@@ -9,3 +9,5 @@
   1. Installation
      * [](overview-distros.md)
      * [](linux-client-ubuntu-kubectl.md)
+  1. Tipps & Tricks 
+     * [Auf ubuntu root-benutzer werden](sudo.md)
