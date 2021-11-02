@@ -11,6 +11,7 @@
   1. Docker-Befehle 
      * [Die wichtigsten Befehle](docker-befehle.md)
      * [docker run](docker-run.md)
+     * [Docker container/image stoppen/löschen](container-image-delete.md)
   
   1. Dockerfile - Examples 
      * [Ubuntu mit ping](ubuntu-ping.md) 
