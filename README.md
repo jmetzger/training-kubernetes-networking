@@ -20,7 +20,8 @@
      * [Nginx mit content aus html-ordner](nginx-html-content.md)
    
   1. Daten persistent machen / Shared Volumes 
-     * [Überblick](storage-overview.md)  
+     * [Überblick](storage-overview.md) 
+     * [Volumes](storage-volumes.md) 
    
   1. Tipps & Tricks 
      * [Auf ubuntu root-benutzer werden](sudo.md)
