@@ -7,7 +7,7 @@
      * [Was ist ein Container](container.md)
      * [Container vs. Virtuelle Maschine](container-vs-vm.md)
   1. Installation
-     * [](overview-distros.md)
+     * [Installation Docker unter Ubuntu mit snap](install-ubuntu-snap.md)
      * [](linux-client-ubuntu-kubectl.md)
   1. Tipps & Tricks 
      * [Auf ubuntu root-benutzer werden](sudo.md)
