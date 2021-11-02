@@ -3,7 +3,7 @@
 ## Agenda 
 
   1. Grundlagen 
-     * [](welches-system.md)
+     * [Übersicht Architektur](architektur.md)
      * [](architecture.md)
   1. Installation
      * [](overview-distros.md)
