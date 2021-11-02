@@ -13,5 +13,8 @@ systemctl status snap.docker.dockerd.service
 # oder (aber veraltet) 
 service snap.docker.dockerd status
 
+systemctl stop snap.docker.dockerd.service
+systemctl status snap.docker.dockerd.service
+systemctl start snap.docker.dockerd.service 
 
 ```
