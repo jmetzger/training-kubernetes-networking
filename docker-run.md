@@ -11,4 +11,9 @@ docker container ls
 # image vorhanden 
 docker images
 
+# in den Container reinwechsel 
+docker exec -it my_xenial bash 
+docker exec -it my_xenial cat /etc/issue
+# 
+
 ```
