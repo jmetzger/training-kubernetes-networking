@@ -11,3 +11,4 @@
      * [](linux-client-ubuntu-kubectl.md)
   1. Tipps & Tricks 
      * [Auf ubuntu root-benutzer werden](sudo.md)
+     * [IP - Adresse abfragen](ip-a.md)
