@@ -10,6 +10,7 @@
      * [Installation Docker unter Ubuntu mit snap](install-ubuntu-snap.md)
   1. Docker-Befehle 
      * [Die wichtigsten Befehle](docker-befehle.md)
+     * [docker run](docker-run.md)
   
   1. Tipps & Tricks 
      * [Auf ubuntu root-benutzer werden](sudo.md)
