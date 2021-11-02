@@ -13,6 +13,7 @@
      * [docker run](docker-run.md)
      * [Docker container/image stoppen/löschen](container-image-delete.md)
      * [Docker containerliste anzeigen](container-liste.md)
+     * [Docker container analysieren](container-inspect.md)
      * [Nginx mit portfreigabe laufen lassen](docker-example-nginx.md) 
   
   1. Dockerfile - Examples 
