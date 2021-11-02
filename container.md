@@ -13,5 +13,5 @@
 - Können über wohldefinierte Kommunikationskanäle untereinander Informationen austauschen
 
 - Durch Entkopplung von Containern:
-  o Unverträglichkeiten von Bibliotheken, Tools oder Datenbank können umgangen werden, wenn diese von den Apllikationen in unterschiedlichen Versionen benötigt werden.
+  o Unverträglichkeiten von Bibliotheken, Tools oder Datenbank können umgangen werden, wenn diese von den Applikationen in unterschiedlichen Versionen benötigt werden.
 ```
