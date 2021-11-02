@@ -8,7 +8,9 @@
      * [Container vs. Virtuelle Maschine](container-vs-vm.md)
   1. Installation
      * [Installation Docker unter Ubuntu mit snap](install-ubuntu-snap.md)
-     * [](linux-client-ubuntu-kubectl.md)
+  1. Docker-Befehle 
+     * [Die wichtigsten Befehle](docker-befehle.md)
+  
   1. Tipps & Tricks 
      * [Auf ubuntu root-benutzer werden](sudo.md)
      * [IP - Adresse abfragen](ip-a.md)
