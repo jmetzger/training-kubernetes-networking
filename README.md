@@ -18,8 +18,11 @@
   1. Dockerfile - Examples 
      * [Ubuntu mit ping](ubuntu-ping.md) 
      * [Nginx mit content aus html-ordner](nginx-html-content.md)
-     
-  3. Tipps & Tricks 
+   
+  1. Daten persistent machen / Shared Volumes 
+     * [Überblick](storage-overview.md)  
+   
+  1. Tipps & Tricks 
      * [Auf ubuntu root-benutzer werden](sudo.md)
      * [IP - Adresse abfragen](ip-a.md)
      * [Hostname setzen](hostname.md)
