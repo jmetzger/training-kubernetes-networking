@@ -14,4 +14,11 @@ docker container ls
 # container (vorhanden, aber beendet)
 docker container ls -a 
 
+# z.b hilfe für docker run 
+docker help run 
+
+# docker hub durchsuchen
+docker search hello-world 
+
+
 ```
