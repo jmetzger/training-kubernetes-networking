@@ -1,7 +1,10 @@
-# Container - Image - Delete 
+# Container - Image - Delete - Kill
 
 ```
 docker stop ubuntu-container 
+# Kill it if it cannot be stopped -be careful
+docker kill ubuntu-container
+
 docker rm ubuntu-container
 
 # ooder alternative
