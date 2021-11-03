@@ -30,5 +30,6 @@ docker build -t devubuntu .
 docker run --name=devjoy -p 2222:22  -d -t devubuntu3
 
 ssh root@localhost -p 2222
+# example, if your docker host ist 192.168.56.101 v
 ssh root@192.168.56.101 -p 2222
 ```
