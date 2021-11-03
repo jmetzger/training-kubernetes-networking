@@ -73,6 +73,15 @@ docker node demote <node-name>
 
 ```
 
+## expose port
+
+```
+docker service create --name my_web \
+                        --replicas 3 \
+                        --publish published=8080,target=80 \
+                        nginx
+```
+
 ## Ref 
 
   * https://docs.docker.com/engine/swarm/services/
