@@ -32,6 +32,9 @@
      * [Example with Wordpress / Nginx / MariadB](example-wnm-docker-compose.md)
      * [Example with Ubuntu and Dockerfile](example-docker-compose-ubuntu-build.md)
      * [Logs in docker - compose](docker-compose-logs.md)
+
+  1. Docker Swarm 
+     * [Docker Swarm Beispiele](docker-swarm-examples.md)
  
   1. Tipps & Tricks 
      * [Auf ubuntu root-benutzer werden](sudo.md)
