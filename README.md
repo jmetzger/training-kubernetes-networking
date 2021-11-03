@@ -27,6 +27,9 @@
  
   1. Netzwerk 
      * [Netzwerk](network.md)
+
+  1. Docker Compose 
+     * [Example with Wordpress / Nginx / MariadB](example-wnm-docker-compose.md)
  
   1. Tipps & Tricks 
      * [Auf ubuntu root-benutzer werden](sudo.md)
