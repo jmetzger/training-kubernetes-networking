@@ -24,7 +24,10 @@
   1. Daten persistent machen / Shared Volumes 
      * [Überblick](storage-overview.md) 
      * [Volumes](storage-volumes.md) 
-   
+ 
+  1. Netzwerk 
+     * [Netzwerk](network.md)
+ 
   1. Tipps & Tricks 
      * [Auf ubuntu root-benutzer werden](sudo.md)
      * [IP - Adresse abfragen](ip-a.md)
