@@ -41,7 +41,7 @@ volumes:
 
 
 ## now start the system
-docker-compoe up -d 
+docker-compose up -d 
 ## we can do some test if db is reachable 
 docker exec -it wordpress_compose_wordpress_1 bash 
 ## within shell do 
