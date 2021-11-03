@@ -72,3 +72,7 @@ docker node ls
 docker node demote <node-name>
 
 ```
+
+## Ref 
+
+  * https://docs.docker.com/engine/swarm/services/
