@@ -46,3 +46,15 @@ docker inspect nginx
 docker inspect nginx_no_net 
 
 ```
+
+## Netzwerk rausnehmen / hinzufügen 
+
+```
+docker network disconnect none nginx_no_net
+docker network connect test_net nginx_no_net 
+
+## löschen erst möglich, wenn es keine Endpoints 
+## d.h. container die das Netzwerk verwenden 
+```
+
+```
