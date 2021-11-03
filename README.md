@@ -19,7 +19,7 @@
   1. Dockerfile - Examples 
      * [Ubuntu mit ping](ubuntu-ping.md) 
      * [Nginx mit content aus html-ordner](nginx-html-content.md)
-     * [ssh server -- not working yet](ubuntu-ssh-server.md)
+     * [ssh server](ubuntu-ssh-server.md)
    
   1. Daten persistent machen / Shared Volumes 
      * [Überblick](storage-overview.md) 
