@@ -1,4 +1,4 @@
-# Docker Grundlagen Training ( 2 days )
+# Kubernetes und Docker Administration und Orchestrierung 
 
 ## Agenda 
 
