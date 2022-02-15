@@ -6,7 +6,9 @@ cd
 mkdir wp
 cd wp
 nano docker-compose.yml
+```
 
+```
 # docker-compose.yaml
 version: "3.7"
 
