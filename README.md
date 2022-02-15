@@ -36,7 +36,8 @@
   1. Netzwerk 
      * [Netzwerk](network.md)
 
-  1. Docker Compose 
+  1. Docker Compose
+     * [Ist docker-compose installiert?](docker-compose-installed.md) 
      * [Example with Wordpress / Nginx / MariadB](example-wnm-docker-compose.md)
      * [Example with Ubuntu and Dockerfile](example-docker-compose-ubuntu-build.md)
      * [Logs in docker - compose](docker-compose-logs.md)
