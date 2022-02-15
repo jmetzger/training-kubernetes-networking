@@ -12,6 +12,7 @@
      * [Installation Docker unter Ubuntu mit snap](install-ubuntu-snap.md)
   1. Docker-Befehle 
      * [Die wichtigsten Befehle](docker-befehle.md)
+     * [Logs anschauen - docker logs - mit Beispiel nginx](docker-logs-nginx.md)
      * [docker run](docker-run.md)
      * [Docker container/image stoppen/löschen](container-image-delete.md)
      * [Docker containerliste anzeigen](container-liste.md)
