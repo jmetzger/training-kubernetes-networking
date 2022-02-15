@@ -26,7 +26,8 @@
      * [ssh server](ubuntu-ssh-server.md)
    
   1. Docker-Container Examples 
-     * [2 Container mit Netzwerk anpingen](2-containers-with-network-ping.md)  
+     * [2 Container mit Netzwerk anpingen](2-containers-with-network-ping.md)
+     * [Container mit eigenem privatem Netz erstellen](container-with-own-bridge.md)  
    
   1. Daten persistent machen / Shared Volumes 
      * [Überblick](storage-overview.md) 
