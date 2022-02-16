@@ -41,6 +41,13 @@ vagrant up
 vagrant ssh 
 # in der Maschine kein pass notwendig zum Wechseln 
 sudo su -
+
+# wenn ich raus will
+exit
+exit
+
+# Danach kann ich die maschine wieder zerstören
+vagrant destroy -f 
 ```
 
 
