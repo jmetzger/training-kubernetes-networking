@@ -1,7 +1,12 @@
 # Connect from remote 
 
 ```
+# on client install kubectl 
+sudo snap install kubectl --classic 
+
 # On master-server get config 
+# als root
+cd
 microk8s config > remote_config 
 
 # Download (scp config file) and store in .kube - folder  
