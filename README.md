@@ -74,7 +74,7 @@
      * [kubectl Spickzettle](/kubectl/spickzettel.md)
 
   1. kubectl - manifest - examples 
-     * [Pod nginx mit Port und IP innerhalb des Clusters](/kubectl-examples/02-pod-nginx-exposed.md)
+     * [02 Pod nginx mit Port und IP innerhalb des Clusters](/kubectl-examples/02-pod-nginx-exposed.md)
 
   1. Documentation 
      * [Vulnerability Scanner with docker](https://docs.docker.com/engine/scan/#prerequisites)
