@@ -1,24 +1,29 @@
 # Connect from remote 
 
 ```
-# on client install kubectl 
+# on CLIENT install kubectl 
 sudo snap install kubectl --classic 
 
-# On master-server get config 
+# On MASTER -server get config 
 # als root
 cd
-microk8s config > remote_config 
+microk8s config > /home/kurs/remote_config 
 
 # Download (scp config file) and store in .kube - folder  
 cd ~
 mkdir .kube
 cd .kube  # Wichtig: config muss nachher im verzeichnis .kube liegen 
-# scp master_server:/path/to/remote_config config 
+# scp kurs@master_server:/path/to/remote_config config 
 # z.B. 
-scp 192.168.56.102:/root/remote_config config
+scp kurs@192.168.56.102:/home/kurs/remote_config config
+# oder benutzer 11trainingdo
+scp 11trainingdo@192.168.56.102:/home/11trainingdo/remote_config config 
 
-# now you can execute all kubectl commands, but they are executed against remote server 
-microk8s kubectl get pods 
+#### Evtl. IP-Adresse in config zum Server aendern 
+
+# Ultimative 1. Test auf CLIENT 
+kubectl cluster-info 
+
 # or if using kubectl or alias 
 kubectl get pods 
 
