@@ -71,6 +71,7 @@
 
   1. kubectl 
      * [Start pod (container with run && examples)](/kubectl/run-with-example.md)
+     * [kubectl Spickzettle](/kubectl/spickzettel.md)
 
   1. Documentation 
      * [Vulnerability Scanner with docker](https://docs.docker.com/engine/scan/#prerequisites)
