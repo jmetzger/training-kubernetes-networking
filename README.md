@@ -70,7 +70,7 @@
      * [Arbeiten mit der Registry](microk8s/registry.md)
 
   1. kubectl 
-     * [Start pod (container with run && examples)](/kubectl/run-with-examples.md)
+     * [Start pod (container with run && examples)](/kubectl/run-with-example.md)
 
   1. Documentation 
      * [Vulnerability Scanner with docker](https://docs.docker.com/engine/scan/#prerequisites)
