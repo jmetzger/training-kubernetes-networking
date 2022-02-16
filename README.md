@@ -47,7 +47,7 @@
   1. Docker Swarm 
      * [Docker Swarm Beispiele](docker-swarm-examples.md)
  
-  1. Tipps & Tricks 
+  1. Tipps & Tricks allgemein / docker 
      * [Auf ubuntu root-benutzer werden](sudo.md)
      * [IP - Adresse abfragen](ip-a.md)
      * [Hostname setzen](hostname.md)
@@ -56,6 +56,13 @@
      * [Läuft der ssh-server](ssh-running.md)
      * [Basis/Parent - Image erstellen](docker-base-image.md)
      * [Eigenes unsichere Registry-Verwenden. ohne https](insecure-registry.md)
+
+  1. Kubernetes - Überblick
+     * [Warum Kubernetes, was macht Kubernetes](warum-kubernetes.md) 
+     * [Aufbau](/kubernets/architecture.md)
+     * [Welches System ? (minikube, micro8ks etc.)](welches-system.md)
+    
+
 
   1. Documentation 
      * [Vulnerability Scanner with docker](https://docs.docker.com/engine/scan/#prerequisites)
