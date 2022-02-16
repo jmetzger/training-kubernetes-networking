@@ -37,3 +37,7 @@ kubectl delete pod nginx
 kubectl exec -it nginx -- bash 
 
 ```
+
+## Referenz
+
+  * https://kubernetes.io/de/docs/reference/kubectl/cheatsheet/
