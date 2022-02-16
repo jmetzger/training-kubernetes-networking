@@ -69,6 +69,9 @@
      * [Create a cluster with microk8s](microk8s/cluster.md)
      * [Arbeiten mit der Registry](microk8s/registry.md)
 
+  1. kubectl 
+     * [Start pod (container with run && examples)](/kubectl/run-with-examples.md)
+
   1. Documentation 
      * [Vulnerability Scanner with docker](https://docs.docker.com/engine/scan/#prerequisites)
      * [Vulnerability Scanner mit snyk](https://snyk.io/plans/)
