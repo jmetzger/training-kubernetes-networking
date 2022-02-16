@@ -73,3 +73,4 @@
      * [Vulnerability Scanner with docker](https://docs.docker.com/engine/scan/#prerequisites)
      * [Vulnerability Scanner mit snyk](https://snyk.io/plans/)
      * [Parent/Base - Image bauen für Docker](https://docs.docker.com/develop/develop-images/baseimages/)
+     * [Documentation zu microk8s plugins/addons](https://microk8s.io/docs/addons)
