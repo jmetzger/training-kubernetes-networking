@@ -81,7 +81,7 @@
   1. kubectl - manifest - examples 
      * [02 Pod nginx mit Port und IP innerhalb des Clusters](/kubectl-examples/02-pod-nginx-exposed.md)
      * [03b Example with service and nginx](/kubectl-examples/03b-service.md)
-     * [04 Ingress mit einfachen Beispiel](/kubectl-examples/04-ingress-nginx.md)
+     * [04 Ingress mit einfachem Beispiel](/kubectl-examples/04-ingress-nginx.md)
 
   1. Documentation 
      * [Vulnerability Scanner with docker](https://docs.docker.com/engine/scan/#prerequisites)
