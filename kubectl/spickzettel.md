@@ -16,6 +16,20 @@ kubectl describe pod.metadata.name
 
 ```
 
+## Ausgabeformate 
+
+```
+# Ausgabe kann in verschiedenen Formaten erfolgen 
+kubectl get pods -o wide # weitere informationen 
+# im json format
+kubectl get pods -o json 
+
+# gilt natürluch auch für andere kommandos
+kubectl get deploy -o json 
+```
+
+
+
 ## Zu den Pods 
 
 ```
