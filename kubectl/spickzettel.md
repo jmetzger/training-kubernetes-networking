@@ -25,7 +25,11 @@ kubectl get pods
 kubectl get pod
 # Format weitere Information 
 kubectl get pod -o wide 
+# Zeige labels der Pods
+kubectl get pods --show-labels 
 
+# Zeige pods mit einem bestimmten label 
+kubectl get pods -l app=nginx 
 
 # Status eines Pods anzeigen 
 kubectl explain pod nginx 
