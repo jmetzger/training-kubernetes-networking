@@ -29,8 +29,9 @@ spec:
   selector:
     app: apple
   ports:
-    - port: 80
-    - targetPort: 5678 # Default port for image
+    - protocol: TCP
+      port: 80
+      targetPort: 5678 # Default port for image
 ```
 
 ```
