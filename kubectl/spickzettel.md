@@ -6,6 +6,9 @@
 # Zeige Information über das Cluster 
 kubectl cluster-info 
 
+# Welche api-resources gibt es ?
+kubectl api-resources 
+
 # Hilfe zu object und eigenschaften bekommen
 kubectl describe pod 
 kubectl describe pod.metadata
