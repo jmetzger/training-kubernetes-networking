@@ -61,6 +61,9 @@
      * [Warum Kubernetes, was macht Kubernetes](warum-kubernetes.md) 
      * [Aufbau](/kubernets/architecture.md)
      * [Welches System ? (minikube, micro8ks etc.)](welches-system.md)
+
+  1. Kubernetes - API - Objekte
+     * [Was sind Deployments](/kubernetes/deployments.md)
     
   1. microk8s 
      * [Installation Ubuntu - snap](microk8s/installation-ubuntu-snap.md)
