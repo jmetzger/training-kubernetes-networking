@@ -15,7 +15,7 @@ Pod :: create the containers
 ```
 
 
-## What are deploments 
+## What are deployments 
 
   * Help to manage updates of pods / replicaset (rolling update) 
 
