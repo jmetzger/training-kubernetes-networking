@@ -63,6 +63,7 @@
      * [Welches System ? (minikube, micro8ks etc.)](welches-system.md)
 
   1. Kubernetes - API - Objekte
+     * [Welche API-Objekte gibt es? (Kommando)](/kubernetes/api-resources.md)
      * [Was sind Deployments](/kubernetes/deployments.md)
     
   1. microk8s 
