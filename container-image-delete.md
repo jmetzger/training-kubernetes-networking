@@ -5,9 +5,10 @@ docker stop ubuntu-container
 # Kill it if it cannot be stopped -be careful
 docker kill ubuntu-container
 
+# Get nur, wenn der Container nicht mehr läuft 
 docker rm ubuntu-container
 
-# ooder alternative
+# oder alternative
 docker rm -f ubuntu-container 
 
 
