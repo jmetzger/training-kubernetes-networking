@@ -1,6 +1,9 @@
 # Übersicht docker befehle 
 
 ```
+# docker hub durchsuchen
+docker search hello-world
+
 docker run <image>
 # z.b. // Zieht das image aus docker hub 
 # hub.docker.com 
@@ -17,8 +20,7 @@ docker container ls -a
 # z.b hilfe für docker run 
 docker help run 
 
-# docker hub durchsuchen
-docker search hello-world 
+ 
 
 
 ```
