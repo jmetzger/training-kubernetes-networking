@@ -7,7 +7,7 @@ docker search hello-world
 docker run <image>
 # z.b. // Zieht das image aus docker hub 
 # hub.docker.com 
-docker run hello-word
+docker run hello-world
 
 # images die lokal vorhanden 
 docker images 
