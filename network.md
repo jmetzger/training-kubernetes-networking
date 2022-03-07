@@ -53,8 +53,9 @@ docker inspect nginx_no_net
 docker network disconnect none nginx_no_net
 docker network connect test_net nginx_no_net 
 
-## löschen erst möglich, wenn es keine Endpoints 
+## Das Löschen von Netzwerken ist erst möglich, wenn es keine Endpoints 
 ## d.h. container die das Netzwerk verwenden 
+docker network rm test_net 
 ```
 
 
