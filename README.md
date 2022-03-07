@@ -48,7 +48,7 @@
      * [Logs in docker - compose](docker-compose-logs.md)
   
   1. Docker Swarm 
-     * [Docker Swarm Beispiele](docker-swarm-examples.md
+     * [Docker Swarm Beispiele](docker-swarm-examples.md)
   
   1. Docker Tipps & Tricks allgemein 
      * [Auf ubuntu root-benutzer werden](sudo.md)
