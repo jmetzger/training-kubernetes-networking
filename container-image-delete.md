@@ -15,4 +15,7 @@ docker rm -f ubuntu-container
 # image löschen 
 docker rmi ubuntu:xenial 
 
+# falls Container noch vorhanden aber nicht laufend 
+docker rmi -f ubuntu:xenial 
+
 ```
