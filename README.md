@@ -59,6 +59,11 @@
      * [Basis/Parent - Image erstellen](docker-base-image.md)
      * [Eigenes unsichere Registry-Verwenden. ohne https](insecure-registry.md)
   
+  1. Docker - Dokumentation 
+     * [Vulnerability Scanner with docker](https://docs.docker.com/engine/scan/#prerequisites)
+     * [Vulnerability Scanner mit snyk](https://snyk.io/plans/)
+     * [Parent/Base - Image bauen für Docker](https://docs.docker.com/develop/develop-images/baseimages/)
+    
   1. Kubernetes - Überblick
      * [Warum Kubernetes, was macht Kubernetes](warum-kubernetes.md) 
      * [Aufbau](/kubernets/architecture.md)
@@ -71,6 +76,7 @@
      * [Create a cluster with microk8s](microk8s/cluster.md)
      * [Ingress controller in microk8s aktivieren](microk8s/ingress.md) 
      * [Arbeiten mit der Registry](microk8s/registry.md)
+     * [Installation Kuberenetes Dashboard](/microk8s/dashboard.md) 
 
   1. Kubernetes - API - Objekte
      * [Welche API-Objekte gibt es? (Kommando)](/kubernetes/api-resources.md)
@@ -85,8 +91,5 @@
      * [03b Example with service and nginx](/kubectl-examples/03b-service.md)
      * [04 Ingress mit einfachem Beispiel](/kubectl-examples/04-ingress-nginx.md)
 
-  1. Documentation 
-     * [Vulnerability Scanner with docker](https://docs.docker.com/engine/scan/#prerequisites)
-     * [Vulnerability Scanner mit snyk](https://snyk.io/plans/)
-     * [Parent/Base - Image bauen für Docker](https://docs.docker.com/develop/develop-images/baseimages/)
+  1. Kubernetes - Documentation 
      * [Documentation zu microk8s plugins/addons](https://microk8s.io/docs/addons)
