@@ -23,4 +23,14 @@ docker container ls
 docker exec -it myubuntu bash
 ls -la
  
+ 
+# Zweiten Container starten
+docker run -d -t --name container-ubuntu2 myubuntu 
+
+# Ersten Container -> 2. anpingen 
+docker exec -it container-ubuntu bash 
+# Jeder container hat eine eigene IP 
+ping 172.17.0.3
+
+ 
 ```
