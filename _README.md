@@ -2,14 +2,16 @@
 
 
 ## Agenda
-  1. Grundlagen 
+  1. Docker-Grundlagen 
      * [Übersicht Architektur](#übersicht-architektur)
      * [Was ist ein Container ?](#was-ist-ein-container-)
      * [Was sind container images](#was-sind-container-images)
      * [Container vs. Virtuelle Maschine](#container-vs.-virtuelle-maschine)
      * [Was ist ein Dockerfile](#was-ist-ein-dockerfile)
-  1. Installation
+  
+  1. Docker-Installation
      * [Installation Docker unter Ubuntu mit snap](#installation-docker-unter-ubuntu-mit-snap)
+  
   1. Docker-Befehle 
      * [Die wichtigsten Befehle](#die-wichtigsten-befehle)
      * [Logs anschauen - docker logs - mit Beispiel nginx](#logs-anschauen---docker-logs---mit-beispiel-nginx)
@@ -24,18 +26,18 @@
      * [Ubuntu mit ping](#ubuntu-mit-ping)
      * [Nginx mit content aus html-ordner](#nginx-mit-content-aus-html-ordner)
      * [ssh server](#ssh-server)
-   
+  
   1. Docker-Container Examples 
      * [2 Container mit Netzwerk anpingen](#2-container-mit-netzwerk-anpingen)
      * [Container mit eigenem privatem Netz erstellen](#container-mit-eigenem-privatem-netz-erstellen)
-   
-  1. Daten persistent machen / Shared Volumes 
+  
+  1. Docker-Daten persistent machen / Shared Volumes 
      * [Überblick](#überblick)
      * [Volumes](#volumes)
- 
-  1. Netzwerk 
+  
+  1. Docker-Netzwerk 
      * [Netzwerk](#netzwerk)
-
+  
   1. Docker Compose
      * [yaml-format](#yaml-format)
      * [Ist docker-compose installiert?](#ist-docker-compose-installiert)
@@ -43,11 +45,11 @@
      * [Example with Wordpress / Nginx / MariadB](#example-with-wordpress--nginx--mariadb)
      * [Example with Ubuntu and Dockerfile](#example-with-ubuntu-and-dockerfile)
      * [Logs in docker - compose](#logs-in-docker---compose)
-
+  
   1. Docker Swarm 
      * [Docker Swarm Beispiele](#docker-swarm-beispiele)
- 
-  1. Tipps & Tricks allgemein / docker 
+  
+  1. Docker Tipps & Tricks allgemein 
      * [Auf ubuntu root-benutzer werden](#auf-ubuntu-root-benutzer-werden)
      * [IP - Adresse abfragen](#ip---adresse-abfragen)
      * [Hostname setzen](#hostname-setzen)
@@ -56,24 +58,30 @@
      * [Läuft der ssh-server](#läuft-der-ssh-server)
      * [Basis/Parent - Image erstellen](#basisparent---image-erstellen)
      * [Eigenes unsichere Registry-Verwenden. ohne https](#eigenes-unsichere-registry-verwenden.-ohne-https)
-
+  
+  1. Docker - Dokumentation 
+     * [Vulnerability Scanner with docker](https://docs.docker.com/engine/scan/#prerequisites)
+     * [Vulnerability Scanner mit snyk](https://snyk.io/plans/)
+     * [Parent/Base - Image bauen für Docker](https://docs.docker.com/develop/develop-images/baseimages/)
+    
   1. Kubernetes - Überblick
      * [Warum Kubernetes, was macht Kubernetes](#warum-kubernetes,-was-macht-kubernetes)
      * [Aufbau](#aufbau)
      * [Welches System ? (minikube, micro8ks etc.)](#welches-system--minikube,-micro8ks-etc.)
 
-  1. Kubernetes - API - Objekte
-     * [Welche API-Objekte gibt es? (Kommando)](#welche-api-objekte-gibt-es-kommando)
-     * [Was sind Deployments](#was-sind-deployments)
-    
-  1. microk8s 
+  1. Kubernetes - microk8s (Installation und Management) 
      * [Installation Ubuntu - snap](#installation-ubuntu---snap)
      * [Patch to next major release - cluster](#patch-to-next-major-release---cluster)
      * [Remote-Verbindung zu Kubernetes (microk8s) einrichten](#remote-verbindung-zu-kubernetes-microk8s-einrichten)
      * [Create a cluster with microk8s](#create-a-cluster-with-microk8s)
      * [Ingress controller in microk8s aktivieren](#ingress-controller-in-microk8s-aktivieren)
      * [Arbeiten mit der Registry](#arbeiten-mit-der-registry)
+     * [Installation Kuberenetes Dashboard](#installation-kuberenetes-dashboard)
 
+  1. Kubernetes - API - Objekte
+     * [Welche API-Objekte gibt es? (Kommando)](#welche-api-objekte-gibt-es-kommando)
+     * [Was sind Deployments](#was-sind-deployments)
+      
   1. kubectl 
      * [Start pod (container with run && examples)](#start-pod-container-with-run-&&-examples)
      * [kubectl Spickzettle](#kubectl-spickzettle)
@@ -83,15 +91,12 @@
      * [03b Example with service and nginx](#03b-example-with-service-and-nginx)
      * [04 Ingress mit einfachem Beispiel](#04-ingress-mit-einfachem-beispiel)
 
-  1. Documentation 
-     * [Vulnerability Scanner with docker](https://docs.docker.com/engine/scan/#prerequisites)
-     * [Vulnerability Scanner mit snyk](https://snyk.io/plans/)
-     * [Parent/Base - Image bauen für Docker](https://docs.docker.com/develop/develop-images/baseimages/)
+  1. Kubernetes - Documentation 
      * [Documentation zu microk8s plugins/addons](https://microk8s.io/docs/addons)
 
 <div class="page-break"></div>
 
-## Grundlagen 
+## Docker-Grundlagen 
 
 ### Übersicht Architektur
 
@@ -144,7 +149,7 @@ Container virtualisieren Betriebssystem
    * mit docker build wird dieses image erstellt 
    
 
-## Installation
+## Docker-Installation
 
 ### Installation Docker unter Ubuntu mit snap
 
@@ -493,7 +498,7 @@ docker network inspect demo_net
 
 ```
 
-## Daten persistent machen / Shared Volumes 
+## Docker-Daten persistent machen / Shared Volumes 
 
 ### Überblick
 
@@ -562,7 +567,7 @@ docker rm container-test-vol2
 docker volume rm test-vol
 ```
 
-## Netzwerk 
+## Docker-Netzwerk 
 
 ### Netzwerk
 
@@ -827,94 +832,7 @@ docker-compose logs
 
 ### Docker Swarm Beispiele
 
-
-### Generic examples 
-
-```
-## should be at least version 1.24 
-docker info
-
-## only for one network interface
-docker swarm init
-
-## in our case, we need to decide what interface
-docker swarm init --advertise-addr 192.168.56.101
-
-## is swarm active 
-docker info | grep -i swarm
-## When it is -> node command works 
-docker node ls
-## is the current node the manager 
-docker info | grep -i "is manager"
-
-## docker create additional overlay network 
-docker network ls
-
-## what about my own node -> self
-docker node inspect self
-docker node inspect --pretty self
-docker node inspect --pretty self | less
-
-```
-
-```
-## Create our first service 
-docker service create redis
-docker images
-docker service ls
-## if service-id start with  j 
-docker service inspect j
-docker service ps j
-docker service rm j
-docker service ls
-```
-
-```
-## Start with multiple replicas and name 
-docker service create --name my_redis --replicas 4 redis
-docker service ls
-## Welche tasks 
-docker service ps my_redis
-docker container ls
-docker service inspect my_redis
-
-## delete service
-docker service rm
-```
-
-### Add additional node 
-
-```
-## on first node, get join token 
-docker swarm join-token manager
-
-## on second node execute join command
-docker swarm join --token SWMTKN-1-07jy3ym29au7u3isf1hfhgd7wpfggc1nia2kwtqfnfc8hxfczw-2kuhwlnr9i0nkje8lz437d2d5 192.168.56.101:2377
-
-## check with node command
-docker node ls 
-
-## Make node a simple worker
-## Does not make, because no highavailable after crush node 1
-## Take at LEAST 3 NODES 
-docker node demote <node-name>
-
-```
-
-### expose port
-
-```
-docker service create --name my_web \
-                        --replicas 3 \
-                        --publish published=8080,target=80 \
-                        nginx
-```
-
-### Ref 
-
-  * https://docs.docker.com/engine/swarm/services/
-
-## Tipps & Tricks allgemein / docker 
+## Docker Tipps & Tricks allgemein 
 
 ### Auf ubuntu root-benutzer werden
 
@@ -1064,6 +982,20 @@ https://docs.docker.com/registry/recipes/mirror/
 
   * https://docs.docker.com/registry/insecure/
 
+## Docker - Dokumentation 
+
+### Vulnerability Scanner with docker
+
+  * https://docs.docker.com/engine/scan/#prerequisites
+
+### Vulnerability Scanner mit snyk
+
+  * https://snyk.io/plans/
+
+### Parent/Base - Image bauen für Docker
+
+  * https://docs.docker.com/develop/develop-images/baseimages/
+
 ## Kubernetes - Überblick
 
 ### Warum Kubernetes, was macht Kubernetes
@@ -1173,52 +1105,7 @@ it is not suitable for production.
 
 
 
-## Kubernetes - API - Objekte
-
-### Welche API-Objekte gibt es? (Kommando)
-
-
-```
-kubectl api-resources 
-
-```
-
-### Was sind Deployments
-
-
-### Hierarchy 
-
-```
-deployment 
-  replicaset 
-    pod 
-
-
-Deployment :: create a new replicaset, when needed (e.g. new version of image comes out) 
-Replicaset :: manage the state - take care, that the are always x-pods running (e.g. 3) 
-Pod :: create the containers 
-
-```
-
-
-### What are deployments 
-
-  * Help to manage updates of pods / replicaset (rolling update) 
-
-
-### Example 
-
-```
-## Deploy a sample from k8s.io 
-kubectl apply -f https://k8s.io/examples/controllers/nginx-deployment.yaml
-
-```
-
-### Refs:
-
-  * https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
-
-## microk8s 
+## Kubernetes - microk8s (Installation und Management) 
 
 ### Installation Ubuntu - snap
 
@@ -1317,6 +1204,58 @@ microk8s enable ingress
   * https://microk8s.io/docs/addon-ingress
 
 ### Arbeiten mit der Registry
+
+### Installation Kuberenetes Dashboard
+
+
+### Reference:
+
+  * https://blog.tippybits.com/installing-kubernetes-in-virtualbox-3d49f666b4d6    
+
+## Kubernetes - API - Objekte
+
+### Welche API-Objekte gibt es? (Kommando)
+
+
+```
+kubectl api-resources 
+
+```
+
+### Was sind Deployments
+
+
+### Hierarchy 
+
+```
+deployment 
+  replicaset 
+    pod 
+
+
+Deployment :: create a new replicaset, when needed (e.g. new version of image comes out) 
+Replicaset :: manage the state - take care, that the are always x-pods running (e.g. 3) 
+Pod :: create the containers 
+
+```
+
+
+### What are deployments 
+
+  * Help to manage updates of pods / replicaset (rolling update) 
+
+
+### Example 
+
+```
+## Deploy a sample from k8s.io 
+kubectl apply -f https://k8s.io/examples/controllers/nginx-deployment.yaml
+
+```
+
+### Refs:
+
+  * https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
 
 ## kubectl 
 
@@ -1671,19 +1610,7 @@ spec:
                 number: 80                
 ```
 
-## Documentation 
-
-### Vulnerability Scanner with docker
-
-  * https://docs.docker.com/engine/scan/#prerequisites
-
-### Vulnerability Scanner mit snyk
-
-  * https://snyk.io/plans/
-
-### Parent/Base - Image bauen für Docker
-
-  * https://docs.docker.com/develop/develop-images/baseimages/
+## Kubernetes - Documentation 
 
 ### Documentation zu microk8s plugins/addons
 
