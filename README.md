@@ -2,14 +2,16 @@
 
 ## Agenda 
 
-  1. Grundlagen 
+  1. Docker-Grundlagen 
      * [Übersicht Architektur](architektur.md)
      * [Was ist ein Container ?](container.md)
      * [Was sind container images](container-images.md) 
      * [Container vs. Virtuelle Maschine](container-vs-vm.md)
      * [Was ist ein Dockerfile](dockerfile.md) 
-  1. Installation
+  
+  1. Docker-Installation
      * [Installation Docker unter Ubuntu mit snap](install-ubuntu-snap.md)
+  
   1. Docker-Befehle 
      * [Die wichtigsten Befehle](docker-befehle.md)
      * [Logs anschauen - docker logs - mit Beispiel nginx](docker-logs-nginx.md)
@@ -24,18 +26,18 @@
      * [Ubuntu mit ping](ubuntu-ping.md) 
      * [Nginx mit content aus html-ordner](nginx-html-content.md)
      * [ssh server](ubuntu-ssh-server.md)
-   
+  
   1. Docker-Container Examples 
      * [2 Container mit Netzwerk anpingen](2-containers-with-network-ping.md)
      * [Container mit eigenem privatem Netz erstellen](container-with-own-bridge.md)  
-   
-  1. Daten persistent machen / Shared Volumes 
+  
+  1. Docker-Daten persistent machen / Shared Volumes 
      * [Überblick](storage-overview.md) 
      * [Volumes](storage-volumes.md) 
- 
-  1. Netzwerk 
+  
+  1. Docker-Netzwerk 
      * [Netzwerk](network.md)
-
+  
   1. Docker Compose
      * [yaml-format](yaml-format.md)
      * [Ist docker-compose installiert?](docker-compose-installed.md) 
@@ -43,11 +45,11 @@
      * [Example with Wordpress / Nginx / MariadB](example-wnm-docker-compose.md)
      * [Example with Ubuntu and Dockerfile](example-docker-compose-ubuntu-build.md)
      * [Logs in docker - compose](docker-compose-logs.md)
-
+  
   1. Docker Swarm 
-     * [Docker Swarm Beispiele](docker-swarm-examples.md)
- 
-  1. Tipps & Tricks allgemein / docker 
+     * [Docker Swarm Beispiele](docker-swarm-examples.md
+  
+  1. Docker Tipps & Tricks allgemein 
      * [Auf ubuntu root-benutzer werden](sudo.md)
      * [IP - Adresse abfragen](ip-a.md)
      * [Hostname setzen](hostname.md)
@@ -56,17 +58,13 @@
      * [Läuft der ssh-server](ssh-running.md)
      * [Basis/Parent - Image erstellen](docker-base-image.md)
      * [Eigenes unsichere Registry-Verwenden. ohne https](insecure-registry.md)
-
+  
   1. Kubernetes - Überblick
      * [Warum Kubernetes, was macht Kubernetes](warum-kubernetes.md) 
      * [Aufbau](/kubernets/architecture.md)
      * [Welches System ? (minikube, micro8ks etc.)](welches-system.md)
 
-  1. Kubernetes - API - Objekte
-     * [Welche API-Objekte gibt es? (Kommando)](/kubernetes/api-resources.md)
-     * [Was sind Deployments](/kubernetes/deployments.md)
-    
-  1. microk8s 
+  1. Kubernetes - microk8s (Installation und Management) 
      * [Installation Ubuntu - snap](microk8s/installation-ubuntu-snap.md)
      * [Patch to next major release - cluster](microk8s/patch-next-major.md)
      * [Remote-Verbindung zu Kubernetes (microk8s) einrichten](microk8s/connect-from-remote.md)
@@ -74,6 +72,10 @@
      * [Ingress controller in microk8s aktivieren](microk8s/ingress.md) 
      * [Arbeiten mit der Registry](microk8s/registry.md)
 
+  1. Kubernetes - API - Objekte
+     * [Welche API-Objekte gibt es? (Kommando)](/kubernetes/api-resources.md)
+     * [Was sind Deployments](/kubernetes/deployments.md)
+      
   1. kubectl 
      * [Start pod (container with run && examples)](/kubectl/run-with-example.md)
      * [kubectl Spickzettle](/kubectl/spickzettel.md)
