@@ -3,6 +3,7 @@
 ```
 # besser 
 docker container ls 
+# Alle Container, auch die, die beendet worden sind 
 docker container ls -a 
 
 
