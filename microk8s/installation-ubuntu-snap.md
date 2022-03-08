@@ -1,5 +1,7 @@
 # Installation on Ubuntu (snap)
 
+## Walkthrough
+
 ```
 sudo snap install microk8s --classic
 # Important enable dns // otherwice not dns lookup is possible 
@@ -16,3 +18,13 @@ source ~/.bashrc
 kubectl
 
 ```
+## Working with snaps 
+
+```
+snap info microk8s 
+
+```
+
+## Ref:
+
+  * https://microk8s.io/docs/setting-snap-channel
