@@ -51,17 +51,7 @@
   
   1. Docker Swarm 
      * [Docker Swarm Beispiele](docker-swarm-examples.md)
-  
-  1. Docker Tipps & Tricks allgemein 
-     * [Auf ubuntu root-benutzer werden](sudo.md)
-     * [IP - Adresse abfragen](ip-a.md)
-     * [Hostname setzen](hostname.md)
-     * [Proxy für Docker setzen](proxy-docker.md)
-     * [YAML Linter Online](http://www.yamllint.com/)
-     * [Läuft der ssh-server](ssh-running.md)
-     * [Basis/Parent - Image erstellen](docker-base-image.md)
-     * [Eigenes unsichere Registry-Verwenden. ohne https](insecure-registry.md)
-  
+
   1. Docker - Dokumentation 
      * [Vulnerability Scanner with docker](https://docs.docker.com/engine/scan/#prerequisites)
      * [Vulnerability Scanner mit snyk](https://snyk.io/plans/)
@@ -96,3 +86,14 @@
 
   1. Kubernetes - Documentation 
      * [Documentation zu microk8s plugins/addons](https://microk8s.io/docs/addons)
+
+  1. Linux und Docker Tipps & Tricks allgemein 
+     * [Auf ubuntu root-benutzer werden](sudo.md)
+     * [IP - Adresse abfragen](ip-a.md)
+     * [Hostname setzen](hostname.md)
+     * [Proxy für Docker setzen](proxy-docker.md)
+     * [vim einrückung für yaml-dateien](/vim/vim-yaml.md)
+     * [YAML Linter Online](http://www.yamllint.com/)
+     * [Läuft der ssh-server](ssh-running.md)
+     * [Basis/Parent - Image erstellen](docker-base-image.md)
+     * [Eigenes unsichere Registry-Verwenden. ohne https](insecure-registry.md)
