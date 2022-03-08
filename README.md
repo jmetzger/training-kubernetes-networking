@@ -59,7 +59,7 @@
     
   1. Kubernetes - Überblick
      * [Warum Kubernetes, was macht Kubernetes](warum-kubernetes.md) 
-     * [Aufbau](/kubernets/architecture.md)
+     * [Aufbau](/kubernetes/architecture.md)
      * [Welches System ? (minikube, micro8ks etc.)](welches-system.md)
 
   1. Kubernetes - microk8s (Installation und Management) 
