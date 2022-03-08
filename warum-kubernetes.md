@@ -9,5 +9,5 @@
   
 # Wozu dient Kubernetes 
 
-  * Orchestrierung von Container 
+  * Orchestrierung von Containern
   * am gebräuchlisten aktuell Docker
