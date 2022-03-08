@@ -22,7 +22,7 @@ So there are other tools/distri around helping you with that.
 
 ### Disadvantages 
 
-  * Plugins sind oftmals etwas schwierige zu aktivieren
+  * Plugins sind oftmals etwas schwierig zu aktivieren
 
 ## microk8s 
 
