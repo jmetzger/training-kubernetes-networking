@@ -26,7 +26,7 @@
 ##### kube-controller-manager  
   
   * Zuständig für die Überwachung der Stati im Cluster mit Hilfe von endlos loops. 
-  * kommuniziert mit dem Cluster über die kubernetes-api 
+  * kommuniziert mit dem Cluster über die kubernetes-api (bereitgestellt vom kube-api-server)
 
 ##### kube-api-server 
 
