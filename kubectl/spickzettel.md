@@ -10,9 +10,9 @@ kubectl cluster-info
 kubectl api-resources 
 
 # Hilfe zu object und eigenschaften bekommen
-kubectl describe pod 
-kubectl describe pod.metadata
-kubectl describe pod.metadata.name 
+kubectl explain pod 
+kubectl explain pod.metadata
+kubectl explain pod.metadata.name 
 
 ```
 
@@ -49,7 +49,7 @@ kubectl get pods --show-labels
 kubectl get pods -l app=nginx 
 
 # Status eines Pods anzeigen 
-kubectl explain pod nginx 
+kubectl describe pod nginx 
 
 # Pod löschen 
 kubectl delete pod nginx 
