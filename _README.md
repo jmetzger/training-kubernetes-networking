@@ -19,7 +19,10 @@
      * [Docker container/image stoppen/löschen](#docker-containerimage-stoppenlöschen)
      * [Docker containerliste anzeigen](#docker-containerliste-anzeigen)
      * [Docker container analysieren](#docker-container-analysieren)
+     * [Docker container in den Vordergrund bringen - attach](#docker-container-in-den-vordergrund-bringen---attach)
+     * [Aufräumen - container und images löschen](#aufräumen---container-und-images-löschen)
      * [Nginx mit portfreigabe laufen lassen](#nginx-mit-portfreigabe-laufen-lassen)
+    
   
   1. Dockerfile - Examples 
      * [Ubuntu mit hello world](#ubuntu-mit-hello-world)
@@ -48,17 +51,7 @@
   
   1. Docker Swarm 
      * [Docker Swarm Beispiele](#docker-swarm-beispiele)
-  
-  1. Docker Tipps & Tricks allgemein 
-     * [Auf ubuntu root-benutzer werden](#auf-ubuntu-root-benutzer-werden)
-     * [IP - Adresse abfragen](#ip---adresse-abfragen)
-     * [Hostname setzen](#hostname-setzen)
-     * [Proxy für Docker setzen](#proxy-für-docker-setzen)
-     * [YAML Linter Online](http://www.yamllint.com/)
-     * [Läuft der ssh-server](#läuft-der-ssh-server)
-     * [Basis/Parent - Image erstellen](#basisparent---image-erstellen)
-     * [Eigenes unsichere Registry-Verwenden. ohne https](#eigenes-unsichere-registry-verwenden.-ohne-https)
-  
+
   1. Docker - Dokumentation 
      * [Vulnerability Scanner with docker](https://docs.docker.com/engine/scan/#prerequisites)
      * [Vulnerability Scanner mit snyk](https://snyk.io/plans/)
@@ -84,6 +77,7 @@
       
   1. kubectl 
      * [Start pod (container with run && examples)](#start-pod-container-with-run-&&-examples)
+     * [Bash completion for kubectl](#bash-completion-for-kubectl)
      * [kubectl Spickzettle](#kubectl-spickzettle)
 
   1. kubectl - manifest - examples 
@@ -93,6 +87,17 @@
 
   1. Kubernetes - Documentation 
      * [Documentation zu microk8s plugins/addons](https://microk8s.io/docs/addons)
+
+  1. Linux und Docker Tipps & Tricks allgemein 
+     * [Auf ubuntu root-benutzer werden](#auf-ubuntu-root-benutzer-werden)
+     * [IP - Adresse abfragen](#ip---adresse-abfragen)
+     * [Hostname setzen](#hostname-setzen)
+     * [Proxy für Docker setzen](#proxy-für-docker-setzen)
+     * [vim einrückung für yaml-dateien](#vim-einrückung-für-yaml-dateien)
+     * [YAML Linter Online](http://www.yamllint.com/)
+     * [Läuft der ssh-server](#läuft-der-ssh-server)
+     * [Basis/Parent - Image erstellen](#basisparent---image-erstellen)
+     * [Eigenes unsichere Registry-Verwenden. ohne https](#eigenes-unsichere-registry-verwenden.-ohne-https)
 
 <div class="page-break"></div>
 
@@ -182,10 +187,13 @@ systemctl is-enabled snap.docker.dockerd.service
 
 
 ```
+## docker hub durchsuchen
+docker search hello-world
+
 docker run <image>
 ## z.b. // Zieht das image aus docker hub 
 ## hub.docker.com 
-docker run hello-word
+docker run hello-world
 
 ## images die lokal vorhanden 
 docker images 
@@ -198,8 +206,7 @@ docker container ls -a
 ## z.b hilfe für docker run 
 docker help run 
 
-## docker hub durchsuchen
-docker search hello-world 
+ 
 
 
 ```
@@ -207,11 +214,19 @@ docker search hello-world
 ### Logs anschauen - docker logs - mit Beispiel nginx
 
 
+### Allgemein 
 ```
 ## Erstmal nginx starten und container-id wird ausgegeben 
 docker run -d nginx 
 a234
 docker logs a234 # a234 sind die ersten 4 Ziffern der Container ID 
+```
+
+### Laufende Log-Ausgabe 
+
+```
+docker logs -f a234 
+## Abbrechen CTRL + c 
 ```
 
 ### docker run
@@ -243,14 +258,18 @@ docker stop ubuntu-container
 ## Kill it if it cannot be stopped -be careful
 docker kill ubuntu-container
 
+## Get nur, wenn der Container nicht mehr läuft 
 docker rm ubuntu-container
 
-## ooder alternative
+## oder alternative
 docker rm -f ubuntu-container 
 
 
 ## image löschen 
 docker rmi ubuntu:xenial 
+
+## falls Container noch vorhanden aber nicht laufend 
+docker rmi -f ubuntu:xenial 
 
 ```
 
@@ -260,6 +279,7 @@ docker rmi ubuntu:xenial
 ```
 ## besser 
 docker container ls 
+## Alle Container, auch die, die beendet worden sind 
 docker container ls -a 
 
 
@@ -277,6 +297,52 @@ docker ps -a
 
 ```
 docker inspect hello-web # hello-web = container name 
+```
+
+### Docker container in den Vordergrund bringen - attach
+
+
+### docker attach - walkthrough 
+
+```
+docker run -d ubuntu 
+1a4d...
+
+docker attach 1a4d 
+
+## Es ist leider mit dem Aufruf run nicht möglich, den prozess wieder in den Hintergrund zu bringen 
+
+```
+
+### interactiven Prozess nicht beenden (statt exit) 
+
+```
+docker run -it ubuntu bash  
+## ein exit würde jetzt den Prozess beenden
+## exit
+
+## Alternativ ohne beenden (detach) 
+## Geht aber nur beim start mit run -it 
+CTRL + P, dann CTRL + Q 
+
+```
+
+### Reference: 
+
+  * https://docs.docker.com/engine/reference/commandline/attach/
+
+### Aufräumen - container und images löschen
+
+
+### Alle nicht verwendeten container und images löschen 
+
+```
+## Alle container, die nicht laufen löschen 
+docker container prune 
+
+## Alle images, die nicht an eine container gebunden sind, löschen 
+docker images prune 
+
 ```
 
 ### Nginx mit portfreigabe laufen lassen
@@ -325,7 +391,7 @@ echo hello-docker
 ## docker build -t dockertrainereu/<dein-name>-hello-docker . 
 ## Beispiel
 docker build -t dockertrainereu/jm-hello-docker .
-docker run -i -t dockertrainereu/<dein-name>-hello-docker 
+docker run dockertrainereu/<dein-name>-hello-docker 
 
 docker login
 user: dockertrainereu 
@@ -356,16 +422,31 @@ CMD ["/bin/bash"]
 
 docker build -t myubuntu .
 docker images
+## -t wird benötigt, damit bash WEITER im Hintergrund im läuft.
+## auch mit -d (ohne -t) wird die bash ausgeführt, aber "das Terminal" dann direkt beendet 
+## -> container läuft dann nicht mehr 
 docker run -d -t --name container-ubuntu myubuntu
 docker container ls
 ## in den container reingehen mit dem namen des Containers: myubuntu 
 docker exec -it myubuntu bash
 ls -la
  
+ 
+## Zweiten Container starten
+docker run -d -t --name container-ubuntu2 myubuntu 
+
+## Ersten Container -> 2. anpingen 
+docker exec -it container-ubuntu bash 
+## Jeder container hat eine eigene IP 
+ping 172.17.0.3
+
+ 
 ```
 
 ### Nginx mit content aus html-ordner
 
+
+### Schritt 1: Simple Example 
 
 ```
 ## das gleich wie cd ~
@@ -387,13 +468,27 @@ COPY html /usr/share/nginx/html
 ## nameskürzel z.B. jm1 
 docker build -t dockertrainereu/jm1-hello-web . 
 docker images
+
+```
+
+
+### Schritt 2: Push build 
+
+```
+
 ## eventually you are not logged in 
 docker login 
 docker push dockertrainereu/jm1-hello-web 
 ##aus spass geloescht
 docker rmi dockertrainereu/jm1-hello-web
+
+```
+
+### Schritt 3: dokcer laufen lassen
+
+```
 ## und direkt aus der Registry wieder runterladen 
-docker run --name hello-web -p 8888:80 -d dockertrainereu/jm1-hello-web
+docker run --name hello-web -p 8080:80 -d dockertrainereu/jm1-hello-web
 
 ## laufenden Container anzeigen lassen
 docker container ls 
@@ -401,7 +496,6 @@ docker container ls
 docker ps 
 
 curl http://localhost:8080 
-
 
 
 ## 
@@ -625,8 +719,9 @@ docker inspect nginx_no_net
 docker network disconnect none nginx_no_net
 docker network connect test_net nginx_no_net 
 
-### löschen erst möglich, wenn es keine Endpoints 
+### Das Löschen von Netzwerken ist erst möglich, wenn es keine Endpoints 
 ### d.h. container die das Netzwerk verwenden 
+docker network rm test_net 
 ```
 
 
@@ -815,6 +910,9 @@ cd ../
 ##~/bautest
 docker-compose up -d 
 ## wird image gebaut und container gestartet 
+
+## Bei Veränderung vom Dockerfile, muss man den Parameter --build mitangeben 
+docker-compose up -d --build 
 ```
 
 ### Logs in docker - compose
@@ -832,155 +930,92 @@ docker-compose logs
 
 ### Docker Swarm Beispiele
 
-## Docker Tipps & Tricks allgemein 
 
-### Auf ubuntu root-benutzer werden
-
+### Generic examples 
 
 ```
-## kurs> 
-sudo su -
-## password von kurs eingegeben
-## wenn wir vorher der benutzer kurs waren
-```
+## should be at least version 1.24 
+docker info
 
-### IP - Adresse abfragen
+## only for one network interface
+docker swarm init
 
+## in our case, we need to decide what interface
+docker swarm init --advertise-addr 192.168.56.101
 
-```
-## IP-Adresse abfragen
-ip a
-```
+## is swarm active 
+docker info | grep -i swarm
+## When it is -> node command works 
+docker node ls
+## is the current node the manager 
+docker info | grep -i "is manager"
 
-### Hostname setzen
+## docker create additional overlay network 
+docker network ls
 
-
-```
-## als root 
-hostnamectl set-hostname server.training.local 
-## damit ist auch sichtbar im prompt 
-su - 
-```
-
-### Proxy für Docker setzen
-
-
-### Walktrough
+## what about my own node -> self
+docker node inspect self
+docker node inspect --pretty self
+docker node inspect --pretty self | less
 
 ```
-## as root
-systemctl list-units -t service | grep docker
-systemctl cat snap.docker.dockerd.service
-systemctl edit snap.docker.dockerd.service
-## in edit folgendes reinschreiben
-[Service]
-Environment="HTTP_PROXY=http://user01:password@10.10.10.10:8080/"
-Environment="HTTPS_PROXY=https://user01:password@10.10.10.10:8080/"
-Environment="NO_PROXY= hostname.example.com,172.10.10.10"
-
-systemctl show snap.docker.dockerd.service --property Environment
-systemctl restart snap.docker.dockerd.service
-systemctl cat snap.docker.dockerd.service
-cd /etc/systemd/system/snap.docker.dockerd.service.d/
-ls -la
-cat override.conf
-```
-
-### Ref
-
-  * https://www.thegeekdiary.com/how-to-configure-docker-to-use-proxy/
-
-### YAML Linter Online
-
-  * http://www.yamllint.com/
-
-### Läuft der ssh-server
-
 
 ```
-systemctl status sshd 
-systemctl status ssh
-```
-
-### Basis/Parent - Image erstellen
-
-
-### Auf Basis von debootstrap 
-
-```
-## Auf einem Debian oder Ubuntu - System 
-## folgende Schritte ausführen 
-## z.B. virtualbox -> Ubuntu 20.04. 
-
-### alles mit root durchführen
-apt install debootstrap
-cd
-debootstrap focal focal > /dev/null
-tar -C focal -c . | docker import - focal 
-
-## er gibt eine checksumme des images 
-## so kann ich das sehen
-## müsste focal:latest heissen
+## Create our first service 
+docker service create redis
 docker images
-
-## teilchen starten 
-docker run --name my_focal2 -dit focal:latest bash 
-
-## Dann kann ich danach reinwechseln 
-docker exec -it my_focal2 bash 
+docker service ls
+## if service-id start with  j 
+docker service inspect j
+docker service ps j
+docker service rm j
+docker service ls
 ```
 
-### Virtuelle Maschine Windows/OSX mit Vagrant erstellen
-
 ```
-## Installieren.
-https://vagrantup.com 
-## ins terminal 
-cd 
-cd Documents 
-mkdir ubuntu_20_04_test 
-cd ubuntu_20_04_test
-vagrant init ubuntu/focal64
-vagrant up 
-## Wenn die Maschine oben ist, kann direkt reinwechseln
-vagrant ssh 
-## in der Maschine kein pass notwendig zum Wechseln 
-sudo su -
+## Start with multiple replicas and name 
+docker service create --name my_redis --replicas 4 redis
+docker service ls
+## Welche tasks 
+docker service ps my_redis
+docker container ls
+docker service inspect my_redis
 
-## wenn ich raus will
-exit
-exit
-
-## Danach kann ich die maschine wieder zerstören
-vagrant destroy -f 
+## delete service
+docker service rm
 ```
 
+### Add additional node 
 
-### Ref:
+```
+## on first node, get join token 
+docker swarm join-token manager
 
-  * https://docs.docker.com/develop/develop-images/baseimages/
+## on second node execute join command
+docker swarm join --token SWMTKN-1-07jy3ym29au7u3isf1hfhgd7wpfggc1nia2kwtqfnfc8hxfczw-2kuhwlnr9i0nkje8lz437d2d5 192.168.56.101:2377
 
-### Eigenes unsichere Registry-Verwenden. ohne https
+## check with node command
+docker node ls 
 
-
-### Setup insecure registry (snap)
+## Make node a simple worker
+## Does not make, because no highavailable after crush node 1
+## Take at LEAST 3 NODES 
+docker node demote <node-name>
 
 ```
 
-systemctl restart 
+### expose port
 
 ```
-
-### Spiegel - Server (mirror -> registry-mirror) 
-
-```
-https://docs.docker.com/registry/recipes/mirror/
-
+docker service create --name my_web \
+                        --replicas 3 \
+                        --publish published=8080,target=80 \
+                        nginx
 ```
 
-### Ref:
+### Ref 
 
-  * https://docs.docker.com/registry/insecure/
+  * https://docs.docker.com/engine/swarm/services/
 
 ## Docker - Dokumentation 
 
@@ -1010,10 +1045,91 @@ https://docs.docker.com/registry/recipes/mirror/
   
 ## Wozu dient Kubernetes 
 
-  * Orchestrierung von Container 
+  * Orchestrierung von Containern
   * am gebräuchlisten aktuell Docker
 
 ### Aufbau
+
+
+### Schaubild 
+
+![Kubernetes Architecture - src: syseleven](https://www.syseleven.de/wp-content/uploads/2020/11/syseleven-webiste-loesungen-kubernetes-modell-800x400-web.jpg)
+
+### Komponenten / Grundbegriffe
+
+#### Master (Control Plane)
+
+##### Aufgaben 
+
+  * Der Master koordiniert den Cluster
+  * Der Master koordiniert alle Aktivitäten in Ihrem Cluster
+    * Planen von Anwendungen
+    * Verwalten des gewünschten Status der Anwendungen
+    * Skalieren von Anwendungen
+    * Rollout neuer Updates.
+
+##### Komponenten des Masters 
+
+###### etcd
+
+  * Verwalten der Konfiguration des Clusters (key/value - pairs) 
+  
+###### kube-controller-manager  
+  
+  * Zuständig für die Überwachung der Stati im Cluster mit Hilfe von endlos loops. 
+  * kommuniziert mit dem Cluster über die kubernetes-api (bereitgestellt vom kube-api-server)
+
+###### kube-api-server 
+
+  * provides api-frontend for administration (no gui)
+  * Exposes an HTTP API (users, parts of the cluster and external components communicate with it)
+  * REST API
+ 
+###### kube-scheduler 
+
+  * assigns Pods to Nodes. 
+  * scheduler determines which Nodes are valid placements for each Pod in the scheduling queue 
+    ( according to constraints and available resources )
+  * The scheduler then ranks each valid Node and binds the Pod to a suitable Node. 
+  * Reference implementation (other schedulers can be used)
+ 
+#### Nodes  
+
+  * Nodes (Knoten) sind die Arbeiter (Maschinen), die Anwendungen ausführen
+  * Ref: https://kubernetes.io/de/docs/concepts/architecture/nodes/
+
+#### Pod/Pods 
+
+  * Pods sind die kleinsten einsetzbaren Einheiten, die in Kubernetes erstellt und verwaltet werden können.
+  * Ein Pod (übersetzt Gruppe) ist eine Gruppe von einem oder mehreren Containern
+    * gemeinsam genutzter Speicher- und Netzwerkressourcen   
+    * Befinden sich immer auf dem gleich virtuellen Server 
+    
+### Control Plane Node (former: master) - components 
+
+### Node (Minion) - components 
+
+#### General 
+
+  * On the nodes we will rollout the applications
+
+#### kubelet
+
+```
+Node Agent that runs on every node (worker) 
+Er stellt sicher, dass Container in einem Pod ausgeführt werden.
+```
+
+#### Kube-proxy 
+
+  * Läuft auf jedem Node 
+  * = Netzwerk-Proxy für die Kubernetes-Netzwerk-Services.
+  * Kube-proxy verwaltet die Netzwerkkommunikation innerhalb oder außerhalb Ihres Clusters.
+  
+### Referenzen 
+
+  * https://www.redhat.com/de/topics/containers/kubernetes-architecture
+
 
 ### Welches System ? (minikube, micro8ks etc.)
 
@@ -1040,7 +1156,7 @@ So there are other tools/distri around helping you with that.
 
 #### Disadvantages 
 
-  * Plugins sind oftmals etwas schwierige zu aktivieren
+  * Plugins sind oftmals etwas schwierig zu aktivieren
 
 ### microk8s 
 
@@ -1110,6 +1226,8 @@ it is not suitable for production.
 ### Installation Ubuntu - snap
 
 
+### Walkthrough
+
 ```
 sudo snap install microk8s --classic
 ## Important enable dns // otherwice not dns lookup is possible 
@@ -1126,6 +1244,16 @@ source ~/.bashrc
 kubectl
 
 ```
+### Working with snaps 
+
+```
+snap info microk8s 
+
+```
+
+### Ref:
+
+  * https://microk8s.io/docs/setting-snap-channel
 
 ### Patch to next major release - cluster
 
@@ -1289,6 +1417,39 @@ kubectl describe pods foo2
 
   * https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#run
 
+### Bash completion for kubectl
+
+
+### Walkthrough 
+
+```
+apt install bash-completion
+source /usr/share/bash-completion/bash_completion
+## is it installed properly 
+type _init_completion
+
+## activate for all users 
+kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+
+## verifizieren - neue login shell
+su -
+
+## zum Testen
+kubectl g<TAB> 
+kubectl get 
+```
+### Alternative für k als alias für kubectl 
+
+```
+source <(kubectl completion bash)
+complete -F __start_kubectl k
+
+```
+
+### Reference 
+
+  * https://kubernetes.io/docs/tasks/tools/included/optional-kubectl-configs-bash-linux/
+
 ### kubectl Spickzettle
 
 
@@ -1302,9 +1463,9 @@ kubectl cluster-info
 kubectl api-resources 
 
 ## Hilfe zu object und eigenschaften bekommen
-kubectl describe pod 
-kubectl describe pod.metadata
-kubectl describe pod.metadata.name 
+kubectl explain pod 
+kubectl explain pod.metadata
+kubectl explain pod.metadata.name 
 
 ```
 
@@ -1341,7 +1502,7 @@ kubectl get pods --show-labels
 kubectl get pods -l app=nginx 
 
 ## Status eines Pods anzeigen 
-kubectl explain pod nginx 
+kubectl describe pod nginx 
 
 ## Pod löschen 
 kubectl delete pod nginx 
@@ -1615,3 +1776,174 @@ spec:
 ### Documentation zu microk8s plugins/addons
 
   * https://microk8s.io/docs/addons
+
+## Linux und Docker Tipps & Tricks allgemein 
+
+### Auf ubuntu root-benutzer werden
+
+
+```
+## kurs> 
+sudo su -
+## password von kurs eingegeben
+## wenn wir vorher der benutzer kurs waren
+```
+
+### IP - Adresse abfragen
+
+
+```
+## IP-Adresse abfragen
+ip a
+```
+
+### Hostname setzen
+
+
+```
+## als root 
+hostnamectl set-hostname server.training.local 
+## damit ist auch sichtbar im prompt 
+su - 
+```
+
+### Proxy für Docker setzen
+
+
+### Walktrough
+
+```
+## as root
+systemctl list-units -t service | grep docker
+systemctl cat snap.docker.dockerd.service
+systemctl edit snap.docker.dockerd.service
+## in edit folgendes reinschreiben
+[Service]
+Environment="HTTP_PROXY=http://user01:password@10.10.10.10:8080/"
+Environment="HTTPS_PROXY=https://user01:password@10.10.10.10:8080/"
+Environment="NO_PROXY= hostname.example.com,172.10.10.10"
+
+systemctl show snap.docker.dockerd.service --property Environment
+systemctl restart snap.docker.dockerd.service
+systemctl cat snap.docker.dockerd.service
+cd /etc/systemd/system/snap.docker.dockerd.service.d/
+ls -la
+cat override.conf
+```
+
+### Ref
+
+  * https://www.thegeekdiary.com/how-to-configure-docker-to-use-proxy/
+
+### vim einrückung für yaml-dateien
+
+
+### Ubuntu (im Unterverzeichnis /etc/vim - systemweit) 
+
+```
+hi CursorColumn cterm=NONE ctermbg=lightred ctermfg=white
+autocmd FileType y?ml setlocal ts=2 sts=2 sw=2 ai number expandtab cursorline cursorcolumn
+```
+
+### Testen 
+
+```
+vim test.yml 
+Eigenschaft: <return> # springt eingerückt in die nächste Zeile um 2 spaces eingerückt
+
+## evtl funktioniert vi test.yml auf manchen Systemen nicht, weil kein vim (vi improved) 
+
+
+```
+
+### YAML Linter Online
+
+  * http://www.yamllint.com/
+
+### Läuft der ssh-server
+
+
+```
+systemctl status sshd 
+systemctl status ssh
+```
+
+### Basis/Parent - Image erstellen
+
+
+### Auf Basis von debootstrap 
+
+```
+## Auf einem Debian oder Ubuntu - System 
+## folgende Schritte ausführen 
+## z.B. virtualbox -> Ubuntu 20.04. 
+
+### alles mit root durchführen
+apt install debootstrap
+cd
+debootstrap focal focal > /dev/null
+tar -C focal -c . | docker import - focal 
+
+## er gibt eine checksumme des images 
+## so kann ich das sehen
+## müsste focal:latest heissen
+docker images
+
+## teilchen starten 
+docker run --name my_focal2 -dit focal:latest bash 
+
+## Dann kann ich danach reinwechseln 
+docker exec -it my_focal2 bash 
+```
+
+### Virtuelle Maschine Windows/OSX mit Vagrant erstellen
+
+```
+## Installieren.
+https://vagrantup.com 
+## ins terminal 
+cd 
+cd Documents 
+mkdir ubuntu_20_04_test 
+cd ubuntu_20_04_test
+vagrant init ubuntu/focal64
+vagrant up 
+## Wenn die Maschine oben ist, kann direkt reinwechseln
+vagrant ssh 
+## in der Maschine kein pass notwendig zum Wechseln 
+sudo su -
+
+## wenn ich raus will
+exit
+exit
+
+## Danach kann ich die maschine wieder zerstören
+vagrant destroy -f 
+```
+
+
+### Ref:
+
+  * https://docs.docker.com/develop/develop-images/baseimages/
+
+### Eigenes unsichere Registry-Verwenden. ohne https
+
+
+### Setup insecure registry (snap)
+
+```
+
+systemctl restart 
+
+```
+
+### Spiegel - Server (mirror -> registry-mirror) 
+
+```
+https://docs.docker.com/registry/recipes/mirror/
+
+```
+
+### Ref:
+
+  * https://docs.docker.com/registry/insecure/
