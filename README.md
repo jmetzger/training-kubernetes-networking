@@ -61,6 +61,7 @@
      * [Warum Kubernetes, was macht Kubernetes](warum-kubernetes.md) 
      * [Aufbau](/kubernetes/architecture.md)
      * [Welches System ? (minikube, micro8ks etc.)](welches-system.md)
+     * [Installation - Welche Komponenten from scratch](/kubernetes/installation-components-overview.md)
 
   1. Kubernetes - microk8s (Installation und Management) 
      * [Installation Ubuntu - snap](microk8s/installation-ubuntu-snap.md)
