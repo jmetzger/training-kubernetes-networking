@@ -16,6 +16,26 @@ kubectl explain pod.metadata.name
 
 ```
 
+## Arbeiten mit manifesten 
+
+```
+kubectl apply -f nginx-replicaset.yml 
+# Wie ist aktuell die hinterlegte config im system
+kubectl get -o yaml -f nginx-replicaset.yml 
+
+# Änderung in nginx-replicaset.yml z.B. replicas: 4 
+# dry-run - was wird geändert 
+kubectl diff -f nginx-replicaset.yml 
+
+# anwenden 
+kubectl apply -f nginx-replicaset.yml 
+
+# Alle Objekte aus manifest löschen
+kubectl delete -f nginx-replicaset.yml 
+
+
+```
+
 ## Ausgabeformate 
 
 ```
@@ -26,6 +46,7 @@ kubectl get pods -o json
 
 # gilt natürluch auch für andere kommandos
 kubectl get deploy -o json 
+kubectl get deploy -o yaml 
 ```
 
 
@@ -74,6 +95,8 @@ kubectl get deployments
 kubectl get deployments --namespace=kube-system 
 kubectl get deployments -n kube-system 
 ```
+
+
 
 ## Referenz
 
