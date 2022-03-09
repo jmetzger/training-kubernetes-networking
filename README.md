@@ -76,6 +76,7 @@
   1. Kubernetes - API - Objekte
      * [Welche API-Objekte gibt es? (Kommando)](/kubernetes/api-resources.md)
      * [Was sind Deployments](/kubernetes/deployments.md)
+     * [Service - Objekt und IP](/kubernetes/service.md)
       
   1. kubectl 
      * [Start pod (container with run && examples)](/kubectl/run-with-example.md)
