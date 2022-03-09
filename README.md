@@ -87,6 +87,9 @@
      * [03b Example with service and nginx](/kubectl-examples/03b-service.md)
      * [04 Ingress mit einfachem Beispiel](/kubectl-examples/04-ingress-nginx.md)
 
+  1. Kubernetes - Wartung 
+     [kubectl drain/uncordon](/kubectl/uncordon-drain.md)
+
   1. Kubernetes - Documentation 
      * [Documentation zu microk8s plugins/addons](https://microk8s.io/docs/addons)
 
