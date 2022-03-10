@@ -9,6 +9,20 @@
   * It is tight into the control plane, so it knows about the objects 
   * Uses the api to find out about Kubernetes 
 
+## Setup a storage class (Where to store backup) 
+
+  * https://docs.kasten.io/latest/install/storage.html#direct-provider-integration
+
+## Inject backup into a namespace to be used by app 
+
+  * https://docs.kasten.io/latest/install/generic.html#using-sidecars
+
+## Restore:
+
+```
+Restore is done on the K10 - Interface 
+```
+
 ## Ref: 
 
   * https://www.kasten.io 
