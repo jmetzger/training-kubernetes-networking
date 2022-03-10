@@ -9,7 +9,31 @@ kubectl label nodes n17 rechenzentrum=rz2
 kubectl label nodes n27 rechenzentrum=rz2
 
 kubectl get nodes --show-labels
+```
 
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 9 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+
+      nodeSelector:
+        rechenzentrum: rz2
 
 # Let's rewrite that to deployment 
 apiVersion: v1
