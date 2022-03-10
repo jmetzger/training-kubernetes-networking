@@ -78,6 +78,7 @@
      * [Api Versionierung Lifetime](/kubernetes/api-versionierung-lifetime.md)
      * [Was sind Deployments](/kubernetes/deployments.md)
      * [Service - Objekt und IP](/kubernetes/service.md)
+     * [Ingress -> Nginx Proxy](/kubernetes/ingress.md)
       
   1. kubectl 
      * [Start pod (container with run && examples)](/kubectl/run-with-example.md)
