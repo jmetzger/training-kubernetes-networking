@@ -23,6 +23,12 @@
 Restore is done on the K10 - Interface 
 ```
 
+## Creating MYSQL - Backup / Restore with Kasten 
+
+  * TODO: maybe move this to a seperate page 
+  * https://blog.kasten.io/kubernetes-backup-and-restore-for-mysql
+
+
 ## Ref: 
 
   * https://www.kasten.io 
