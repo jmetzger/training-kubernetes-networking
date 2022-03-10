@@ -93,8 +93,8 @@
      * [04 Ingress mit einfachem Beispiel](/kubectl-examples/04-ingress-nginx.md)
      * [05 Ingress mit Permanent Redirect](/kubectl-examples/05-ingress-permanent-redirect.md)
 
-  1. Kubernetes - Monitoring (microk8s) 
-     * [metrics-server aktivieren (microk8s)](/microk8s/metrics-server.md)
+  1. Kubernetes - Monitoring (microk8s und vanilla) 
+     * [metrics-server aktivieren (microk8s und vanilla)](/microk8s/metrics-server.md)
 
   1. Kubernetes - Backups 
      + [Kubernetes Aware Cloud Backup - kasten.io](/backups/cluster-backup-kasten-io.md)
