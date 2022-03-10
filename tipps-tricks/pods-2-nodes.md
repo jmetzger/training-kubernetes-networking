@@ -4,9 +4,9 @@
 
 ```
 # leave n3 as is 
-kubectl label nodes n3 rechenzentrum=rz1
-kubectl label nodes n2 rechenzentrum=rz2
-kubectl label nodes n1 rechenzentrum=rz2
+kubectl label nodes n7 rechenzentrum=rz1
+kubectl label nodes n17 rechenzentrum=rz2
+kubectl label nodes n27 rechenzentrum=rz2
 
 # Let's rewrite that to deployment 
 apiVersion: v1
