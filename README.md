@@ -85,6 +85,7 @@
      * [Bash completion for kubectl](/kubectl/bash-completion.md)
      * [kubectl Spickzettel](/kubectl/spickzettel.md)
      * [Tipps&Tricks zu Deploymnent - Rollout](/kubectl/rollout.md) 
+     
 
   1. kubectl - manifest - examples 
      * [02 Pod nginx mit Port und IP innerhalb des Clusters](/kubectl-examples/02-pod-nginx-exposed.md)
@@ -100,6 +101,7 @@
 
   1. Kubernetes - Wartung 
      * [kubectl drain/uncordon](/kubectl/uncordon-drain.md)
+     * [Alte manifeste konvertieren mit convert plugin](/kubectl/convert-plugin.md)
 
   1. Kubernetes - Documentation 
      * [Documentation zu microk8s plugins/addons](https://microk8s.io/docs/addons)
