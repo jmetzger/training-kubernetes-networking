@@ -24,3 +24,8 @@ kubectl top nodes
 kubectl top pods 
 
 ```
+
+## Kubernetes 
+
+  * https://kubernetes-sigs.github.io/metrics-server/
+  * kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
