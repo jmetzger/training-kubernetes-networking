@@ -12,6 +12,7 @@ kubectl get nodes --show-labels
 ```
 
 ```
+# nginx-deployment 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -31,7 +32,6 @@ spec:
         image: nginx:latest
         ports:
         - containerPort: 80
-
       nodeSelector:
         rechenzentrum: rz2
 
