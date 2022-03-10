@@ -1,5 +1,9 @@
 # Kubernetes Native Backup (kasten.io) 
 
+## Background 
+
+  * Belongs to veeam (one of the major companies for backup software) 
+
 ## What does Kubernetes Native Backup mean ? 
 
   * It is tight into the control plane, so it knows about the objects 
