@@ -1,5 +1,12 @@
 # Ingress Nginx 
 
+## Prerequisits
+
+```
+# Ingress Controller muss aktiviert sein 
+microk8s enable ingress
+```
+
 ## Walkthrough 
 
 ```
