@@ -75,6 +75,7 @@
 
   1. Kubernetes - API - Objekte
      * [Welche API-Objekte gibt es? (Kommando)](/kubernetes/api-resources.md)
+     * [Versionierung - Lifetime](/kubernetes/api-versionierung-lifetime.md)
      * [Was sind Deployments](/kubernetes/deployments.md)
      * [Service - Objekt und IP](/kubernetes/service.md)
       
