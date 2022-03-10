@@ -90,6 +90,7 @@
      * [02 Pod nginx mit Port und IP innerhalb des Clusters](/kubectl-examples/02-pod-nginx-exposed.md)
      * [03b Example with service and nginx](/kubectl-examples/03b-service.md)
      * [04 Ingress mit einfachem Beispiel](/kubectl-examples/04-ingress-nginx.md)
+     * [05 Ingress mit Permanent Redirect](/kubectl-examples/05-ingress-permanent-redirect.md)
 
   1. Kubernetes - Monitoring (microk8s) 
      * [metrics-server aktivieren (microk8s)](/microk8s/metrics-server.md)
