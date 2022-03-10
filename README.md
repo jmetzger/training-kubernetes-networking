@@ -93,6 +93,8 @@
   1. Kubernetes - Monitoring (microk8s) 
      * [metrics-server aktivieren (microk8s)](/microk8s/metrics-server.md)
 
+  1. Kubernetes - Backups 
+     + [Kubernetes Aware Cloud Backup - kasten.io](/backups/cluster-backup-kasten-io.md)
 
   1. Kubernetes - Wartung 
      * [kubectl drain/uncordon](/kubectl/uncordon-drain.md)
