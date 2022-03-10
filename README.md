@@ -82,7 +82,7 @@
   1. kubectl 
      * [Start pod (container with run && examples)](/kubectl/run-with-example.md)
      * [Bash completion for kubectl](/kubectl/bash-completion.md)
-     * [kubectl Spickzettle](/kubectl/spickzettel.md)
+     * [kubectl Spickzettel](/kubectl/spickzettel.md)
      * [Tipps&Tricks zu Deploymnent - Rollout](/kubectl/rollout.md) 
 
   1. kubectl - manifest - examples 
