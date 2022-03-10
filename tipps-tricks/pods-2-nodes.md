@@ -24,7 +24,7 @@ spec:
     image: nginx
     imagePullPolicy: IfNotPresent
   nodeSelector:
-    disktype: ssd
+    rechenzentrum=rz2
 
 
 
