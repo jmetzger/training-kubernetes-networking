@@ -3,59 +3,49 @@
 ## Example
 
 ```
-apiVersion: networking.k8s.io/v1beta1
+# redirect.yml 
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: my-namespace
+
+---
+
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-   annotations:
-     nginx.ingress.kubernetes.io/permanent-redirect: https://nginx.redirect/destination
-     nginx.ingress.kubernetes.io/permanent-redirect-code: '308'
-   name: destination-home
-   namespace: myNamespace
+  annotations:
+    nginx.ingress.kubernetes.io/permanent-redirect: https://www.google.de
+    nginx.ingress.kubernetes.io/permanent-redirect-code: "308"
+  creationTimestamp: null
+  name: destination-home
+  namespace: my-namespace
 spec:
-   rules:
-   - host: nginx.redirect
-     http:
-       paths:
-       - backend:
-           serviceName: http-svc
-           servicePort: 80
-         path: /source
+  rules:
+  - host: web.training.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: http-svc
+            port:
+              number: 80
+        path: /source
+        pathType: ImplementationSpecific
+```
 
+```
+Achtung: host-eintrag auf Rechner machen, von dem aus man zugreift 
+
+/etc/hosts 
+45.23.12.12 web.training.local
 ```
 
 
-
-## Example 
-
 ```
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-   annotations:
-     nginx.ingress.kubernetes.io/permanent-redirect: https://nginx.redirect/destination
-     nginx.ingress.kubernetes.io/permanent-redirect-code: '308'
-   name: destination-home
-   namespace: myNamespace
- spec:
-   rules:
-   - host: nginx.redirect
-     http:
-       paths:
-       - backend:
-           serviceName: http-svc
-           servicePort: 80
-         path: /source
-
-
-curl -I  http://nginx.redirect/source
+curl -I  http://web.training.local/source
 HTTP/1.1 308 
 Permanent Redirect 
-Location: https://nginx.redirect/destination
-curl -I  http://nginx.redirect/source/bar 
-HTTP/1.1 308 
-Permanent Redirect 
-Location: https://nginx.redirect/destination
-
 
 ```
 
