@@ -8,6 +8,9 @@ kubectl label nodes n7 rechenzentrum=rz1
 kubectl label nodes n17 rechenzentrum=rz2
 kubectl label nodes n27 rechenzentrum=rz2
 
+kubectl get nodes --show-labels
+
+
 # Let's rewrite that to deployment 
 apiVersion: v1
 kind: Pod
