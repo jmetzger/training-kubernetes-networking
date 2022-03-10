@@ -11,7 +11,7 @@ metadata:
      nginx.ingress.kubernetes.io/permanent-redirect-code: '308'
    name: destination-home
    namespace: myNamespace
- spec:
+spec:
    rules:
    - host: nginx.redirect
      http:
