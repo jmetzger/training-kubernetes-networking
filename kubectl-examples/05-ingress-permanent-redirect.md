@@ -1,5 +1,30 @@
 # Ingress Permanent Redirect (nginx) 
 
+## Example
+
+```
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+   annotations:
+     nginx.ingress.kubernetes.io/permanent-redirect: https://nginx.redirect/destination
+     nginx.ingress.kubernetes.io/permanent-redirect-code: '308'
+   name: destination-home
+   namespace: myNamespace
+ spec:
+   rules:
+   - host: nginx.redirect
+     http:
+       paths:
+       - backend:
+           serviceName: http-svc
+           servicePort: 80
+         path: /source
+
+```
+
+
+
 ## Example 
 
 ```
