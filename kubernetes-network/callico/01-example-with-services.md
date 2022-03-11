@@ -99,7 +99,9 @@ http://164.92.255.234:30002/
 ```
 
 ```
-kubectl delete stars client 
+# Alles wieder löschen 
+kubectl delete ns client stars management-ui
+
 
 ```
 
