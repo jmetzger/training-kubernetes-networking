@@ -52,6 +52,8 @@ wget https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-d
 ## Let us look into this: 
 cat allow-ui.yaml 
 cat allow-ui-client.yaml
+kubectl apply -f allow-ui.yaml
+kubectl apply -f allow-ui-client.yaml 
 
 ```
 
