@@ -12,11 +12,11 @@
 
 ## Welche gibt es ? 
 
-  * Flanell 
+  * Flanel
   * Canal 
   * Calico 
   
-## Flannell
+## Flannel
 
 ### Overlay - Netzwerk 
 
