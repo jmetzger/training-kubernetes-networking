@@ -82,6 +82,7 @@ kubectl apply -f nfs.yml
 ```
 # deployment including mount 
 # vi deploy.yml 
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-deployment
