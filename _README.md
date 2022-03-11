@@ -75,26 +75,36 @@
 
   1. Kubernetes - API - Objekte
      * [Welche API-Objekte gibt es? (Kommando)](#welche-api-objekte-gibt-es-kommando)
+     * [Api Versionierung Lifetime](#api-versionierung-lifetime)
      * [Was sind Deployments](#was-sind-deployments)
      * [Service - Objekt und IP](#service---objekt-und-ip)
+     * [Ingress -> Nginx Proxy](#ingress-->-nginx-proxy)
       
   1. kubectl 
      * [Start pod (container with run && examples)](#start-pod-container-with-run-&&-examples)
      * [Bash completion for kubectl](#bash-completion-for-kubectl)
-     * [kubectl Spickzettle](#kubectl-spickzettle)
+     * [kubectl Spickzettel](#kubectl-spickzettel)
      * [Tipps&Tricks zu Deploymnent - Rollout](#tipps&tricks-zu-deploymnent---rollout)
+     
 
   1. kubectl - manifest - examples 
      * [02 Pod nginx mit Port und IP innerhalb des Clusters](#02-pod-nginx-mit-port-und-ip-innerhalb-des-clusters)
      * [03b Example with service and nginx](#03b-example-with-service-and-nginx)
      * [04 Ingress mit einfachem Beispiel](#04-ingress-mit-einfachem-beispiel)
+     * [05 Ingress mit Permanent Redirect](#05-ingress-mit-permanent-redirect)
 
-  1. Kubernetes - Monitoring (microk8s) 
-     * [metrics-server aktivieren (microk8s)](#metrics-server-aktivieren-microk8s)
+  1. Kubernetes - Monitoring (microk8s und vanilla) 
+     * [metrics-server aktivieren (microk8s und vanilla)](#metrics-server-aktivieren-microk8s-und-vanilla)
 
+  1. Kubernetes - Backups 
+     + [Kubernetes Aware Cloud Backup - kasten.io](/backups/cluster-backup-kasten-io.md)
 
   1. Kubernetes - Wartung 
      * [kubectl drain/uncordon](#kubectl-drainuncordon)
+     * [Alte manifeste konvertieren mit convert plugin](#alte-manifeste-konvertieren-mit-convert-plugin)
+
+  1. Kubernetes - Tipps & Tricks 
+     * [Assigning Pods to Nodes](#assigning-pods-to-nodes)
 
   1. Kubernetes - Documentation 
      * [Documentation zu microk8s plugins/addons](https://microk8s.io/docs/addons)
@@ -1601,6 +1611,22 @@ kubectl api-resources
 
 ```
 
+### Api Versionierung Lifetime
+
+
+### Wie ist die deprecation policy ? 
+
+  * https://kubernetes.io/docs/reference/using-api/deprecation-policy/
+
+### Was ist wann deprecated ? 
+
+  * https://kubernetes.io/docs/reference/using-api/deprecation-guide/
+
+
+### Reference: 
+ 
+  * https://kubernetes.io/docs/reference/using-api/
+
 ### Was sind Deployments
 
 
@@ -1676,6 +1702,15 @@ LoadBalancer - an external balancer is used (that is mainly the case in
 
   * https://kubernetes.io/docs/concepts/services-networking/service/
 
+### Ingress -> Nginx Proxy
+
+
+
+
+### Ref. / Dokumentation 
+
+  * https://matthewpalmer.net/kubernetes-app-developer/articles/kubernetes-ingress-guide-nginx-example.html
+
 ## kubectl 
 
 ### Start pod (container with run && examples)
@@ -1741,7 +1776,7 @@ complete -F __start_kubectl k
 
   * https://kubernetes.io/docs/tasks/tools/included/optional-kubectl-configs-bash-linux/
 
-### kubectl Spickzettle
+### kubectl Spickzettel
 
 
 ### Allgemein 
@@ -1959,6 +1994,13 @@ spec:
 ### 04 Ingress mit einfachem Beispiel
 
 
+### Prerequisits
+
+```
+## Ingress Controller muss aktiviert sein 
+microk8s enable ingress
+```
+
 ### Walkthrough 
 
 ```
@@ -2108,9 +2150,73 @@ spec:
                 number: 80                
 ```
 
-## Kubernetes - Monitoring (microk8s) 
+### 05 Ingress mit Permanent Redirect
 
-### metrics-server aktivieren (microk8s)
+
+### Example
+
+```
+## redirect.yml 
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: my-namespace
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/permanent-redirect: https://www.google.de
+    nginx.ingress.kubernetes.io/permanent-redirect-code: "308"
+  creationTimestamp: null
+  name: destination-home
+  namespace: my-namespace
+spec:
+  rules:
+  - host: web.training.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: http-svc
+            port:
+              number: 80
+        path: /source
+        pathType: ImplementationSpecific
+```
+
+```
+Achtung: host-eintrag auf Rechner machen, von dem aus man zugreift 
+
+/etc/hosts 
+45.23.12.12 web.training.local
+```
+
+
+```
+curl -I  http://web.training.local/source
+HTTP/1.1 308 
+Permanent Redirect 
+
+```
+
+### Umbauen zu google ;o) 
+
+```
+This annotation allows to return a permanent redirect instead of sending data to the upstream. For example nginx.ingress.kubernetes.io/permanent-redirect: https://www.google.com would redirect everything to Google.
+
+```
+
+### Refs:
+
+  * https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md#permanent-redirect
+  * 
+
+## Kubernetes - Monitoring (microk8s und vanilla) 
+
+### metrics-server aktivieren (microk8s und vanilla)
 
 
 ### Warum ? Was macht er ? 
@@ -2138,6 +2244,13 @@ kubectl top pods
 
 ```
 
+### Kubernetes 
+
+  * https://kubernetes-sigs.github.io/metrics-server/
+  * kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+## Kubernetes - Backups 
+
 ## Kubernetes - Wartung 
 
 ### kubectl drain/uncordon
@@ -2162,6 +2275,99 @@ kubectl rollout restart deploy/webserver
 
 
 ```
+
+### Alte manifeste konvertieren mit convert plugin
+
+
+### What is about? 
+
+  * Plugins needs to be installed seperately on Client (or where you have your manifests) 
+
+### Walkthrough 
+
+```
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl-convert"
+## Validate the checksum
+curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl-convert.sha256"
+echo "$(<kubectl-convert.sha256) kubectl-convert" | sha256sum --check
+## install 
+sudo install -o root -g root -m 0755 kubectl-convert /usr/local/bin/kubectl-convert
+
+## Does it work 
+kubectl convert --help 
+
+## Works like so 
+## Convert to the newest version 
+## kubectl convert -f pod.yaml
+
+```
+
+### Reference 
+
+  * https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-kubectl-convert-plugin 
+
+## Kubernetes - Tipps & Tricks 
+
+### Assigning Pods to Nodes
+
+
+### Walkthrough 
+
+```
+## leave n3 as is 
+kubectl label nodes n7 rechenzentrum=rz1
+kubectl label nodes n17 rechenzentrum=rz2
+kubectl label nodes n27 rechenzentrum=rz2
+
+kubectl get nodes --show-labels
+```
+
+```
+## nginx-deployment 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 9 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+      nodeSelector:
+        rechenzentrum: rz2
+
+## Let's rewrite that to deployment 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    env: test
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    imagePullPolicy: IfNotPresent
+  nodeSelector:
+    rechenzentrum=rz2
+
+
+
+```
+
+### Ref:
+
+  * https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
 
 ## Kubernetes - Documentation 
 
