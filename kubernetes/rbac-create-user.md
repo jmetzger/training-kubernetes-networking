@@ -32,8 +32,8 @@ kubectl get pods
 ```
 cd 
 mkdir -p manifests/rbac
-vi namespace.json
 ##  Minischritt 1:
+vi namespace.json
 {
   "apiVersion": "v1",
   "kind": "Namespace",
@@ -65,11 +65,15 @@ kubectl apply -f role.yaml
 ## Minischritt 3:
 ## Verknüpfung Role zu Benutzer (=rolebinding) 
 
-kubectl create rolebinding rolebindin-training-pods --role role-training-pods --user training
+kubectl create rolebinding rolebinding-training-pods --role role-training-pods --user training
 
 ```
 
-
+```
+## Minischritt 4:
+kubectl config use-context trainingc 
+kubectl get pods 
+```
 
 ## Ref: 
 
