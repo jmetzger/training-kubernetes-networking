@@ -53,4 +53,20 @@
 ### Vorteile 
 
   * ISTIO integrierbar (Mesh - Netz) 
-  * Performance etwas besser als Flannel (weil keine Encapsulation) 
+  * Performance etwas besser als Flannel (weil keine Encapsulation)
+
+### Referenz 
+  * https://projectcalico.docs.tigera.io/security/calico-network-policy
+
+## microk8s Vergleich 
+
+  * https://microk8s.io/compare
+
+```
+snap.microk8s.daemon-flanneld
+Flannel is a CNI which gives a subnet to each host for use with container runtimes.
+
+Flanneld runs if ha-cluster is not enabled. If ha-cluster is enabled, calico is run instead.
+
+The flannel daemon is started using the arguments in ${SNAP_DATA}/args/flanneld. For more information on the configuration, see the flannel documentation.
+```
