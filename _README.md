@@ -79,7 +79,16 @@
      * [Was sind Deployments](#was-sind-deployments)
      * [Service - Objekt und IP](#service---objekt-und-ip)
      * [Ingress -> Nginx Proxy](#ingress-->-nginx-proxy)
-      
+
+  1. Kubernetes - RBAC 
+     * [Nutzer einrichten](#nutzer-einrichten)
+ 
+    
+  1. Kubernetes - Netzwerk (CNI's) 
+     * [Übersicht Netzwerke](#übersicht-netzwerke)
+     * [Callico - nginx example](#callico---nginx-example)
+     * [Callico - client-backend-ui-example](#callico---client-backend-ui-example)
+   
   1. kubectl 
      * [Start pod (container with run && examples)](#start-pod-container-with-run-&&-examples)
      * [Bash completion for kubectl](#bash-completion-for-kubectl)
@@ -96,6 +105,9 @@
   1. Kubernetes - Monitoring (microk8s und vanilla) 
      * [metrics-server aktivieren (microk8s und vanilla)](#metrics-server-aktivieren-microk8s-und-vanilla)
 
+  1. Kubernetes - Shared Volumes 
+     * [Shared Volumes with nfs](#shared-volumes-with-nfs)
+
   1. Kubernetes - Backups 
      + [Kubernetes Aware Cloud Backup - kasten.io](/backups/cluster-backup-kasten-io.md)
 
@@ -108,6 +120,8 @@
 
   1. Kubernetes - Documentation 
      * [Documentation zu microk8s plugins/addons](https://microk8s.io/docs/addons)
+     * [LDAP-Anbindung](https://github.com/apprenda-kismatic/kubernetes-ldap)
+     * [Shared Volumes - Welche gibt es ?](https://kubernetes.io/docs/concepts/storage/volumes/)
 
   1. Linux und Docker Tipps & Tricks allgemein 
      * [Auf ubuntu root-benutzer werden](#auf-ubuntu-root-benutzer-werden)
@@ -1711,6 +1725,366 @@ LoadBalancer - an external balancer is used (that is mainly the case in
 
   * https://matthewpalmer.net/kubernetes-app-developer/articles/kubernetes-ingress-guide-nginx-example.html
 
+## Kubernetes - RBAC 
+
+### Nutzer einrichten
+
+
+### Enable RBAC in microk8s 
+
+```
+microk8s enable rbac 
+
+```
+
+### Schritt 1: Systemaccount anlegen und in kubeconfig hinterlegen 
+
+```
+kubectl create -n kube-system  serviceaccount training
+## extract name of the token from here 
+kubectl get -n kube-system  serviceaccount training -o yaml
+
+## Secret auslesen und base64 dekodieren 
+## $() geht nur in der bash 
+TOKEN=$(kubectl get -n kube-system secret training-token-nxdfl -o jsonpath='{.data.token}' | base64 --decode)
+echo $TOKEN
+kubectl config set-credentials training --token=$TOKEN
+## trainingc vorher in .kube/config eingetragen 
+kubectl config use-context trainingc
+
+## Hier reichen die Rechte nicht aus 
+kubectl get pods
+## Error from server (Forbidden): pods is forbidden: User "system:serviceaccount:kube-system:training" cannot list # resource "pods" in API group "" in the namespace "default"
+```
+
+### Schritt 2: Role und Rolebinding festlegen 
+
+```
+cd 
+mkdir -p manifests/rbac
+###  Minischritt 1:
+
+## namespace.yml:
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: training
+  labels:
+    name: training
+
+kubectl apply -f namespace.yaml
+
+### Minischritt 2:
+## vi role.yaml 
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: training
+  name: role-training-pods
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
+
+kubectl apply -f role.yaml
+
+### Minischritt 3:
+### Verknüpfung Role zu Benutzer (=rolebinding) 
+
+kubectl create rolebinding rolebinding-training-pods --role role-training-pods --user training
+
+```
+
+```
+### Minischritt 4:
+kubectl config use-context trainingc 
+kubectl get pods 
+```
+
+### Ref: 
+
+ * https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengaddingserviceaccttoken.htm
+ * https://microk8s.io/docs/multi-user
+
+## Kubernetes - Netzwerk (CNI's) 
+
+### Übersicht Netzwerke
+
+
+### CNI 
+
+  * Common Network Interface
+  * Fest Definition, wie Container mit Netzwerk-Bibliotheken kommunizieren
+
+### Docker - Container oder andere 
+
+  * Container wird hochgefahren -> über CNI -> zieht Netzwerk - IP  hoch. 
+  * Container witd runtergahren -> uber CNI -> Netzwerk - IP wird released 
+
+### Welche gibt es ? 
+
+  * Flanel
+  * Canal 
+  * Calico 
+  
+### Flannel
+
+#### Overlay - Netzwerk 
+
+  * virtuelles Netzwerk was sich oben drüber und eigentlich auf Netzwerkebene nicht existiert
+  * VXLAN 
+
+#### Vorteile 
+
+  * Guter einfacher Einstieg 
+  * redziert auf eine Binary flanneld 
+
+#### Nachteile 
+
+  * keine Firewall - Policies möglich 
+  * keine klassichen Netzwerk-Tools zum Debuggen möglich. 
+
+### Canal 
+
+#### General 
+
+  * Auch ein Overlay - Netzwerk 
+  * Unterstüzt auch policies 
+
+### Calico
+
+#### Generell 
+
+  * klassische Netzwerk (BGP)
+
+#### Vorteile gegenüber Flannel 
+
+  * Policy über Kubernetes Object (NetworkPolicies)
+
+#### Vorteile 
+
+  * ISTIO integrierbar (Mesh - Netz) 
+  * Performance etwas besser als Flannel (weil keine Encapsulation)
+
+#### Referenz 
+  * https://projectcalico.docs.tigera.io/security/calico-network-policy
+
+### microk8s Vergleich 
+
+  * https://microk8s.io/compare
+
+```
+snap.microk8s.daemon-flanneld
+Flannel is a CNI which gives a subnet to each host for use with container runtimes.
+
+Flanneld runs if ha-cluster is not enabled. If ha-cluster is enabled, calico is run instead.
+
+The flannel daemon is started using the arguments in ${SNAP_DATA}/args/flanneld. For more information on the configuration, see the flannel documentation.
+```
+
+### Callico - nginx example
+
+
+```
+## Schritt 1:
+kubectl create ns policy-demo
+kubectl create deployment --namespace=policy-demo nginx --image=nginx
+kubectl expose --namespace=policy-demo deployment nginx --port=80
+## lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
+kubectl run --namespace=policy-demo access --rm -ti --image busybox /bin/sh
+```
+```
+## innerhalb der shell 
+wget -q nginx -O -
+```
+```
+## Schritt 2: Policy festlegen, dass kein Ingress-Traffic erlaubt
+## in diesem namespace: policy-demo 
+kubectl create -f - <<EOF
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: default-deny
+  namespace: policy-demo
+spec:
+  podSelector:
+    matchLabels: {}
+EOF
+## lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
+kubectl run --namespace=policy-demo access --rm -ti --image busybox /bin/sh
+```
+
+```
+## innerhalb der shell 
+wget -q nginx -O -
+```
+
+```
+## Schritt 3: Zugriff erlauben von pods mit dem Label run=access 
+kubectl create -f - <<EOF
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: access-nginx
+  namespace: policy-demo
+spec:
+  podSelector:
+    matchLabels:
+      app: nginx
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            run: access
+EOF
+
+## lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
+## pod hat durch run -> access automatisch das label run:access zugewiesen 
+kubectl run --namespace=policy-demo access --rm -ti --image busybox /bin/sh
+```
+
+```
+## innerhalb der shell 
+wget -q nginx -O -
+```
+
+``` 
+kubectl run --namespace=policy-demo no-access --rm -ti --image busybox /bin/sh
+```
+
+```
+## in der shell  
+wget -q nginx -O -
+```
+
+```
+
+kubectl delete ns policy-demo 
+
+```
+
+
+### Ref:
+
+  * https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-basic
+
+### Callico - client-backend-ui-example
+
+
+### Walkthrough 
+
+```
+cd
+mkdir -p manifests/callico/example1 
+cd manifests/callico/example1 
+```
+
+```
+### Step 1: Create containers 
+
+kubectl create -f https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/manifests/00-namespace.yaml
+kubectl create -f https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/manifests/01-management-ui.yaml
+kubectl create -f https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/manifests/02-backend.yaml
+kubectl create -f https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/manifests/03-frontend.yaml
+kubectl create -f https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/manifests/04-client.yaml
+
+kubectl get pods --all-namespaces --watch
+kubectl get ns 
+```
+
+```
+### Step 2: Check connections in the browser (ui) 
+### Use IP of one of your nodes here 
+http://164.92.255.234:30002/
+```
+
+```
+### Step 3: Download default-deny rules 
+wget https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/policies/default-deny.yaml
+### Let us have look into it 
+### Deny all pods 
+cat default-deny.yaml 
+### Apply this for 2 namespaces created in Step 1
+kubectl -n client apply -f default-deny.yaml 
+kubectl -n stars apply -f default-deny.yaml 
+
+```
+
+```
+### Step 4: Refresh UI and see, that there are no connections possilbe 
+http://164.92.255.234:30002/
+```
+
+```
+### Step 5: 
+### Allow traffic by policy 
+wget https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/policies/allow-ui.yaml
+wget https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/policies/allow-ui-client.yaml
+### Let us look into this: 
+cat allow-ui.yaml 
+cat allow-ui-client.yaml
+kubectl apply -f allow-ui.yaml
+kubectl apply -f allow-ui-client.yaml 
+
+```
+
+```
+### Step 6: 
+### Refresh management ui 
+### Now all traffic is allowed
+http://164.92.255.234:30002/
+```
+
+```
+### Step 7:
+### Restrict traffic to backend 
+wget https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/policies/backend-policy.yaml
+cat backend-policy.yaml 
+kubectl apply -f backend-policy.yaml
+
+
+```
+
+```
+### Step 8:
+### Refresh 
+## The frontend can now access the backend (on TCP port 6379 only).
+## The backend cannot access the frontend at all.
+## The client cannot access the frontend, nor can it access the backend
+http://164.92.255.234:30002/
+
+
+```
+
+```
+### Step 9: 
+wget https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/policies/frontend-policy.yaml
+cat frontend-policy.yaml 
+kubectl apply -f frontend-policy.yaml 
+```
+
+```
+### Step 10:
+## Refresh ui 
+## Client can now access Frontend 
+http://164.92.255.234:30002/
+
+```
+
+```
+## Alles wieder löschen 
+kubectl delete ns client stars management-ui
+
+
+```
+
+
+
+### Reference 
+
+  * https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/kubernetes-demo
+
 ## kubectl 
 
 ### Start pod (container with run && examples)
@@ -2249,6 +2623,146 @@ kubectl top pods
   * https://kubernetes-sigs.github.io/metrics-server/
   * kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 
+## Kubernetes - Shared Volumes 
+
+### Shared Volumes with nfs
+
+
+### Create new server and install nfs-server
+
+```
+## on Ubuntu 20.04LTS
+apt install nfs-kernel-server 
+systemctl status nfs-server 
+
+vi /etc/exports 
+## adjust ip's of kubernetes master and nodes 
+## kmaster
+/var/nfs/ 192.168.56.101(rw,sync,no_root_squash,no_subtree_check)
+## knode1
+/var/nfs/ 192.168.56.103(rw,sync,no_root_squash,no_subtree_check)
+## knode 2
+/var/nfs/ 192.168.56.105(rw,sync,no_root_squash,no_subtree_check)
+
+exportfs -av 
+```
+
+### On all clients 
+
+```
+#### Please do this on all servers 
+
+apt install nfs-common 
+## for testing 
+mkdir /mnt/nfs 
+## 192.168.56.106 is our nfs-server 
+mount -t nfs 192.168.56.106:/var/nfs /mnt/nfs 
+ls -la /mnt/nfs
+umount /mnt/nfs
+```
+
+### Setup PersistentVolume and PersistentVolumeClaim in cluster
+
+```
+## vi nfs.yml 
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  # any PV name
+  name: pv-nfs
+  labels:
+    volume: nfs-data-volume
+spec:
+  capacity:
+    # storage size
+    storage: 5Gi
+  accessModes:
+    # ReadWriteMany(RW from multi nodes), ReadWriteOnce(RW from a node), ReadOnlyMany(R from multi nodes)
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy:
+    # retain even if pods terminate
+    Retain
+  nfs:
+    # NFS server's definition
+    path: /var/nfs/nginx
+    server: 192.168.56.106
+    readOnly: false
+  storageClassName: ""
+---
+## now we want to claim space
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pv-nfs-claim
+spec:
+  storageClassName: ""
+  volumeName: pv-nfs
+  accessModes:
+  - ReadWriteMany
+  resources:
+     requests:
+       storage: 1Gi
+```
+```
+kubectl apply -f nfs.yml
+```
+
+```
+## deployment including mount 
+## vi deploy.yml 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 4 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+    
+      volumes:
+      - name: nfsvol
+        persistentVolumeClaim:
+          claimName: pv-nfs-claim
+    
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - "[ -f /run/nginx.pid ]"
+          initialDelaySeconds: 10
+          periodSeconds: 5
+
+        readinessProbe:
+          httpGet:
+            scheme: HTTP
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 5
+
+        volumeMounts:
+          - name: nfsvol
+            mountPath: "/usr/share/nginx/html"
+     
+```
+
+```
+kubectl apply -f deploy.yml 
+
+```
+
 ## Kubernetes - Backups 
 
 ## Kubernetes - Wartung 
@@ -2374,6 +2888,14 @@ spec:
 ### Documentation zu microk8s plugins/addons
 
   * https://microk8s.io/docs/addons
+
+### LDAP-Anbindung
+
+  * https://github.com/apprenda-kismatic/kubernetes-ldap
+
+### Shared Volumes - Welche gibt es ?
+
+  * https://kubernetes.io/docs/concepts/storage/volumes/
 
 ## Linux und Docker Tipps & Tricks allgemein 
 
