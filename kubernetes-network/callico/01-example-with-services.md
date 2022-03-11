@@ -27,7 +27,7 @@ kubectl get ns
 http://164.92.255.234:30002/
 ```
 
-````
+```
 ## Step 3: Download default-deny rules 
 wget https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/policies/default-deny.yaml
 ## Let us have look into it 
@@ -97,6 +97,12 @@ kubectl apply -f frontend-policy.yaml
 http://164.92.255.234:30002/
 
 ```
+
+```
+kubectl delete stars client 
+
+```
+
 
 
 ## Reference 
