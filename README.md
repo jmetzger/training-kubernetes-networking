@@ -105,6 +105,9 @@
   1. Kubernetes - Monitoring (microk8s und vanilla) 
      * [metrics-server aktivieren (microk8s und vanilla)](/microk8s/metrics-server.md)
 
+  1. Shared Volumes 
+     * [Shared Volumes with nfs](share-volumes/nfs.md)
+
   1. Kubernetes - Backups 
      + [Kubernetes Aware Cloud Backup - kasten.io](/backups/cluster-backup-kasten-io.md)
 
