@@ -82,7 +82,7 @@
     
   1. Kubernetes - Netzwerk (CNI's) 
      * [Übersicht Netzwerke](/kubernetes-networks/overview.md) 
-     * [Callico - nginx example](/kubernetes-network/callico.md)   
+     * [Callico - nginx example](/kubernetes-network/callico/00-simple-example.md)
      * [Callico - Example 1](/callico/example1.md) 
    
   1. kubectl 
