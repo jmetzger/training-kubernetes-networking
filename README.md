@@ -105,7 +105,7 @@
   1. Kubernetes - Monitoring (microk8s und vanilla) 
      * [metrics-server aktivieren (microk8s und vanilla)](/microk8s/metrics-server.md)
 
-  1. Shared Volumes 
+  1. Kubernetes - Shared Volumes 
      * [Shared Volumes with nfs](shared-volumes/nfs.md)
 
   1. Kubernetes - Backups 
