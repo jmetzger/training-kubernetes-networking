@@ -35,3 +35,4 @@ kubectl get pods
 ## Ref: 
 
  * https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengaddingserviceaccttoken.htm
+ * https://microk8s.io/docs/multi-user
