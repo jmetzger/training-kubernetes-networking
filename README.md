@@ -87,7 +87,7 @@
   1. Kubernetes - Netzwerk (CNI's) 
      * [Übersicht Netzwerke](/kubernetes-networks/overview.md) 
      * [Callico - nginx example](/kubernetes-network/callico/00-simple-example.md)
-     * [Callico - Example 1](/callico/example1.md) 
+     * [Callico - client-backend-ui-example](/kubernetes-network/callico/example1.md) 
    
   1. kubectl 
      * [Start pod (container with run && examples)](/kubectl/run-with-example.md)
