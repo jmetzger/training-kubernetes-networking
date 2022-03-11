@@ -12,24 +12,45 @@
 
 ## Welche gibt es ? 
 
-  * Flannell 
+  * Flanell 
   * Canal 
-  * Callisto 
+  * Calico 
   
 ## Flannell
 
 ### Overlay - Netzwerk 
 
- * virtuelles Netzwerk was sich oben drüber und eigentlich auf Netzwerkebene nicht exists 
- * VXLAN 
+  * virtuelles Netzwerk was sich oben drüber und eigentlich auf Netzwerkebene nicht existiert
+  * VXLAN 
 
 ### Vorteile 
 
- * Guter einfacher Einstieg 
- * redziert auf eine Binarry flanneld 
+  * Guter einfacher Einstieg 
+  * redziert auf eine Binary flanneld 
 
-## Nachteile 
+### Nachteile 
 
- * keine Firewall - Policies möglich 
- * keine klassichen Netzwerk-Tools zum Debuggen möglich. 
+  * keine Firewall - Policies möglich 
+  * keine klassichen Netzwerk-Tools zum Debuggen möglich. 
 
+## Canal 
+
+### General 
+
+  * Auch ein Overlay - Netzwerk 
+  * Unterstüzt auch policies 
+
+## Calico
+
+### Generell 
+
+  * klassische Netzwerk (BGP)
+
+### Vorteile gegenüber Flannel 
+
+  * Policy über Kubernetes Object (NetworkPolicies)
+
+### Vorteile 
+
+  * ISTIO integrierbar (Mesh - Netz) 
+  * Performance etwas besser als Flannel (weil keine Encapsulation) 
