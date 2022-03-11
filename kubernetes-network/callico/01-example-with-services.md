@@ -86,14 +86,14 @@ http://164.92.255.234:30002/
 ```
 
 ```
-## Step 8: 
+## Step 9: 
 wget https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/policies/frontend-policy.yaml
 cat frontend-policy.yaml 
 kubectl apply -f frontend-policy.yaml 
 ```
 
 ```
-## Step 8:
+## Step 10:
 # Refresh ui 
 # Client can now access Frontend 
 http://164.92.255.234:30002/
