@@ -33,19 +33,16 @@ kubectl get pods
 cd 
 mkdir -p manifests/rbac
 ##  Minischritt 1:
-vi namespace.json
-{
-  "apiVersion": "v1",
-  "kind": "Namespace",
-  "metadata": {
-    "name": "training",
-    "labels": {
-      "name": "training"
-    }
-  }
-}
 
-kubectl apply -f namespace.json
+# namespace.yml:
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: training
+  labels:
+    name: training
+
+kubectl apply -f namespace.yaml
 
 ## Minischritt 2:
 # vi role.yaml 
