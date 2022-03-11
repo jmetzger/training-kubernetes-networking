@@ -120,6 +120,7 @@
 
   1. Kubernetes - Documentation 
      * [Documentation zu microk8s plugins/addons](https://microk8s.io/docs/addons)
+     * [LDAP-Anbindung](https://github.com/apprenda-kismatic/kubernetes-ldap)
 
   1. Linux und Docker Tipps & Tricks allgemein 
      * [Auf ubuntu root-benutzer werden](sudo.md)
