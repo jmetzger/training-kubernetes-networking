@@ -124,7 +124,8 @@ spec:
           periodSeconds: 5
 
         volumeMounts:
-          - mountPath: "/usr/share/nginx/html"
+          - name: nfsvol
+            mountPath: "/usr/share/nginx/html"
      
 ```
 
