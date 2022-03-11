@@ -63,6 +63,15 @@ kubectl run --namespace=policy-demo access --rm -ti --image busybox /bin/sh
 wget -q nginx -O -
 ```
 
+``` 
+kubectl run --namespace=policy-demo no-access --rm -ti --image busybox /bin/sh
+```
+
+```
+# in der shell  
+wget -q nginx -O -
+```
+
 
 
 
