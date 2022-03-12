@@ -98,8 +98,3 @@ kubectl config use-context training-ctx
 kubectl get pods 
 ```
 
-## Ref: 
-
- * https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengaddingserviceaccttoken.htm
- * https://faun.pub/kubernetes-rbac-use-one-role-in-multiple-namespaces-d1d08bb08286
- * https://microk8s.io/docs/multi-user
