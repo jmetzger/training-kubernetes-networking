@@ -60,7 +60,7 @@
   1. Kubernetes - Überblick
      * [Warum Kubernetes, was macht Kubernetes](#warum-kubernetes,-was-macht-kubernetes)
      * [Aufbau Allgemein](#aufbau-allgemein)
-     * [Aufbau mit helm, OpenShift, Rancher-RKE, microk8s](#aufbau-mit-helm,-openshift,-rancher-rke,-microk8s)
+     * [Aufbau mit helm OpenShift Rancher-RKE microk8s](#aufbau-mit-helm-openshift-rancher-rke-microk8s)
      * [Welches System ? (minikube, micro8ks etc.)](#welches-system--minikube,-micro8ks-etc.)
      * [Installation - Welche Komponenten from scratch](#installation---welche-komponenten-from-scratch)
 
@@ -1189,7 +1189,7 @@ Er stellt sicher, dass Container in einem Pod ausgeführt werden.
   * https://www.redhat.com/de/topics/containers/kubernetes-architecture
 
 
-### Aufbau mit helm, OpenShift, Rancher-RKE, microk8s
+### Aufbau mit helm OpenShift Rancher-RKE microk8s
 
 
 ![Aufbau](/images/aufbau-komponente-kubernetes.png)
