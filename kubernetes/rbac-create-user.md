@@ -82,7 +82,7 @@ kubectl auth can-i get pods -n default --as system:serviceaccount:default:traini
 kubectl config set-context training-ctx --cluster microk8s-cluster --user training
 
 # extract name of the token from here 
-TOKEN_NAME=`kubectl get serviceaccount training -o jsonpath='{.secrets[0].name}'`
+TOKEN_NAME=$(kubectl get serviceaccount training -o jsonpath='{.secrets[0].name}')
 
 TOKEN=`kubectl get secret $TOKEN_NAME -o jsonpath='{.data.token}' | base64 --decode`
 echo $TOKEN
