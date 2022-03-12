@@ -21,8 +21,7 @@
      * [Docker container analysieren](docker-inspect.md)
      * [Docker container in den Vordergrund bringen - attach](/docker/docker-attach.md) 
      * [Aufräumen - container und images löschen](prune-container-images.md)
-     * [Nginx mit portfreigabe laufen lassen](docker-example-nginx.md)
-    
+     * [Nginx mit portfreigabe laufen lassen](docker-example-nginx.md)    
   
   1. Dockerfile - Examples 
      * [Ubuntu mit hello world](ubuntu-hello-world.md)
@@ -83,7 +82,6 @@
   1. Kubernetes - RBAC 
      * [Nutzer einrichten](/kubernetes/rbac-create-user.md) 
  
-    
   1. Kubernetes - Netzwerk (CNI's) 
      * [Übersicht Netzwerke](/kubernetes-networks/overview.md) 
      * [Callico - nginx example](/kubernetes-network/callico/00-simple-example.md)
@@ -95,7 +93,6 @@
      * [kubectl Spickzettel](/kubectl/spickzettel.md)
      * [Tipps&Tricks zu Deploymnent - Rollout](/kubectl/rollout.md) 
      
-
   1. kubectl - manifest - examples 
      * [02 Pod nginx mit Port und IP innerhalb des Clusters](/kubectl-examples/02-pod-nginx-exposed.md)
      * [03b Example with service and nginx](/kubectl-examples/03b-service.md)
