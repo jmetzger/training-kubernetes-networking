@@ -22,7 +22,6 @@
      * [Docker container in den Vordergrund bringen - attach](#docker-container-in-den-vordergrund-bringen---attach)
      * [Aufräumen - container und images löschen](#aufräumen---container-und-images-löschen)
      * [Nginx mit portfreigabe laufen lassen](#nginx-mit-portfreigabe-laufen-lassen)
-    
   
   1. Dockerfile - Examples 
      * [Ubuntu mit hello world](#ubuntu-mit-hello-world)
@@ -83,7 +82,6 @@
   1. Kubernetes - RBAC 
      * [Nutzer einrichten](#nutzer-einrichten)
  
-    
   1. Kubernetes - Netzwerk (CNI's) 
      * [Übersicht Netzwerke](#übersicht-netzwerke)
      * [Callico - nginx example](#callico---nginx-example)
@@ -95,7 +93,6 @@
      * [kubectl Spickzettel](#kubectl-spickzettel)
      * [Tipps&Tricks zu Deploymnent - Rollout](#tipps&tricks-zu-deploymnent---rollout)
      
-
   1. kubectl - manifest - examples 
      * [02 Pod nginx mit Port und IP innerhalb des Clusters](#02-pod-nginx-mit-port-und-ip-innerhalb-des-clusters)
      * [03b Example with service and nginx](#03b-example-with-service-and-nginx)
