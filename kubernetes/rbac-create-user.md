@@ -1,78 +1,105 @@
-# RBAC - Create user
+# RBAC - Create user for kubeconfig with restricted permissions (microk8s) 
 
 ## Enable RBAC in microk8s 
 
 ```
+# This is important, if not enable every user on the system is allowed to do everything 
 microk8s enable rbac 
-
 ```
 
-## Schritt 1: Systemaccount anlegen und in kubeconfig hinterlegen 
-
-```
-kubectl create -n kube-system  serviceaccount training
-# extract name of the token from here 
-kubectl get -n kube-system  serviceaccount training -o yaml
-
-# Secret auslesen und base64 dekodieren 
-# $() geht nur in der bash 
-TOKEN=$(kubectl get -n kube-system secret training-token-nxdfl -o jsonpath='{.data.token}' | base64 --decode)
-echo $TOKEN
-kubectl config set-credentials training --token=$TOKEN
-# trainingc vorher in .kube/config eingetragen 
-kubectl config use-context trainingc
-
-# Hier reichen die Rechte nicht aus 
-kubectl get pods
-# Error from server (Forbidden): pods is forbidden: User "system:serviceaccount:kube-system:training" cannot list # resource "pods" in API group "" in the namespace "default"
-```
-
-## Schritt 2: Role und Rolebinding festlegen 
+## Schritt 1: Nutzer-Account auf Server anlegen (in Client) 
 
 ```
 cd 
 mkdir -p manifests/rbac
-##  Minischritt 1:
+cd manifests/rbac
 
-# namespace.yml:
+##  Mini-Schritt 1: Definition für Nutzer 
+# vi service-account.yml 
 apiVersion: v1
-kind: Namespace
+kind: ServiceAccount
 metadata:
   name: training
-  labels:
-    name: training
+  namespace: default
 
-kubectl apply -f namespace.yaml
 
-## Minischritt 2:
-# vi role.yaml 
+kubectl apply -f service-account.yml 
+```
 
+```
+## Mini-Schritt 2: ClusterRolle festlegen (dies gilt für alle namespaces, muss aber noch zugewiesen werden)
+## Bevor sie zugewiesen ist, funktioniert sie nicht (da sie keinem Nutzer zugewiesen ist) 
+
+# vi pods-clusterrole.yml 
 apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
+kind: ClusterRole
 metadata:
-  namespace: training
-  name: role-training-pods
+  name: pods-clusterrole
 rules:
 - apiGroups: [""] # "" indicates the core API group
   resources: ["pods"]
   verbs: ["get", "watch", "list"]
 
-kubectl apply -f role.yaml
+kubectl apply -f pods-clusterrole.yml 
+```
 
-## Minischritt 3:
-## Verknüpfung Role zu Benutzer (=rolebinding) 
+```
+## Mini-Schritt 3: Die ClusterRolle den entsprechenden Nutzern über RoleBinding zu ordnen 
 
-kubectl create rolebinding rolebinding-training-pods --role role-training-pods --user training
+# vi rb-training-ns-default-pods.yml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: rolebinding-ns-default-pods
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: pods-clusterrole 
+subjects:
+- kind: ServiceAccount
+  name: training
+  namespace: default
+
+kubectl apply -f rb-training-ns-default-pods.yml
 
 ```
 
 ```
-## Minischritt 4:
-kubectl config use-context trainingc 
+Mini-Schritt 4: Testen (klappt der Zugang) 
+kubectl auth can-i get pods -n default --as system:serviceaccount:default:training
+```
+
+## Schritt 2: Context anlegen / Credentials auslesen und in kubeconfig hinterlegen 
+
+```
+## Mini-Schritt 1: kubeconfig setzen 
+kubectl config set-context training-ctx --cluster microk8s-cluster --user training
+
+# extract name of the token from here 
+TOKEN_NAME=$(kubectl get serviceaccount training -o jsonpath='{.secrets[0].name}')
+
+# Secret auslesen und base64 dekodieren 
+# $() geht nur in der bash 
+# ACHTUNG -> training-token... hinter secret kommt aus dem vorigen Befehl 
+TOKEN=$(kubectl get secret $TOKEN_NAME -o jsonpath='{.data.token}' | base64 --decode)
+echo $TOKEN
+kubectl config set-credentials training --token=$TOKEN
+kubectl config use-context training-ctx
+
+# Hier reichen die Rechte nicht aus 
+kubectl get deploy
+# Error from server (Forbidden): pods is forbidden: User "system:serviceaccount:kube-system:training" cannot list # resource "pods" in API group "" in the namespace "default"
+```
+
+```
+## Mini-Schritt 2:
+kubectl config use-context training-ctx
 kubectl get pods 
 ```
 
 ## Ref: 
 
  * https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengaddingserviceaccttoken.htm
+ * https://faun.pub/kubernetes-rbac-use-one-role-in-multiple-namespaces-d1d08bb08286
  * https://microk8s.io/docs/multi-user
