@@ -6,7 +6,7 @@
      * [Übersicht Architektur](#übersicht-architektur)
      * [Was ist ein Container ?](#was-ist-ein-container-)
      * [Was sind container images](#was-sind-container-images)
-     * [Container vs. Virtuelle Maschine](#container-vs.-virtuelle-maschine)
+     * [Container vs. Virtuelle Maschine](#container-vs-virtuelle-maschine)
      * [Was ist ein Dockerfile](#was-ist-ein-dockerfile)
   
   1. Docker-Installation
@@ -61,7 +61,7 @@
      * [Warum Kubernetes, was macht Kubernetes](#warum-kubernetes-was-macht-kubernetes)
      * [Aufbau Allgemein](#aufbau-allgemein)
      * [Aufbau mit helm OpenShift Rancher-RKE microk8s](#aufbau-mit-helm-openshift-rancher-rke-microk8s)
-     * [Welches System ? (minikube, micro8ks etc.)](#welches-system--minikube-micro8ks-etc.)
+     * [Welches System ? (minikube, micro8ks etc.)](#welches-system--minikube-micro8ks-etc)
      * [Installation - Welche Komponenten from scratch](#installation---welche-komponenten-from-scratch)
 
   1. Kubernetes - microk8s (Installation und Management) 
@@ -130,7 +130,7 @@
      * [YAML Linter Online](http://www.yamllint.com/)
      * [Läuft der ssh-server](#läuft-der-ssh-server)
      * [Basis/Parent - Image erstellen](#basisparent---image-erstellen)
-     * [Eigenes unsichere Registry-Verwenden. ohne https](#eigenes-unsichere-registry-verwenden.-ohne-https)
+     * [Eigenes unsichere Registry-Verwenden. ohne https](#eigenes-unsichere-registry-verwenden-ohne-https)
 
 <div class="page-break"></div>
 
