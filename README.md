@@ -60,7 +60,7 @@
   1. Kubernetes - Überblick
      * [Warum Kubernetes, was macht Kubernetes](warum-kubernetes.md) 
      * [Aufbau Allgemein](/kubernetes/architecture.md)
-     * [Aufbau mit helm, OpenShift, Rancher-RKE, microk8s](/kubernetes/aufbau-helm-microk8s-kubernetes.md)
+     * [Aufbau mit helm OpenShift Rancher-RKE microk8s](/kubernetes/aufbau-helm-microk8s-kubernetes.md)
      * [Welches System ? (minikube, micro8ks etc.)](welches-system.md)
      * [Installation - Welche Komponenten from scratch](/kubernetes/installation-components-overview.md)
 
