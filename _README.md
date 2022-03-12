@@ -59,7 +59,8 @@
     
   1. Kubernetes - Überblick
      * [Warum Kubernetes, was macht Kubernetes](#warum-kubernetes,-was-macht-kubernetes)
-     * [Aufbau](#aufbau)
+     * [Aufbau Allgemein](#aufbau-allgemein)
+     * [Aufbau mit helm, OpenShift, Rancher (RKE), microk8s](#aufbau-mit-helm,-openshift,-rancher-rke,-microk8s)
      * [Welches System ? (minikube, micro8ks etc.)](#welches-system--minikube,-micro8ks-etc.)
      * [Installation - Welche Komponenten from scratch](#installation---welche-komponenten-from-scratch)
 
@@ -1105,7 +1106,7 @@ docker service create --name my_web \
   * Orchestrierung von Containern
   * am gebräuchlisten aktuell Docker
 
-### Aufbau
+### Aufbau Allgemein
 
 
 ### Schaubild 
@@ -1187,6 +1188,11 @@ Er stellt sicher, dass Container in einem Pod ausgeführt werden.
 
   * https://www.redhat.com/de/topics/containers/kubernetes-architecture
 
+
+### Aufbau mit helm, OpenShift, Rancher (RKE), microk8s
+
+
+![Aufbau](/images/aufbau-komponente-kubernetes.png)
 
 ### Welches System ? (minikube, micro8ks etc.)
 
@@ -2732,23 +2738,7 @@ spec:
         image: nginx:latest
         ports:
         - containerPort: 80
-        livenessProbe:
-          exec:
-            command:
-            - /bin/sh
-            - -c
-            - "[ -f /run/nginx.pid ]"
-          initialDelaySeconds: 10
-          periodSeconds: 5
-
-        readinessProbe:
-          httpGet:
-            scheme: HTTP
-            path: /
-            port: 80
-          initialDelaySeconds: 10
-          periodSeconds: 5
-
+        
         volumeMounts:
           - name: nfsvol
             mountPath: "/usr/share/nginx/html"
