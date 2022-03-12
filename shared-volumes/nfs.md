@@ -107,23 +107,7 @@ spec:
         image: nginx:latest
         ports:
         - containerPort: 80
-        livenessProbe:
-          exec:
-            command:
-            - /bin/sh
-            - -c
-            - "[ -f /run/nginx.pid ]"
-          initialDelaySeconds: 10
-          periodSeconds: 5
-
-        readinessProbe:
-          httpGet:
-            scheme: HTTP
-            path: /
-            port: 80
-          initialDelaySeconds: 10
-          periodSeconds: 5
-
+        
         volumeMounts:
           - name: nfsvol
             mountPath: "/usr/share/nginx/html"
