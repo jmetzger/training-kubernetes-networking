@@ -1748,6 +1748,22 @@ mkdir -p manifests/rbac
 cd manifests/rbac
 ```
 
+####  Mini-Schritt 1: Definition für Nutzer 
+
+```
+## vi service-account.yml 
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: training
+  namespace: default
+
+
+kubectl apply -f service-account.yml 
+```
+
+
+
 
 
 
