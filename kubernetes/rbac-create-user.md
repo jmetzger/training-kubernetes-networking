@@ -7,14 +7,17 @@
 microk8s enable rbac 
 ```
 
-## Schritt 1: Nutzer-Account auf Server anlegen (in Client) 
+## Schritt 1: Nutzer-Account auf Server anlegen / in Client 
 
 ```
 cd 
 mkdir -p manifests/rbac
 cd manifests/rbac
+```
 
-##  Mini-Schritt 1: Definition für Nutzer 
+###  Mini-Schritt 1: Definition für Nutzer 
+
+```
 # vi service-account.yml 
 apiVersion: v1
 kind: ServiceAccount
@@ -26,8 +29,10 @@ metadata:
 kubectl apply -f service-account.yml 
 ```
 
+
+### Mini-Schritt 2: ClusterRolle festlegen - Dies gilt für alle namespaces, muss aber noch zugewiesen werden
+
 ```
-## Mini-Schritt 2: ClusterRolle festlegen - Dies gilt für alle namespaces, muss aber noch zugewiesen werden
 ## Bevor sie zugewiesen ist, funktioniert sie nicht - da sie keinem Nutzer zugewiesen ist 
 
 # vi pods-clusterrole.yml 
@@ -43,9 +48,8 @@ rules:
 kubectl apply -f pods-clusterrole.yml 
 ```
 
+### Mini-Schritt 3: Die ClusterRolle den entsprechenden Nutzern über RoleBinding zu ordnen 
 ```
-## Mini-Schritt 3: Die ClusterRolle den entsprechenden Nutzern über RoleBinding zu ordnen 
-
 # vi rb-training-ns-default-pods.yml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -65,8 +69,10 @@ kubectl apply -f rb-training-ns-default-pods.yml
 
 ```
 
-```
+
 ## Mini-Schritt 4: Testen (klappt der Zugang) 
+
+```
 kubectl auth can-i get pods -n default --as system:serviceaccount:default:training
 ```
 
