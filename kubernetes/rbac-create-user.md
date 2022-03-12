@@ -75,3 +75,29 @@ kubectl apply -f rb-training-ns-default-pods.yml
 kubectl auth can-i get pods -n default --as system:serviceaccount:default:training
 ```
 
+## Schritt 2: Context anlegen / Credentials auslesen und in kubeconfig hinterlegen 
+
+```
+## Mini-Schritt 1: kubeconfig setzen 
+kubectl config set-context training-ctx --cluster microk8s-cluster --user training
+
+# extract name of the token from here 
+TOKEN_NAME=$(kubectl get serviceaccount training -o jsonpath='{.secrets[0].name}')
+
+# Secret auslesen und base64 dekodieren 
+# $() geht nur in der bash 
+# ACHTUNG -> training-token... hinter secret kommt aus dem vorigen Befehl 
+TOKEN=$(kubectl get secret $TOKEN_NAME -o jsonpath='{.data.token}' | base64 --decode)
+echo $TOKEN
+kubectl config set-credentials training --token=$TOKEN
+kubectl config use-context training-ctx
+
+# Hier reichen die Rechte nicht aus 
+kubectl get deploy
+# Error from server (Forbidden): pods is forbidden: User "system:serviceaccount:kube-system:training" cannot list # resource "pods" in API group "" in the namespace "default"
+```
+
+
+
+
+
