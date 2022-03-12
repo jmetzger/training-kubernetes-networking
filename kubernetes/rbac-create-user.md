@@ -69,3 +69,9 @@ kubectl apply -f rb-training-ns-default-pods.yml
 
 ```
 
+### Mini-Schritt 4: Testen (klappt der Zugang) 
+
+```
+kubectl auth can-i get pods -n default --as system:serviceaccount:default:training
+```
+
