@@ -58,10 +58,10 @@
      * [Parent/Base - Image bauen für Docker](https://docs.docker.com/develop/develop-images/baseimages/)
     
   1. Kubernetes - Überblick
-     * [Warum Kubernetes, was macht Kubernetes](#warum-kubernetes,-was-macht-kubernetes)
+     * [Warum Kubernetes, was macht Kubernetes](#warum-kubernetes-was-macht-kubernetes)
      * [Aufbau Allgemein](#aufbau-allgemein)
      * [Aufbau mit helm OpenShift Rancher-RKE microk8s](#aufbau-mit-helm-openshift-rancher-rke-microk8s)
-     * [Welches System ? (minikube, micro8ks etc.)](#welches-system--minikube,-micro8ks-etc.)
+     * [Welches System ? (minikube, micro8ks etc.)](#welches-system--minikube-micro8ks-etc.)
      * [Installation - Welche Komponenten from scratch](#installation---welche-komponenten-from-scratch)
 
   1. Kubernetes - microk8s (Installation und Management) 
