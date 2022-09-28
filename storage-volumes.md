@@ -16,6 +16,7 @@ docker run -it --name=container-test-vol --mount target=/test_data,source=test-v
 1234ad# touch /test_data/README 
 exit
 # stops container 
+docker container ls -a 
 
 # create new container and check for /test_data/README 
 docker run -it --name=container-test-vol2 --mount target=/test_data,source=test-vol ubuntu bash
