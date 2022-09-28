@@ -1,6 +1,8 @@
 # Install docker (ubuntu) with snap
 
 ```
+
+sudo su -
 snap install docker
 
 # for information retrieval 
