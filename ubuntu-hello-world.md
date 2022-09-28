@@ -4,7 +4,7 @@
 ## Schritt 1:
 cd 
 mkdir Hello-World 
-
+cd Hello-World
 
 ## Schritt 2:
 # nano Dockerfile
@@ -23,6 +23,7 @@ echo hello-docker
 # docker build -t dockertrainereu/<dein-name>-hello-docker . 
 # Beispiel
 docker build -t dockertrainereu/jm-hello-docker .
+dpcker images
 docker run dockertrainereu/<dein-name>-hello-docker 
 
 docker login
