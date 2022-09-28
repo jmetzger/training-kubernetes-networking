@@ -40,7 +40,7 @@ docker push dockertrainereu/jm-hello-docker
 
 ```
 
-## Simple Version 
+## Advanced Version 
 
 ```
 ## Schritt 1:
