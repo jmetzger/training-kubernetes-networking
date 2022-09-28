@@ -27,6 +27,10 @@ ls -la
 # Zweiten Container starten
 docker run -d -t --name container-ubuntu2 myubuntu 
 
+# docker inspect to find out ip of other container 
+# 172.17.0.3 
+docker inspect <container-id>
+
 # Ersten Container -> 2. anpingen 
 docker exec -it container-ubuntu bash 
 # Jeder container hat eine eigene IP 
