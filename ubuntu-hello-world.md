@@ -23,7 +23,7 @@ echo hello-docker
 # docker build -t dockertrainereu/<dein-name>-hello-docker . 
 # Beispiel
 docker build -t dockertrainereu/jm-hello-docker .
-dpcker images
+docker images
 docker run dockertrainereu/<dein-name>-hello-docker 
 
 docker login
