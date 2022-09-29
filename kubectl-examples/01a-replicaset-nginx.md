@@ -1,6 +1,14 @@
 # Replicaset
 
 ```
+cd
+cd manifests
+mkdir 02-rs 
+cd 02-rs 
+vi rs.yml
+```
+
+```
 apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
@@ -24,4 +32,8 @@ spec:
              
 
              
- ```
+```
+
+```
+kubectl apply -f rs.yml 
+```
