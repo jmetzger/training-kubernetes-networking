@@ -3,6 +3,9 @@
 ## Example (that does work)
 
 ```
+# Show the pods that are running 
+kubectl get pods 
+
 # Synopsis (most simplistic example 
 # kubectl run NAME --image=IMAGE_EG_FROM_DOCKER
 # example
