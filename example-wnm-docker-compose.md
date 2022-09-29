@@ -1,9 +1,12 @@
 ### Wordpress - blog mit docker compose (Walkthrough)
 
 ```
-mkdir wordpress-mit-docker-compose 
-cd wordpress-mit-docker-compose 
+mkdir wp 
+cd wp 
 # nano docker-compose.yml 
+```
+
+```
 version: "3.7"
 
 services:
@@ -43,7 +46,7 @@ volumes:
 ## now start the system
 docker-compose up -d 
 ## we can do some test if db is reachable 
-docker exec -it wordpress_compose_wordpress_1 bash 
+docker exec -it wp_wordpress_1 bash 
 ## within shell do 
 apt update 
 apt-get install -y telnet
