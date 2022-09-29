@@ -9,7 +9,7 @@ spec:
   selector:
     matchLabels:
       run: my-nginx
-  replicas: 2
+  replicas: 3
   template:
     metadata:
       labels:
