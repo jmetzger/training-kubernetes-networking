@@ -26,7 +26,7 @@ kind: Service
 metadata:
   name: my-nginx
   labels:
-    run: my-nginx
+    svc: nginx
 spec:
   ports:
   - port: 80
