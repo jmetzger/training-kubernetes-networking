@@ -73,6 +73,30 @@
      * [Arbeiten mit der Registry](microk8s/registry.md)
      * [Installation Kuberenetes Dashboard](/microk8s/dashboard.md) 
 
+
+  1. Kubernetes Praxis API-Objekte 
+     * [Das Tool kubectl (Devs/Ops) - Spickzettel](/kubectl/spickzettel.md)
+     * [kubectl example with run](/kubectl/run-with-example.md)
+     * Arbeiten mit manifests (Devs/Ops)
+     * Pods (Devs/Ops)
+     * [kubectl/manifest/pod](/kubectl-examples/01-pod-nginx.md)
+     * ReplicaSets (Theorie) - (Devs/Ops)
+     * [kubectl/manifest/replicaset](/kubectl-examples/01a-replicaset-nginx.md)
+     * Deployments (Devs/Ops)
+     * [kubectl/manifest/deployments](/kubectl-examples/03-nginx-deployment.md)
+     * Services (Devs/Ops)
+     * [kubectl/manifest/service](/kubectl-examples/03b-service.md)
+     * DaemonSets (Devs/Ops)
+     * IngressController (Devs/Ops)
+     * [Hintergrund Ingress](/kubernetes/ingress.md) 
+     * [Ingress Controller auf Digitalocean (doks) mit helm installieren](/digitalocean/ingress-auf-digitalocean-mit-helm.md)
+     * [Documentation for default ingress nginx](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/)
+     * [Beispiel Ingress](/kubectl-examples/04-ingress-nginx.md)
+     * [Beispiel mit Hostnamen](/kubectl-examples/04-ingress-nginx-with-hostnames.md)
+     * [Achtung: Ingress mit Helm - annotations](/ingress-mit-helm-class-achtung.md)
+     * [Permanente Weiterleitung mit Ingress](/kubectl-examples/05-ingress-permanent-redirect.md)
+     * [ConfigMap Example](/kubectl-examples/06-configmap.md)
+
   1. Kubernetes - API - Objekte
      * [Welche API-Objekte gibt es? (Kommando)](/kubernetes/api-resources.md)
      * [Api Versionierung Lifetime](/kubernetes/api-versionierung-lifetime.md)
