@@ -71,8 +71,7 @@
      * [Create a cluster with microk8s](microk8s/cluster.md)
      * [Ingress controller in microk8s aktivieren](microk8s/ingress.md) 
      * [Arbeiten mit der Registry](microk8s/registry.md)
-     * [Installation Kuberenetes Dashboard](/microk8s/dashboard.md) 
-
+     * [Installation Kubernetes Dashboard](/microk8s/dashboard.md) 
 
   1. Kubernetes Praxis API-Objekte 
      * [Das Tool kubectl (Devs/Ops) - Spickzettel](/kubectl/spickzettel.md)
@@ -84,7 +83,7 @@
      * [kubectl/manifest/replicaset](/kubectl-examples/01a-replicaset-nginx.md)
      * Deployments (Devs/Ops)
      * [kubectl/manifest/deployments](/kubectl-examples/03-nginx-deployment.md)
-     * ![Services - Aufbau](/kubernetes/services-aufbau.md)
+     * [Services - Aufbau](/kubernetes/services-aufbau.md)
      * [kubectl/manifest/service](/kubectl-examples/03b-service.md)
      * DaemonSets (Devs/Ops)
      * IngressController (Devs/Ops)
@@ -97,13 +96,6 @@
      * [Achtung: Ingress mit Helm - annotations](/ingress-mit-helm-class-achtung.md)
      * [Permanente Weiterleitung mit Ingress](/kubectl-examples/05-ingress-permanent-redirect.md)
      * [ConfigMap Example](/kubectl-examples/06-configmap.md)
-
-  1. Kubernetes - API - Objekte
-     * [Welche API-Objekte gibt es? (Kommando)](/kubernetes/api-resources.md)
-     * [Api Versionierung Lifetime](/kubernetes/api-versionierung-lifetime.md)
-     * [Was sind Deployments](/kubernetes/deployments.md)
-     * [Service - Objekt und IP](/kubernetes/service.md)
-     * [Ingress -> Nginx Proxy](/kubernetes/ingress.md)
 
   1. Kubernetes - RBAC 
      * [Nutzer einrichten](/kubernetes/rbac-create-user.md) 
