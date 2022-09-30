@@ -142,6 +142,9 @@
      * [Environment to learn](https://killercoda.com/killer-shell-cks)
      * [Youtube Channel](https://www.youtube.com/watch?v=01qcYSck1c4)
 
+  1. Kubernetes -Wann / Wann nicht 
+     * [Kubernetes Wann / Wann nicht](kubernetes/wann-kubernetes-wann-nicht.md)
+
   1. Linux und Docker Tipps & Tricks allgemein 
      * [Auf ubuntu root-benutzer werden](sudo.md)
      * [IP - Adresse abfragen](ip-a.md)
