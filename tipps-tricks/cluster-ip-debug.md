@@ -7,9 +7,15 @@
 ## Lösung 
 
 ```
-# Achtung http:// muss angegeben werden, sonst funktioniert das Kommando möglichweiser nicht
-# -L sollte man immer verwenden, leitet um 
-# --output - gibt es auf stdout (Bildschirm aus) 
-kubectl run -it --rm --image=curlimages/curl curly -- curl -L --output - http://www.test.de 
+# Wir starten eine Busybox und fragen per wget und port ab
+# busytester ist der name 
+# long version 
+kubectl run -it --rm --image=busybox busytester 
+# wget <pod-ip-des-ziels> 
+# exit 
+
+
+# quick and dirty 
+kubectl run -it --rm --image=busybox busytester -- wget <pod-ip-des-ziels>  
 
 ```
