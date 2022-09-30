@@ -99,7 +99,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: "jochen.lab2.t3isp.de"
+  - host: "<euername>.lab<nr>.t3isp.de"
     http:
       paths:
         - path: /apple
