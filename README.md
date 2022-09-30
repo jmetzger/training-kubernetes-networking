@@ -146,6 +146,9 @@
   1. Kubernetes -Wann / Wann nicht 
      * [Kubernetes Wann / Wann nicht](kubernetes/wann-kubernetes-wann-nicht.md)
 
+  1. Kubernetes - Hardening 
+     * [Kubernetes Tipps Hardening](kubernetes-security/tipps-hardening.md)
+
   1. Linux und Docker Tipps & Tricks allgemein 
      * [Auf ubuntu root-benutzer werden](sudo.md)
      * [IP - Adresse abfragen](ip-a.md)
