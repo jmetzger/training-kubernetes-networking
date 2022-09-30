@@ -84,7 +84,7 @@
      * [kubectl/manifest/replicaset](/kubectl-examples/01a-replicaset-nginx.md)
      * Deployments (Devs/Ops)
      * [kubectl/manifest/deployments](/kubectl-examples/03-nginx-deployment.md)
-     * Services (Devs/Ops)
+     * ![Services - Aufbau](/kubernetes/services-aufbau.md)
      * [kubectl/manifest/service](/kubectl-examples/03b-service.md)
      * DaemonSets (Devs/Ops)
      * IngressController (Devs/Ops)
