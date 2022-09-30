@@ -48,3 +48,10 @@ spec:
 kubectl explain pod.spec.containers.securityContext 
 
 ```
+
+
+## NetworkPolicy 
+
+```
+# Firewall Kubernetes 
+```
