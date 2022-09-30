@@ -1,3 +1,3 @@
 # Services Aufbau (Grafik) 
 
-![Services Aufbau](images/)
+![Services Aufbau](images/kubernetes-services.drawio.svg)
