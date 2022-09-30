@@ -29,6 +29,7 @@ NAME                                     TYPE           CLUSTER-IP     EXTERNAL-
 nginx-ingress-ingress-nginx-controller   LoadBalancer   10.245.78.34   157.245.20.222   80:31588/TCP,443:30704/TCP   4m39s   app.kubernetes.io/component=controller,app.kubernetes.io/instance=nginx-ingress,app.kubernetes.io/name=ingress-nginx
 
 # Now setup wildcard - domain for training purpose 
+# inwx.com
 *.lab1.t3isp.de A 157.245.20.222 
 
 
