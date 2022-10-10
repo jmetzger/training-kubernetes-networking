@@ -39,7 +39,7 @@ done
 ### Schritt 4:
 
 ```
-dockertrainereu/<dein-name>-hello-docker . 
+# dockertrainereu/<dein-name>-hello-docker . 
 # Beispiel
 docker build -t dockertrainereu/jm-hello-docker .
 docker images
