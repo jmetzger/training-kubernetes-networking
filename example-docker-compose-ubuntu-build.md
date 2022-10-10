@@ -34,6 +34,9 @@ RUN apt-get update; apt-get install -y inetutils-ping
 CMD ["/bin/bash"]
 ```
 
+## Schritt 4: 
+
+
 ```
 cd ../
 # wichtig, im docker-compose - Ordner seiend 
