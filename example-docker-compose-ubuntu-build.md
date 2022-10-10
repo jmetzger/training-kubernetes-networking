@@ -1,10 +1,14 @@
 # Example Docker Compose (Ubuntu with Dockerfile) 
 
+## Schritt 1:
+
 ```
 cd
 mkdir bautest
 cd bautest 
 ```
+
+## Schritt 2:
 
 ```
 # nano docker-compose.yml
@@ -15,6 +19,8 @@ services:
     build: ./myubuntu
     restart: always
 ```
+
+## Schritt 3:
 
 ```
 mkdir myubuntu 
