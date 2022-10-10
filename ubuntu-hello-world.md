@@ -19,13 +19,20 @@ RUN chmod u+x hello.sh
 CMD ["/hello.sh"]
 ```
 
+```
 ## Schritt 3:
 nano hello.sh 
 #!/bin/bash
-echo hello-docker
+while true 
+let i=0
+do 
+let i+i+1
+echo $1hello-docker
+done 
+```
 
-## Schritt 4:
-# docker build -t dockertrainereu/<dein-name>-hello-docker . 
+
+ainereu/<dein-name>-hello-docker . 
 # Beispiel
 docker build -t dockertrainereu/jm-hello-docker .
 docker images
