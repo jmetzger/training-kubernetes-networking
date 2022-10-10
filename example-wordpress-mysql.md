@@ -10,6 +10,8 @@ cd wp
 nano docker-compose.yml
 ```
 
+## Schritt 2:
+
 ```
 # docker-compose.yaml
 version: "3.8"
