@@ -18,6 +18,7 @@
      * [docker run](docker-run.md)
      * [Docker container/image stoppen/löschen](container-image-delete.md)
      * [Docker containerliste anzeigen](container-liste.md)
+     * [Docker nicht verwendete Images/Container löschen](delete-everything.md)
      * [Docker container analysieren](docker-inspect.md)
      * [Docker container in den Vordergrund bringen - attach](/docker/docker-attach.md) 
      * [Aufräumen - container und images löschen](prune-container-images.md)
