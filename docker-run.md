@@ -15,7 +15,7 @@ docker container ls
 
 # in den Container reinwechsel 
 docker exec -it my_xenial bash 
-docker exec my_xenial cat /etc/issue
+docker exec my_xenial cat /etc/os-release
 # 
 
 ```
