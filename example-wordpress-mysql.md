@@ -52,3 +52,9 @@ volumes:
 
 
 ```
+
+## Schritt 3:
+
+```
+docker-compose up -d 
+```
