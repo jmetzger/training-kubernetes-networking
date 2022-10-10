@@ -17,7 +17,7 @@ docker run -it --name=container-test-vol --mount target=/test_data,source=test-v
 1234ad# touch /test_data/README 
 exit
 # stops container 
-docker container ls -a 
+docker container ls 
 ```
 
 ```
