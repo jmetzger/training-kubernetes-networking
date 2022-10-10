@@ -1,4 +1,4 @@
-# Container - Image - Delete - Kill
+# Container - Image - Stop - Start -Delete - Kill
 
 ```
 docker stop ubuntu-container 
