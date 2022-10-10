@@ -2,8 +2,8 @@
 
 ## Simple Version 
 
+### Schritt 1:
 ```
-## Schritt 1:
 cd 
 mkdir Hello-World 
 cd Hello-World
