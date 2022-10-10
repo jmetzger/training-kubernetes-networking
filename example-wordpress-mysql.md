@@ -1,5 +1,7 @@
 # Docker Compose example Wordpress / MySQL 
 
+
+## Schritt 1:
 ```
 clear
 cd
