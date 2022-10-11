@@ -9,7 +9,11 @@ microk8s status
 # Sobald Kubernetes zur Verfügung steht aktivieren wir noch das plugin dns
 microk8s enable dns 
 microk8s status
+```
 
+## Optional
+
+```
 # Execute kubectl commands like so 
 microk8s kubectl
 microk8s kubectl cluster-info
