@@ -27,16 +27,48 @@ in powershell (normaler Benutzer)
 kubectl completion powershell | Out-String | Invoke-Expression
 ```
 
-## Walkthrough (kubectl mit Cluster verheiraten) 
+## kubectl - config - Struktur vorbereiten  
 
 ```
 # in powershell im heimatordner des Benutzers .kube - ordnern anlegen
+# C:\Users\<dein-name>\
 mkdir .kube 
 cd .kube 
-# config - datei anlegen (ohne endung und inhalt aus microk8s config dort speichern
-# Wichtig: Evtl. IP-Addresse ändern (bei virtualbox) ... muss von aussen erreichbar sein. 
-# z.B. vom Windows Client aus 
 ```
+
+## IP von Cluster-Node bekommen 
+
+```
+# auf virtualbox - maschine per ssh einloggen 
+# öffentliche ip herausfinden - z.B. enp0s8 bei HostOnly - Adapter
+ip -br a 
+```
+
+## config für kubectl aus Cluster-Node auslesen (microk8s) 
+
+```
+# auf virtualbox - maschine per ssh einloggen / zum root wechseln 
+# abfragen
+microk8s config 
+
+# Alle Zeilen ins clipboard kopieren
+# und mit notepad++ in die Datei \Users\<dein-name>\.kube\config 
+# schreiben
+
+# Wichtig: Zeile cluster -> clusters / server 
+# Hier ip von letztem Schritt eintragen:
+# z.B. 
+Server: https://192.168.56.106/......
+```
+
+## Testen 
+
+```
+# in powershell
+# kann ich eine Verbindung zum Cluster aufbauen ? 
+kubectl cluster-info 
+```
+
 
 
   * https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/
