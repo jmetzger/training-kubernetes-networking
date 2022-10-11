@@ -4,7 +4,9 @@
 
 ```
 sudo snap install microk8s --classic
-# Important enable dns // otherwice not dns lookup is possible 
+microk8s status
+
+# Sobald Kubernetes zur Verfügung steht aktivieren wir noch das plugin dns
 microk8s enable dns 
 microk8s status
 
