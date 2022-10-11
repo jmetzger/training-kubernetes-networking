@@ -2,7 +2,7 @@
 
 ## Situation 
 
-  * Kein Zugriff auf die Nodes, zum Testen von Verbindungen zu Pods und Services über die ClusterIP 
+  * Kein Zugriff auf die Nodes, zum Testen von Verbindungen zu Pods und Services über die PodIP/ClusterIP 
 
 ## Lösung 
 
