@@ -27,6 +27,16 @@ in powershell (normaler Benutzer)
 kubectl completion powershell | Out-String | Invoke-Expression
 ```
 
-## Reference 
+## Walkthrough (kubectl mit Cluster verheiraten) 
+
+```
+# in powershell im heimatordner des Benutzers .kube - ordnern anlegen
+mkdir .kube 
+cd .kube 
+# config - datei anlegen (ohne endung und inhalt aus microk8s config dort speichern
+# Wichtig: Evtl. IP-Addresse ändern (bei virtualbox) ... muss von aussen erreichbar sein. 
+# z.B. vom Windows Client aus 
+```
+
 
   * https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/
