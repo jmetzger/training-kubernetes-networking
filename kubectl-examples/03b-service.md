@@ -1,6 +1,14 @@
 # Example Service 
 
+## Schritt 1: Deployment 
+
 ```
+mkdir 04-service 
+cd 04-service 
+```
+
+```
+# 01-deploy.yml 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,7 +28,17 @@ spec:
         image: nginx
         ports:
         - containerPort: 80
+```
+
+```
+kubectl apply -f .
+```
+
+## Schritt 2:
+
+
 ---
+# 02-svc.yml 
 apiVersion: v1
 kind: Service
 metadata:
@@ -33,9 +51,12 @@ spec:
     protocol: TCP
   selector:
     run: my-nginx
-        
-        
-```        
+```
+
+```
+kubectl apply -f . 
+```
+
 
 ## Ref.
 
