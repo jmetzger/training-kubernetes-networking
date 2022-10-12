@@ -153,8 +153,8 @@
 
   1. Kubernetes Deployment Scenarios 
      * [Deployment green/blue,canary,rolling update](/kubernetes/deployment-strategies-en.md)
-    
-
+     * [Praxis-Übung A/B Deployment](/kubectl-examples/08-ab-deployment.md)
+     
   1. Linux und Docker Tipps & Tricks allgemein 
      * [Auf ubuntu root-benutzer werden](sudo.md)
      * [IP - Adresse abfragen](ip-a.md)
