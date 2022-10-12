@@ -123,7 +123,7 @@
      * [metrics-server aktivieren (microk8s und vanilla)](/microk8s/metrics-server.md)
 
   1. Kubernetes - Shared Volumes 
-     * [Shared Volumes with nfs](shared-volumes/nfs.md)
+     * [Shared Volumes with nfs](shared-volumes/nfs-multi.md)
 
   1. Kubernetes - Backups 
      + [Kubernetes Aware Cloud Backup - kasten.io](/backups/cluster-backup-kasten-io.md)
