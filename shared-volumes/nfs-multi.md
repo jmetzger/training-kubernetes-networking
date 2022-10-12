@@ -206,6 +206,7 @@ kubectl run -it --rm curly --image=curlimages/curl -- /bin/sh
 
 ## Persistent Storage Step 6: retest after redeployment 
 
+```
 # now start deployment again 
 kubectl apply -f 03-deploy.yml 
 
