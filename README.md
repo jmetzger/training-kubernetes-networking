@@ -161,3 +161,6 @@
      * [Läuft der ssh-server](ssh-running.md)
      * [Basis/Parent - Image erstellen](docker-base-image.md)
      * [Eigenes unsichere Registry-Verwenden. ohne https](insecure-registry.md)
+     
+  1. VirtualBox Tipps & Tricks 
+     * [VirtualBox 6.1. - Ubuntu für Kubernetes aufsetzen ](training-kubernetes-docker/blob/main/virtualbox-ubuntu.md)
