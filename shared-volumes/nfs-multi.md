@@ -202,7 +202,9 @@ kubectl delete -f 03-deploy.yml
 kubectl run -it --rm curly --image=curlimages/curl -- /bin/sh 
 # curl http://<cluster-ip>
 # exit 
+```
 
+## Persistent Storage Step 6: retest after redeployment 
 
 # now start deployment again 
 kubectl apply -f 03-deploy.yml 
