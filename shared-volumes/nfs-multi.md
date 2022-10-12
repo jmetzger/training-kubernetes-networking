@@ -176,7 +176,11 @@ spec:
 
 ```
 kubectl apply -f 04-service.yml 
+```
 
+## Persistent Storage Step 5: write data and test
+
+```
 # connect to the container and add index.html - data 
 kubectl exec -it deploy/nginx-deployment -- bash 
 # in container
