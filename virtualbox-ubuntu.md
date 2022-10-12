@@ -15,7 +15,7 @@ Alles andere so lassen.
 Weiter 
 
 Seite 2: 
-Hauptspeicher mindest 4 GB , d.h. 4096 auswählen
+Hauptspeicher mindest 4 GB , d.h. 4096 auswählen (füpr Kubernetes / microk8s)
 Weiter
 
 Seite 3:
@@ -32,7 +32,7 @@ Weiter
 
 Seite 6:
 Dateiname und Größe -> bei Größe mindestens 30 GB einstellen (bei Bedarf größer) 
-Erzeugen 
+-> Erzeugen 
 ```
 
 ## Schritt 2: ISO einhängen / Netzwerk und starten / installieren
@@ -50,7 +50,7 @@ Netzwerk -> Adapter 2 (Reiter) anklicken -> Netzwerkadapter aktivieren
 Angeschlossen an -> Host-only - Adapter 
 
 3. 
-unten rechts -> o.k. klicken 
+unten rechts -> ok klicken 
 
 ```
 
@@ -135,7 +135,7 @@ Hier brauchen wir nichts auswählen, alles kann später installiert werden
 
 Seit 13:  Installation
 
-Warten bis Installation Complete und dies auch unten angezeigt wird:
+Warten bis Installation Complete und dies auch unten angezeigt wird (Reboot Now):
 (es dauert hier etwas bis alle Updates (unattended-upgrades) im Hintergrund durchgeführt worden sind) 
 
 -> Reboot Now 
