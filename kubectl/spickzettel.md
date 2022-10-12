@@ -94,6 +94,9 @@ kubectl get deployments
 # kann ich den namespace angeben
 kubectl get deployments --namespace=kube-system 
 kubectl get deployments -n kube-system 
+
+# wir wollen unseren default namespace ändern 
+kubectl config set-context --current --namespace <dein-namespace>
 ```
 
 
