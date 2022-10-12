@@ -11,13 +11,9 @@ Walkthrough
 # In the console do a 
 mount /dev/cdrom /mnt
 cd /mnt
-sudo ./VBoxGuestAdditions.run 
+sudo apt-get install -y build-essential linux-headers-`uname -r`
+sudo ./VBoxLinuxAdditions.run 
 
-# Reboot
-# Check if it is installed
-dpkg -l | grep virtualbox-guest 
-sudo usermod -aG vboxsf root 
-sudo usermod -aG vboxsf <your-user>
 
 sudo reboot
 
@@ -40,6 +36,12 @@ sudo su -
 mkdir /linux
 # linux ist der vergebene Ordnername 
 mount -t vboxsf linux /linux 
+
+# Optional, falls du nicht zugreifen kannst:
+sudo usermod -aG vboxsf root 
+sudo usermod -aG vboxsf <your-user>
+
+
 ```
 
 
