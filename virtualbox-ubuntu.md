@@ -102,14 +102,51 @@ Guided Storage konfiguration
 Entire Disk 
 
 -> Done 
+
+Seite 8: File System Summary
+
+-> Done 
+
+Seite 9: Popup: Confirm destructive action 
+Bestätigen, dass gesamte Festplatte überschrieben wird
+(kein Problem, da Festplatte ohnehin leer und virtuell)
+
+-> Continue 
+
+Seite 10: Profile Setup
+
+User eingeben / einrichten 
+Servernamen einrichten 
+
+-> Done 
+
+Seite 11: SSH Setup 
+
+Haken bei: Install OpenSSH Server 
+setzen
+
+-> Done 
+
+Seite 12: Featured Server Snaps 
+
+Hier brauchen wir nichts auswählen, alles kann später installiert werden
+
+-> Done 
+
+Seit 13:  Installation
+
+Warten bis Installation Complete und dies auch unten angezeigt wird:
+(es dauert hier etwas bis alle Updates (unattended-upgrades) im Hintergrund durchgeführt worden sind) 
+
+-> Reboot Now 
+
+Wenn "Failed unmounting /cdrom" kommt 
+dann einfach Server stoppen
+-> Virtual Box Manager -> Virtuelle Maschine auswählen -> Rechte Maustaste -> Schliessen ->  Ausschalten 
+
 ```
 
-
-
-
-
-
-## Starten des Gast-Systems in virtualbox 
+## Schritt 4: Starten des Gast-Systems in virtualbox 
 
 ```
 * Im VirtualBox Manager auf virtuelle Maschine klicken
