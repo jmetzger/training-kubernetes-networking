@@ -18,6 +18,7 @@
      * [docker run](#docker-run)
      * [Docker container/image stoppen/löschen](#docker-containerimage-stoppenlöschen)
      * [Docker containerliste anzeigen](#docker-containerliste-anzeigen)
+     * [Docker nicht verwendete Images/Container löschen](#docker-nicht-verwendete-imagescontainer-löschen)
      * [Docker container analysieren](#docker-container-analysieren)
      * [Docker container in den Vordergrund bringen - attach](#docker-container-in-den-vordergrund-bringen---attach)
      * [Aufräumen - container und images löschen](#aufräumen---container-und-images-löschen)
@@ -68,6 +69,7 @@
      * [Installation Ubuntu - snap](#installation-ubuntu---snap)
      * [Patch to next major release - cluster](#patch-to-next-major-release---cluster)
      * [Remote-Verbindung zu Kubernetes (microk8s) einrichten](#remote-verbindung-zu-kubernetes-microk8s-einrichten)
+     * [kubectl unter windows - Remote-Verbindung zu Kuberenets (microk8s) einrichten](#kubectl-unter-windows---remote-verbindung-zu-kuberenets-microk8s-einrichten)
      * [Create a cluster with microk8s](#create-a-cluster-with-microk8s)
      * [Ingress controller in microk8s aktivieren](#ingress-controller-in-microk8s-aktivieren)
      * [Arbeiten mit der Registry](#arbeiten-mit-der-registry)
@@ -122,6 +124,8 @@
 
   1. Kubernetes - Shared Volumes 
      * [Shared Volumes with nfs](#shared-volumes-with-nfs)
+     
+     
 
   1. Kubernetes - Backups 
      + [Kubernetes Aware Cloud Backup - kasten.io](/backups/cluster-backup-kasten-io.md)
@@ -134,6 +138,7 @@
      * [Assigning Pods to Nodes](#assigning-pods-to-nodes)
      * [Kubernetes Debuggen ClusterIP/PodIP](#kubernetes-debuggen-clusterippodip)
      * [Debugging pods](#debugging-pods)
+     * [Autoscaling Pods/Deployments](#autoscaling-podsdeployments)
 
   1. Kubernetes - Documentation 
      * [Documentation zu microk8s plugins/addons](https://microk8s.io/docs/addons)
@@ -149,6 +154,14 @@
   1. Kubernetes - Hardening 
      * [Kubernetes Tipps Hardening](#kubernetes-tipps-hardening)
 
+  1. Kubernetes Deployment Scenarios 
+     * [Deployment green/blue,canary,rolling update](#deployment-greenbluecanaryrolling-update)
+     * [Praxis-Übung A/B Deployment](#praxis-übung-ab-deployment)
+
+  1. Kubernetes Probes (Liveness and Readiness) 
+     * [Übung Liveness-Probe](#übung-liveness-probe)
+     * [Funktionsweise Readiness-Probe vs. Liveness-Probe](#funktionsweise-readiness-probe-vs-liveness-probe)
+
   1. Linux und Docker Tipps & Tricks allgemein 
      * [Auf ubuntu root-benutzer werden](#auf-ubuntu-root-benutzer-werden)
      * [IP - Adresse abfragen](#ip---adresse-abfragen)
@@ -159,6 +172,10 @@
      * [Läuft der ssh-server](#läuft-der-ssh-server)
      * [Basis/Parent - Image erstellen](#basisparent---image-erstellen)
      * [Eigenes unsichere Registry-Verwenden. ohne https](#eigenes-unsichere-registry-verwenden-ohne-https)
+     
+  1. VirtualBox Tipps & Tricks 
+     * [VirtualBox 6.1. - Ubuntu für Kubernetes aufsetzen ](#virtualbox-61---ubuntu-für-kubernetes-aufsetzen-)
+     * [VirtualBox 6.1. - Shared folder aktivieren](#virtualbox-61---shared-folder-aktivieren)
 
 <div class="page-break"></div>
 
@@ -192,7 +209,7 @@
 
 
   * Container Image benötigt, um zur Laufzeit Container-Instanzen zu erzeugen 
-  * Bei Docker werden Docker Images zu Docker Containern, wenn Sie auf einer Docker Engine als Prozess ausgeführt
+  * Bei Docker werden Docker Images zu Docker Containern, wenn Sie auf einer Docker Engine als Prozess ausgeführt werden.
   * Man kann sich ein Docker Image als Kopiervorlage vorstellen.
     * Diese wird genutzt, um damit einen Docker Container als Kopie zu erstellen   
 
@@ -300,15 +317,17 @@ docker logs -f a234
 ```
 ## before that we did
 docker pull ubuntu:xenial
-docker run -t -d --name my_xenial ubuntu:xenial
-## will wollen überprüfen, ob der container läuft
-docker container ls 
 ## image vorhanden 
 docker images
 
+docker run -t -d --name my_xenial ubuntu:xenial
+## will wollen überprüfen, ob der container läuft
+docker container ls 
+
+
 ## in den Container reinwechsel 
 docker exec -it my_xenial bash 
-docker exec -it my_xenial cat /etc/issue
+docker exec my_xenial cat /etc/os-release
 ## 
 
 ```
@@ -352,6 +371,20 @@ docker ps
 docker ps -a
 
 
+
+```
+
+### Docker nicht verwendete Images/Container löschen
+
+
+```
+docker system prune 
+## Löscht möglicherweise nicht alles
+
+## d.h. danach nochmal prüfen ob noch images da sind
+docker images 
+## und händisch löschen 
+docker rmi <image-name>
 
 ```
 
@@ -434,12 +467,14 @@ curl http://localhost:8080
 
 ### Simple Version 
 
+#### Schritt 1:
 ```
-### Schritt 1:
 cd 
 mkdir Hello-World 
 cd Hello-World
+```
 
+```
 ### Schritt 2:
 ## nano Dockerfile
 FROM ubuntu:latest 
@@ -447,19 +482,36 @@ FROM ubuntu:latest
 COPY hello.sh .
 RUN chmod u+x hello.sh
 CMD ["/hello.sh"]
+```
 
-### Schritt 3:
+#### Schritt 3:
+```
 nano hello.sh 
-##!/bin/bash
-echo hello-docker
+```
 
-### Schritt 4:
-## docker build -t dockertrainereu/<dein-name>-hello-docker . 
+```
+##!/bin/bash
+let i=0
+
+while true
+do
+  let i=i+1
+  echo $i:hello-docker
+  sleep 5
+done
+```
+
+#### Schritt 4:
+
+```
+## dockertrainereu/<dein-name>-hello-docker . 
 ## Beispiel
 docker build -t dockertrainereu/jm-hello-docker .
 docker images
 docker run dockertrainereu/<dein-name>-hello-docker 
+```
 
+```
 docker login
 user: dockertrainereu 
 pass: --bekommt ihr vom trainer--
@@ -522,27 +574,32 @@ docker push dockertrainereu/jm-hello-docker
 ```
 mkdir myubuntu 
 cd myubuntu/
+```
 
-
+```
 ## nano Dockerfile
 FROM ubuntu:latest
 RUN apt-get update; apt-get install -y inetutils-ping
 CMD ["/bin/bash"]
+```
 
-
-
+```
 docker build -t myubuntu .
 docker images
 ## -t wird benötigt, damit bash WEITER im Hintergrund im läuft.
 ## auch mit -d (ohne -t) wird die bash ausgeführt, aber "das Terminal" dann direkt beendet 
 ## -> container läuft dann nicht mehr 
+```
+
+```
 docker run -d -t --name container-ubuntu myubuntu
 docker container ls
 ## in den container reingehen mit dem namen des Containers: myubuntu 
 docker exec -it myubuntu bash
 ls -la
- 
- 
+ ```
+
+```
 ## Zweiten Container starten
 docker run -d -t --name container-ubuntu2 myubuntu 
 
@@ -757,12 +814,16 @@ docker volume inspect test-vol
 ### Storage volumes in container einhängen
 
 ```
+## Schritt 1
 docker run -it --name=container-test-vol --mount target=/test_data,source=test-vol ubuntu bash
 1234ad# touch /test_data/README 
 exit
 ## stops container 
-docker container ls -a 
+docker container ls -a
+```
 
+```
+## Schritt 2:
 ## create new container and check for /test_data/README 
 docker run -it --name=container-test-vol2 --mount target=/test_data,source=test-vol ubuntu bash
 ab45# ls -la /test_data/README 
@@ -885,6 +946,8 @@ docker-compose --version
 ### Example with Wordpress / MySQL
 
 
+
+### Schritt 1:
 ```
 clear
 cd
@@ -893,9 +956,11 @@ cd wp
 nano docker-compose.yml
 ```
 
+### Schritt 2:
+
 ```
 ## docker-compose.yaml
-version: "3.7"
+version: "3.8"
 
 services:
   database:
@@ -932,6 +997,12 @@ volumes:
   wordpress_uploads:
 
 
+```
+
+### Schritt 3:
+
+```
+docker-compose up -d 
 ```
 
 ### Example with Wordpress / Nginx / MariadB
@@ -997,11 +1068,15 @@ docker-compose logs
 ### Example with Ubuntu and Dockerfile
 
 
+### Schritt 1:
+
 ```
 cd
 mkdir bautest
 cd bautest 
 ```
+
+### Schritt 2:
 
 ```
 ## nano docker-compose.yml
@@ -1012,6 +1087,8 @@ services:
     build: ./myubuntu
     restart: always
 ```
+
+### Schritt 3:
 
 ```
 mkdir myubuntu 
@@ -1024,6 +1101,9 @@ FROM ubuntu:latest
 RUN apt-get update; apt-get install -y inetutils-ping
 CMD ["/bin/bash"]
 ```
+
+### Schritt 4: 
+
 
 ```
 cd ../
@@ -1597,10 +1677,16 @@ runcmd:
 
 ```
 sudo snap install microk8s --classic
-## Important enable dns // otherwice not dns lookup is possible 
-microk8s enable dns 
 microk8s status
 
+## Sobald Kubernetes zur Verfügung steht aktivieren wir noch das plugin dns
+microk8s enable dns 
+microk8s status
+```
+
+### Optional
+
+```
 ## Execute kubectl commands like so 
 microk8s kubectl
 microk8s kubectl cluster-info
@@ -1658,6 +1744,82 @@ kubectl get pods
 kubectl --kubeconfig /home/myuser/.kube/myconfig
 
 ```
+
+### kubectl unter windows - Remote-Verbindung zu Kuberenets (microk8s) einrichten
+
+
+### Walkthrough (Installation)
+
+```
+## Step 1
+chocolatry installiert. 
+(powershell als Administrator ausführen)
+## https://docs.chocolatey.org/en-us/choco/setup
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+## Step 2
+choco install kubernetes-cli 
+
+## Step 3
+testen:
+kubectl version --client 
+
+## Step 4:
+## powershell als normaler benutzer öffnen 
+```
+
+### Walkthrough (autocompletion) 
+
+```
+in powershell (normaler Benutzer) 
+kubectl completion powershell | Out-String | Invoke-Expression
+```
+
+### kubectl - config - Struktur vorbereiten  
+
+```
+## in powershell im heimatordner des Benutzers .kube - ordnern anlegen
+## C:\Users\<dein-name>\
+mkdir .kube 
+cd .kube 
+```
+
+### IP von Cluster-Node bekommen 
+
+```
+## auf virtualbox - maschine per ssh einloggen 
+## öffentliche ip herausfinden - z.B. enp0s8 bei HostOnly - Adapter
+ip -br a 
+```
+
+### config für kubectl aus Cluster-Node auslesen (microk8s) 
+
+```
+## auf virtualbox - maschine per ssh einloggen / zum root wechseln 
+## abfragen
+microk8s config 
+
+## Alle Zeilen ins clipboard kopieren
+## und mit notepad++ in die Datei \Users\<dein-name>\.kube\config 
+## schreiben
+
+## Wichtig: Zeile cluster -> clusters / server 
+## Hier ip von letztem Schritt eintragen:
+## z.B. 
+Server: https://192.168.56.106/......
+```
+
+### Testen 
+
+```
+## in powershell
+## kann ich eine Verbindung zum Cluster aufbauen ? 
+kubectl cluster-info 
+```
+
+
+
+  * https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/
 
 ### Create a cluster with microk8s
 
@@ -1806,6 +1968,9 @@ kubectl get deployments
 ## kann ich den namespace angeben
 kubectl get deployments --namespace=kube-system 
 kubectl get deployments -n kube-system 
+
+## wir wollen unseren default namespace ändern 
+kubectl config set-context --current --namespace <dein-namespace>
 ```
 
 
@@ -1965,7 +2130,15 @@ kubectl apply -f deploy.yml
 ### kubectl/manifest/service
 
 
+### Schritt 1: Deployment 
+
 ```
+mkdir 04-service 
+cd 04-service 
+```
+
+```
+## 01-deploy.yml 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -1985,7 +2158,17 @@ spec:
         image: nginx
         ports:
         - containerPort: 80
----
+```
+
+```
+kubectl apply -f .
+```
+
+### Schritt 2:
+
+
+```
+## 02-svc.yml 
 apiVersion: v1
 kind: Service
 metadata:
@@ -1998,9 +2181,12 @@ spec:
     protocol: TCP
   selector:
     run: my-nginx
-        
-        
-```        
+```
+
+```
+kubectl apply -f . 
+```
+
 
 ### Ref.
 
@@ -2071,8 +2257,11 @@ microk8s enable ingress
 ### Walkthrough 
 
 ```
-mkdir apple-banana-ingress
+mkdir abi
+```
 
+
+```
 ## apple.yml 
 ## vi apple.yml 
 kind: Pod
@@ -2149,6 +2338,7 @@ metadata:
   annotations:
     ingress.kubernetes.io/rewrite-target: /
 spec:
+  ingressClassName: nginx
   rules:
   - http:
       paths:
@@ -2198,6 +2388,7 @@ metadata:
   annotations:
     ingress.kubernetes.io/rewrite-target: /
 spec:
+  ingressClassName: nginx
   rules:
   - http:
       paths:
@@ -3019,6 +3210,9 @@ kubectl get deployments
 ## kann ich den namespace angeben
 kubectl get deployments --namespace=kube-system 
 kubectl get deployments -n kube-system 
+
+## wir wollen unseren default namespace ändern 
+kubectl config set-context --current --namespace <dein-namespace>
 ```
 
 
@@ -3096,7 +3290,15 @@ kubectl get pod/nginx-static-web -o yml
 ### 03b Example with service and nginx
 
 
+### Schritt 1: Deployment 
+
 ```
+mkdir 04-service 
+cd 04-service 
+```
+
+```
+## 01-deploy.yml 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -3116,7 +3318,17 @@ spec:
         image: nginx
         ports:
         - containerPort: 80
----
+```
+
+```
+kubectl apply -f .
+```
+
+### Schritt 2:
+
+
+```
+## 02-svc.yml 
 apiVersion: v1
 kind: Service
 metadata:
@@ -3129,9 +3341,12 @@ spec:
     protocol: TCP
   selector:
     run: my-nginx
-        
-        
-```        
+```
+
+```
+kubectl apply -f . 
+```
+
 
 ### Ref.
 
@@ -3150,8 +3365,11 @@ microk8s enable ingress
 ### Walkthrough 
 
 ```
-mkdir apple-banana-ingress
+mkdir abi
+```
 
+
+```
 ## apple.yml 
 ## vi apple.yml 
 kind: Pod
@@ -3228,6 +3446,7 @@ metadata:
   annotations:
     ingress.kubernetes.io/rewrite-target: /
 spec:
+  ingressClassName: nginx
   rules:
   - http:
       paths:
@@ -3277,6 +3496,7 @@ metadata:
   annotations:
     ingress.kubernetes.io/rewrite-target: /
 spec:
+  ingressClassName: nginx
   rules:
   - http:
       paths:
@@ -3419,12 +3639,20 @@ vi /etc/exports
 exportfs -av 
 ```
 
-### On all clients 
+### On all nodes (needed for production) 
 
 ```
-#### Please do this on all servers 
-
+## 
 apt install nfs-common 
+
+```
+
+### On all nodes (only for testing)
+
+```
+#### Please do this on all servers (if you have access by ssh)
+### find out, if connection to nfs works ! 
+
 ## for testing 
 mkdir /mnt/nfs 
 ## 192.168.56.106 is our nfs-server 
@@ -3433,21 +3661,28 @@ ls -la /mnt/nfs
 umount /mnt/nfs
 ```
 
-### Setup PersistentVolume and PersistentVolumeClaim in cluster
+### Persistent Storage-Step 1: Setup PersistentVolume in cluster
 
 ```
-## vi nfs.yml 
+cd
+cd manifests 
+mkdir -p nfs 
+cd nfs 
+nano 01-pv.yml 
+```
+
+```
 apiVersion: v1
 kind: PersistentVolume
 metadata:
   # any PV name
-  name: pv-nfs
+  name: pv-nfs-tln<nr>
   labels:
-    volume: nfs-data-volume
+    volume: nfs-data-volume-tln<nr>
 spec:
   capacity:
     # storage size
-    storage: 5Gi
+    storage: 1Gi
   accessModes:
     # ReadWriteMany(RW from multi nodes), ReadWriteOnce(RW from a node), ReadOnlyMany(R from multi nodes)
     - ReadWriteMany
@@ -3456,32 +3691,51 @@ spec:
     Retain
   nfs:
     # NFS server's definition
-    path: /var/nfs/nginx
-    server: 192.168.56.106
+    path: /var/nfs/tln<nr>/nginx
+    server: 10.135.0.8
     readOnly: false
   storageClassName: ""
----
+```
+
+```
+kubectl apply -f 01-pv.yml 
+kubectl get pv 
+```
+
+### Persistent Storage-Step 2: Create Persistent Volume Claim 
+
+```
+nano 02-pvs.yml
+```
+
+```
+## vi 02-pvs.yml 
 ## now we want to claim space
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: pv-nfs-claim
+  name: pv-nfs-claim-tln<nr>
 spec:
   storageClassName: ""
-  volumeName: pv-nfs
+  volumeName: pv-nfs-tln<nr>
   accessModes:
   - ReadWriteMany
   resources:
      requests:
        storage: 1Gi
 ```
+
+
 ```
-kubectl apply -f nfs.yml
+kubectl apply -f 02-pvs.yml
+kubectl get pvc
 ```
+
+### Persistent Storage-Step 3: Deployment 
 
 ```
 ## deployment including mount 
-## vi deploy.yml 
+## vi 03-deploy.yml 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -3490,18 +3744,13 @@ spec:
   selector:
     matchLabels:
       app: nginx
-  replicas: 4 # tells deployment to run 2 pods matching the template
+  replicas: 4 # tells deployment to run 4 pods matching the template
   template:
     metadata:
       labels:
         app: nginx
     spec:
-    
-      volumes:
-      - name: nfsvol
-        persistentVolumeClaim:
-          claimName: pv-nfs-claim
-    
+       
       containers:
       - name: nginx
         image: nginx:latest
@@ -3511,13 +3760,84 @@ spec:
         volumeMounts:
           - name: nfsvol
             mountPath: "/usr/share/nginx/html"
-     
+
+      volumes:
+      - name: nfsvol
+        persistentVolumeClaim:
+          claimName: pv-nfs-claim-tln<tln>
+
+
 ```
 
 ```
-kubectl apply -f deploy.yml 
+kubectl apply -f 03-deploy.yml 
 
 ```
+
+### Persistent Storage Step 4: service 
+
+```
+## now testing it with a service 
+## cat 04-service.yml 
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-nginx
+  labels:
+    run: svc-my-nginx
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: nginx
+```        
+
+```
+kubectl apply -f 04-service.yml 
+```
+
+### Persistent Storage Step 5: write data and test
+
+```
+## connect to the container and add index.html - data 
+kubectl exec -it deploy/nginx-deployment -- bash 
+## in container
+echo "hello dear friend" > /usr/share/nginx/html/index.html 
+exit 
+
+## now try to connect 
+kubectl get svc 
+
+## connect with ip and port
+kubectl run -it --rm curly --image=curlimages/curl -- /bin/sh 
+## curl http://<cluster-ip>
+## exit
+
+## now destroy deployment 
+kubectl delete -f 03-deploy.yml 
+
+## Try again - no connection 
+kubectl run -it --rm curly --image=curlimages/curl -- /bin/sh 
+## curl http://<cluster-ip>
+## exit 
+```
+
+### Persistent Storage Step 6: retest after redeployment 
+
+```
+## now start deployment again 
+kubectl apply -f 03-deploy.yml 
+
+## and try connection again  
+kubectl run -it --rm curly --image=curlimages/curl -- /bin/sh 
+## curl http://<cluster-ip>
+## exit 
+```
+
+
+
 
 ## Kubernetes - Backups 
 
@@ -3644,7 +3964,7 @@ spec:
 
 ### Situation 
 
-  * Kein Zugriff auf die Nodes, zum Testen von Verbindungen zu Pods und Services über die ClusterIP 
+  * Kein Zugriff auf die Nodes, zum Testen von Verbindungen zu Pods und Services über die PodIP/ClusterIP 
 
 ### Lösung 
 
@@ -3670,6 +3990,33 @@ kubectl run -it --rm --image=busybox busytester -- wget <pod-ip-des-ziels>
   1. Which pod is in charge 
   1. Problems when starting: kubectl describe po mypod 
   1. Problems while running: kubectl logs mypod 
+
+### Autoscaling Pods/Deployments
+
+
+### Example: 
+
+```
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+    name: busybox-1
+spec:
+    scaleTargetRef:
+        kind: Deployment
+        name: busybox-1
+    minReplicas: 3
+    maxReplicas: 4
+    targetCPUUtilizationPercentage: 80
+
+
+```
+
+
+### Reference 
+
+  * https://medium.com/expedia-group-tech/autoscaling-in-kubernetes-why-doesnt-the-horizontal-pod-autoscaler-work-for-me-5f0094694054
 
 ## Kubernetes - Documentation 
 
@@ -3805,6 +4152,338 @@ kubectl explain pod.spec.containers.securityContext
 ```
 ## Firewall Kubernetes 
 ```
+
+## Kubernetes Deployment Scenarios 
+
+### Deployment green/blue,canary,rolling update
+
+
+### Canary Deployment 
+
+```
+A small group of the user base will see the new application 
+(e.g. 1000 out of 100.000), all the others will still see the old version
+
+From: a canary was used to test if the air was good in the mine 
+(like a test balloon) 
+```
+
+### Blue / Green Deployment 
+
+```
+The current version is the Blue one 
+The new version is the Green one 
+
+New Version (GREEN) will be tested and if it works  
+the traffic will be switch completey to the new version (GREEN) 
+
+Old version can either be deleted or will function as fallback 
+```
+
+### A/B Deployment/Testing 
+
+```
+2 Different versions are online, e.g. to test a new design / new feature 
+You can configure the weight (how much traffic to one or the other) 
+by the number of pods
+```
+
+#### Example Calculation 
+
+```
+e.g. Deployment1: 10 pods
+Deployment2: 5 pods
+
+Both have a common label,
+The service will access them through this label 
+```
+
+### Praxis-Übung A/B Deployment
+
+
+### Walkthrough 
+
+```
+cd
+cd manifests
+mkdir ab 
+cd ab 
+```
+
+```
+## vi 01-cm-version1.yml 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-version-1
+data:
+  index.html: |
+    <html>
+    <h1>Welcome to Version 1</h1>
+    </br>
+    <h1>Hi! This is a configmap Index file Version 1 </h1>
+    </html>
+```
+
+```
+## vi 02-deployment-v1.yml 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deploy-v1
+spec:
+  selector:
+    matchLabels:
+      version: v1
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: nginx
+        version: v1
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+            - name: nginx-index-file
+              mountPath: /usr/share/nginx/html/
+      volumes:
+      - name: nginx-index-file
+        configMap:
+          name: nginx-version-1
+```
+
+```
+## vi 03-cm-version2.yml 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-version-2
+data:
+  index.html: |
+    <html>
+    <h1>Welcome to Version 2</h1>
+    </br>
+    <h1>Hi! This is a configmap Index file Version 2 </h1>
+    </html>
+```
+
+```
+## vi 04-deployment-v2.yml 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deploy-v2
+spec:
+  selector:
+    matchLabels:
+      version: v2
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: nginx
+        version: v2
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+            - name: nginx-index-file
+              mountPath: /usr/share/nginx/html/
+      volumes:
+      - name: nginx-index-file
+        configMap:
+          name: nginx-version-2
+```
+
+```
+## vi 05-svc.yml 
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx
+  labels:
+    svc: nginx
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: nginx
+```
+
+```
+kubectl apply -f . 
+## get external ip  
+kubectl get nodes -o wide 
+## get port
+kubectl get svc my-nginx -o wide 
+## test it with curl apply it multiple time (at least ten times)
+curl <external-ip>:<node-port>
+```
+
+## Kubernetes Probes (Liveness and Readiness) 
+
+### Übung Liveness-Probe
+
+
+
+### Übung 1: Liveness (command) 
+
+```
+What does it do ? 
+ 
+* At the beginning pod is ready (first 30 seconds)
+* Check will be done after 5 seconds of pod being startet
+* Check will be done periodically every 5 minutes and will check
+  * for /tmp/healthy
+  * if file is there will return: 0 
+  * if file is not there will return: 1 
+* After 30 seconds container will be killed
+* After 35 seconds container will be restarted
+```
+
+```
+## cd
+## mkdir -p manifests/probes
+## cd manifests/probes 
+## vi 01-pod-liveness-command.yml 
+
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    test: liveness
+  name: liveness-exec
+spec:
+  containers:
+  - name: liveness
+    image: busybox
+    args:
+    - /bin/sh
+    - -c
+    - touch /tmp/healthy; sleep 30; rm -f /tmp/healthy; sleep 600
+    livenessProbe:
+      exec:
+        command:
+        - cat
+        - /tmp/healthy
+      initialDelaySeconds: 5
+      periodSeconds: 5
+```
+
+```
+## apply and test 
+kubectl apply -f 01-pod-liveness-command.yml 
+kubectl describe -l test=liveness pods 
+sleep 30
+kubectl describe -l test=liveness pods 
+sleep 5 
+kubectl describe -l test=liveness pods 
+```
+
+```
+## cleanup
+kubectl delete -f 01-pod-liveness-command.yml
+ 
+``` 
+
+### Übung 2: Liveness Probe (HTTP)
+
+```
+## Step 0: Understanding Prerequisite:
+This is how this image works:
+## after 10 seconds it returns code 500 
+http.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
+    duration := time.Now().Sub(started)
+    if duration.Seconds() > 10 {
+        w.WriteHeader(500)
+        w.Write([](fmt.Sprintf("error: %v", duration.Seconds())))
+    } else {
+        w.WriteHeader(200)
+        w.Write([]("ok"))
+    }
+})
+```
+
+```
+## Step 1: Pod  - manifest 
+## vi 02-pod-liveness-http.yml
+## status-code >=200 and < 400 o.k. 
+## else failure 
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    test: liveness
+  name: liveness-http
+spec:
+  containers:
+  - name: liveness
+    image: k8s.gcr.io/liveness
+    args:
+    - /server
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+        httpHeaders:
+        - name: Custom-Header
+          value: Awesome
+      initialDelaySeconds: 3
+      periodSeconds: 3
+```
+
+```
+## Step 2: apply and test
+kubectl apply -f 02-pod-liveness-http.yml
+## after 10 seconds port should have been started 
+sleep 10 
+kubectl describe pod liveness-http
+
+```
+
+
+### Reference:
+ 
+   * https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+
+### Funktionsweise Readiness-Probe vs. Liveness-Probe
+
+
+### Why / Howto / 
+
+  * Readiness checks, if container is ready and if it's not READY 
+    * SENDS NO TRAFFIC to the container   
+  
+
+### Difference to LiveNess 
+
+  * They are configured exactly the same, but use another keyword
+    * readinessProbe instead of livenessProbe 
+
+### Example 
+
+```
+readinessProbe:
+  exec:
+    command:
+    - cat
+    - /tmp/healthy
+  initialDelaySeconds: 5
+  periodSeconds: 5
+```
+
+### Reference 
+
+  * https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-readiness-probes
 
 ## Linux und Docker Tipps & Tricks allgemein 
 
@@ -3976,3 +4655,65 @@ https://docs.docker.com/registry/recipes/mirror/
 ### Ref:
 
   * https://docs.docker.com/registry/insecure/
+
+## VirtualBox Tipps & Tricks 
+
+### VirtualBox 6.1. - Ubuntu für Kubernetes aufsetzen 
+
+### VirtualBox 6.1. - Shared folder aktivieren
+
+
+### Prepare 
+
+```
+Walkthrough
+
+## At the top menu of the virtual machine 
+## Menu -> Geräte -> Gasterweiterung einlegen 
+
+## In the console do a 
+mount /dev/cdrom /mnt
+cd /mnt
+sudo apt-get install -y build-essential linux-headers-`uname -r`
+sudo ./VBoxLinuxAdditions.run 
+
+
+sudo reboot
+
+```
+
+### Configure 
+
+```
+Geräte -> Gemeinsame Ordner 
+Hinzufügen (blaues Ordnersymbol mit + ) -> 
+Ordner-Pfad: C:\Linux (Ordner muss auf Windows angelegt sein) 
+Ordner-Name: linux
+checkbox nicht ausgewählt bei : automatisch einbinden, nur lesbar
+checkbox ausgewählt bei: Permanent erzeugen
+
+Dann rebooten
+
+In der virtuellen Maschine:  
+sudo su -
+mkdir /linux
+## linux ist der vergebene Ordnername 
+mount -t vboxsf linux /linux 
+
+## Optional, falls du nicht zugreifen kannst:
+sudo usermod -aG vboxsf root 
+sudo usermod -aG vboxsf <your-user>
+
+
+```
+
+
+### persistent setzen (beim booten mounten) 
+```
+echo "linux	/linux	vboxsf	defaults	0	0" >> /etc/fstab 
+reboot
+```
+
+### Reference:
+
+  * https://gist.github.com/estorgio/1d679f962e8209f8a9232f7593683265
