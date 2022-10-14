@@ -10,6 +10,14 @@ Will complain/deny when creating such a pod with that container type
 
 ```
 
+## Möglichkeiten in Pods und Containern 
+
+```
+# für die Pods
+kubectl explain pod.spec.securityContext 
+kubectl explain pod.spec.containers.securityContext
+```
+
 ## Example (seccomp / security context) 
 
 ```
