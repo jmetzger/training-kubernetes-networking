@@ -13,6 +13,16 @@ RUN apt-get update; apt-get install -y inetutils-ping
 ```
 
 ```
+# Variante 2
+# nano Dockerfile
+FROM ubuntu:22.04
+RUN apt-get update && \
+    apt-get install -y inetutils-ping && \
+    rm -rf /var/lib/apt/lists/*
+# CMD ["/bin/bash"]
+```
+
+```
 docker build -t myubuntu .
 docker images
 # -t wird benötigt, damit bash WEITER im Hintergrund im läuft.
