@@ -9,8 +9,9 @@ mkdir Hello-World
 cd Hello-World
 ```
 
+### Schritt 2:
+
 ```
-## Schritt 2:
 # nano Dockerfile
 FROM ubuntu:latest 
 
