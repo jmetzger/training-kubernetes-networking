@@ -47,6 +47,9 @@ docker images
 docker run dockertrainereu/<dein-name>-hello-docker 
 ```
 
+
+### Schritt 5:
+
 ```
 docker login
 user: dockertrainereu 
