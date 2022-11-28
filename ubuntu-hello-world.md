@@ -5,8 +5,8 @@
 ### Schritt 1:
 ```
 cd 
-mkdir Hello-World 
-cd Hello-World
+mkdir hello-world 
+cd hello-world
 ```
 
 ### Schritt 2:
