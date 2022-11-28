@@ -10,9 +10,15 @@ mkdir nginx-test
 cd nginx-test
 mkdir html
 cd html/
-# vi index.html
-Text, den du rein haben möchtest 
+vi index.html
 
+```
+
+```
+Text, den du rein haben möchtest 
+```
+
+```
 cd ..
 vi Dockerfile 
 ```
