@@ -13,7 +13,7 @@ docker volume inspect test-vol
 
 ```
 # Schritt 1
-docker run -it --name=container-test-vol --mount target=/test_data,source=test-vol ubuntu bash
+docker run -it --name container-test-vol --mount target=/test_data,source=test-vol ubuntu bash
 1234ad# touch /test_data/README 
 exit
 # stops container 
