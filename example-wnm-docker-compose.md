@@ -41,10 +41,12 @@ volumes:
     wordpress_plugins:
     wordpress_themes:
     wordpress_uploads:
+```
 
 
+```
 ## now start the system
-docker-compose up -d 
+docker compose up -d 
 ## we can do some test if db is reachable 
 docker exec -it wp_wordpress_1 bash 
 ## within shell do 
@@ -54,5 +56,5 @@ apt-get install -y telnet
 telnet database 3306
 
 # and we even have logs
-docker-compose logs 
+docker compose logs 
 ```
