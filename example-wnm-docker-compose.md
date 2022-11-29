@@ -57,4 +57,7 @@ telnet database 3306
 
 # and we even have logs
 docker compose logs 
+
+# 
+docker compose down 
 ```
