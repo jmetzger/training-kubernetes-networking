@@ -41,9 +41,13 @@ services:
 docker compose up -d
 # start and exits 
 docker compose ps 
+# 
+docker exec -it captest_nginx_1 bash 
+#/ touch /tmp/foo; chown 10000 /tmp/foo  
+
 # what happened -> wants to do chown, but it is not allowed 
 docker logs captest_nginx_1 
-o=rwx /tmp/foo 
+
 ```
 
 ```
