@@ -1,4 +1,4 @@
-# Scanning immage with docker scan (using snyk) 
+# Scanning image with docker scan (using snyk) 
 
 ## Prerequisites 
 
