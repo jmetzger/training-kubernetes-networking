@@ -132,8 +132,6 @@
 
   1. Kubernetes - Shared Volumes 
      * [Shared Volumes with nfs](shared-volumes/nfs-multi.md)
-     
-     
 
   1. Kubernetes - Backups 
      + [Kubernetes Aware Cloud Backup - kasten.io](/backups/cluster-backup-kasten-io.md)
@@ -169,7 +167,10 @@
   1. Kubernetes Probes (Liveness and Readiness) 
      * [Übung Liveness-Probe](/probes/uebung-liveness.md)
      * [Funktionsweise Readiness-Probe vs. Liveness-Probe](/probes/readiness.md) 
-
+     
+  1. Kubernetes Interna 
+     * [OCI,Container,Images Standards](docker-alternatives-kubernetes.md)
+   
   1. Linux und Docker Tipps & Tricks allgemein 
      * [Auf ubuntu root-benutzer werden](sudo.md)
      * [IP - Adresse abfragen](ip-a.md)
