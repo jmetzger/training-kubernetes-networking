@@ -1,4 +1,4 @@
-# Warum Kubernetes / Hintergründe
+# Warum Kubernetes  ? / Hintergründe
 
   * Virtualisierung von Hardware - 5fache bessere Auslastung
   * Google als Ausgangspunkt 
@@ -7,7 +7,7 @@
   * Immutable - System
   * Selbstheilend
   
-# Wozu dient Kubernetes 
+# Wozu dient Kubernetes ?
 
   * Orchestrierung von Containern
   * am gebräuchlisten aktuell Docker
