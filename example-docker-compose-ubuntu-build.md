@@ -28,10 +28,30 @@ cd myubuntu
 ```
 
 ```
+nano hello.sh
+```
+
+```
+#!/bin/bash
+let i=0
+
+while true
+do
+  let i=i+1
+  echo $i:hello-docker
+  sleep 5
+done
+
+```
+
+```
 # nano Dockerfile 
 FROM ubuntu:latest
 RUN apt-get update; apt-get install -y inetutils-ping
-CMD ["/bin/bash"]
+COPY hello.sh .
+RUN chmod u+x hello.sh
+CMD ["/hello.sh"]
+
 ```
 
 ## Schritt 4: 
