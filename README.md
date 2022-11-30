@@ -138,9 +138,10 @@
   1. Kubernetes - Backups 
      + [Kubernetes Aware Cloud Backup - kasten.io](/backups/cluster-backup-kasten-io.md)
 
-  1. Kubernetes - Wartung 
+  1. Kubernetes - Wartung / Debugging 
      * [kubectl drain/uncordon](/kubectl/uncordon-drain.md)
      * [Alte manifeste konvertieren mit convert plugin](/kubectl/convert-plugin.md)
+     * [Netzwerkverbindung zu pod testen](/tipps-tricks/verbindung-zu-pod-testen.md)
 
   1. Kubernetes - Tipps & Tricks 
      * [Assigning Pods to Nodes](/tipps-tricks/pods-2-nodes.md) 
