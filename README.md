@@ -88,8 +88,7 @@
   1. Kubernetes Praxis API-Objekte 
      * [Das Tool kubectl (Devs/Ops) - Spickzettel](/kubectl/spickzettel.md)
      * [kubectl example with run](/kubectl/run-with-example.md)
-     * Arbeiten mit manifests (Devs/Ops)
-     * Pods (Devs/Ops)
+     * [Bauen einer Applikation mit Resource Objekten](/images/WebApp.drawio.svg)
      * [kubectl/manifest/pod](/kubectl-examples/01-pod-nginx.md)
      * ReplicaSets (Theorie) - (Devs/Ops)
      * [kubectl/manifest/replicaset](/kubectl-examples/01a-replicaset-nginx.md)
