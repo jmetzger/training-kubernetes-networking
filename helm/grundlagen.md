@@ -29,7 +29,7 @@ Wenn wir ein Chart ausführen wird eine Release erstellen
 # Cluster muss vorhanden, aber nicht notwendig wo helm installiert 
 
 # Voraussetzung auf dem Client-Rechner (helm ist nichts als anderes als ein Client-Programm) 
-Ein lauffähiges kubectl auf dem lokalen System (welches sich mit dem Cluster verbinden.
+Ein lauffähiges kubectl auf dem lokalen System (welches sich mit dem Cluster verbinden kann).
 -> saubere -> .kube/config 
 
 # Test
