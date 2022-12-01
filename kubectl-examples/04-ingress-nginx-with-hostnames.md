@@ -11,7 +11,7 @@ microk8s enable ingress
 
 ## Walkthrough 
 
-### Step 1: pdos and services
+### Step 1: pods and services
 
 ```
 mkdir abi
