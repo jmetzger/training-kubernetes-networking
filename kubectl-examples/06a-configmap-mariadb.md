@@ -3,14 +3,39 @@
 
 
 
-## Schritt 1: configmap vorbereiten 
+## Schritt 1: Deployment 
 ```
 cd 
 mkdir -p manifests 
 cd manifests
-mkdir configmaptests 
-cd configmaptests
-nano 01-configmap.yml
+mkdir configmapmaria
+cd configmapmaria
+nano 01-deploy.yml
+```
+
+```
+#deploy.yml 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb-deployment
+spec:
+  selector:
+    matchLabels:
+      app: mariadb
+  replicas: 1 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+      - name: mariadb-cont
+        image: mariadb:latest
+```
+
+```
+kubectl apply -f .
 ```
 
 ```
