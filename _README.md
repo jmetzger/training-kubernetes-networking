@@ -10,7 +10,7 @@
      * [Was ist ein Dockerfile](#was-ist-ein-dockerfile)
   
   1. Docker-Installation
-     * [BEST for Ubuntu - Install Docker from Docker Repo](#best-for-ubuntu---install-docker-from-docker-repo)
+     * [BEST for Ubuntu : Install Docker from Docker Repo](#best-for-ubuntu--install-docker-from-docker-repo)
      * [Installation Docker unter Ubuntu mit snap](#installation-docker-unter-ubuntu-mit-snap)
      * [Installation Docker unter SLES 15](#installation-docker-unter-sles-15)
   
@@ -263,7 +263,7 @@ CMD python /app/app.py
 
 ## Docker-Installation
 
-### BEST for Ubuntu - Install Docker from Docker Repo
+### BEST for Ubuntu : Install Docker from Docker Repo
 
 
 ### Walkthrough 
