@@ -2328,7 +2328,7 @@ kubectl describe pods foo2
 ### Bauen einer Applikation mit Resource Objekten
 
 
-![Bauen einer Webanwendung](images/WebApp.drawio.svg)
+![Bauen einer Webanwendung](images/WebApp.drawio.png)
 
 ### kubectl/manifest/pod
 
