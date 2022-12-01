@@ -11,6 +11,8 @@ microk8s enable ingress
 
 ## Walkthrough 
 
+### Step 1: pdos and services
+
 ```
 mkdir abi
 cd abi
@@ -30,7 +32,7 @@ spec:
     - name: apple-app
       image: hashicorp/http-echo
       args:
-        - "-text=apple-tln12"
+        - "-text=apple-<dein-name>"
 ---
 
 kind: Service
@@ -64,7 +66,7 @@ spec:
     - name: banana-app
       image: hashicorp/http-echo
       args:
-        - "-text=banana-tln12"
+        - "-text=banana-<dein-name>"
 
 ---
 
@@ -83,6 +85,8 @@ spec:
 ```
 kubectl apply -f banana.yml
 ```
+
+## Step 2: Ingress 
 
 ```
 # Ingress
