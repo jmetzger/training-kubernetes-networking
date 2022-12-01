@@ -1,4 +1,4 @@
-# Simple Example Calico 
+# Simple Example Calico
 
 ```
 # Schritt 1:
