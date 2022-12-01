@@ -1,9 +1,26 @@
 # ConfigMap Example (Mariadb) 
 
+## Schritt 1: configmap 
+
+```
+## 01-configmap.yml
+kind: ConfigMap 
+apiVersion: v1 
+metadata:
+  name: mariadb-configmap 
+data:
+  # als Wertepaare
+  MARIADB_ROOT_PASSWORD: 11abc432
+```
+
+```
+kubectl apply -f .
+kubectl get cm
+kubectl get cm -o yaml
+```
 
 
-
-## Schritt 1: Deployment 
+## Schritt 2: Deployment 
 ```
 cd 
 mkdir -p manifests 
@@ -38,23 +55,7 @@ spec:
 kubectl apply -f .
 ```
 
-```
-## 01-configmap.yml
-kind: ConfigMap 
-apiVersion: v1 
-metadata:
-  name: example-configmap 
-data:
-  # als Wertepaare
-  database: mongodb
-  database_uri: mongodb://localhost:27017
-```
 
-```
-kubectl apply -f 01-configmap.yml 
-kubectl get cm
-kubectl get cm -o yaml
-```
 
 ## Schrit 2: Beispiel als Datei 
 
