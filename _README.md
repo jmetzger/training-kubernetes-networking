@@ -10,7 +10,9 @@
      * [Was ist ein Dockerfile](#was-ist-ein-dockerfile)
   
   1. Docker-Installation
+     * [BEST for Ubuntu: Install Docker from Docker Repo](#best-for-ubuntu:-install-docker-from-docker-repo)
      * [Installation Docker unter Ubuntu mit snap](#installation-docker-unter-ubuntu-mit-snap)
+     * [Installation Docker unter SLES 15](#installation-docker-unter-sles-15)
   
   1. Docker-Befehle 
      * [Die wichtigsten Befehle](#die-wichtigsten-befehle)
@@ -37,9 +39,14 @@
   1. Docker-Daten persistent machen / Shared Volumes 
      * [Überblick](#überblick)
      * [Volumes](#volumes)
+     * [bind-mounts](#bind-mounts)
   
   1. Docker-Netzwerk 
      * [Netzwerk](#netzwerk)
+     
+  1. Docker Security 
+     * [Docker Security](#docker-security)
+     * [Scanning docker image with docker scan/snyx](#scanning-docker-image-with-docker-scansnyx)
   
   1. Docker Compose
      * [yaml-format](#yaml-format)
@@ -49,6 +56,7 @@
      * [Example with Ubuntu and Dockerfile](#example-with-ubuntu-and-dockerfile)
      * [Logs in docker - compose](#logs-in-docker---compose)
      * [docker-compose und replicas](#docker-compose-und-replicas)
+     * [docker compose Reference](https://docs.docker.com/compose/compose-file/compose-file-v3/)
   
   1. Docker Swarm 
      * [Docker Swarm Beispiele](#docker-swarm-beispiele)
@@ -69,6 +77,8 @@
      * [Installation Ubuntu - snap](#installation-ubuntu---snap)
      * [Patch to next major release - cluster](#patch-to-next-major-release---cluster)
      * [Remote-Verbindung zu Kubernetes (microk8s) einrichten](#remote-verbindung-zu-kubernetes-microk8s-einrichten)
+     * [Bash completion installieren](#bash-completion-installieren)
+     * [vim support for yaml](#vim-support-for-yaml)
      * [kubectl unter windows - Remote-Verbindung zu Kuberenets (microk8s) einrichten](#kubectl-unter-windows---remote-verbindung-zu-kuberenets-microk8s-einrichten)
      * [Create a cluster with microk8s](#create-a-cluster-with-microk8s)
      * [Ingress controller in microk8s aktivieren](#ingress-controller-in-microk8s-aktivieren)
@@ -78,8 +88,7 @@
   1. Kubernetes Praxis API-Objekte 
      * [Das Tool kubectl (Devs/Ops) - Spickzettel](#das-tool-kubectl-devsops---spickzettel)
      * [kubectl example with run](#kubectl-example-with-run)
-     * Arbeiten mit manifests (Devs/Ops)
-     * Pods (Devs/Ops)
+     * [Bauen einer Applikation mit Resource Objekten](#bauen-einer-applikation-mit-resource-objekten)
      * [kubectl/manifest/pod](#kubectlmanifestpod)
      * ReplicaSets (Theorie) - (Devs/Ops)
      * [kubectl/manifest/replicaset](#kubectlmanifestreplicaset)
@@ -98,14 +107,21 @@
      * [Achtung: Ingress mit Helm - annotations](#achtung:-ingress-mit-helm---annotations)
      * [Permanente Weiterleitung mit Ingress](#permanente-weiterleitung-mit-ingress)
      * [ConfigMap Example](#configmap-example)
+     * [Configmap MariadDB - Example](#configmap-mariaddb---example)
+     
+  1. Helm (Kubernetes Paketmanager) 
+     * [Helm Grundlagen](#helm-grundlagen)
+     * [Helm Warum ?](#helm-warum-)
+     * [Helm Example](#helm-example)
 
   1. Kubernetes - RBAC 
      * [Nutzer einrichten](#nutzer-einrichten)
  
-  1. Kubernetes - Netzwerk (CNI's) 
+  1. Kubernetes - Netzwerk (CNI's) / Mesh
      * [Übersicht Netzwerke](#übersicht-netzwerke)
      * [Callico - nginx example](#callico---nginx-example)
      * [Callico - client-backend-ui-example](#callico---client-backend-ui-example)
+     * [Mesh / istio](#mesh--istio)
    
   1. kubectl 
      * [Start pod (container with run && examples)](#start-pod-container-with-run-&&-examples)
@@ -124,15 +140,14 @@
 
   1. Kubernetes - Shared Volumes 
      * [Shared Volumes with nfs](#shared-volumes-with-nfs)
-     
-     
 
   1. Kubernetes - Backups 
      + [Kubernetes Aware Cloud Backup - kasten.io](/backups/cluster-backup-kasten-io.md)
 
-  1. Kubernetes - Wartung 
+  1. Kubernetes - Wartung / Debugging 
      * [kubectl drain/uncordon](#kubectl-drainuncordon)
      * [Alte manifeste konvertieren mit convert plugin](#alte-manifeste-konvertieren-mit-convert-plugin)
+     * [Netzwerkverbindung zu pod testen](#netzwerkverbindung-zu-pod-testen)
 
   1. Kubernetes - Tipps & Tricks 
      * [Assigning Pods to Nodes](#assigning-pods-to-nodes)
@@ -146,6 +161,7 @@
      * [Shared Volumes - Welche gibt es ?](https://kubernetes.io/docs/concepts/storage/volumes/)
      * [Helpful to learn - Kubernetes](https://kubernetes.io/docs/tasks/)
      * [Environment to learn](https://killercoda.com/killer-shell-cks)
+     * [Environment to learn II](https://killercoda.com/)
      * [Youtube Channel](https://www.youtube.com/watch?v=01qcYSck1c4)
 
   1. Kubernetes -Wann / Wann nicht 
@@ -161,7 +177,10 @@
   1. Kubernetes Probes (Liveness and Readiness) 
      * [Übung Liveness-Probe](#übung-liveness-probe)
      * [Funktionsweise Readiness-Probe vs. Liveness-Probe](#funktionsweise-readiness-probe-vs-liveness-probe)
-
+     
+  1. Kubernetes Interna 
+     * [OCI,Container,Images Standards](#ocicontainerimages-standards)
+   
   1. Linux und Docker Tipps & Tricks allgemein 
      * [Auf ubuntu root-benutzer werden](#auf-ubuntu-root-benutzer-werden)
      * [IP - Adresse abfragen](#ip---adresse-abfragen)
@@ -226,13 +245,60 @@ Container virtualisieren Betriebssystem
 ### Was ist ein Dockerfile
 
 
+## What is it ? 
  * Textdatei, die Linux - Kommandos enthält
    * die man auch auf der Kommandozeile ausführen könnte 
    * Diese erledigen alle Aufgaben, die nötig sind, um ein Image zusammenzustellen
    * mit docker build wird dieses image erstellt 
    
+## Exmaple 
+
+```
+## syntax=docker/dockerfile:1
+FROM ubuntu:18.04
+COPY . /app
+RUN make /app
+CMD python /app/app.py
+```
 
 ## Docker-Installation
+
+### BEST for Ubuntu: Install Docker from Docker Repo
+
+
+### Walkthrough 
+
+```
+sudo apt-get update
+sudo apt-get install \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+```
+
+### Läuft der Dienst (dockerd) 
+
+```
+systemctl status docker 
+```
+
+### docker-compose ? 
+
+```
+## herausfinden, ob docker compose installieren 
+docker compose version 
+```
 
 ### Installation Docker unter Ubuntu mit snap
 
@@ -259,6 +325,93 @@ systemctl start snap.docker.dockerd.service
 ## wird der docker-dienst beim nächsten reboot oder starten des Server gestartet ? 
 systemctl is-enabled snap.docker.dockerd.service
 
+```
+
+### Installation Docker unter SLES 15
+
+
+### Walkthrough 
+
+
+```
+sudo zypper search -v docker*
+sudo zypper install docker
+
+## Dem Nutzer /z.B. Nutzer kurs die Gruppe docker hinzufügen 
+## damit auch dieser den Docker-daemon verwenden darf 
+sudo groupadd docker
+sudo usermod -aG docker $USER
+
+### Unter SLES werden Dienste nicht automatisch aktiviert und gestartet !!! 
+## Service für start nach Boot aktivieren 
+newgrp docker 
+sudo systemctl enable docker.service
+## Docker dienst starten 
+sudo systemctl start docker.service
+```
+
+
+### Ausführlich mit Ausgaben 
+
+```
+sudo zypper search -v docker*
+
+Repository-Daten werden geladen...
+Installierte Pakete werden gelesen...
+
+sudo zypper install docker
+
+Dienst 'Basesystem_Module_x86_64' wird aktualisiert.
+Dienst 'Containers_Module_x86_64' wird aktualisiert.
+Dienst 'Desktop_Applications_Module_x86_64' wird aktualisiert.
+Dienst 'Development_Tools_Module_x86_64' wird aktualisiert.
+Dienst 'SUSE_Linux_Enterprise_Server_x86_64' wird aktualisiert.
+Dienst 'Server_Applications_Module_x86_64' wird aktualisiert.
+Repository-Daten werden geladen...
+Installierte Pakete werden gelesen...
+Paketabhängigkeiten werden aufgelöst...
+
+Das folgende empfohlene Paket wurde automatisch gewählt:
+  git-core
+
+Die folgenden 7 NEUEN Pakete werden installiert:
+  catatonit containerd docker docker-bash-completion git-core libsha1detectcoll1 runc
+
+7 neue Pakete zu installieren.
+Gesamtgröße des Downloads: 52,2 MiB. Bereits im Cache gespeichert: 0 B. Nach der Operation werden zusätzlich 242,1 MiB belegt.
+Fortfahren? [j/n/v/...? zeigt alle Optionen](j): j
+Paket libsha1detectcoll1-1.0.3-2.18.x86_64 abrufen                                                                                                                                                                          (1/7),  23,2 KiB ( 45,8 KiB entpackt)
+Abrufen: libsha1detectcoll1-1.0.3-2.18.x86_64.rpm .......................................................................................................................................................................................................[fertig]
+Paket catatonit-0.1.5-3.3.2.x86_64 abrufen                                                                                                                                                                                  (2/7), 257,2 KiB (696,5 KiB entpackt)
+Abrufen: catatonit-0.1.5-3.3.2.x86_64.rpm ...............................................................................................................................................................................................................[fertig]
+Paket runc-1.1.4-150000.33.4.x86_64 abrufen                                                                                                                                                                                 (3/7),   2,6 MiB (  9,1 MiB entpackt)
+Abrufen: runc-1.1.4-150000.33.4.x86_64.rpm ..............................................................................................................................................................................................................[fertig]
+Paket containerd-1.6.6-150000.73.2.x86_64 abrufen                                                                                                                                                                           (4/7),  17,7 MiB ( 74,2 MiB entpackt)
+Abrufen: containerd-1.6.6-150000.73.2.x86_64.rpm ........................................................................................................................................................................................................[fertig]
+Paket git-core-2.35.3-150300.10.15.1.x86_64 abrufen                                                                                                                                                                         (5/7),   4,8 MiB ( 26,6 MiB entpackt)
+Abrufen: git-core-2.35.3-150300.10.15.1.x86_64.rpm ......................................................................................................................................................................................................[fertig]
+Paket docker-20.10.17_ce-150000.166.1.x86_64 abrufen                                                                                                                                                                        (6/7),  26,6 MiB (131,4 MiB entpackt)
+Abrufen: docker-20.10.17_ce-150000.166.1.x86_64.rpm .....................................................................................................................................................................................................[fertig]
+Paket docker-bash-completion-20.10.17_ce-150000.166.1.noarch abrufen                                                                                                                                                        (7/7), 121,3 KiB (113,6 KiB entpackt)
+Abrufen: docker-bash-completion-20.10.17_ce-150000.166.1.noarch.rpm .....................................................................................................................................................................................[fertig]
+
+Überprüfung auf Dateikonflikte läuft: ...................................................................................................................................................................................................................[fertig]
+(1/7) Installieren: libsha1detectcoll1-1.0.3-2.18.x86_64 ................................................................................................................................................................................................[fertig]
+(2/7) Installieren: catatonit-0.1.5-3.3.2.x86_64 ........................................................................................................................................................................................................[fertig]
+(3/7) Installieren: runc-1.1.4-150000.33.4.x86_64 .......................................................................................................................................................................................................[fertig]
+(4/7) Installieren: containerd-1.6.6-150000.73.2.x86_64 .................................................................................................................................................................................................[fertig]
+(5/7) Installieren: git-core-2.35.3-150300.10.15.1.x86_64 ...............................................................................................................................................................................................[fertig]
+Updating /etc/sysconfig/docker ...
+(6/7) Installieren: docker-20.10.17_ce-150000.166.1.x86_64 ..............................................................................................................................................................................................[fertig]
+(7/7) Installieren: docker-bash-completion-20.10.17_ce-150000.166.1.noarch ..............................................................................................................................................................................[fertig]
+
+sudo groupadd docker
+sudo usermod -aG docker $USER
+// logout
+
+newgrp docker 
+sudo systemctl enable docker.service
+sudo systemctl start docker.service
 ```
 
 ## Docker-Befehle 
@@ -470,12 +623,13 @@ curl http://localhost:8080
 #### Schritt 1:
 ```
 cd 
-mkdir Hello-World 
-cd Hello-World
+mkdir hello-world 
+cd hello-world
 ```
 
+#### Schritt 2:
+
 ```
-### Schritt 2:
 ## nano Dockerfile
 FROM ubuntu:latest 
 
@@ -511,6 +665,9 @@ docker images
 docker run dockertrainereu/<dein-name>-hello-docker 
 ```
 
+
+#### Schritt 5:
+
 ```
 docker login
 user: dockertrainereu 
@@ -524,49 +681,7 @@ docker push dockertrainereu/jm-hello-docker
 
 ```
 
-### Advanced Version 
 
-```
-### Schritt 1:
-cd 
-mkdir Hello-World 
-cd Hello-World
-
-### Schritt 2:
-## nano Dockerfile
-FROM ubuntu:latest 
-
-COPY hello.sh .
-RUN chmod u+x hello.sh
-CMD ["/hello.sh"]
-
-### Schritt 3:
-nano hello.sh 
-##!/bin/bash
-while true
-do 
-  echo hello-docker
-done 
-
-### Schritt 4:
-## docker build -t dockertrainereu/<dein-name>-hello-docker . 
-## Beispiel
-docker build -t dockertrainereu/jm-hello-docker .
-docker images
-docker run -d -t --name hello dockertrainereu/<dein-name>-hello-docker 
-docker exec -it hello sh 
-
-docker login
-user: dockertrainereu 
-pass: --bekommt ihr vom trainer--
-
-## docker push dockertrainereu/<dein-name>-hello-docker 
-## z.B. 
-docker push dockertrainereu/jm-hello-docker
-
-## und wir schauen online, ob wir das dort finden
-
-```
 
 ### Ubuntu mit ping
 
@@ -578,9 +693,19 @@ cd myubuntu/
 
 ```
 ## nano Dockerfile
-FROM ubuntu:latest
+FROM ubuntu:22.04
 RUN apt-get update; apt-get install -y inetutils-ping
-CMD ["/bin/bash"]
+## CMD ["/bin/bash"]
+```
+
+```
+## Variante 2
+## nano Dockerfile
+FROM ubuntu:22.04
+RUN apt-get update && \
+    apt-get install -y inetutils-ping && \
+    rm -rf /var/lib/apt/lists/*
+## CMD ["/bin/bash"]
 ```
 
 ```
@@ -628,39 +753,38 @@ mkdir nginx-test
 cd nginx-test
 mkdir html
 cd html/
-## vi index.html
-Text, den du rein haben möchtest 
+vi index.html
 
+```
+
+```
+Text, den du rein haben möchtest 
+```
+
+```
 cd ..
 vi Dockerfile 
+```
 
+```
 FROM nginx:latest
 COPY html /usr/share/nginx/html
+```
 
+```
 ## nameskürzel z.B. jm1 
-docker build -t dockertrainereu/jm1-hello-web . 
+docker build -t nginx-test  . 
 docker images
 
 ```
 
 
-### Schritt 2: Push build 
 
-```
-
-## eventually you are not logged in 
-docker login 
-docker push dockertrainereu/jm1-hello-web 
-##aus spass geloescht
-docker rmi dockertrainereu/jm1-hello-web
-
-```
-
-### Schritt 3: dokcer laufen lassen
+### Schritt 2: docker laufen lassen
 
 ```
 ## und direkt aus der Registry wieder runterladen 
-docker run --name hello-web -p 8080:80 -d dockertrainereu/jm1-hello-web
+docker run --name hello-web -p 8080:80 -d nginx-test
 
 ## laufenden Container anzeigen lassen
 docker container ls 
@@ -815,7 +939,7 @@ docker volume inspect test-vol
 
 ```
 ## Schritt 1
-docker run -it --name=container-test-vol --mount target=/test_data,source=test-vol ubuntu bash
+docker run -it --name container-test-vol --mount target=/test_data,source=test-vol ubuntu bash
 1234ad# touch /test_data/README 
 exit
 ## stops container 
@@ -836,6 +960,18 @@ ab45# ls -la /test_data/README
 docker rm container-test-vol 
 docker rm container-test-vol2
 docker volume rm test-vol
+```
+
+### bind-mounts
+
+
+```
+## andere Verzeichnis als das Heimatverzeichnis von root funktionieren aktuell nicht mit 
+## snap install docker 
+## wg. des Confinements 
+docker run -d -it  --name devtest --mount type=bind,source=/root,target=/app nginx:latest
+docker exec -it devtest bash 
+/# cd /app 
 ```
 
 ## Docker-Netzwerk 
@@ -903,6 +1039,91 @@ docker network rm test_net
 
 
 
+## Docker Security 
+
+### Docker Security
+
+
+### Run container under specific user: 
+
+```
+## user with id 40000 does not need to exist in container 
+docker run -it -u 40000 alpine 
+
+## user kurs needs to exist in container (/etc/passwd) 
+docker run -it -u kurs alpine 
+
+```
+
+### Default capabilities 
+
+  * Set everytime a new container is started as default 
+  * https://github.com/moby/moby/blob/master/profiles/seccomp/default.json
+
+
+### Run container with less capabilities 
+
+```
+cd
+mkdir captest
+cd captest 
+```
+
+```
+nano docker-compose.yml 
+```
+
+```
+services: 
+  nginx:
+    image: nginx 
+    cap_drop:
+      - CHOWN
+```
+
+```
+docker compose up -d
+## start and exits 
+docker compose ps 
+## 
+docker exec -it captest_nginx_1 bash 
+##/ touch /tmp/foo; chown 10000 /tmp/foo  
+
+## what happened -> wants to do chown, but it is not allowed 
+docker logs captest_nginx_1 
+
+```
+
+```
+docker compose down 
+```
+
+
+### Reference:
+
+  * https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html
+  * https://www.redhat.com/en/blog/secure-your-containers-one-weird-trick
+  * man capabilities
+
+### Scanning docker image with docker scan/snyx
+
+
+### Prerequisites 
+
+```
+You need to be logged in on docker hub with docker login 
+(with your account credentials
+```
+
+
+### Example 
+
+```
+## Snyk (docker scan) 
+docker help scan
+docker scan --json --accept-license dockertrainereu/jm-hello-docker  > result.json
+```
+
 ## Docker Compose
 
 ### yaml-format
@@ -942,6 +1163,15 @@ docker-compose version
 docker-compose --version 
 
 ```
+
+## docker compose direkt als plugin für docker 
+
+```
+## Installiert man docker in der neuesten 20.10.21 
+## existiert docker als plugin und wird anders aufgerufen 
+docker compose 
+```
+
 
 ### Example with Wordpress / MySQL
 
@@ -1049,10 +1279,12 @@ volumes:
     wordpress_plugins:
     wordpress_themes:
     wordpress_uploads:
+```
 
 
+```
 ### now start the system
-docker-compose up -d 
+docker compose up -d 
 ### we can do some test if db is reachable 
 docker exec -it wp_wordpress_1 bash 
 ### within shell do 
@@ -1062,7 +1294,10 @@ apt-get install -y telnet
 telnet database 3306
 
 ## and we even have logs
-docker-compose logs 
+docker compose logs 
+
+## 
+docker compose down 
 ```
 
 ### Example with Ubuntu and Dockerfile
@@ -1096,10 +1331,30 @@ cd myubuntu
 ```
 
 ```
+nano hello.sh
+```
+
+```
+##!/bin/bash
+let i=0
+
+while true
+do
+  let i=i+1
+  echo $i:hello-docker
+  sleep 5
+done
+
+```
+
+```
 ## nano Dockerfile 
 FROM ubuntu:latest
 RUN apt-get update; apt-get install -y inetutils-ping
-CMD ["/bin/bash"]
+COPY hello.sh .
+RUN chmod u+x hello.sh
+CMD ["/hello.sh"]
+
 ```
 
 ### Schritt 4: 
@@ -1110,11 +1365,11 @@ cd ../
 ## wichtig, im docker-compose - Ordner seiend 
 ##pwd 
 ##~/bautest
-docker-compose up -d 
+docker compose up -d 
 ## wird image gebaut und container gestartet 
 
 ## Bei Veränderung vom Dockerfile, muss man den Parameter --build mitangeben 
-docker-compose up -d --build 
+docker compose up -d --build 
 ```
 
 ### Logs in docker - compose
@@ -1150,6 +1405,10 @@ configs:
     external: true
 ```
 ### Ref:
+
+  * https://docs.docker.com/compose/compose-file/compose-file-v3/
+
+### docker compose Reference
 
   * https://docs.docker.com/compose/compose-file/compose-file-v3/
 
@@ -1270,7 +1529,7 @@ docker service create --name my_web \
   * Immutable - System
   * Selbstheilend
   
-## Wozu dient Kubernetes 
+## Wozu dient Kubernetes ?
 
   * Orchestrierung von Containern
   * am gebräuchlisten aktuell Docker
@@ -1745,6 +2004,60 @@ kubectl --kubeconfig /home/myuser/.kube/myconfig
 
 ```
 
+### Bash completion installieren
+
+
+### Walkthrough 
+
+```
+apt install bash-completion
+source /usr/share/bash-completion/bash_completion
+## is it installed properly 
+type _init_completion
+
+## activate for all users 
+kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+
+## verifizieren - neue login shell
+su -
+
+## zum Testen
+kubectl g<TAB> 
+kubectl get 
+```
+### Alternative für k als alias für kubectl 
+
+```
+source <(kubectl completion bash)
+complete -F __start_kubectl k
+
+```
+
+### Reference 
+
+  * https://kubernetes.io/docs/tasks/tools/included/optional-kubectl-configs-bash-linux/
+
+### vim support for yaml
+
+
+### Ubuntu (im Unterverzeichnis /etc/vim - systemweit) 
+
+```
+hi CursorColumn cterm=NONE ctermbg=lightred ctermfg=white
+autocmd FileType y?ml setlocal ts=2 sts=2 sw=2 ai number expandtab cursorline cursorcolumn
+```
+
+### Testen 
+
+```
+vim test.yml 
+Eigenschaft: <return> # springt eingerückt in die nächste Zeile um 2 spaces eingerückt
+
+## evtl funktioniert vi test.yml auf manchen Systemen nicht, weil kein vim (vi improved) 
+
+
+```
+
 ### kubectl unter windows - Remote-Verbindung zu Kuberenets (microk8s) einrichten
 
 
@@ -2012,6 +2325,11 @@ kubectl describe pods foo2
 
   * https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#run
 
+### Bauen einer Applikation mit Resource Objekten
+
+<!-- Do not edit this file with editors other than diagrams.net -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="731px" height="241px" viewBox="-0.5 -0.5 731 241" content="&lt;mxfile host=&quot;app.diagrams.net&quot; modified=&quot;2022-11-30T12:16:03.113Z&quot; agent=&quot;5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36&quot; etag=&quot;-PTTp2W74H-wHcNSc8nm&quot; version=&quot;20.6.0&quot; type=&quot;google&quot;&gt;&lt;diagram id=&quot;yU8C2uva4W3iNGBeJZi2&quot; name=&quot;Seite-1&quot;&gt;3Zddb9MwFIZ/TSW4YEqcz16u7T6QgFVUE3CFvOQsMThx5Dhtwq/HXpzmk7UISiduKp/Xju3zvO6JM7OWSXnDcRa/ZyHQGTLCcmatZgh5xlz+KqGqBcuzaiHiJKwlsxU25Ado0dBqQULIewMFY1SQrC8GLE0hED0Nc852/WGPjPZXzXAEI2ETYDpWP5FQxLXqI6/Vb4FEcbOy6eqEE9wM1pnkMQ7ZriNZVzNryRkTdSspl0AVu4ZL/dz1L3r3G+OQimMeuPt6vbm7vxV4VSwel/P14qYI3/j1LFtMC52w3qyoGgKcFWkIahJjZi12MRGwyXCgenfScqnFIqEyMmVzvCm9zy1wAWVH0pu8AZaA4JUc0vQ21usTY/o63rX8XVdrcYc9srWItefRfu4Wi2xoMr9ByUQvD5Nj9zEhY4xp/y/qYjK9k2EyXiAmf4DJHmMynSlM5qkwzUeU1iw8OygXDUB5Y1D+BCf3ZKfJHHH6CBklAc5BjHDJLEWfSS44+w5LRhmXSspSOXLxSCgdSJiSKJVhINmB1BeKmVyFXuqOhIShWmbShL5NpziwzkT5m/DBOpkP1siHlfSBVYlK8v/1wRm8hubn9sE7XF0hlJcXHTIuYhaxFNOrVh1wase8YyzThn0DISp9E8OFYH07JVFefdbPPwVfVHDhOU28Kru9q+qQJzkreADPZe7WAwXmEYjDlVVReNZiDhQLsu1f8f6+Ye7IsA3wLZG5nrvYW+7hYm+if1rtxzfRt2nEIc+luGTyJDFKZVlALlX15UG1ItV6teasVKkptsBfj0d8iEhaygAnCmT6kGd7iGe0YHh9O7sD6IjbG6ThpfqoUmWa4jwnQZ9LHyKURDxVigvTcHVcFwvHRjpui4UKqk6wBk5kZupV8If1wz+yLHTQT90IG+3o6qFXWDOiXpSN8UPnreEbo85HP9X9oBtMZFn+hW0YBrJt0zZc5PSnNQbT1tVzNO3TWdlDmDo+Mmy/Uuvh7ae+dfUT&lt;/diagram&gt;&lt;/mxfile&gt;" style="background-color: rgb(255, 255, 255);"><defs/><g><rect x="70" y="0" width="660" height="240" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="all"/><rect x="500" y="20" width="210" height="170" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="all"/><rect x="540" y="60" width="150" height="110" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="all"/><rect x="580" y="90" width="80" height="60" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="all"/><g transform="translate(-0.5 -0.5)"><switch><foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;"><div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 78px; height: 1px; padding-top: 120px; margin-left: 581px;"><div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;"><div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">Pod</div></div></div></foreignObject><text x="620" y="124" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">Pod</text></switch></g><rect x="540" y="70" width="60" height="30" fill="none" stroke="none" pointer-events="all"/><g transform="translate(-0.5 -0.5)"><switch><foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;"><div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 58px; height: 1px; padding-top: 85px; margin-left: 541px;"><div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;"><div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">Replicaset</div></div></div></foreignObject><text x="570" y="89" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">Replicaset</text></switch></g><rect x="510" y="10" width="60" height="30" fill="none" stroke="none" pointer-events="all"/><g transform="translate(-0.5 -0.5)"><switch><foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;"><div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 58px; height: 1px; padding-top: 25px; margin-left: 511px;"><div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;"><div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">Deployment</div></div></div></foreignObject><text x="540" y="29" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">Deployment</text></switch></g><path d="M 440 120 L 510 120 L 510 135 L 573.63 135" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="stroke"/><path d="M 578.88 135 L 571.88 138.5 L 573.63 135 L 571.88 131.5 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="all"/><rect x="320" y="90" width="120" height="60" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="all"/><g transform="translate(-0.5 -0.5)"><switch><foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;"><div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 118px; height: 1px; padding-top: 120px; margin-left: 321px;"><div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;"><div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">Service</div></div></div></foreignObject><text x="380" y="124" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">Service</text></switch></g><rect x="0" y="90" width="120" height="60" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="all"/><g transform="translate(-0.5 -0.5)"><switch><foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;"><div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 118px; height: 1px; padding-top: 120px; margin-left: 1px;"><div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;"><div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">Ingress Controller<br />(Proxy Server)<br />Nginx </div></div></div></foreignObject><text x="60" y="124" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">Ingress Controller...</text></switch></g><path d="M 139.96 130.08 L 292.04 120.4" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="stroke"/><path d="M 297.28 120.07 L 290.52 124.01 L 292.04 120.4 L 290.08 117.02 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="all"/></g><switch><g requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"/><a transform="translate(0,-5)" xlink:href="https://www.diagrams.net/doc/faq/svg-export-text-problems" target="_blank"><text text-anchor="middle" font-size="10px" x="50%" y="100%">Text is not SVG - cannot display</text></a></switch></svg>
 ### kubectl/manifest/pod
 
 
@@ -2424,7 +2742,12 @@ microk8s enable ingress
 
 ### Walkthrough 
 
+#### Step 1: pods and services
+
 ```
+cd
+mkdir -p manifests
+cd manifests 
 mkdir abi
 cd abi
 ```
@@ -2443,7 +2766,7 @@ spec:
     - name: apple-app
       image: hashicorp/http-echo
       args:
-        - "-text=apple-tln12"
+        - "-text=apple-<dein-name>"
 ---
 
 kind: Service
@@ -2477,7 +2800,7 @@ spec:
     - name: banana-app
       image: hashicorp/http-echo
       args:
-        - "-text=banana-tln12"
+        - "-text=banana-<dein-name>"
 
 ---
 
@@ -2496,6 +2819,8 @@ spec:
 ```
 kubectl apply -f banana.yml
 ```
+
+### Step 2: Ingress 
 
 ```
 ## Ingress
@@ -2654,6 +2979,364 @@ This annotation allows to return a permanent redirect instead of sending data to
 
 ### ConfigMap Example
 
+
+### Schritt 1: configmap vorbereiten 
+```
+cd 
+mkdir -p manifests 
+cd manifests
+mkdir configmaptests 
+cd configmaptests
+nano 01-configmap.yml
+```
+
+```
+### 01-configmap.yml
+kind: ConfigMap 
+apiVersion: v1 
+metadata:
+  name: example-configmap 
+data:
+  # als Wertepaare
+  database: mongodb
+  database_uri: mongodb://localhost:27017
+```
+
+```
+kubectl apply -f 01-configmap.yml 
+kubectl get cm
+kubectl get cm -o yaml
+```
+
+### Schrit 2: Beispiel als Datei 
+
+
+```
+nano 02-pod.yml
+```
+
+```
+kind: Pod 
+apiVersion: v1 
+metadata:
+  name: pod-mit-configmap 
+
+spec:
+  # Add the ConfigMap as a volume to the Pod
+  volumes:
+    # `name` here must match the name
+    # specified in the volume mount
+    - name: example-configmap-volume
+      # Populate the volume with config map data
+      configMap:
+        # `name` here must match the name 
+        # specified in the ConfigMap's YAML 
+        name: example-configmap
+
+  containers:
+    - name: container-configmap
+      image: nginx:latest
+      # Mount the volume that contains the configuration data 
+      # into your container filesystem
+      volumeMounts:
+        # `name` here must match the name
+        # from the volumes section of this pod
+        - name: example-configmap-volume
+          mountPath: /etc/config
+
+
+```
+
+```
+kubectl apply -f 02-pod.yml 
+```
+
+```
+##Jetzt schauen wir uns den Container/Pod mal an
+kubectl exec pod-mit-configmap -- ls -la /etc/config
+kubectl exec -it pod-mit-configmap --  bash
+## ls -la /etc/config 
+```
+
+### Schritt 3: Beispiel. ConfigMap als env-variablen 
+
+```
+nano 03-pod-mit-env.yml
+```
+
+```
+## 03-pod-mit-env.yml 
+kind: Pod 
+apiVersion: v1 
+metadata:
+  name: pod-env-var 
+spec:
+  containers:
+    - name: env-var-configmap
+      image: nginx:latest 
+      envFrom:
+        - configMapRef:
+            name: example-configmap
+
+```
+
+```
+kubectl apply -f 03-pod-mit-env.yml
+```
+
+```
+## und wir schauen uns das an 
+##Jetzt schauen wir uns den Container/Pod mal an
+kubectl exec pod-env-var -- env
+kubectl exec -it pod-env-var --  bash
+## env
+
+```
+
+
+### Reference: 
+
+ * https://matthewpalmer.net/kubernetes-app-developer/articles/ultimate-configmap-guide-kubernetes.html
+
+### Configmap MariadDB - Example
+
+
+### Schritt 1: configmap 
+
+```
+### 01-configmap.yml
+kind: ConfigMap 
+apiVersion: v1 
+metadata:
+  name: mariadb-configmap 
+data:
+  # als Wertepaare
+  MARIADB_ROOT_PASSWORD: 11abc432
+```
+
+```
+kubectl apply -f .
+kubectl get cm
+kubectl get cm mariadb-configmap -o yaml
+```
+
+
+### Schritt 2: Deployment 
+```
+cd 
+mkdir -p manifests 
+cd manifests
+mkdir configmapmaria
+cd configmapmaria
+nano 01-deploy.yml
+```
+
+```
+##deploy.yml 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb-deployment
+spec:
+  selector:
+    matchLabels:
+      app: mariadb
+  replicas: 1 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+      - name: mariadb-cont
+        image: mariadb:latest
+        envFrom:
+        - configMapRef:
+            name: mariadb-configmap
+
+```
+
+```
+kubectl apply -f .
+```
+
+### Imporatnt Sidenode 
+
+  * If configmap changes, deployment does not know
+  * So kubectl apply -f deploy.yml will not have any effect
+  * to fix, use stakater/relaoder: https://github.com/stakater/Reloader
+
+
+## Helm (Kubernetes Paketmanager) 
+
+### Helm Grundlagen
+
+
+### Wo ? 
+
+```
+artifacts helm 
+
+```
+
+ * https://artifacthub.io/
+
+### Komponenten 
+
+```
+Chart - beeinhaltet Beschreibung und Komponenten 
+tar.gz - Format 
+oder Verzeichnis 
+
+Wenn wir ein Chart ausführen wird eine Release erstellen 
+(parallel: image -> container, analog: chart -> release)
+```
+
+### Installation 
+
+```
+## Beispiel ubuntu 
+## snap install --classic helm
+
+## Cluster muss vorhanden, aber nicht notwendig wo helm installiert 
+
+## Voraussetzung auf dem Client-Rechner (helm ist nichts als anderes als ein Client-Programm) 
+Ein lauffähiges kubectl auf dem lokalen System (welches sich mit dem Cluster verbinden kann).
+-> saubere -> .kube/config 
+
+## Test
+kubectl cluster-info 
+
+```
+
+
+### Helm Warum ?
+
+
+```
+Ein Paket für alle Komponenten
+Einfaches Installieren, Updaten und deinstallieren 
+Feststehende Struktur 
+```
+
+### Helm Example
+
+
+### Prerequisites 
+
+  * kubectl needs to be installed and configured to access cluster
+  * Good: helm works as unprivileged user as well - Good for our setup 
+  * install helm on ubuntu (client) as root: snap install --classic helm 
+    * this installs helm3
+  * Please only use: helm3. No server-side components needed (in cluster) 
+    * Get away from examples using helm2 (hint: helm init) - uses tiller  
+
+### Simple Walkthrough (Example 0)
+
+```
+## Repo hinzufpgen 
+helm repo add bitnami https://charts.bitnami.com/bitnami 
+## gecachte Informationen aktualieren 
+helm repo update
+
+helm search repo bitnami 
+## helm install release-name bitnami/mysql
+helm install my-mysql bitnami/mysql
+## Chart runterziehen ohne installieren 
+## helm pull bitnami/mysql
+
+## Release anzeigen zu lassen
+helm list 
+
+## Status einer Release / Achtung, heisst nicht unbedingt nicht, dass pod läuft 
+helm status my-mysql 
+
+## weitere release installieren 
+## helm install neuer-release-name  bitnami/mysql 
+
+
+```
+
+### Under the hood 
+
+```
+## Helm speichert Informationen über die Releases in den Secrets
+kubectl get secrets | grep helm 
+
+
+```
+
+
+### Example 1: - To get know the structure 
+
+```
+helm repo add bitnami https://charts.bitnami.com/bitnami 
+helm search repo bitnami 
+helm repo update
+helm pull bitnami/mysql 
+tar xzvf mysql-9.0.0.tgz 
+
+```
+
+
+
+### Example 2: We will setup mysql without persistent storage (not helpful in production ;o() 
+
+```
+helm repo add bitnami https://charts.bitnami.com/bitnami 
+helm search repo bitnami 
+helm repo update
+
+helm install my-mysql bitnami/mysql
+
+
+```
+
+
+### Example 2 - continue - fehlerbehebung 
+
+```
+helm uninstall my-mysql 
+## Install with persistentStorage disabled - Setting a specific value 
+helm install my-mysql --set primary.persistence.enabled=false bitnami/mysql
+
+## just as notice 
+## helm uninstall my-mysql 
+
+```
+
+### Example 2b: using a values file 
+
+```
+## mkdir helm-mysql
+## cd helm-mysql
+## vi values.yml 
+primary:
+  persistence:
+    enabled: false 
+```
+
+```
+helm uninstall my-mysql
+helm install my-mysql bitnami/mysql -f values.yml 
+```
+
+### Example 3: Install wordpress 
+
+```
+helm repo add bitnami https://charts.bitnami.com/bitnami 
+helm install my-wordpress \
+  --set wordpressUsername=admin \
+  --set wordpressPassword=password \
+  --set mariadb.auth.rootPassword=secretpassword \
+    bitnami/wordpress
+```
+
+### Referenced
+
+  * https://github.com/bitnami/charts/tree/master/bitnami/mysql/#installing-the-chart
+  * https://helm.sh/docs/intro/quickstart/
+
 ## Kubernetes - RBAC 
 
 ### Nutzer einrichten
@@ -2767,7 +3450,7 @@ kubectl get pods
 
 
 
-## Kubernetes - Netzwerk (CNI's) 
+## Kubernetes - Netzwerk (CNI's) / Mesh
 
 ### Übersicht Netzwerke
 
@@ -2787,6 +3470,7 @@ kubectl get pods
   * Flanel
   * Canal 
   * Calico 
+  * Cilium
   
 ### Flannel
 
@@ -3044,6 +3728,38 @@ kubectl delete ns client stars management-ui
 ### Reference 
 
   * https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/kubernetes-demo
+
+### Mesh / istio
+
+
+### Schaubild 
+
+![istio Schaubild](https://istio.io/latest/docs/examples/virtual-machines/vm-bookinfo.svg)
+
+### Istio 
+
+```
+## Visualization 
+## with kiali (included in istio) 
+https://istio.io/latest/docs/tasks/observability/kiali/kiali-graph.png
+
+## Example 
+## https://istio.io/latest/docs/examples/bookinfo/
+The sidecars are injected in all pods within the namespace by labeling the namespace like so:
+kubectl label namespace default istio-injection=enabled
+
+## Gateway (like Ingress in vanilla Kubernetes) 
+kubectl label namespace default istio-injection=enabled
+```
+
+### istio tls 
+
+ * https://istio.io/latest/docs/ops/configuration/traffic-management/tls-configuration/
+
+
+### istio - the next generation without sidecar 
+
+  * https://istio.io/latest/blog/2022/introducing-ambient-mesh/
 
 ## kubectl 
 
@@ -3841,7 +4557,7 @@ kubectl run -it --rm curly --image=curlimages/curl -- /bin/sh
 
 ## Kubernetes - Backups 
 
-## Kubernetes - Wartung 
+## Kubernetes - Wartung / Debugging 
 
 ### kubectl drain/uncordon
 
@@ -3895,6 +4611,35 @@ kubectl convert --help
 ### Reference 
 
   * https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-kubectl-convert-plugin 
+
+### Netzwerkverbindung zu pod testen
+
+
+### Situation 
+
+```
+Managed Cluster und ich kann nicht auf einzelne Nodes per ssh zugreifen
+```
+
+### Behelf: Eigenen Pod starten mit busybox 
+
+```
+kubectl run podtest --rm -ti --image busybox -- /bin/sh
+```
+
+### Example test connection 
+
+```
+## wget befehl zum Kopieren
+wget -O - http://10.244.0.99
+```
+
+```
+## -O -> Output (grosses O (buchstabe)) 
+kubectl run podtest --rm -ti --image busybox -- /bin/sh
+/ # wget -O - http://10.244.0.99
+/ # exit 
+```
 
 ## Kubernetes - Tipps & Tricks 
 
@@ -4040,6 +4785,10 @@ spec:
 
   * https://killercoda.com/killer-shell-cks
 
+### Environment to learn II
+
+  * https://killercoda.com/
+
 ### Youtube Channel
 
   * https://www.youtube.com/watch?v=01qcYSck1c4
@@ -4105,6 +4854,14 @@ e.g. not allowed to run container as root.
 
 Will complain/deny when creating such a pod with that container type
 
+```
+
+### Möglichkeiten in Pods und Containern 
+
+```
+## für die Pods
+kubectl explain pod.spec.securityContext 
+kubectl explain pod.spec.containers.securityContext
 ```
 
 ### Example (seccomp / security context) 
@@ -4485,6 +5242,80 @@ readinessProbe:
 
   * https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-readiness-probes
 
+## Kubernetes Interna 
+
+### OCI,Container,Images Standards
+
+
+### Schritt 1:
+
+```
+cd
+mkdir bautest
+cd bautest 
+```
+
+### Schritt 2:
+
+```
+## nano docker-compose.yml
+version: "3.8"
+
+services:
+  myubuntu:
+    build: ./myubuntu
+    restart: always
+```
+
+### Schritt 3:
+
+```
+mkdir myubuntu 
+cd myubuntu 
+```
+
+```
+nano hello.sh
+```
+
+```
+##!/bin/bash
+let i=0
+
+while true
+do
+  let i=i+1
+  echo $i:hello-docker
+  sleep 5
+done
+
+```
+
+```
+## nano Dockerfile 
+FROM ubuntu:latest
+RUN apt-get update; apt-get install -y inetutils-ping
+COPY hello.sh .
+RUN chmod u+x hello.sh
+CMD ["/hello.sh"]
+
+```
+
+### Schritt 4: 
+
+
+```
+cd ../
+## wichtig, im docker-compose - Ordner seiend 
+##pwd 
+##~/bautest
+docker-compose up -d 
+## wird image gebaut und container gestartet 
+
+## Bei Veränderung vom Dockerfile, muss man den Parameter --build mitangeben 
+docker-compose up -d --build 
+```
+
 ## Linux und Docker Tipps & Tricks allgemein 
 
 ### Auf ubuntu root-benutzer werden
@@ -4659,6 +5490,167 @@ https://docs.docker.com/registry/recipes/mirror/
 ## VirtualBox Tipps & Tricks 
 
 ### VirtualBox 6.1. - Ubuntu für Kubernetes aufsetzen 
+
+
+### Vorbereitung 
+
+  * Ubuntu Server 22.04 LTS - ISO herunterladen
+
+### Schritt 1: Virtuelle Maschine erstellen 
+
+```
+In VirtualBox Manager -> Menu -> Maschine -> Neu (Oder Neu icon) 
+
+Seite 1:
+Bei Name Ubuntu Server eingeben (dadurch wird gleich das richtige ausgewählt, bei den Selects) 
+Alles andere so lassen.
+Weiter 
+
+Seite 2: 
+Hauptspeicher mindest 4 GB , d.h. 4096 auswählen (füpr Kubernetes / microk8s)
+Weiter
+
+Seite 3:
+Festplatte erzeugen ausgewählt lassen
+Weiter
+
+Seite 4: 
+Dateityp der Festplatte: VDI ausgewählt lassen
+Weiter 
+
+Seite 5:
+Art der Speicherung -> dynamisch alloziert ausgewählt lassen
+Weiter 
+
+Seite 6:
+Dateiname und Größe -> bei Größe mindestens 30 GB einstellen (bei Bedarf größer) 
+-> Erzeugen 
+```
+
+### Schritt 2: ISO einhängen / Netzwerk und starten / installieren
+
+```
+Neuen Server anklicken und ändern klicken:
+
+1. 
+Massenspeicher -> Controller IDE -> CD (Leer) klicken
+CD - Symbol rechts neben -> Optisches Laufwerk (sekundärer Master) -> klicken -> Abbild auswählen
+Downgeloadetes ISO Ubuntu 22.04 auswählen -> Öffnen klicken 
+
+2. 
+Netzwerk -> Adapter 2 (Reiter) anklicken -> Netzwerkadapter aktivieren
+Angeschlossen an -> Host-only - Adapter 
+
+3. 
+unten rechts -> ok klicken 
+
+```
+
+### Schritt 3: Starten klicken und damit Installationsprozess beginnen
+
+```
+Try or install Ubuntu Server -> ausgewählt lassen
+
+Seite 1:
+Use up -.... Select your language 
+-> English lassen
+Enter eingeben
+
+Seite 2: Keyboard Configuration
+Layout auswählen (durch Navigieren mit Tab-Taste) -> Return
+German auswählen (Pfeiltaste nach unten bis German, dann return)
+Identify Keyboard -> Return
+Keyboard Detection starting -> Ok 
+Jetzt die gewünschten tasten drücken und Fragen beantworten
+Layout - Variante bestätigen mit OK 
+
+-> Done 
+
+Seite 3: Choose type of install 
+Ubuntu - Server ausgewählt lassen
+
+-> Done 
+
+Seite 4: Erkennung der Netzwerkkarten 
+(192.168.56.1x) sollte auftauchen
+
+-> Done 
+
+Seite 5: Proxy
+
+leer lassen
+
+-> Done 
+
+Seite 6: Mirror Address
+
+kann so bleiben
+
+-> Done 
+
+Seite 7: 
+
+Guided Storage konfiguration
+Entire Disk 
+
+-> Done 
+
+Seite 8: File System Summary
+
+-> Done 
+
+Seite 9: Popup: Confirm destructive action 
+Bestätigen, dass gesamte Festplatte überschrieben wird
+(kein Problem, da Festplatte ohnehin leer und virtuell)
+
+-> Continue 
+
+Seite 10: Profile Setup
+
+User eingeben / einrichten 
+Servernamen einrichten 
+
+-> Done 
+
+Seite 11: SSH Setup 
+
+Haken bei: Install OpenSSH Server 
+setzen
+
+-> Done 
+
+Seite 12: Featured Server Snaps 
+
+Hier brauchen wir nichts auswählen, alles kann später installiert werden
+
+-> Done 
+
+Seit 13:  Installation
+
+Warten bis Installation Complete und dies auch unten angezeigt wird (Reboot Now):
+(es dauert hier etwas bis alle Updates (unattended-upgrades) im Hintergrund durchgeführt worden sind) 
+
+-> Reboot Now 
+
+Wenn "Failed unmounting /cdrom" kommt 
+dann einfach Server stoppen
+-> Virtual Box Manager -> Virtuelle Maschine auswählen -> Rechte Maustaste -> Schliessen ->  Ausschalten 
+
+```
+
+### Schritt 4: Starten des Gast-Systems in virtualbox 
+
+```
+* Im VirtualBox Manager auf virtuelle Maschine klicken
+* Neben dem Start - Pfeil -> Dreieck anklicken und Ohne Gui starten wählen 
+* System startet dann im Hintergrund (kein 2. Fenster)
+```
+
+### Erklärung 
+
+ * Console wird nicht benötigt, da wir mit putty (ssh) arbeiten zum Administrieren des Clusters
+ * Putty-Verbindung muss nur auf sein, wenn wir administrieren
+ * Verwendung des Clusters (nutzer/Entwickler) erfolgt ausschliesslich über kubectl in powershell !! 
 
 ### VirtualBox 6.1. - Shared folder aktivieren
 
