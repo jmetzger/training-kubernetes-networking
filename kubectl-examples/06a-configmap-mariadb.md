@@ -59,5 +59,9 @@ spec:
 kubectl apply -f .
 ```
 
+## Imporatnt Sidenode 
 
+  * If configmap changes, deployment does not know
+  * So kubectl apply -f deploy.yml will not have any effect
+  * to fix, use stakater/relaoder: https://github.com/stakater/Reloader
 
