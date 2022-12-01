@@ -104,7 +104,7 @@
      * [Beispiel Ingress](#beispiel-ingress)
      * [Install Ingress On Digitalocean DOKS](#install-ingress-on-digitalocean-doks)
      * [Beispiel mit Hostnamen](#beispiel-mit-hostnamen)
-     * [Achtung: Ingress mit Helm - annotations](#achtung:-ingress-mit-helm---annotations)
+     * [Achtung: Ingress mit Helm - annotations](#achtung-ingress-mit-helm---annotations)
      * [Permanente Weiterleitung mit Ingress](#permanente-weiterleitung-mit-ingress)
      * [ConfigMap Example](#configmap-example)
      * [Configmap MariadDB - Example](#configmap-mariaddb---example)
@@ -124,10 +124,10 @@
      * [Mesh / istio](#mesh--istio)
    
   1. kubectl 
-     * [Start pod (container with run && examples)](#start-pod-container-with-run-&&-examples)
+     * [Start pod (container with run && examples)](#start-pod-container-with-run--examples)
      * [Bash completion for kubectl](#bash-completion-for-kubectl)
      * [kubectl Spickzettel](#kubectl-spickzettel)
-     * [Tipps&Tricks zu Deploymnent - Rollout](#tipps&tricks-zu-deploymnent---rollout)
+     * [Tipps&Tricks zu Deploymnent - Rollout](#tippstricks-zu-deploymnent---rollout)
      
   1. kubectl - manifest - examples 
      * [02 Pod nginx mit Port und IP innerhalb des Clusters](#02-pod-nginx-mit-port-und-ip-innerhalb-des-clusters)
