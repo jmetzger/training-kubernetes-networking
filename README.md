@@ -117,10 +117,11 @@
   1. Kubernetes - RBAC 
      * [Nutzer einrichten](/kubernetes/rbac-create-user.md) 
  
-  1. Kubernetes - Netzwerk (CNI's) 
+  1. Kubernetes - Netzwerk (CNI's) / Mesh
      * [Übersicht Netzwerke](/kubernetes-networks/overview.md) 
      * [Callico - nginx example](/kubernetes-network/callico/00-simple-example.md)
      * [Callico - client-backend-ui-example](/kubernetes-network/callico/01-example-with-services.md)
+     * [Mesh / istio](sammlung-istio.md)  
    
   1. kubectl 
      * [Start pod (container with run && examples)](/kubectl/run-with-example.md)
