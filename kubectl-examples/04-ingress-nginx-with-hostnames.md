@@ -14,6 +14,9 @@ microk8s enable ingress
 ### Step 1: pods and services
 
 ```
+cd
+mkdir -p manifests
+cd manifests 
 mkdir abi
 cd abi
 ```
