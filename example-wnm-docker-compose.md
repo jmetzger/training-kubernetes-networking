@@ -45,11 +45,11 @@ volumes:
 
 
 ```console
-## now start the system
+# now start the system
 docker compose up -d 
-## we can do some test if db is reachable 
+# we can do some test if db is reachable 
 docker exec -it wp-wordpress-1 bash 
-## within shell do 
+# within shell do 
 apt update 
 apt-get install -y telnet
 # this should work 
