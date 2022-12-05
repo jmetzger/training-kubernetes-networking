@@ -52,7 +52,7 @@
      * [docker-compose und replicas](docker-compose-replicas.md)
      * [docker compose Reference](https://docs.docker.com/compose/compose-file/compose-file-v3/)
   
-    1. Docker Security 
+  1. Docker Security 
      * [Docker Security](docker/security/overview.md)
      * [Scanning docker image with docker scan/snyx](docker/security/docker-scan-snyk.md) 
   
