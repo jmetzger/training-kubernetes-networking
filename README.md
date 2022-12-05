@@ -11,8 +11,6 @@
   
   1. Docker-Installation
      * [BEST for Ubuntu : Install Docker from Docker Repo](install-docker-ubuntu-apt.md) 
-     * [Installation Docker unter Ubuntu mit snap](install-ubuntu-snap.md)
-     * [Installation Docker unter SLES 15](install-sles15-zypper.md)
   
   1. Docker-Befehle 
      * [Die wichtigsten Befehle](docker-befehle.md)
