@@ -44,7 +44,7 @@ volumes:
 ```
 
 
-```
+```console
 ## now start the system
 docker compose up -d 
 ## we can do some test if db is reachable 
