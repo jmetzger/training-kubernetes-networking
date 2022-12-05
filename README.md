@@ -42,10 +42,6 @@
      * [Volumes](storage-volumes.md) 
      * [bind-mounts](docker-bind-mount.md)
      
-  1. Docker Security 
-     * [Docker Security](docker/security/overview.md)
-     * [Scanning docker image with docker scan/snyx](docker/security/docker-scan-snyk.md) 
-  
   1. Docker Compose
      * [yaml-format](yaml-format.md)
      * [Ist docker-compose installiert?](docker-compose-installed.md) 
@@ -55,6 +51,10 @@
      * [Logs in docker - compose](docker-compose-logs.md)
      * [docker-compose und replicas](docker-compose-replicas.md)
      * [docker compose Reference](https://docs.docker.com/compose/compose-file/compose-file-v3/)
+  
+    1. Docker Security 
+     * [Docker Security](docker/security/overview.md)
+     * [Scanning docker image with docker scan/snyx](docker/security/docker-scan-snyk.md) 
   
   1. Docker Swarm 
      * [Docker Swarm Beispiele](docker-swarm-examples.md)
