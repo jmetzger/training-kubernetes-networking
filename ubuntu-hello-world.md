@@ -13,7 +13,7 @@ cd hello-world
 
 ```
 # nano Dockerfile
-FROM ubuntu:latest 
+FROM ubuntu:22.04 
 
 COPY hello.sh .
 RUN chmod u+x hello.sh
