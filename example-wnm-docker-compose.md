@@ -6,7 +6,7 @@ cd wp
 # nano docker-compose.yml 
 ```
 
-```
+```yaml
 version: "3.7"
 
 services:
