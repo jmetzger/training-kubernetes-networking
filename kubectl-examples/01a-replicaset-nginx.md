@@ -27,8 +27,6 @@ spec:
       containers:
         - name: nginx
           image: "nginx:latest"
-          ports:
-             - containerPort: 80
              
 
              
