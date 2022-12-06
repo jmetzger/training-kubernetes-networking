@@ -77,8 +77,7 @@
      * [Patch to next major release - cluster](microk8s/patch-next-major.md)
      * [Remote-Verbindung zu Kubernetes (microk8s) einrichten](microk8s/connect-from-remote.md)
      * [vim support for yaml](vim/vim-yaml.md)
-     * [kubectl unter windows - Remote-Verbindung zu Kuberenets (microk8s) einrichten](kubectl-windows.md)
-   
+     * [kubectl unter windows - Remote-Verbindung zu Kuberenets (microk8s) einrichten](kubectl-windows.md)   
      * [Ingress controller in microk8s aktivieren](microk8s/ingress.md) 
      * [Arbeiten mit der Registry](microk8s/registry.md)
      * [Installation Kubernetes Dashboard](/microk8s/dashboard.md) 
