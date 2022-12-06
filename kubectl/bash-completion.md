@@ -3,11 +3,14 @@
 ## Walkthrough 
 
 ```
+# Eventuell, wenn bash-completion nicht installiert ist.
 apt install bash-completion
 source /usr/share/bash-completion/bash_completion
 # is it installed properly 
 type _init_completion
+```
 
+```
 # activate for all users 
 kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 
