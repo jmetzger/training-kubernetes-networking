@@ -1,6 +1,6 @@
 # vim (einrückung für yaml-dateien aktivieren
 
-## Ubuntu (im Unterverzeichnis /etc/vim - systemweit) 
+## Ubuntu (im Unterverzeichnis /etc/vim/vimrc.local - systemweit) 
 
 ```
 hi CursorColumn cterm=NONE ctermbg=lightred ctermfg=white
