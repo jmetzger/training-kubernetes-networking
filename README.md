@@ -72,9 +72,9 @@
 
   1. Kubernetes - microk8s (Installation und Management) 
      * [Installation Ubuntu - snap](microk8s/installation-ubuntu-snap.md)
+     * [Bash completion installieren](kubectl/bash-completion.md)
      * [Patch to next major release - cluster](microk8s/patch-next-major.md)
      * [Remote-Verbindung zu Kubernetes (microk8s) einrichten](microk8s/connect-from-remote.md)
-     * [Bash completion installieren](kubectl/bash-completion.md)
      * [vim support for yaml](vim/vim-yaml.md)
      * [kubectl unter windows - Remote-Verbindung zu Kuberenets (microk8s) einrichten](kubectl-windows.md)
      * [Create a cluster with microk8s](microk8s/cluster.md)
