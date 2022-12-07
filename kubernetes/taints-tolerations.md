@@ -45,7 +45,7 @@ kubectl describe n111 | grep -i taint
 kubectl taint nodes n1 gpu=true:NoSchedule
 ```
 
-# Step 3
+## Step 3
 
 ```
 cd 
