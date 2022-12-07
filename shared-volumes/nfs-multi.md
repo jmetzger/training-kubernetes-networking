@@ -35,8 +35,8 @@ apt install nfs-common
 
 # for testing 
 mkdir /mnt/nfs 
-# 192.168.56.106 is our nfs-server 
-mount -t nfs 192.168.56.106:/var/nfs /mnt/nfs 
+# 10.135.0.18 is our nfs-server 
+mount -t nfs 10.135.0.18:/var/nfs /mnt/nfs 
 ls -la /mnt/nfs
 umount /mnt/nfs
 ```
