@@ -25,6 +25,57 @@ Labels hat, die auch als
 Taints auf dem Node vergeben sind.
 ```
 
+## Walkthrough  
+
+### Step 1: Cordon the other nodes - scheduling will not be possible there 
+
+```
+# Cordon nodes n11 and n111 
+# You will see a taint here 
+kubectl cordon n11
+kubectl cordon n111
+kubectl describe n111 | grep -i taint 
+```
+
+
+
+## Step 2: Set taint on first node 
+
+```
+kubectl taint nodes n1 gpu=true:NoSchedule
+```
+
+```
+# Step 4: Try to schedule on that node with No tolerations 
+cd 
+mkdir -p manifests
+cd manifests 
+mkdir tainttest 
+cd tainttest 
+nano 01-no-tolerations.yml
+```
+
+```
+vi 01-no-tolerations.yml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-test-no-tol
+  labels:
+    env: test-env
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+```
+
+```
+kubectl apply -f . 
+kubectl get po nginx-test-no-tol
+kubectl get describe nginx-test-no-tol
+```
+
+
 ## Taints vergeben 
 
 ```
@@ -45,97 +96,38 @@ cd tainttest
 nano 01-tolerations.yml
 ```
 
-
 ```
 # vi 01-tolerations-pod.yml 
 apiVersion: v1
 kind: Pod
 metadata:
-  name: nginx-test
+  name: nginx-test-no-tol
   labels:
     env: test-env
 spec:
   containers:
   - name: nginx
     image: nginx:latest
-    imagePullPolicy: IfNotPresent
-    resources:
-      requests:
-        memory: "128Mi"
-        cpu: "250m"
-      limits:
-        memory: "512Mi"
-        cpu: "500m"
-  tolerations:
-  - key: "gpu"
-    operator: "Equal"
-    value: "true"
-    effect: "NoSchedule"
-
 ```
 
 ```
-kubectl apply -f .
-# but it does not mean, it will really be scheduled on first node 
-# only that it can be scheduled here 
-kubectl get pods -o wide 
-
-kubectl delete -f .
-```
-
-
-## Pod mit mit der falschen Toleration schedulen 
-
-```
-# Damit wir sehen, ob das wirklich funktioniert, drainen wir zunächst die anderen Nodes 
-kubectl drain n11
-kubectl drain n111
-```
-
-```
-# vi 02-notolerations.yml 
-apiVersion: v1
-kind: Pod
-metadata:
-  name: nginx-test-wrong-tol
-  labels:
-    env: test-env
-spec:
-  containers:
-  - name: nginx
-    image: nginx:latest
-    imagePullPolicy: IfNotPresent
-    resources:
-      requests:
-        memory: "128Mi"
-        cpu: "250m"
-      limits:
-        memory: "512Mi"
-        cpu: "500m"
-  tolerations:
-  # hier cpu statt gpu 
-  - key: "cpu"
-    operator: "Equal"
-    value: "true"
-    effect: "NoSchedule"
-
-```
-
-```
-# er dürfte jetzt nicht gescheduled werden, 
-weil es keine node für ihn gibt 
 kubectl apply -f . 
-kubectl get describe pods nginx-test-wrong-tol
-
+kubectl get po nginx-test-no-tol
+kubectl get describe nginx-test-no-tol
 ```
 
 
-
-## Taints rausnehmen 
+### Taints rausnehmen 
 
 ```
 kubectl taint nodes n1 gpu:true:NoSchedule-
+```
 
+### uncordon other nodes 
+
+```
+kubectl uncordon n11
+kubectl uncordon n111
 ```
 
 ## References 
