@@ -24,3 +24,40 @@ data:
 ```
 kubectl apply -f .
 ```
+
+```
+#deploy.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb-deployment
+spec:
+  selector:
+    matchLabels:
+      app: mariadb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+      - name: mariadb-cont
+        image: mariadb:latest
+        envFrom:
+        - configMapRef:
+            name: mariadb-configmap
+
+        volumeMounts:
+          - name: example-configmap-volume
+            mountPath: /etc/my
+
+      volumes:
+      - name: example-configmap-volume
+        configMap:
+          name: example-configmap
+```
+
+```
+kubectl apply -f .
+```
