@@ -57,7 +57,7 @@ nano 01-no-tolerations.yml
 ```
 
 ```
-vi 01-no-tolerations.yml 
+#vi 01-no-tolerations.yml 
 apiVersion: v1
 kind: Pod
 metadata:
@@ -67,7 +67,7 @@ metadata:
 spec:
   containers:
   - name: nginx
-    image: nginx:latest
+    image: nginx:1.21
 ```
 
 ```
