@@ -39,3 +39,15 @@ spec:
         - containerPort: 80
           name: web
 ```
+
+## Auflösung Namen.
+
+```
+ping web-0.nginx 
+ping web-1.nginx 
+```
+
+## Referenz 
+
+  * https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/
+
