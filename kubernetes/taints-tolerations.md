@@ -45,8 +45,9 @@ kubectl describe n111 | grep -i taint
 kubectl taint nodes n1 gpu=true:NoSchedule
 ```
 
+# Step 3
+
 ```
-# Step 4: Try to schedule on that node with No tolerations 
 cd 
 mkdir -p manifests
 cd manifests 
@@ -75,47 +76,59 @@ kubectl get po nginx-test-no-tol
 kubectl get describe nginx-test-no-tol
 ```
 
-
-## Taints vergeben 
-
-```
-# Dieses labels muss ein pod haben -> gpu:true 
-# Ansonsten wird er nicht gescheduled 
-kubectl taint nodes n1 gpu=true:NoSchedule
+## Step 4:
 
 ```
-
-## Pod mit richtigen Tolerations schedulen 
-
-``` 
-cd 
-mkdir -p manifests
-cd manifests 
-mkdir tainttest 
-cd tainttest 
-nano 01-tolerations.yml
-```
-
-```
-# vi 01-tolerations-pod.yml 
+vi 01-no-tolerations.yml 
 apiVersion: v1
 kind: Pod
 metadata:
-  name: nginx-test-no-tol
+  name: nginx-test-wrong-tol
   labels:
     env: test-env
 spec:
   containers:
   - name: nginx
     image: nginx:latest
+tolerations:
+  - key: "cpu"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
 ```
 
 ```
-kubectl apply -f . 
-kubectl get po nginx-test-no-tol
-kubectl get describe nginx-test-no-tol
+kubectl apply -f .
+kubectl get po nginx-test-wrong-tol
+kubectl get describe nginx-test-wrong-tol
 ```
 
+## Step 5:
+
+```
+vi 03-no-tolerations.yml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-test-good-tol
+  labels:
+    env: test-env
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+tolerations:
+  - key: "cpu"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
+```
+
+```
+kubectl apply -f .
+kubectl get po nginx-test-good-tol
+kubectl get describe nginx-test-good-tol
+```
 
 ### Taints rausnehmen 
 
