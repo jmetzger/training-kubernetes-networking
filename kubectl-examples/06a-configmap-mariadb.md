@@ -31,12 +31,7 @@ kubectl get cm mariadb-configmap -o yaml
 
 ## Schritt 2: Deployment 
 ```
-cd 
-mkdir -p manifests 
-cd manifests
-mkdir configmapmaria
-cd configmapmaria
-nano 01-deploy.yml
+nano 02-deploy.yml
 ```
 
 ```
