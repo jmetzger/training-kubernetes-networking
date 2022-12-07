@@ -90,7 +90,7 @@ spec:
   containers:
   - name: nginx
     image: nginx:latest
-tolerations:
+  tolerations:
   - key: "cpu"
     operator: "Equal"
     value: "true"
@@ -117,7 +117,7 @@ spec:
   containers:
   - name: nginx
     image: nginx:latest
-tolerations:
+  tolerations:
   - key: "gpu"
     operator: "Equal"
     value: "true"
