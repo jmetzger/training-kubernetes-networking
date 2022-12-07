@@ -9,6 +9,8 @@ microk8s enable ingress
 
 ## Walkthrough 
 
+### Schritt 1:
+
 ```
 cd 
 mkdir -p manifests
@@ -85,6 +87,8 @@ spec:
 ```
 kubectl apply -f banana.yml
 ```
+
+### Schritt 2:
 
 ```
 # Ingress
