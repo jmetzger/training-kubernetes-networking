@@ -85,11 +85,11 @@ kubectl get pv
 ## Persistent Storage-Step 2: Create Persistent Volume Claim 
 
 ```
-nano 02-pvs.yml
+nano 02-pvc.yml
 ```
 
 ```
-# vi 02-pvs.yml 
+# vi 02-pvc.yml 
 # now we want to claim space
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -107,7 +107,7 @@ spec:
 
 
 ```
-kubectl apply -f 02-pvs.yml
+kubectl apply -f 02-pvc.yml
 kubectl get pvc
 ```
 
