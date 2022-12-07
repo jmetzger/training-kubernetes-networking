@@ -10,7 +10,11 @@ microk8s enable ingress
 ## Walkthrough 
 
 ```
+cd 
+mkdir -p manifests
+cd manifests 
 mkdir abi
+cd abi 
 ```
 
 
