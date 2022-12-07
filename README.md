@@ -104,7 +104,8 @@
      * [Achtung: Ingress mit Helm - annotations](/ingress-mit-helm-class-achtung.md)
      * [Permanente Weiterleitung mit Ingress](/kubectl-examples/05-ingress-permanent-redirect.md)
      * [ConfigMap Example](/kubectl-examples/06-configmap.md)
-     * [Configmap MariadDB - Example](kubectl-examples/06a-configmap-mariadb.md)
+     * [Configmap MariaDB - Example](kubectl-examples/06a-configmap-mariadb.md)
+     * [Configmap MariaDB my.cnf](kubectl-examples/06b-mariadb-configmap-configfile.md)
      
   1. Helm (Kubernetes Paketmanager) 
      * [Helm Grundlagen](/helm/grundlagen.md)
@@ -125,12 +126,6 @@
      * [Bash completion for kubectl](/kubectl/bash-completion.md)
      * [kubectl Spickzettel](/kubectl/spickzettel.md)
      * [Tipps&Tricks zu Deploymnent - Rollout](/kubectl/rollout.md) 
-     
-  1. kubectl - manifest - examples 
-     * [02 Pod nginx mit Port und IP innerhalb des Clusters](/kubectl-examples/02-pod-nginx-exposed.md)
-     * [03b Example with service and nginx](/kubectl-examples/03b-service.md)
-     * [04 Ingress mit einfachem Beispiel](/kubectl-examples/04-ingress-nginx.md)
-     * [05 Ingress mit Permanent Redirect](/kubectl-examples/05-ingress-permanent-redirect.md)
 
   1. Kubernetes - Monitoring (microk8s und vanilla) 
      * [metrics-server aktivieren (microk8s und vanilla)](/microk8s/metrics-server.md)
