@@ -106,7 +106,7 @@ kubectl describe po nginx-test-wrong-tol
 ## Step 5:
 
 ```
-vi 03-good-tolerations.yml 
+# vi 03-good-tolerations.yml 
 apiVersion: v1
 kind: Pod
 metadata:
