@@ -100,13 +100,13 @@ tolerations:
 ```
 kubectl apply -f .
 kubectl get po nginx-test-wrong-tol
-kubectl get describe nginx-test-wrong-tol
+kubectl describe po nginx-test-wrong-tol
 ```
 
 ## Step 5:
 
 ```
-vi 03-no-tolerations.yml 
+vi 03-good-tolerations.yml 
 apiVersion: v1
 kind: Pod
 metadata:
@@ -118,7 +118,7 @@ spec:
   - name: nginx
     image: nginx:latest
 tolerations:
-  - key: "cpu"
+  - key: "gpu"
     operator: "Equal"
     value: "true"
     effect: "NoSchedule"
@@ -127,7 +127,7 @@ tolerations:
 ```
 kubectl apply -f .
 kubectl get po nginx-test-good-tol
-kubectl get describe nginx-test-good-tol
+kubectl describe po nginx-test-good-tol
 ```
 
 ### Taints rausnehmen 
