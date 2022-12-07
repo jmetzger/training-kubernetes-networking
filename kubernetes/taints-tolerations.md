@@ -79,7 +79,7 @@ kubectl get describe nginx-test-no-tol
 ## Step 4:
 
 ```
-vi 01-no-tolerations.yml 
+# vi 02-nginx-test-wrong-tol.yml 
 apiVersion: v1
 kind: Pod
 metadata:
