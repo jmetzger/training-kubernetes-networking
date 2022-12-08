@@ -7,7 +7,7 @@
 microk8s enable rbac 
 ```
 
-## Schritt 1: Nutzer-Account auf Server anlegen / in Client 
+## Schritt 1: Nutzer-Account auf Server anlegen und secret anlegen / in Client 
 
 ```
 cd 
@@ -28,6 +28,23 @@ metadata:
 
 ```
 kubectl apply -f service-account.yml 
+```
+
+### Mini-Schritt 1.5: Secret erstellen 
+
+```
+# vi secret.yml 
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/service-account-token
+metadata:
+  name: trainingtoken
+  annotations:
+    kubernetes.io/service-account.name: training
+```
+
+```
+kubectl apply -f .
 ```
 
 
