@@ -45,7 +45,9 @@ rules:
 - apiGroups: [""] # "" indicates the core API group
   resources: ["pods"]
   verbs: ["get", "watch", "list"]
+```
 
+```
 kubectl apply -f pods-clusterrole.yml 
 ```
 
