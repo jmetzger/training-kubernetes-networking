@@ -173,25 +173,12 @@
      * [Übung Liveness-Probe](/probes/uebung-liveness.md)
      * [Funktionsweise Readiness-Probe vs. Liveness-Probe](/probes/readiness.md) 
      
-  1. Kubernetes Interna 
+  1. Kubernetes Interna / Misc.
      * [OCI,Container,Images Standards](docker-alternatives-kubernetes.md)
+     * [Geolocation Kubernetes Cluster](https://learnk8s.io/bite-sized/connecting-multiple-kubernetes-clusters)
    
-  1. Linux und Docker Tipps & Tricks allgemein 
-     * [Auf ubuntu root-benutzer werden](sudo.md)
-     * [IP - Adresse abfragen](ip-a.md)
-     * [Hostname setzen](hostname.md)
-     * [Proxy für Docker setzen](proxy-docker.md)
-     * [vim einrückung für yaml-dateien](/vim/vim-yaml.md)
-     * [YAML Linter Online](http://www.yamllint.com/)
-     * [Läuft der ssh-server](ssh-running.md)
-     * [Basis/Parent - Image erstellen](docker-base-image.md)
-     * [Eigenes unsichere Registry-Verwenden. ohne https](insecure-registry.md)
-     
-  1. VirtualBox Tipps & Tricks 
-     * [VirtualBox 6.1. - Ubuntu für Kubernetes aufsetzen ](virtualbox-ubuntu.md)
-     * [VirtualBox 6.1. - Shared folder aktivieren](virtualbox-shared-folders.md)
 
-
+  
 ## Backlog
 
   1. Docker-Grundlagen 
