@@ -15,10 +15,15 @@
 ## Praktisches Beispiel für Version ab 1.2.23 - Problemstellung 
 
 ```
-# Schritt 1: Namespace anlegen 
+mkdir -p manifests
+cd manifests
+mkdir psa 
+cd psa 
+nano 01-ns.yml 
+```
 
-# mkdir manifests/security
-# cd manifests/security 
+```
+# Schritt 1: Namespace anlegen 
 # vi 01-ns.yml 
 
 apiVersion: v1
