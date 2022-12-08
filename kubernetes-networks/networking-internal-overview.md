@@ -22,12 +22,26 @@
     * Example with hashicorp/http-echo container 1 and busybox container 2 ? 
  
  
- ## Pod-To-Pod Communication 
+## Pod-To-Pod Communication (across nodes)  
  
- ### General 
+### Prerequisites 
  
-   * pods on a single node as well as pods on a topological remote can establish communication at all times
+  * pods on a single node as well as pods on a topological remote can establish communication at all times
    * Each pod receives a unique IP address, valid anywhere in the cluster. Kubernetes requires this address to not be subject to network address   translation (NAT)
+   * Pods on the same node through virtual bridge (see image above)
+ 
+### General (what needs to be done) - and could be doen manually
+ 
+   * local bridge networks of all nodes need to be connected
+   * there needs to be an IPAM (IP-Address Managemenet) so addresses are only used once
+   * The need to be routes so, that each bridge can communicate with the bridge on the other network
+   * Plus: There needs to be a rule for incoming network
+   * Also: A tunnel needs to be set up to the outside world.
+
+### General - Pod-to-Pod Communiation (across nodes) 
+
+![pod to pod across nodes](https://www.inovex.de/wp-content/uploads/2020/05/Pod-to-Pod-Networking.png)
+
    
 
    
