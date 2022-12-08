@@ -1,5 +1,6 @@
 # Examples ingress / egress 
 
+  * https://github.com/ahmetb/kubernetes-network-policy-recipes
   * https://k8s-examples.container-solutions.com/examples/NetworkPolicy/NetworkPolicy.html
 
 ## Downside egress 
