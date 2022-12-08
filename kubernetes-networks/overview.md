@@ -3,7 +3,7 @@
 ## CNI 
 
   * Common Network Interface
-  * Fest Definition, wie Container mit Netzwerk-Bibliotheken kommunizieren
+  * Feste Definition, wie Container mit Netzwerk-Bibliotheken kommunizieren
 
 ## Docker - Container oder andere 
 
@@ -16,6 +16,7 @@
   * Canal 
   * Calico 
   * Cilium
+  * Weave Net 
   
 ## Flannel
 
