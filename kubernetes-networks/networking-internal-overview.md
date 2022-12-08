@@ -38,11 +38,20 @@
    * Plus: There needs to be a rule for incoming network
    * Also: A tunnel needs to be set up to the outside world.
 
-### General - Pod-to-Pod Communiation (across nodes) 
+### General - Pod-to-Pod Communiation (across nodes) - what would need to be done
 
 ![pod to pod across nodes](https://www.inovex.de/wp-content/uploads/2020/05/Pod-to-Pod-Networking.png)
 
-   
+
+### General - Pod-to-Pod Communication (side-note) 
+
+  * This could of cause be done manually, but it is too complex 
+  * So Kubernetes has created an Interface, which is well defined 
+    * The interface is called CNI (common network interface) 
+    * Funtionally is achieved through Network Plugin (which use this interface) 
+      * e.g. calico / cilium / weave net / flannel 
+
+
 
    
     
