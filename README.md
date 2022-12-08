@@ -122,6 +122,7 @@
      * [Callico - client-backend-ui-example](/kubernetes-network/callico/01-example-with-services.md)
      * [Mesh / istio](sammlung-istio.md)  
      * [Kubernetes Ports/Protokolle](https://kubernetes.io/docs/reference/networking/ports-and-protocols/)
+     * [IPV4/IPV6 Dualstack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/)
    
   1. kubectl 
      * [Start pod (container with run && examples)](/kubectl/run-with-example.md)
