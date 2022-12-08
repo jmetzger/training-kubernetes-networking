@@ -24,8 +24,9 @@ kind: ServiceAccount
 metadata:
   name: training
   namespace: default
+```
 
-
+```
 kubectl apply -f service-account.yml 
 ```
 
