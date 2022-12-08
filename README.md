@@ -120,6 +120,7 @@
      * [Callico - nginx example](/kubernetes-network/callico/00-simple-example.md)
      * [Callico - client-backend-ui-example](/kubernetes-network/callico/01-example-with-services.md)
      * [Mesh / istio](sammlung-istio.md)  
+     * [Kubernetes Ports/Protokolle](https://kubernetes.io/docs/reference/networking/ports-and-protocols/)
    
   1. kubectl 
      * [Start pod (container with run && examples)](/kubectl/run-with-example.md)
@@ -150,6 +151,7 @@
 
   1. Kubernetes - Documentation 
      * [Documentation zu microk8s plugins/addons](https://microk8s.io/docs/addons)
+    
      * [LDAP-Anbindung](https://github.com/apprenda-kismatic/kubernetes-ldap)
      * [Shared Volumes - Welche gibt es ?](https://kubernetes.io/docs/concepts/storage/volumes/)
      * [Helpful to learn - Kubernetes](https://kubernetes.io/docs/tasks/)
