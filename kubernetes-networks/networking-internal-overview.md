@@ -21,7 +21,14 @@
   * Every container is in the same Network Namespace, so they can communicate through localhost
     * Example with hashicorp/http-echo container 1 and busybox container 2 ? 
  
-
+ 
+ ## Pod-To-Pod Communication 
+ 
+ ### General 
+ 
+   * pods on a single node as well as pods on a topological remote can establish communication at all times
+   * Each pod receives a unique IP address, valid anywhere in the cluster. Kubernetes requires this address to not be subject to network address   translation (NAT)
+   
 
    
     
