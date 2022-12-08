@@ -18,8 +18,6 @@ nano 01-nginx.yml
 ```
 
 ```
-
-```
 # vi nginx-static.yml 
 
 apiVersion: v1
