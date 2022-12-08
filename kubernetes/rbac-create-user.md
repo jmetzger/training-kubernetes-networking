@@ -110,4 +110,6 @@ kubectl get pods
   * https://microk8s.io/docs/multi-user
   * https://faun.pub/kubernetes-rbac-use-one-role-in-multiple-namespaces-d1d08bb08286
 
+## Ref: Create Service Account Token 
 
+  * https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#create-token
