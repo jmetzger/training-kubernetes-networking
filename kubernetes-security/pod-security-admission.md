@@ -124,7 +124,7 @@ kubectl -n test-ns<tln> describe pods nginx
 
 ## Praktisches Beispiel für Version ab 1.2.23 -Lösung - Container als NICHT-Root laufen lassen
 
-  * Wir müssen ein image, dass auch als NICHT-Root kaufen kann 
+  * Wir müssen ein image, dass auch als NICHT-Root laufen kann 
   * .. oder selbst eines bauen (;o)) 
   o bei nginx ist das bitnami/nginx 
  
