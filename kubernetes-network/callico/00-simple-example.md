@@ -26,7 +26,7 @@ spec:
     matchLabels: {}
 EOF
 # lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
-kubectl run --namespace=policy-demo access --rm -ti --image busybox /bin/sh
+kubectl run --namespace=policy-demo access --rm -ti --image busybox
 ```
 
 ```
