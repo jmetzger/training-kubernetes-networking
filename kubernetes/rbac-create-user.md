@@ -67,9 +67,10 @@ subjects:
 - kind: ServiceAccount
   name: training
   namespace: default
+```
 
+```
 kubectl apply -f rb-training-ns-default-pods.yml
-
 ```
 
 ### Mini-Schritt 4: Testen (klappt der Zugang) 
