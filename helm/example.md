@@ -113,19 +113,25 @@ helm install my-wordpress \
 ## Example 4: Install Wordpress with values and auth 
 
 ```
-# mkdir helm-mysql
-# cd helm-mysql
-# vi values.yml 
 
 # mkdir helm-mysql
 # cd helm-mysql
-# vi values.yml 
+# vi values.yml
 persistence:
   enabled: false
 
+
+
 wordpressUsername: admin
 wordpressPassword: password
-mariadb.auth.rootPassword=secretpassword
+mariadb:
+  primary:
+    persistence:
+      enabled: false
+
+  auth:
+    rootPassword: secretpassword
+
 
 ```
 
