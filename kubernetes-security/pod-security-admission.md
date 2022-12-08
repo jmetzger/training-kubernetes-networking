@@ -134,7 +134,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: bitnami-nginx
-  namespace: test-ns12
+  namespace: test-ns<tln>
 spec:
   containers:
     - image: bitnami/nginx
