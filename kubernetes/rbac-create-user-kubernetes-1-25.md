@@ -32,6 +32,10 @@ kubectl apply -f service-account.yml
 
 ### Mini-Schritt 1.5: Secret erstellen 
 
+  * From Kubernetes 1.25 tokens are not created automatically when creating a service account (sa)
+  * You have to create them manually with annotation attached 
+  * https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#create-token
+
 ```
 # vi secret.yml 
 apiVersion: v1
