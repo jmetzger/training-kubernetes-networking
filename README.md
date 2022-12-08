@@ -169,6 +169,7 @@
 
   1. Kubernetes - Hardening 
      * [Kubernetes Tipps Hardening](kubernetes-security/tipps-hardening.md)
+     * [Kubernetes Security Admission Controller Example](kubernetes-security/pod-security-admission.md)
 
   1. Kubernetes Deployment Scenarios 
      * [Deployment green/blue,canary,rolling update](/kubernetes/deployment-strategies-en.md)
