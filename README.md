@@ -151,6 +151,9 @@
      * [Taints und Tolerations](kubernetes/taints-tolerations.md)
      * [Autoscaling Pods/Deployments](/kubernetes/autoscaling.md)
 
+  1. Kubernetes Advanced 
+     * [Curl api-server kubernetes aus pod heraus](kubernetes-advanced/curl-api-server.md)
+
   1. Kubernetes - Documentation 
      * [Documentation zu microk8s plugins/addons](https://microk8s.io/docs/addons)  
      * [LDAP-Anbindung](https://github.com/apprenda-kismatic/kubernetes-ldap)
