@@ -1,8 +1,36 @@
 # Examples ingress / egress 
 
+## Links 
+
   * https://github.com/ahmetb/kubernetes-network-policy-recipes
   * https://k8s-examples.container-solutions.com/examples/NetworkPolicy/NetworkPolicy.html
 
+## Example with http (Cilium !!) 
+
+```
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+description: "L7 policy to restrict access to specific HTTP call"
+metadata:
+  name: "rule1"
+spec:
+  endpointSelector:
+    matchLabels:
+      type: l7-test
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        org: client-pod
+    toPorts:
+    - ports:
+      - port: "8080"
+        protocol: TCP
+      rules:
+        http:
+        - method: "GET"
+          path: "/discount"
+```          
+   
 ## Downside egress 
 
   * No valid api for anything other than IP's and/or Ports
