@@ -116,6 +116,7 @@
      * [Nutzer einrichten](/kubernetes/rbac-create-user.md) 
  
   1. Kubernetes - Netzwerk (CNI's) / Mesh
+     * [Netzwerk Interna](/kubernetes-networks/networking-internal-overview.md)
      * [Übersicht Netzwerke](/kubernetes-networks/overview.md) 
      * [Callico - nginx example](/kubernetes-network/callico/00-simple-example.md)
      * [Callico - client-backend-ui-example](/kubernetes-network/callico/01-example-with-services.md)
