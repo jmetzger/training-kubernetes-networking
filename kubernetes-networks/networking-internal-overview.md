@@ -35,5 +35,5 @@ spec:
 ```
 kubectl apply -f .
 
-ctr -n k8s.io c list 
+ctr -n k8s.io c list | grep pause
 ```
