@@ -125,6 +125,23 @@ kubectl config use-context training-ctx
 kubectl get pods 
 ```
 
+### Mini-Schritt 3: Zurück zum alten Default-Context 
+
+```
+kubectl config get-contexts
+```
+
+```
+CURRENT   NAME           CLUSTER            AUTHINFO    NAMESPACE
+          microk8s       microk8s-cluster   admin2
+*         training-ctx   microk8s-cluster   training2
+```
+
+```
+kubectl config use-context microk8s  
+```
+
+
 ## Refs:
 
   * https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengaddingserviceaccttoken.htm
