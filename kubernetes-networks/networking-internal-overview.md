@@ -52,7 +52,11 @@
       * e.g. calico / cilium / weave net / flannel 
 
 
+### CNI 
 
+  * CNI only handles network connectivity of container and the cleanup of allocated resources (i.e. IP addresses) after containers have been deleted (garbage collection) and therefore is lightweight and quite easy to implement. 
+  * There are some basic libraries within CNI which do some basic stuff.
+ 
    
     
 
