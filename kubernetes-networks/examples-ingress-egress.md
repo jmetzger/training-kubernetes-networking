@@ -1,9 +1,6 @@
 # Examples ingress / egress 
 
-```
-
-
-```
+  * https://k8s-examples.container-solutions.com/examples/NetworkPolicy/NetworkPolicy.html
 
 ## Downside egress 
 
