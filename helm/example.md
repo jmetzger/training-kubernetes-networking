@@ -110,6 +110,30 @@ helm install my-wordpress \
     bitnami/wordpress
 ```
 
+## Example 4: Install Wordpress with values and auth 
+
+```
+# mkdir helm-mysql
+# cd helm-mysql
+# vi values.yml 
+
+# mkdir helm-mysql
+# cd helm-mysql
+# vi values.yml 
+persistence:
+  enabled: false
+
+wordpressUsername: admin
+wordpressPassword: password
+mariadb.auth.rootPassword=secretpassword
+
+```
+
+```
+helm uninstall my-wordpress 
+helm install my-wordpress bitnami/wordpress -f values 
+```
+
 ## Referenced
 
   * https://github.com/bitnami/charts/tree/master/bitnami/mysql/#installing-the-chart
