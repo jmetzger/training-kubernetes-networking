@@ -28,7 +28,6 @@
      * [Ubuntu mit hello world](ubuntu-hello-world.md)
      * [Ubuntu mit ping](ubuntu-ping.md) 
      * [Nginx mit content aus html-ordner](nginx-html-content.md)
-     * [ssh server](ubuntu-ssh-server.md)
   
   1. Docker-Netzwerk 
      * [Netzwerk](network.md)
@@ -55,9 +54,6 @@
   1. Docker Security 
      * [Docker Security](docker/security/overview.md)
      * [Scanning docker image with docker scan/snyx](docker/security/docker-scan-snyk.md) 
-  
-  1. Docker Swarm 
-     * [Docker Swarm Beispiele](docker-swarm-examples.md)
 
   1. Docker - Dokumentation 
      * [Vulnerability Scanner with docker](https://docs.docker.com/engine/scan/#prerequisites)
@@ -72,9 +68,9 @@
 
   1. Kubernetes - microk8s (Installation und Management) 
      * [Installation Ubuntu - snap](microk8s/installation-ubuntu-snap.md)
-     * [Bash completion installieren](kubectl/bash-completion.md)
      * [Create a cluster with microk8s](microk8s/cluster.md)
      * [Remote-Verbindung zu Kubernetes (microk8s) einrichten](microk8s/connect-from-remote.md)
+     * [Bash completion installieren](kubectl/bash-completion.md)
      * [vim support for yaml](vim/vim-yaml.md)
      * [Ingress controller in microk8s aktivieren](microk8s/ingress.md) 
 
@@ -90,7 +86,6 @@
      * [Services - Aufbau](/kubernetes/services-aufbau.md)
      * [kubectl/manifest/service](/kubectl-examples/03b-service.md)
      * DaemonSets (Devs/Ops)
-     * IngressController (Devs/Ops)
      * [Hintergrund Ingress](/kubernetes/ingress.md) 
      * [Ingress Controller auf Digitalocean (doks) mit helm installieren](/digitalocean/ingress-auf-digitalocean-mit-helm.md)
      * [Documentation for default ingress nginx](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/)
@@ -126,14 +121,8 @@
      * [kubectl Spickzettel](/kubectl/spickzettel.md)
      * [Tipps&Tricks zu Deploymnent - Rollout](/kubectl/rollout.md) 
 
-  1. Kubernetes - Monitoring (microk8s und vanilla) 
-     * [metrics-server aktivieren (microk8s und vanilla)](/microk8s/metrics-server.md)
-
   1. Kubernetes - Shared Volumes 
      * [Shared Volumes with nfs](shared-volumes/nfs-multi.md)
-
-  1. Kubernetes - Backups 
-     + [Kubernetes Aware Cloud Backup - kasten.io](/backups/cluster-backup-kasten-io.md)
 
   1. Kubernetes - Wartung / Debugging 
      * [kubectl drain/uncordon](/kubectl/uncordon-drain.md)
@@ -215,11 +204,6 @@
 
   1. Kubernetes - Backups 
      + [Kubernetes Aware Cloud Backup - kasten.io](/backups/cluster-backup-kasten-io.md)
-
-  1. Kubernetes - Wartung / Debugging 
-     * [kubectl drain/uncordon](/kubectl/uncordon-drain.md)
-     * [Alte manifeste konvertieren mit convert plugin](/kubectl/convert-plugin.md)
-     * [Netzwerkverbindung zu pod testen](/tipps-tricks/verbindung-zu-pod-testen.md)
 
   1. Kubernetes - Tipps & Tricks 
      * [Assigning Pods to Nodes](/tipps-tricks/pods-2-nodes.md) 
