@@ -11,8 +11,6 @@
   
   1. Docker-Installation
      * [BEST for Ubuntu : Install Docker from Docker Repo](#best-for-ubuntu--install-docker-from-docker-repo)
-     * [Installation Docker unter Ubuntu mit snap](#installation-docker-unter-ubuntu-mit-snap)
-     * [Installation Docker unter SLES 15](#installation-docker-unter-sles-15)
   
   1. Docker-Befehle 
      * [Die wichtigsten Befehle](#die-wichtigsten-befehle)
@@ -30,7 +28,9 @@
      * [Ubuntu mit hello world](#ubuntu-mit-hello-world)
      * [Ubuntu mit ping](#ubuntu-mit-ping)
      * [Nginx mit content aus html-ordner](#nginx-mit-content-aus-html-ordner)
-     * [ssh server](#ssh-server)
+  
+  1. Docker-Netzwerk 
+     * [Netzwerk](#netzwerk)
   
   1. Docker-Container Examples 
      * [2 Container mit Netzwerk anpingen](#2-container-mit-netzwerk-anpingen)
@@ -40,14 +40,7 @@
      * [Überblick](#überblick)
      * [Volumes](#volumes)
      * [bind-mounts](#bind-mounts)
-  
-  1. Docker-Netzwerk 
-     * [Netzwerk](#netzwerk)
      
-  1. Docker Security 
-     * [Docker Security](#docker-security)
-     * [Scanning docker image with docker scan/snyx](#scanning-docker-image-with-docker-scansnyx)
-  
   1. Docker Compose
      * [yaml-format](#yaml-format)
      * [Ist docker-compose installiert?](#ist-docker-compose-installiert)
@@ -58,8 +51,9 @@
      * [docker-compose und replicas](#docker-compose-und-replicas)
      * [docker compose Reference](https://docs.docker.com/compose/compose-file/compose-file-v3/)
   
-  1. Docker Swarm 
-     * [Docker Swarm Beispiele](#docker-swarm-beispiele)
+  1. Docker Security 
+     * [Docker Security](#docker-security)
+     * [Scanning docker image with docker scan/snyx](#scanning-docker-image-with-docker-scansnyx)
 
   1. Docker - Dokumentation 
      * [Vulnerability Scanner with docker](https://docs.docker.com/engine/scan/#prerequisites)
@@ -71,19 +65,14 @@
      * [Aufbau Allgemein](#aufbau-allgemein)
      * [Aufbau mit helm,OpenShift,Rancher(RKE),microk8s](#aufbau-mit-helmopenshiftrancherrkemicrok8s)
      * [Welches System ? (minikube, micro8ks etc.)](#welches-system--minikube-micro8ks-etc)
-     * [Installation - Welche Komponenten from scratch](#installation---welche-komponenten-from-scratch)
 
   1. Kubernetes - microk8s (Installation und Management) 
      * [Installation Ubuntu - snap](#installation-ubuntu---snap)
-     * [Patch to next major release - cluster](#patch-to-next-major-release---cluster)
+     * [Create a cluster with microk8s](#create-a-cluster-with-microk8s)
      * [Remote-Verbindung zu Kubernetes (microk8s) einrichten](#remote-verbindung-zu-kubernetes-microk8s-einrichten)
      * [Bash completion installieren](#bash-completion-installieren)
      * [vim support for yaml](#vim-support-for-yaml)
-     * [kubectl unter windows - Remote-Verbindung zu Kuberenets (microk8s) einrichten](#kubectl-unter-windows---remote-verbindung-zu-kuberenets-microk8s-einrichten)
-     * [Create a cluster with microk8s](#create-a-cluster-with-microk8s)
      * [Ingress controller in microk8s aktivieren](#ingress-controller-in-microk8s-aktivieren)
-     * [Arbeiten mit der Registry](#arbeiten-mit-der-registry)
-     * [Installation Kubernetes Dashboard](#installation-kubernetes-dashboard)
 
   1. Kubernetes Praxis API-Objekte 
      * [Das Tool kubectl (Devs/Ops) - Spickzettel](#das-tool-kubectl-devsops---spickzettel)
@@ -97,7 +86,6 @@
      * [Services - Aufbau](#services---aufbau)
      * [kubectl/manifest/service](#kubectlmanifestservice)
      * DaemonSets (Devs/Ops)
-     * IngressController (Devs/Ops)
      * [Hintergrund Ingress](#hintergrund-ingress)
      * [Ingress Controller auf Digitalocean (doks) mit helm installieren](#ingress-controller-auf-digitalocean-doks-mit-helm-installieren)
      * [Documentation for default ingress nginx](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/)
@@ -107,7 +95,8 @@
      * [Achtung: Ingress mit Helm - annotations](#achtung-ingress-mit-helm---annotations)
      * [Permanente Weiterleitung mit Ingress](#permanente-weiterleitung-mit-ingress)
      * [ConfigMap Example](#configmap-example)
-     * [Configmap MariadDB - Example](#configmap-mariaddb---example)
+     * [Configmap MariaDB - Example](#configmap-mariadb---example)
+     * [Configmap MariaDB my.cnf](#configmap-mariadb-mycnf)
      
   1. Helm (Kubernetes Paketmanager) 
      * [Helm Grundlagen](#helm-grundlagen)
@@ -115,50 +104,112 @@
      * [Helm Example](#helm-example)
 
   1. Kubernetes - RBAC 
-     * [Nutzer einrichten](#nutzer-einrichten)
+     * [Nutzer einrichten microk8s ab kubernetes 1.25](#nutzer-einrichten-microk8s-ab-kubernetes-125)
  
   1. Kubernetes - Netzwerk (CNI's) / Mesh
+     * [Netzwerk Interna](#netzwerk-interna)
      * [Übersicht Netzwerke](#übersicht-netzwerke)
-     * [Callico - nginx example](#callico---nginx-example)
-     * [Callico - client-backend-ui-example](#callico---client-backend-ui-example)
+     * [Calico - nginx example NetworkPolicy](#calico---nginx-example-networkpolicy)
+     * [Beispiele Ingress Egress NetworkPolicy](#beispiele-ingress-egress-networkpolicy)
      * [Mesh / istio](#mesh--istio)
+     * [Kubernetes Ports/Protokolle](https://kubernetes.io/docs/reference/networking/ports-and-protocols/)
+     * [IPV4/IPV6 Dualstack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/)
    
   1. kubectl 
      * [Start pod (container with run && examples)](#start-pod-container-with-run--examples)
      * [Bash completion for kubectl](#bash-completion-for-kubectl)
      * [kubectl Spickzettel](#kubectl-spickzettel)
      * [Tipps&Tricks zu Deploymnent - Rollout](#tippstricks-zu-deploymnent---rollout)
-     
-  1. kubectl - manifest - examples 
-     * [02 Pod nginx mit Port und IP innerhalb des Clusters](#02-pod-nginx-mit-port-und-ip-innerhalb-des-clusters)
-     * [03b Example with service and nginx](#03b-example-with-service-and-nginx)
-     * [04 Ingress mit einfachem Beispiel](#04-ingress-mit-einfachem-beispiel)
-     * [05 Ingress mit Permanent Redirect](#05-ingress-mit-permanent-redirect)
-
-  1. Kubernetes - Monitoring (microk8s und vanilla) 
-     * [metrics-server aktivieren (microk8s und vanilla)](#metrics-server-aktivieren-microk8s-und-vanilla)
 
   1. Kubernetes - Shared Volumes 
      * [Shared Volumes with nfs](#shared-volumes-with-nfs)
-
-  1. Kubernetes - Backups 
-     + [Kubernetes Aware Cloud Backup - kasten.io](/backups/cluster-backup-kasten-io.md)
 
   1. Kubernetes - Wartung / Debugging 
      * [kubectl drain/uncordon](#kubectl-drainuncordon)
      * [Alte manifeste konvertieren mit convert plugin](#alte-manifeste-konvertieren-mit-convert-plugin)
      * [Netzwerkverbindung zu pod testen](#netzwerkverbindung-zu-pod-testen)
+     * [Curl from pod api-server](#curl-from-pod-api-server)
 
   1. Kubernetes - Tipps & Tricks 
-     * [Assigning Pods to Nodes](#assigning-pods-to-nodes)
      * [Kubernetes Debuggen ClusterIP/PodIP](#kubernetes-debuggen-clusterippodip)
      * [Debugging pods](#debugging-pods)
+     * [Taints und Tolerations](#taints-und-tolerations)
      * [Autoscaling Pods/Deployments](#autoscaling-podsdeployments)
+
+  1. Kubernetes Advanced 
+     * [Curl api-server kubernetes aus pod heraus](#curl-api-server-kubernetes-aus-pod-heraus)
 
   1. Kubernetes - Documentation 
      * [Documentation zu microk8s plugins/addons](https://microk8s.io/docs/addons)
-     * [LDAP-Anbindung](https://github.com/apprenda-kismatic/kubernetes-ldap)
      * [Shared Volumes - Welche gibt es ?](https://kubernetes.io/docs/concepts/storage/volumes/)
+
+  1. Kubernetes - Hardening 
+     * [Kubernetes Tipps Hardening](#kubernetes-tipps-hardening)
+     * [Kubernetes Security Admission Controller Example](#kubernetes-security-admission-controller-example)
+     
+  1. Kubernetes Interna / Misc.
+     * [OCI,Container,Images Standards](#ocicontainerimages-standards)
+     * [Geolocation Kubernetes Cluster](https://learnk8s.io/bite-sized/connecting-multiple-kubernetes-clusters)
+  
+## Backlog
+
+  1. Docker-Installation
+     * [Installation Docker unter Ubuntu mit snap](#installation-docker-unter-ubuntu-mit-snap)
+     * [Installation Docker unter SLES 15](#installation-docker-unter-sles-15)
+  
+  1. Dockerfile - Examples 
+     * [Nginx mit content aus html-ordner](#nginx-mit-content-aus-html-ordner)
+     * [ssh server](#ssh-server)
+  
+  1. Docker-Container Examples 
+     * [2 Container mit Netzwerk anpingen](#2-container-mit-netzwerk-anpingen)
+     * [Container mit eigenem privatem Netz erstellen](#container-mit-eigenem-privatem-netz-erstellen)
+  
+  1. Docker-Netzwerk 
+     * [Netzwerk](#netzwerk)
+     
+  1. Docker Security 
+     * [Scanning docker image with docker scan/snyx](#scanning-docker-image-with-docker-scansnyx)
+  
+  1. Docker Compose
+     * [yaml-format](#yaml-format)
+     * [Example with Ubuntu and Dockerfile](#example-with-ubuntu-and-dockerfile)
+     * [docker-compose und replicas](#docker-compose-und-replicas)
+     * [docker compose Reference](https://docs.docker.com/compose/compose-file/compose-file-v3/)
+  
+  1. Docker Swarm 
+     * [Docker Swarm Beispiele](#docker-swarm-beispiele)
+
+  1. Docker - Dokumentation 
+     * [Vulnerability Scanner with docker](https://docs.docker.com/engine/scan/#prerequisites)
+     * [Vulnerability Scanner mit snyk](https://snyk.io/plans/)
+     * [Parent/Base - Image bauen für Docker](https://docs.docker.com/develop/develop-images/baseimages/)
+    
+  1. Kubernetes - Überblick
+     * [Installation - Welche Komponenten from scratch](#installation---welche-komponenten-from-scratch)
+
+  1. Kubernetes - microk8s (Installation und Management) 
+     * [kubectl unter windows - Remote-Verbindung zu Kuberenets (microk8s) einrichten](#kubectl-unter-windows---remote-verbindung-zu-kuberenets-microk8s-einrichten)
+     * [Arbeiten mit der Registry](#arbeiten-mit-der-registry)
+     * [Installation Kubernetes Dashboard](#installation-kubernetes-dashboard)
+
+  1. Kubernetes - RBAC 
+     * [Nutzer einrichten - kubernetes bis 1.24](#nutzer-einrichten---kubernetes-bis-124)
+     
+  1. kubectl 
+     * [Tipps&Tricks zu Deploymnent - Rollout](#tippstricks-zu-deploymnent---rollout)
+     
+  1. Kubernetes - Monitoring (microk8s und vanilla) 
+     * [metrics-server aktivieren (microk8s und vanilla)](#metrics-server-aktivieren-microk8s-und-vanilla)
+
+  1. Kubernetes - Backups 
+     + [Kubernetes Aware Cloud Backup - kasten.io](/backups/cluster-backup-kasten-io.md)
+
+  1. Kubernetes - Tipps & Tricks 
+     * [Assigning Pods to Nodes](#assigning-pods-to-nodes)
+
+  1. Kubernetes - Documentation 
+     * [LDAP-Anbindung](https://github.com/apprenda-kismatic/kubernetes-ldap)
      * [Helpful to learn - Kubernetes](https://kubernetes.io/docs/tasks/)
      * [Environment to learn](https://killercoda.com/killer-shell-cks)
      * [Environment to learn II](https://killercoda.com/)
@@ -177,10 +228,7 @@
   1. Kubernetes Probes (Liveness and Readiness) 
      * [Übung Liveness-Probe](#übung-liveness-probe)
      * [Funktionsweise Readiness-Probe vs. Liveness-Probe](#funktionsweise-readiness-probe-vs-liveness-probe)
-     
-  1. Kubernetes Interna 
-     * [OCI,Container,Images Standards](#ocicontainerimages-standards)
-   
+       
   1. Linux und Docker Tipps & Tricks allgemein 
      * [Auf ubuntu root-benutzer werden](#auf-ubuntu-root-benutzer-werden)
      * [IP - Adresse abfragen](#ip---adresse-abfragen)
@@ -298,120 +346,6 @@ systemctl status docker
 ```
 ## herausfinden, ob docker compose installieren 
 docker compose version 
-```
-
-### Installation Docker unter Ubuntu mit snap
-
-
-```
-
-sudo su -
-snap install docker
-
-## for information retrieval 
-snap info docker
-systemctl list-units
-systemctl list-units -t service
-systemctl list-units -t service | grep docker
-
-systemctl status snap.docker.dockerd.service
-## oder (aber veraltet) 
-service snap.docker.dockerd status
-
-systemctl stop snap.docker.dockerd.service
-systemctl status snap.docker.dockerd.service
-systemctl start snap.docker.dockerd.service 
-
-## wird der docker-dienst beim nächsten reboot oder starten des Server gestartet ? 
-systemctl is-enabled snap.docker.dockerd.service
-
-```
-
-### Installation Docker unter SLES 15
-
-
-### Walkthrough 
-
-
-```
-sudo zypper search -v docker*
-sudo zypper install docker
-
-## Dem Nutzer /z.B. Nutzer kurs die Gruppe docker hinzufügen 
-## damit auch dieser den Docker-daemon verwenden darf 
-sudo groupadd docker
-sudo usermod -aG docker $USER
-
-### Unter SLES werden Dienste nicht automatisch aktiviert und gestartet !!! 
-## Service für start nach Boot aktivieren 
-newgrp docker 
-sudo systemctl enable docker.service
-## Docker dienst starten 
-sudo systemctl start docker.service
-```
-
-
-### Ausführlich mit Ausgaben 
-
-```
-sudo zypper search -v docker*
-
-Repository-Daten werden geladen...
-Installierte Pakete werden gelesen...
-
-sudo zypper install docker
-
-Dienst 'Basesystem_Module_x86_64' wird aktualisiert.
-Dienst 'Containers_Module_x86_64' wird aktualisiert.
-Dienst 'Desktop_Applications_Module_x86_64' wird aktualisiert.
-Dienst 'Development_Tools_Module_x86_64' wird aktualisiert.
-Dienst 'SUSE_Linux_Enterprise_Server_x86_64' wird aktualisiert.
-Dienst 'Server_Applications_Module_x86_64' wird aktualisiert.
-Repository-Daten werden geladen...
-Installierte Pakete werden gelesen...
-Paketabhängigkeiten werden aufgelöst...
-
-Das folgende empfohlene Paket wurde automatisch gewählt:
-  git-core
-
-Die folgenden 7 NEUEN Pakete werden installiert:
-  catatonit containerd docker docker-bash-completion git-core libsha1detectcoll1 runc
-
-7 neue Pakete zu installieren.
-Gesamtgröße des Downloads: 52,2 MiB. Bereits im Cache gespeichert: 0 B. Nach der Operation werden zusätzlich 242,1 MiB belegt.
-Fortfahren? [j/n/v/...? zeigt alle Optionen](j): j
-Paket libsha1detectcoll1-1.0.3-2.18.x86_64 abrufen                                                                                                                                                                          (1/7),  23,2 KiB ( 45,8 KiB entpackt)
-Abrufen: libsha1detectcoll1-1.0.3-2.18.x86_64.rpm .......................................................................................................................................................................................................[fertig]
-Paket catatonit-0.1.5-3.3.2.x86_64 abrufen                                                                                                                                                                                  (2/7), 257,2 KiB (696,5 KiB entpackt)
-Abrufen: catatonit-0.1.5-3.3.2.x86_64.rpm ...............................................................................................................................................................................................................[fertig]
-Paket runc-1.1.4-150000.33.4.x86_64 abrufen                                                                                                                                                                                 (3/7),   2,6 MiB (  9,1 MiB entpackt)
-Abrufen: runc-1.1.4-150000.33.4.x86_64.rpm ..............................................................................................................................................................................................................[fertig]
-Paket containerd-1.6.6-150000.73.2.x86_64 abrufen                                                                                                                                                                           (4/7),  17,7 MiB ( 74,2 MiB entpackt)
-Abrufen: containerd-1.6.6-150000.73.2.x86_64.rpm ........................................................................................................................................................................................................[fertig]
-Paket git-core-2.35.3-150300.10.15.1.x86_64 abrufen                                                                                                                                                                         (5/7),   4,8 MiB ( 26,6 MiB entpackt)
-Abrufen: git-core-2.35.3-150300.10.15.1.x86_64.rpm ......................................................................................................................................................................................................[fertig]
-Paket docker-20.10.17_ce-150000.166.1.x86_64 abrufen                                                                                                                                                                        (6/7),  26,6 MiB (131,4 MiB entpackt)
-Abrufen: docker-20.10.17_ce-150000.166.1.x86_64.rpm .....................................................................................................................................................................................................[fertig]
-Paket docker-bash-completion-20.10.17_ce-150000.166.1.noarch abrufen                                                                                                                                                        (7/7), 121,3 KiB (113,6 KiB entpackt)
-Abrufen: docker-bash-completion-20.10.17_ce-150000.166.1.noarch.rpm .....................................................................................................................................................................................[fertig]
-
-Überprüfung auf Dateikonflikte läuft: ...................................................................................................................................................................................................................[fertig]
-(1/7) Installieren: libsha1detectcoll1-1.0.3-2.18.x86_64 ................................................................................................................................................................................................[fertig]
-(2/7) Installieren: catatonit-0.1.5-3.3.2.x86_64 ........................................................................................................................................................................................................[fertig]
-(3/7) Installieren: runc-1.1.4-150000.33.4.x86_64 .......................................................................................................................................................................................................[fertig]
-(4/7) Installieren: containerd-1.6.6-150000.73.2.x86_64 .................................................................................................................................................................................................[fertig]
-(5/7) Installieren: git-core-2.35.3-150300.10.15.1.x86_64 ...............................................................................................................................................................................................[fertig]
-Updating /etc/sysconfig/docker ...
-(6/7) Installieren: docker-20.10.17_ce-150000.166.1.x86_64 ..............................................................................................................................................................................................[fertig]
-(7/7) Installieren: docker-bash-completion-20.10.17_ce-150000.166.1.noarch ..............................................................................................................................................................................[fertig]
-
-sudo groupadd docker
-sudo usermod -aG docker $USER
-// logout
-
-newgrp docker 
-sudo systemctl enable docker.service
-sudo systemctl start docker.service
 ```
 
 ## Docker-Befehle 
@@ -631,7 +565,7 @@ cd hello-world
 
 ```
 ## nano Dockerfile
-FROM ubuntu:latest 
+FROM ubuntu:22.04 
 
 COPY hello.sh .
 RUN chmod u+x hello.sh
@@ -799,42 +733,70 @@ docker rm -f hello-web
 
 ```
 
-### ssh server
+## Docker-Netzwerk 
+
+### Netzwerk
 
 
-```
-cd 
-mkdir devubuntu
-cd devubuntu 
-## vi Dockerfile 
-```
-
-```Dockerfile
-FROM ubuntu:latest
-
-RUN apt-get update && \
-    DEBIAN_FRONTEND="noninteractive" apt-get install -y inetutils-ping openssh-server && \
-    rm -rf /var/lib/apt/lists/*
-
-RUN mkdir /run/sshd && \
-    echo 'root:root' | chpasswd && \
-    sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config && \
-    sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config && \
-    mkdir /root/.ssh
-
-EXPOSE 22/tcp
-
-CMD ["/usr/sbin/sshd","-D"]
-```
+### Übersicht
 
 ```
-docker build -t devubuntu . 
-docker run --name=devjoy -p 2222:22  -d -t devubuntu3
+3 Typen 
 
-ssh root@localhost -p 2222
-## example, if your docker host ist 192.168.56.101 v
-ssh root@192.168.56.101 -p 2222
+o none
+o bridge (Standard-Netzwerk) 
+o host 
+
+### Additionally possible to install
+o overlay (needed for multi-node)
+
 ```
+
+
+### Kommandos 
+
+```
+## Netzwerk anzeigen 
+docker network ls 
+
+## bridge netzwerk anschauen 
+## Zeigt auch ip der docker container an  
+docker inspect bridge
+
+## im container sehen wir es auch
+docker inspect ubuntu-container 
+
+```
+
+### Eigenes Netz erstellen 
+
+```
+docker network create -d bridge test_net 
+docker network ls 
+
+docker container run -d --name nginx --network test_net nginx
+docker container run -d --name nginx_no_net --network none nginx 
+
+docker network inspect none 
+docker network inspect test_net 
+
+docker inspect nginx 
+docker inspect nginx_no_net 
+
+```
+
+### Netzwerk rausnehmen / hinzufügen 
+
+```
+docker network disconnect none nginx_no_net
+docker network connect test_net nginx_no_net 
+
+### Das Löschen von Netzwerken ist erst möglich, wenn es keine Endpoints 
+### d.h. container die das Netzwerk verwenden 
+docker network rm test_net 
+```
+
+
 
 ## Docker-Container Examples 
 
@@ -974,156 +936,6 @@ docker exec -it devtest bash
 /# cd /app 
 ```
 
-## Docker-Netzwerk 
-
-### Netzwerk
-
-
-### Übersicht
-
-```
-3 Typen 
-
-o none
-o bridge (Standard-Netzwerk) 
-o host 
-
-### Additionally possible to install
-o overlay (needed for multi-node)
-
-```
-
-
-### Kommandos 
-
-```
-## Netzwerk anzeigen 
-docker network ls 
-
-## bridge netzwerk anschauen 
-## Zeigt auch ip der docker container an  
-docker inspect bridge
-
-## im container sehen wir es auch
-docker inspect ubuntu-container 
-
-```
-
-### Eigenes Netz erstellen 
-
-```
-docker network create -d bridge test_net 
-docker network ls 
-
-docker container run -d --name nginx --network test_net nginx
-docker container run -d --name nginx_no_net --network none nginx 
-
-docker network inspect none 
-docker network inspect test_net 
-
-docker inspect nginx 
-docker inspect nginx_no_net 
-
-```
-
-### Netzwerk rausnehmen / hinzufügen 
-
-```
-docker network disconnect none nginx_no_net
-docker network connect test_net nginx_no_net 
-
-### Das Löschen von Netzwerken ist erst möglich, wenn es keine Endpoints 
-### d.h. container die das Netzwerk verwenden 
-docker network rm test_net 
-```
-
-
-
-## Docker Security 
-
-### Docker Security
-
-
-### Run container under specific user: 
-
-```
-## user with id 40000 does not need to exist in container 
-docker run -it -u 40000 alpine 
-
-## user kurs needs to exist in container (/etc/passwd) 
-docker run -it -u kurs alpine 
-
-```
-
-### Default capabilities 
-
-  * Set everytime a new container is started as default 
-  * https://github.com/moby/moby/blob/master/profiles/seccomp/default.json
-
-
-### Run container with less capabilities 
-
-```
-cd
-mkdir captest
-cd captest 
-```
-
-```
-nano docker-compose.yml 
-```
-
-```
-services: 
-  nginx:
-    image: nginx 
-    cap_drop:
-      - CHOWN
-```
-
-```
-docker compose up -d
-## start and exits 
-docker compose ps 
-## 
-docker exec -it captest_nginx_1 bash 
-##/ touch /tmp/foo; chown 10000 /tmp/foo  
-
-## what happened -> wants to do chown, but it is not allowed 
-docker logs captest_nginx_1 
-
-```
-
-```
-docker compose down 
-```
-
-
-### Reference:
-
-  * https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html
-  * https://www.redhat.com/en/blog/secure-your-containers-one-weird-trick
-  * man capabilities
-
-### Scanning docker image with docker scan/snyx
-
-
-### Prerequisites 
-
-```
-You need to be logged in on docker hub with docker login 
-(with your account credentials
-```
-
-
-### Example 
-
-```
-## Snyk (docker scan) 
-docker help scan
-docker scan --json --accept-license dockertrainereu/jm-hello-docker  > result.json
-```
-
 ## Docker Compose
 
 ### yaml-format
@@ -1244,7 +1056,7 @@ cd wp
 ## nano docker-compose.yml 
 ```
 
-```
+```yaml
 version: "3.7"
 
 services:
@@ -1282,12 +1094,12 @@ volumes:
 ```
 
 
-```
-### now start the system
+```console
+## now start the system
 docker compose up -d 
-### we can do some test if db is reachable 
-docker exec -it wp_wordpress_1 bash 
-### within shell do 
+## we can do some test if db is reachable 
+docker exec -it wp-wordpress-1 bash 
+## within shell do 
 apt update 
 apt-get install -y telnet
 ## this should work 
@@ -1412,96 +1224,90 @@ configs:
 
   * https://docs.docker.com/compose/compose-file/compose-file-v3/
 
-## Docker Swarm 
+## Docker Security 
 
-### Docker Swarm Beispiele
+### Docker Security
 
 
-### Generic examples 
+### Run container under specific user: 
 
 ```
-## should be at least version 1.24 
-docker info
+## user with id 40000 does not need to exist in container 
+docker run -it -u 40000 alpine 
 
-## only for one network interface
-docker swarm init
-
-## in our case, we need to decide what interface
-docker swarm init --advertise-addr 192.168.56.101
-
-## is swarm active 
-docker info | grep -i swarm
-## When it is -> node command works 
-docker node ls
-## is the current node the manager 
-docker info | grep -i "is manager"
-
-## docker create additional overlay network 
-docker network ls
-
-## what about my own node -> self
-docker node inspect self
-docker node inspect --pretty self
-docker node inspect --pretty self | less
+## user kurs needs to exist in container (/etc/passwd) 
+docker run -it -u kurs alpine 
 
 ```
 
-```
-## Create our first service 
-docker service create redis
-docker images
-docker service ls
-## if service-id start with  j 
-docker service inspect j
-docker service ps j
-docker service rm j
-docker service ls
-```
+### Default capabilities 
+
+  * Set everytime a new container is started as default 
+  * https://github.com/moby/moby/blob/master/profiles/seccomp/default.json
+
+
+### Run container with less capabilities 
 
 ```
-## Start with multiple replicas and name 
-docker service create --name my_redis --replicas 4 redis
-docker service ls
-## Welche tasks 
-docker service ps my_redis
-docker container ls
-docker service inspect my_redis
-
-## delete service
-docker service rm
+cd
+mkdir captest
+cd captest 
 ```
 
-### Add additional node 
+```
+nano docker-compose.yml 
+```
 
 ```
-## on first node, get join token 
-docker swarm join-token manager
+services: 
+  nginx:
+    image: nginx 
+    cap_drop:
+      - CHOWN
+```
 
-## on second node execute join command
-docker swarm join --token SWMTKN-1-07jy3ym29au7u3isf1hfhgd7wpfggc1nia2kwtqfnfc8hxfczw-2kuhwlnr9i0nkje8lz437d2d5 192.168.56.101:2377
+```
+docker compose up -d
+## start and exits 
+docker compose ps 
+## 
+docker exec -it captest_nginx_1 bash 
+##/ touch /tmp/foo; chown 10000 /tmp/foo  
 
-## check with node command
-docker node ls 
-
-## Make node a simple worker
-## Does not make, because no highavailable after crush node 1
-## Take at LEAST 3 NODES 
-docker node demote <node-name>
+## what happened -> wants to do chown, but it is not allowed 
+docker logs captest_nginx_1 
 
 ```
 
-### expose port
-
 ```
-docker service create --name my_web \
-                        --replicas 3 \
-                        --publish published=8080,target=80 \
-                        nginx
+docker compose down 
 ```
 
-### Ref 
 
-  * https://docs.docker.com/engine/swarm/services/
+### Reference:
+
+  * https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html
+  * https://www.redhat.com/en/blog/secure-your-containers-one-weird-trick
+  * man capabilities
+
+### Scanning docker image with docker scan/snyx
+
+
+### Prerequisites 
+
+```
+You need to be logged in on docker hub with docker login 
+(with your account credentials
+```
+
+
+### Example 
+
+```
+## Snyk (docker scan) 
+docker help scan
+docker scan --json --accept-license dockertrainereu/jm-hello-docker  > result.json
+```
 
 ## Docker - Dokumentation 
 
@@ -1712,221 +1518,6 @@ it is not suitable for production.
 
 
 
-### Installation - Welche Komponenten from scratch
-
-
-### Step 1: Server 1 (manuell installiert -> microk8s)
-
-```
-## Installation Ubuntu - Server 
-
-## cloud-init script 
-## s.u. BASIS (keine Voraussetzung - nur zum Einrichten des Nutzers 11trainingdo per ssh) 
-
-## Server 1 - manuell 
-## Ubuntu 20.04 LTS - Grundinstallation 
-
-## minimal Netzwerk - öffentlichen IP 
-## nichts besonderes eingerichtet - Standard Digitalocean 
-
-## Standard vo Installation microk8s 
-lo               UNKNOWN        127.0.0.1/8 ::1/128
-## public ip / interne 
-eth0             UP             164.92.255.234/20 10.19.0.6/16 fe80::c:66ff:fec4:cbce/64
-## private ip 
-eth1             UP             10.135.0.3/16 fe80::8081:aaff:feaa:780/64
-
-snap install microk8s --classic 
-## namensaufloesung fuer pods 
-microk8s enable dns 
-
-```
-
-```
-## Funktioniert microk8s 
-microk8s status
-```
-
-### Steps 2: Server 2+3 (automatische Installation -> microk8s ) 
-
-```
-## Was macht das ? 
-## 1. Basisnutzer (11trainingdo) - keine Voraussetzung für microk8s
-## 2. Installation von microk8s 
-##.>>>>>>> microk8s installiert <<<<<<<<
-## - snap install --classic microk8s 
-## >>>>>>> Zuordnung zur Gruppe microk8s - notwendig für bestimmte plugins (z.B. helm)  
-## usermod -a -G microk8s root 
-## >>>>>>> Setzen des .kube - Verzeichnisses auf den Nutzer microk8s -> nicht zwingend erforderlich 
-## chown -r -R microk8s ~/.kube 
-## >>>>>>> REQUIRED .. DNS aktivieren, wichtig für Namensauflösungen innerhalb der PODS
-## >>>>>>> sonst funktioniert das nicht !!! 
-## microk8s enable dns 
-## >>>>>>> kubectl alias gesetzt, damit man nicht immer microk8s kubectl eingeben muss
-## - echo "alias kubectl='microk8s kubectl'" >> /root/.bashrc
-
-## cloud-init script 
-## s.u. MITMICROK8S (keine Voraussetzung - nur zum Einrichten des Nutzers 11trainingdo per ssh) 
-##cloud-config
-users:
-  - name: 11trainingdo
-    shell: /bin/bash
-
-runcmd:
-  - sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config
-  - echo " " >> /etc/ssh/sshd_config 
-  - echo "AllowUsers 11trainingdo" >> /etc/ssh/sshd_config 
-  - echo "AllowUsers root" >> /etc/ssh/sshd_config 
-  - systemctl reload sshd 
-  - sed -i '/11trainingdo/c 11trainingdo:$6$HeLUJW3a$4xSfDFQjKWfAoGkZF3LFAxM4hgl3d6ATbr2kEu9zMOFwLxkYMO.AJF526mZONwdmsm9sg0tCBKl.SYbhS52u70:17476:0:99999:7:::' /etc/shadow
-  - echo "11trainingdo ALL=(ALL) ALL" > /etc/sudoers.d/11trainingdo
-  - chmod 0440 /etc/sudoers.d/11trainingdo
-  
-  - echo "Installing microk8s"
-  - snap install --classic microk8s
-  - usermod -a -G microk8s root
-  - chown -f -R microk8s ~/.kube
-  - microk8s enable dns 
-  - echo "alias kubectl='microk8s kubectl'" >> /root/.bashrc
-```
-```
-## Prüfen ob microk8s - wird automatisch nach Installation gestartet
-## kann eine Weile dauern
-microk8s status
-
-```
-
-### Step 3: Client - Maschine (wir sollten nicht auf control-plane oder cluster - node arbeiten
-
-```
-Weiteren Server hochgezogen. 
-Vanilla + BASIS 
-
-## Installation Ubuntu - Server 
-
-## cloud-init script 
-## s.u. BASIS (keine Voraussetzung - nur zum Einrichten des Nutzers 11trainingdo per ssh) 
-
-## Server 1 - manuell 
-## Ubuntu 20.04 LTS - Grundinstallation 
-
-## minimal Netzwerk - öffentlichen IP 
-## nichts besonderes eingerichtet - Standard Digitalocean 
-
-## Standard vo Installation microk8s 
-lo               UNKNOWN        127.0.0.1/8 ::1/128
-## public ip / interne 
-eth0             UP             164.92.255.232/20 10.19.0.6/16 fe80::c:66ff:fec4:cbce/64
-## private ip 
-eth1             UP             10.135.0.5/16 fe80::8081:aaff:feaa:780/64
-
-```
-
-```
-##### Installation von kubectl aus dem snap
-## NICHT .. keine microk8s - keine control-plane / worker-node 
-## NUR Client zum Arbeiten 
-snap install kubectl --classic 
-
-##### .kube/config 
-## Damit ein Zugriff auf die kube-server-api möglich
-## d.h. REST-API Interface, um das Cluster verwalten.
-## Hier haben uns für den ersten Control-Node entschieden
-## Alternativ wäre round-robin per dns möglich 
-
-## Mini-Schritt 1:
-## Auf dem Server 1: kubeconfig ausspielen 
-microk8s config > /root/kube-config 
-## auf das Zielsystem gebracht (client 1) 
-scp /root/kubeconfig 11trainingdo@10.135.0.5:/home/11trainingdo
-
-## Mini-Schritt 2:
-## Auf dem Client 1 (diese Maschine) kubeconfig an die richtige Stelle bringen 
-## Standardmäßig der Client nach eine Konfigurationsdatei sucht in ~/.kube/config 
-sudo su -
-cd 
-mkdir .kube 
-cd .kube 
-mv /home/11trainingdo/kube-config config 
-
-## Verbindungstest gemacht
-## Damit feststellen ob das funktioniert. 
-kubectl cluster-info 
-
-```
-
-### Schritt 4: Auf allen Servern IP's hinterlegen und richtigen Hostnamen überprüfen 
-
-```
-## Auf jedem Server 
-hostnamectl 
-## evtl. hostname setzen 
-## z.B. - auf jedem Server eindeutig 
-hostnamectl set-hostname n1.training.local 
-
-## Gleiche hosts auf allen server einrichten.
-## Wichtig, um Traffic zu minimieren verwenden, die interne (private) IP
-
-/etc/hosts 
-10.135.0.3 n1.training.local n1
-10.135.0.4 n2.training.local n2
-10.135.0.5 n3.training.local n3 
-
-```
-
-### Schritt 5: Cluster aufbauen 
-
-```
-## Mini-Schritt 1:
-## Server 1: connection - string (token) 
-microk8s add-node 
-## Zeigt Liste und wir nehmen den Eintrag mit der lokalen / öffentlichen ip
-## Dieser Token kann nur 1x verwendet werden und wir auf dem ANDEREN node ausgeführt
-## microk8s join 10.135.0.3:25000/e9cdaa11b5d6d24461c8643cdf107837/bcad1949221a
-
-## Mini-Schritt 2:
-## Dauert eine Weile, bis das durch ist. 
-## Server 2: Den Node hinzufügen durch den JOIN - Befehl 
-microk8s join 10.135.0.3:25000/e9cdaa11b5d6d24461c8643cdf107837/bcad1949221a
-
-## Mini-Schritt 3:
-## Server 1: token besorgen für node 3
-microk8s add-node 
-
-## Mini-Schritt 4:
-## Server 3: Den Node hinzufügen durch den JOIN-Befehl 
-microk8s join 10.135.0.3:25000/09c96e57ec12af45b2752fb45450530c/bcad1949221a
-
-## Mini-Schritt 5: Überprüfen ob HA-Cluster läuft 
-Server 1: (es kann auf jedem der 3 Server überprüft werden, auf einem reicht 
-microk8s status | grep high-availability 
-high-availability: yes 
-```
-
-### Ergänzend nicht notwendige Scripte 
-
-```
-## cloud-init script 
-## s.u. BASIS (keine Voraussetzung - nur zum Einrichten des Nutzers 11trainingdo per ssh) 
-
-## Digitalocean - unter user_data reingepastet beim Einrichten 
-
-##cloud-config
-users:
-  - name: 11trainingdo
-    shell: /bin/bash
-
-runcmd:
-  - sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config
-  - echo " " >> /etc/ssh/sshd_config 
-  - echo "AllowUsers 11trainingdo" >> /etc/ssh/sshd_config 
-  - echo "AllowUsers root" >> /etc/ssh/sshd_config 
-  - systemctl reload sshd 
-  - sed -i '/11trainingdo/c 11trainingdo:$6$HeLUJW3a$4xSfDFQjKWfAoGkZF3LFAxM4hgl3d6ATbr2kEu9zMOFwLxkYMO.AJF526mZONwdmsm9sg0tCBKl.SYbhS52u70:17476:0:99999:7:::' /etc/shadow
-  - echo "11trainingdo ALL=(ALL) ALL" > /etc/sudoers.d/11trainingdo
-  - chmod 0440 /etc/sudoers.d/11trainingdo
-```
-
 ## Kubernetes - microk8s (Installation und Management) 
 
 ### Installation Ubuntu - snap
@@ -1967,7 +1558,31 @@ snap info microk8s
 
   * https://microk8s.io/docs/setting-snap-channel
 
-### Patch to next major release - cluster
+### Create a cluster with microk8s
+
+
+### Walkthrough 
+
+```
+## auf master (jeweils für jedes node neu ausführen)
+microk8s add-node
+
+## dann auf jeweiligem node vorigen Befehl der ausgegeben wurde ausführen
+## Kann mehr als 60 sekunden dauern ! Geduld...Geduld..Geduld 
+##z.B. -> ACHTUNG evtl. IP ändern 
+microk8s join 10.128.63.86:25000/567a21bdfc9a64738ef4b3286b2b8a69
+
+```
+
+### Auf einem Node addon aktivieren z.B. ingress
+
+```
+gucken, ob es auf dem anderen node auch aktiv ist. 
+```
+
+### Ref:
+
+  * https://microk8s.io/docs/high-availability
 
 ### Remote-Verbindung zu Kubernetes (microk8s) einrichten
 
@@ -2010,11 +1625,14 @@ kubectl --kubeconfig /home/myuser/.kube/myconfig
 ### Walkthrough 
 
 ```
+## Eventuell, wenn bash-completion nicht installiert ist.
 apt install bash-completion
 source /usr/share/bash-completion/bash_completion
 ## is it installed properly 
 type _init_completion
+```
 
+```
 ## activate for all users 
 kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 
@@ -2040,7 +1658,7 @@ complete -F __start_kubectl k
 ### vim support for yaml
 
 
-### Ubuntu (im Unterverzeichnis /etc/vim - systemweit) 
+### Ubuntu (im Unterverzeichnis /etc/vim/vimrc.local - systemweit) 
 
 ```
 hi CursorColumn cterm=NONE ctermbg=lightred ctermfg=white
@@ -2058,108 +1676,6 @@ Eigenschaft: <return> # springt eingerückt in die nächste Zeile um 2 spaces ei
 
 ```
 
-### kubectl unter windows - Remote-Verbindung zu Kuberenets (microk8s) einrichten
-
-
-### Walkthrough (Installation)
-
-```
-## Step 1
-chocolatry installiert. 
-(powershell als Administrator ausführen)
-## https://docs.chocolatey.org/en-us/choco/setup
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-
-## Step 2
-choco install kubernetes-cli 
-
-## Step 3
-testen:
-kubectl version --client 
-
-## Step 4:
-## powershell als normaler benutzer öffnen 
-```
-
-### Walkthrough (autocompletion) 
-
-```
-in powershell (normaler Benutzer) 
-kubectl completion powershell | Out-String | Invoke-Expression
-```
-
-### kubectl - config - Struktur vorbereiten  
-
-```
-## in powershell im heimatordner des Benutzers .kube - ordnern anlegen
-## C:\Users\<dein-name>\
-mkdir .kube 
-cd .kube 
-```
-
-### IP von Cluster-Node bekommen 
-
-```
-## auf virtualbox - maschine per ssh einloggen 
-## öffentliche ip herausfinden - z.B. enp0s8 bei HostOnly - Adapter
-ip -br a 
-```
-
-### config für kubectl aus Cluster-Node auslesen (microk8s) 
-
-```
-## auf virtualbox - maschine per ssh einloggen / zum root wechseln 
-## abfragen
-microk8s config 
-
-## Alle Zeilen ins clipboard kopieren
-## und mit notepad++ in die Datei \Users\<dein-name>\.kube\config 
-## schreiben
-
-## Wichtig: Zeile cluster -> clusters / server 
-## Hier ip von letztem Schritt eintragen:
-## z.B. 
-Server: https://192.168.56.106/......
-```
-
-### Testen 
-
-```
-## in powershell
-## kann ich eine Verbindung zum Cluster aufbauen ? 
-kubectl cluster-info 
-```
-
-
-
-  * https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/
-
-### Create a cluster with microk8s
-
-
-### Walkthrough 
-
-```
-## auf master (jeweils für jedes node neu ausführen)
-microk8s add-node
-
-## dann auf jeweiligem node vorigen Befehl der ausgegeben wurde ausführen
-## Kann mehr als 60 sekunden dauern ! Geduld...Geduld..Geduld 
-##z.B. -> ACHTUNG evtl. IP ändern 
-microk8s join 10.128.63.86:25000/567a21bdfc9a64738ef4b3286b2b8a69
-
-```
-
-### Auf einem Node addon aktivieren z.B. ingress
-
-```
-gucken, ob es auf dem anderen node auch aktiv ist. 
-```
-
-### Ref:
-
-  * https://microk8s.io/docs/high-availability
-
 ### Ingress controller in microk8s aktivieren
 
 
@@ -2172,15 +1688,6 @@ microk8s enable ingress
 ### Referenz 
 
   * https://microk8s.io/docs/addon-ingress
-
-### Arbeiten mit der Registry
-
-### Installation Kubernetes Dashboard
-
-
-### Reference:
-
-  * https://blog.tippybits.com/installing-kubernetes-in-virtualbox-3d49f666b4d6    
 
 ## Kubernetes Praxis API-Objekte 
 
@@ -2336,6 +1843,14 @@ kubectl describe pods foo2
 ### Walkthrough 
 
 ```
+cd 
+mkdir -p manifests
+cd manifests
+mkdir -p web
+cd web
+```
+
+```
 ## vi nginx-static.yml 
 
 apiVersion: v1
@@ -2364,6 +1879,7 @@ kubectl get pod/nginx-static-web -o wide
 
 ```
 cd
+mkdir -p manifests
 cd manifests
 mkdir 02-rs 
 cd 02-rs 
@@ -2388,9 +1904,9 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: "nginx:latest"
+          image: nginx:1.21
           ports:
-             - containerPort: 80
+            - containerPort: 80
              
 
              
@@ -2422,7 +1938,7 @@ spec:
   selector:
     matchLabels:
       app: nginx
-  replicas: 2 # tells deployment to run 2 pods matching the template
+  replicas: 8 # tells deployment to run 2 pods matching the template
   template:
     metadata:
       labels:
@@ -2430,7 +1946,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: nginx:latest
+        image: nginx:1.21
         ports:
         - containerPort: 80
         
@@ -2451,6 +1967,9 @@ kubectl apply -f deploy.yml
 ### Schritt 1: Deployment 
 
 ```
+cd
+mkdir -p manifests
+cd manifests 
 mkdir 04-service 
 cd 04-service 
 ```
@@ -2574,8 +2093,14 @@ microk8s enable ingress
 
 ### Walkthrough 
 
+#### Schritt 1:
+
 ```
+cd 
+mkdir -p manifests
+cd manifests 
 mkdir abi
+cd abi 
 ```
 
 
@@ -2646,6 +2171,8 @@ spec:
 ```
 kubectl apply -f banana.yml
 ```
+
+#### Schritt 2:
 
 ```
 ## Ingress
@@ -3098,10 +2625,19 @@ kubectl exec -it pod-env-var --  bash
 
  * https://matthewpalmer.net/kubernetes-app-developer/articles/ultimate-configmap-guide-kubernetes.html
 
-### Configmap MariadDB - Example
+### Configmap MariaDB - Example
 
 
 ### Schritt 1: configmap 
+
+```
+cd 
+mkdir -p manifests
+cd manifests
+mkdir cftest 
+cd cftest 
+nano 01-configmap.yml 
+```
 
 ```
 ### 01-configmap.yml
@@ -3123,12 +2659,7 @@ kubectl get cm mariadb-configmap -o yaml
 
 ### Schritt 2: Deployment 
 ```
-cd 
-mkdir -p manifests 
-cd manifests
-mkdir configmapmaria
-cd configmapmaria
-nano 01-deploy.yml
+nano 02-deploy.yml
 ```
 
 ```
@@ -3141,7 +2672,7 @@ spec:
   selector:
     matchLabels:
       app: mariadb
-  replicas: 1 # tells deployment to run 2 pods matching the template
+  replicas: 1 
   template:
     metadata:
       labels:
@@ -3160,12 +2691,77 @@ spec:
 kubectl apply -f .
 ```
 
-### Imporatnt Sidenode 
+### Important Sidenode 
 
   * If configmap changes, deployment does not know
   * So kubectl apply -f deploy.yml will not have any effect
-  * to fix, use stakater/relaoder: https://github.com/stakater/Reloader
+  * to fix, use stakater/reloader: https://github.com/stakater/Reloader
 
+
+### Configmap MariaDB my.cnf
+
+
+### configmap zu fuss 
+
+```
+vi mariadb-config2.yml 
+```
+
+```
+kind: ConfigMap 
+apiVersion: v1 
+metadata:
+  name: example-configmap 
+data:
+  # als Wertepaare
+  database: mongodb
+  my.cnf: |
+ [mysqld]
+ slow_query_log = 1
+ innodb_buffer_pool_size = 1G 
+  
+```
+
+```
+kubectl apply -f .
+```
+
+```
+##deploy.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb-deployment
+spec:
+  selector:
+    matchLabels:
+      app: mariadb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+      - name: mariadb-cont
+        image: mariadb:latest
+        envFrom:
+        - configMapRef:
+            name: mariadb-configmap
+
+        volumeMounts:
+          - name: example-configmap-volume
+            mountPath: /etc/my
+
+      volumes:
+      - name: example-configmap-volume
+        configMap:
+          name: example-configmap
+```
+
+```
+kubectl apply -f .
+```
 
 ## Helm (Kubernetes Paketmanager) 
 
@@ -3332,6 +2928,36 @@ helm install my-wordpress \
     bitnami/wordpress
 ```
 
+### Example 4: Install Wordpress with values and auth 
+
+```
+
+## mkdir helm-mysql
+## cd helm-mysql
+## vi values.yml
+persistence:
+  enabled: false
+
+
+
+wordpressUsername: admin
+wordpressPassword: password
+mariadb:
+  primary:
+    persistence:
+      enabled: false
+
+  auth:
+    rootPassword: secretpassword
+
+
+```
+
+```
+helm uninstall my-wordpress 
+helm install my-wordpress bitnami/wordpress -f values 
+```
+
 ### Referenced
 
   * https://github.com/bitnami/charts/tree/master/bitnami/mysql/#installing-the-chart
@@ -3339,7 +2965,7 @@ helm install my-wordpress \
 
 ## Kubernetes - RBAC 
 
-### Nutzer einrichten
+### Nutzer einrichten microk8s ab kubernetes 1.25
 
 
 ### Enable RBAC in microk8s 
@@ -3349,7 +2975,7 @@ helm install my-wordpress \
 microk8s enable rbac 
 ```
 
-### Schritt 1: Nutzer-Account auf Server anlegen / in Client 
+### Schritt 1: Nutzer-Account auf Server anlegen und secret anlegen / in Client 
 
 ```
 cd 
@@ -3366,9 +2992,31 @@ kind: ServiceAccount
 metadata:
   name: training
   namespace: default
+```
 
-
+```
 kubectl apply -f service-account.yml 
+```
+
+#### Mini-Schritt 1.5: Secret erstellen 
+
+  * From Kubernetes 1.25 tokens are not created automatically when creating a service account (sa)
+  * You have to create them manually with annotation attached 
+  * https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#create-token
+
+```
+## vi secret.yml 
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/service-account-token
+metadata:
+  name: trainingtoken
+  annotations:
+    kubernetes.io/service-account.name: training
+```
+
+```
+kubectl apply -f .
 ```
 
 
@@ -3386,7 +3034,9 @@ rules:
 - apiGroups: [""] # "" indicates the core API group
   resources: ["pods"]
   verbs: ["get", "watch", "list"]
+```
 
+```
 kubectl apply -f pods-clusterrole.yml 
 ```
 
@@ -3406,9 +3056,10 @@ subjects:
 - kind: ServiceAccount
   name: training
   namespace: default
+```
 
+```
 kubectl apply -f rb-training-ns-default-pods.yml
-
 ```
 
 #### Mini-Schritt 4: Testen (klappt der Zugang) 
@@ -3417,16 +3068,16 @@ kubectl apply -f rb-training-ns-default-pods.yml
 kubectl auth can-i get pods -n default --as system:serviceaccount:default:training
 ```
 
-### Schritt 2: Context anlegen / Credentials auslesen und in kubeconfig hinterlegen 
+### Schritt 2: Context anlegen / Credentials auslesen und in kubeconfig hinterlegen (bis Version 1.25.) 
 
 #### Mini-Schritt 1: kubeconfig setzen 
+
 ```
 kubectl config set-context training-ctx --cluster microk8s-cluster --user training
 
 ## extract name of the token from here 
-TOKEN_NAME=`kubectl get serviceaccount training -o jsonpath='{.secrets[0].name}'`
 
-TOKEN=`kubectl get secret $TOKEN_NAME -o jsonpath='{.data.token}' | base64 --decode`
+TOKEN=`kubectl get secret trainingtoken -o jsonpath='{.data.token}' | base64 --decode`
 echo $TOKEN
 kubectl config set-credentials training --token=$TOKEN
 kubectl config use-context training-ctx
@@ -3442,15 +3093,142 @@ kubectl config use-context training-ctx
 kubectl get pods 
 ```
 
+#### Mini-Schritt 3: Zurück zum alten Default-Context 
+
+```
+kubectl config get-contexts
+```
+
+```
+CURRENT   NAME           CLUSTER            AUTHINFO    NAMESPACE
+          microk8s       microk8s-cluster   admin2
+*         training-ctx   microk8s-cluster   training2
+```
+
+```
+kubectl config use-context microk8s  
+```
+
+
 ### Refs:
 
   * https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengaddingserviceaccttoken.htm
   * https://microk8s.io/docs/multi-user
   * https://faun.pub/kubernetes-rbac-use-one-role-in-multiple-namespaces-d1d08bb08286
 
+### Ref: Create Service Account Token 
 
+  * https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#create-token
 
 ## Kubernetes - Netzwerk (CNI's) / Mesh
+
+### Netzwerk Interna
+
+
+### Network Namespace for each pod 
+
+#### Overview 
+
+![Overview](https://www.inovex.de/wp-content/uploads/2020/05/Container-to-Container-Networking_2_neu-400x401.png)
+![Overview Kubernetes Networking](https://www.inovex.de/wp-content/uploads/2020/05/Container-to-Container-Networking_3_neu-400x412.png)
+
+#### General 
+
+  * Each pod will have its own network namespace
+    * with routing, networkdevices 
+  * Connection to default namespace to host is done through veth - Link to bridge on host network 
+    * similar like on docker to docker0 
+  
+```
+  Each container is connected to the bridge via a veth-pair. This interface pair functions like a virtual point-to-point ethernet connection and connects the network namespaces of the containers with the network namespace of the host
+```
+  
+  * Every container is in the same Network Namespace, so they can communicate through localhost
+    * Example with hashicorp/http-echo container 1 and busybox container 2 ? 
+ 
+ 
+### Pod-To-Pod Communication (across nodes)  
+ 
+#### Prerequisites 
+ 
+  * pods on a single node as well as pods on a topological remote can establish communication at all times
+   * Each pod receives a unique IP address, valid anywhere in the cluster. Kubernetes requires this address to not be subject to network address   translation (NAT)
+   * Pods on the same node through virtual bridge (see image above)
+ 
+#### General (what needs to be done) - and could be doen manually
+ 
+   * local bridge networks of all nodes need to be connected
+   * there needs to be an IPAM (IP-Address Managemenet) so addresses are only used once
+   * The need to be routes so, that each bridge can communicate with the bridge on the other network
+   * Plus: There needs to be a rule for incoming network
+   * Also: A tunnel needs to be set up to the outside world.
+
+#### General - Pod-to-Pod Communiation (across nodes) - what would need to be done
+
+![pod to pod across nodes](https://www.inovex.de/wp-content/uploads/2020/05/Pod-to-Pod-Networking.png)
+
+
+#### General - Pod-to-Pod Communication (side-note) 
+
+  * This could of cause be done manually, but it is too complex 
+  * So Kubernetes has created an Interface, which is well defined 
+    * The interface is called CNI (common network interface) 
+    * Funtionally is achieved through Network Plugin (which use this interface) 
+      * e.g. calico / cilium / weave net / flannel 
+
+
+#### CNI 
+
+  * CNI only handles network connectivity of container and the cleanup of allocated resources (i.e. IP addresses) after containers have been deleted (garbage collection) and therefore is lightweight and quite easy to implement. 
+  * There are some basic libraries within CNI which do some basic stuff.
+ 
+   
+    
+
+
+### Hidden Pause Container 
+
+#### What is for ? 
+
+  * Holds the network - namespace for the pod 
+  * Gets started first and falls asleep later 
+  * Will still be there, when the other containers die 
+
+```
+cd 
+mkdir -p manifests 
+cd manifests 
+mkdir pausetest
+cd pausetest
+nano 01-nginx.yml
+```
+
+```
+## vi nginx-static.yml 
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pausetest
+  labels:
+    webserver: nginx:1.21
+spec:
+  containers:
+  - name: web
+    image: nginx
+```
+
+```
+kubectl apply -f .
+
+ctr -n k8s.io c list | grep pause
+```
+
+
+### References 
+
+  * https://www.inovex.de/de/blog/kubernetes-networking-part-1-en/
+  * https://www.inovex.de/de/blog/kubernetes-networking-2-calico-cilium-weavenet/
 
 ### Übersicht Netzwerke
 
@@ -3458,7 +3236,7 @@ kubectl get pods
 ### CNI 
 
   * Common Network Interface
-  * Fest Definition, wie Container mit Netzwerk-Bibliotheken kommunizieren
+  * Feste Definition, wie Container mit Netzwerk-Bibliotheken kommunizieren
 
 ### Docker - Container oder andere 
 
@@ -3471,6 +3249,7 @@ kubectl get pods
   * Canal 
   * Calico 
   * Cilium
+  * Weave Net 
   
 ### Flannel
 
@@ -3514,6 +3293,15 @@ kubectl get pods
 #### Referenz 
   * https://projectcalico.docs.tigera.io/security/calico-network-policy
 
+### Weave Net 
+
+  * Ähnlich calico 
+  * Verwendet overlay netzwerk
+  * Sehr stabil bzgl IPV4/IPV6 (Dual Stack) 
+  * Sehr grosses Feature-Set 
+  * mit das älteste Plugin 
+
+
 ### microk8s Vergleich 
 
   * https://microk8s.io/compare
@@ -3527,16 +3315,16 @@ Flanneld runs if ha-cluster is not enabled. If ha-cluster is enabled, calico is 
 The flannel daemon is started using the arguments in ${SNAP_DATA}/args/flanneld. For more information on the configuration, see the flannel documentation.
 ```
 
-### Callico - nginx example
+### Calico - nginx example NetworkPolicy
 
 
 ```
 ## Schritt 1:
 kubectl create ns policy-demo
 kubectl create deployment --namespace=policy-demo nginx --image=nginx
-kubectl expose --namespace=policy-demo deployment nginx --port=80
+kubectl expose --namespace=policy-demo deployment nginx:1.21 --port=80
 ## lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
-kubectl run --namespace=policy-demo access --rm -ti --image busybox /bin/sh
+kubectl run --namespace=policy-demo access --rm -ti --image busybox
 ```
 ```
 ## innerhalb der shell 
@@ -3556,7 +3344,7 @@ spec:
     matchLabels: {}
 EOF
 ## lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
-kubectl run --namespace=policy-demo access --rm -ti --image busybox /bin/sh
+kubectl run --namespace=policy-demo access --rm -ti --image busybox
 ```
 
 ```
@@ -3585,7 +3373,7 @@ EOF
 
 ## lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
 ## pod hat durch run -> access automatisch das label run:access zugewiesen 
-kubectl run --namespace=policy-demo access --rm -ti --image busybox /bin/sh
+kubectl run --namespace=policy-demo access --rm -ti --image busybox
 ```
 
 ```
@@ -3594,7 +3382,7 @@ wget -q nginx -O -
 ```
 
 ``` 
-kubectl run --namespace=policy-demo no-access --rm -ti --image busybox /bin/sh
+kubectl run --namespace=policy-demo no-access --rm -ti --image busybox
 ```
 
 ```
@@ -3613,121 +3401,130 @@ kubectl delete ns policy-demo
 
   * https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-basic
 
-### Callico - client-backend-ui-example
+### Beispiele Ingress Egress NetworkPolicy
 
 
-### Walkthrough 
+### Links 
 
-```
-cd
-mkdir -p manifests/callico/example1 
-cd manifests/callico/example1 
-```
+  * https://github.com/ahmetb/kubernetes-network-policy-recipes
+  * https://k8s-examples.container-solutions.com/examples/NetworkPolicy/NetworkPolicy.html
 
-```
-### Step 1: Create containers 
-
-kubectl create -f https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/manifests/00-namespace.yaml
-kubectl create -f https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/manifests/01-management-ui.yaml
-kubectl create -f https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/manifests/02-backend.yaml
-kubectl create -f https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/manifests/03-frontend.yaml
-kubectl create -f https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/manifests/04-client.yaml
-
-kubectl get pods --all-namespaces --watch
-kubectl get ns 
-```
+### Example with http (Cilium !!) 
 
 ```
-### Step 2: Check connections in the browser (ui) 
-### Use IP of one of your nodes here 
-http://164.92.255.234:30002/
-```
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+description: "L7 policy to restrict access to specific HTTP call"
+metadata:
+  name: "rule1"
+spec:
+  endpointSelector:
+    matchLabels:
+      type: l7-test
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        org: client-pod
+    toPorts:
+    - ports:
+      - port: "8080"
+        protocol: TCP
+      rules:
+        http:
+        - method: "GET"
+          path: "/discount"
+```          
+   
+### Downside egress 
+
+  * No valid api for anything other than IP's and/or Ports
+  * If you want more, you have to use CNI-Plugin specific, e.g. 
+
+#### Example egress with ip's 
 
 ```
-### Step 3: Download default-deny rules 
-wget https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/policies/default-deny.yaml
-### Let us have look into it 
-### Deny all pods 
-cat default-deny.yaml 
-### Apply this for 2 namespaces created in Step 1
-kubectl -n client apply -f default-deny.yaml 
-kubectl -n stars apply -f default-deny.yaml 
-
+## Allow traffic of all pods having the label role:app
+## egress only to a specific ip and port 
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: test-network-policy
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      role: app
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 10.10.0.0/16
+    ports:
+    - protocol: TCP 
+      port: 5432
 ```
 
-```
-### Step 4: Refresh UI and see, that there are no connections possilbe 
-http://164.92.255.234:30002/
-```
+### Example Advanced Egress (cni-plugin specific) 
+
+#### Cilium
 
 ```
-### Step 5: 
-### Allow traffic by policy 
-wget https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/policies/allow-ui.yaml
-wget https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/policies/allow-ui-client.yaml
-### Let us look into this: 
-cat allow-ui.yaml 
-cat allow-ui-client.yaml
-kubectl apply -f allow-ui.yaml
-kubectl apply -f allow-ui-client.yaml 
-
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: "fqdn-pprof"
+  namespace: msp
+spec:
+  endpointSelector:
+    matchLabels:
+      app: pprof
+  egress:
+  - toFQDNs:
+    - matchPattern: '*.baidu.com'
+  - toPorts:
+    - ports:
+      - port: "53"
+        protocol: ANY
+      rules:
+        dns:
+        - matchPattern: '*'
 ```
 
-```
-### Step 6: 
-### Refresh management ui 
-### Now all traffic is allowed
-http://164.92.255.234:30002/
-```
+#### Calico 
+
+  * Only Calico enterprise 
+    * Calico Enterprise extends Calico’s policy model so that domain names (FQDN / DNS) can be used to allow access from a pod or set of pods (via label selector) to external resources outside of your cluster.
+    * https://projectcalico.docs.tigera.io/security/calico-enterprise/egress-access-controls
+
+#### Using isitio as mesh (e.g. with cilium/calico )
+
+##### Installation of sidecar in calico 
+
+  * https://projectcalico.docs.tigera.io/getting-started/kubernetes/hardway/istio-integration
+
+##### Example 
 
 ```
-### Step 7:
-### Restrict traffic to backend 
-wget https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/policies/backend-policy.yaml
-cat backend-policy.yaml 
-kubectl apply -f backend-policy.yaml
-
-
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: test-network-policy
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      role: app
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 10.10.0.0/16
+    ports:
+    - protocol: TCP 
+      port: 5432
 ```
-
-```
-### Step 8:
-### Refresh 
-## The frontend can now access the backend (on TCP port 6379 only).
-## The backend cannot access the frontend at all.
-## The client cannot access the frontend, nor can it access the backend
-http://164.92.255.234:30002/
-
-
-```
-
-```
-### Step 9: 
-wget https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/policies/frontend-policy.yaml
-cat frontend-policy.yaml 
-kubectl apply -f frontend-policy.yaml 
-```
-
-```
-### Step 10:
-## Refresh ui 
-## Client can now access Frontend 
-http://164.92.255.234:30002/
-
-```
-
-```
-## Alles wieder löschen 
-kubectl delete ns client stars management-ui
-
-
-```
-
-
-
-### Reference 
-
-  * https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-demo/kubernetes-demo
 
 ### Mesh / istio
 
@@ -3760,6 +3557,14 @@ kubectl label namespace default istio-injection=enabled
 ### istio - the next generation without sidecar 
 
   * https://istio.io/latest/blog/2022/introducing-ambient-mesh/
+
+### Kubernetes Ports/Protokolle
+
+  * https://kubernetes.io/docs/reference/networking/ports-and-protocols/
+
+### IPV4/IPV6 Dualstack
+
+  * https://kubernetes.io/docs/concepts/services-networking/dual-stack/
 
 ## kubectl 
 
@@ -3802,11 +3607,14 @@ kubectl describe pods foo2
 ### Walkthrough 
 
 ```
+## Eventuell, wenn bash-completion nicht installiert ist.
 apt install bash-completion
 source /usr/share/bash-completion/bash_completion
 ## is it installed properly 
 type _init_completion
+```
 
+```
 ## activate for all users 
 kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
 
@@ -3960,377 +3768,6 @@ kubectl rollout undo deploy nginx-deployment
 
 ```
 
-## kubectl - manifest - examples 
-
-### 02 Pod nginx mit Port und IP innerhalb des Clusters
-
-
-### What is containerPort (from kubectl explain) ?
-
-```
-containerPort        <integer> -required-
-     Number of port to expose on the pod's IP address. This must be a valid port
-     number, 0 < x < 65536.
-     
-```
-
-### Walkthrough 
-
-```
-vi nginx-static-expose.yml 
-
-apiVersion: v1
-kind: Pod
-metadata:
-  name: nginx-static-web
-  labels:
-    webserver: nginx
-spec:
-  containers:
-  - name: web
-    image: nginx
-    ports:
-    - name: web
-      containerPort: 80
-      protocol: TCP
-
-```
-
-```
-kubectl apply -f nginx-static-expose.yml 
-kubectl describe nginx-static-web 
-## show config 
-kubectl get pod/nginx-static-web -o yml 
-```
-
-### 03b Example with service and nginx
-
-
-### Schritt 1: Deployment 
-
-```
-mkdir 04-service 
-cd 04-service 
-```
-
-```
-## 01-deploy.yml 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: my-nginx
-spec:
-  selector:
-    matchLabels:
-      run: my-nginx
-  replicas: 3
-  template:
-    metadata:
-      labels:
-        run: my-nginx
-    spec:
-      containers:
-      - name: my-nginx
-        image: nginx
-        ports:
-        - containerPort: 80
-```
-
-```
-kubectl apply -f .
-```
-
-### Schritt 2:
-
-
-```
-## 02-svc.yml 
-apiVersion: v1
-kind: Service
-metadata:
-  name: my-nginx
-  labels:
-    svc: nginx
-spec:
-  ports:
-  - port: 80
-    protocol: TCP
-  selector:
-    run: my-nginx
-```
-
-```
-kubectl apply -f . 
-```
-
-
-### Ref.
-
-  * https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/
-
-### 04 Ingress mit einfachem Beispiel
-
-
-### Prerequisits
-
-```
-## Ingress Controller muss aktiviert sein 
-microk8s enable ingress
-```
-
-### Walkthrough 
-
-```
-mkdir abi
-```
-
-
-```
-## apple.yml 
-## vi apple.yml 
-kind: Pod
-apiVersion: v1
-metadata:
-  name: apple-app
-  labels:
-    app: apple
-spec:
-  containers:
-    - name: apple-app
-      image: hashicorp/http-echo
-      args:
-        - "-text=apple"
----
-
-kind: Service
-apiVersion: v1
-metadata:
-  name: apple-service
-spec:
-  selector:
-    app: apple
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 5678 # Default port for image
-```
-
-```
-kubectl apply -f apple.yml 
-```
-
-```
-## banana
-## vi banana.yml
-kind: Pod
-apiVersion: v1
-metadata:
-  name: banana-app
-  labels:
-    app: banana
-spec:
-  containers:
-    - name: banana-app
-      image: hashicorp/http-echo
-      args:
-        - "-text=banana"
-
----
-
-kind: Service
-apiVersion: v1
-metadata:
-  name: banana-service
-spec:
-  selector:
-    app: banana
-  ports:
-    - port: 80
-      targetPort: 5678 # Default port for image
-```
-
-```
-kubectl apply -f banana.yml
-```
-
-```
-## Ingress
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: example-ingress
-  annotations:
-    ingress.kubernetes.io/rewrite-target: /
-spec:
-  ingressClassName: nginx
-  rules:
-  - http:
-      paths:
-        - path: /apple
-          backend:
-            serviceName: apple-service
-            servicePort: 80
-        - path: /banana
-          backend:
-            serviceName: banana-service
-            servicePort: 80
-```
-
-```
-## ingress 
-kubectl apply -f ingress.yml
-kubectl get ing 
-```
-
-### Reference 
-
-  * https://matthewpalmer.net/kubernetes-app-developer/articles/kubernetes-ingress-guide-nginx-example.html
-
-### Find the problem 
-
-```
-## Hints 
-
-## 1. Which resources does our version of kubectl support 
-## Can we find Ingress as "Kind" here.
-kubectl api-ressources 
-
-## 2. Let's see, how the configuration works 
-kubectl explain --api-version=networking.k8s.io/v1 ingress.spec.rules.http.paths.backend.service
-
-## now we can adjust our config 
-```
-
-### Solution
-
-```
-## in kubernetes 1.22.2 - ingress.yml needs to be modified like so.
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: example-ingress
-  annotations:
-    ingress.kubernetes.io/rewrite-target: /
-spec:
-  ingressClassName: nginx
-  rules:
-  - http:
-      paths:
-        - path: /apple
-          pathType: Prefix
-          backend:
-            service:
-              name: apple-service
-              port:
-                number: 80
-        - path: /banana
-          pathType: Prefix
-          backend:
-            service:
-              name: banana-service
-              port:
-                number: 80                
-```
-
-### 05 Ingress mit Permanent Redirect
-
-
-### Example
-
-```
-## redirect.yml 
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: my-namespace
-
----
-
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    nginx.ingress.kubernetes.io/permanent-redirect: https://www.google.de
-    nginx.ingress.kubernetes.io/permanent-redirect-code: "308"
-  creationTimestamp: null
-  name: destination-home
-  namespace: my-namespace
-spec:
-  rules:
-  - host: web.training.local
-    http:
-      paths:
-      - backend:
-          service:
-            name: http-svc
-            port:
-              number: 80
-        path: /source
-        pathType: ImplementationSpecific
-```
-
-```
-Achtung: host-eintrag auf Rechner machen, von dem aus man zugreift 
-
-/etc/hosts 
-45.23.12.12 web.training.local
-```
-
-
-```
-curl -I  http://web.training.local/source
-HTTP/1.1 308 
-Permanent Redirect 
-
-```
-
-### Umbauen zu google ;o) 
-
-```
-This annotation allows to return a permanent redirect instead of sending data to the upstream. For example nginx.ingress.kubernetes.io/permanent-redirect: https://www.google.com would redirect everything to Google.
-
-```
-
-### Refs:
-
-  * https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md#permanent-redirect
-  * 
-
-## Kubernetes - Monitoring (microk8s und vanilla) 
-
-### metrics-server aktivieren (microk8s und vanilla)
-
-
-### Warum ? Was macht er ? 
-
-```
-Der Metrics-Server sammelt Informationen von den einzelnen Nodes und Pods
-Er bietet mit 
-
-kubectl top pods
-kubectl top nodes 
-
-ein einfaches Interface, um einen ersten Eindruck über die Auslastung zu bekommen. 
-```
-
-### Walktrough 
-
-```
-## Auf einem der Nodes im Cluster (HA-Cluster) 
-microk8s enable metrics-server 
-
-## Es dauert jetzt einen Moment bis dieser aktiv ist auch nach der Installation 
-## Auf dem Client
-kubectl top nodes 
-kubectl top pods 
-
-```
-
-### Kubernetes 
-
-  * https://kubernetes-sigs.github.io/metrics-server/
-  * kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
-
 ## Kubernetes - Shared Volumes 
 
 ### Shared Volumes with nfs
@@ -4371,8 +3808,8 @@ apt install nfs-common
 
 ## for testing 
 mkdir /mnt/nfs 
-## 192.168.56.106 is our nfs-server 
-mount -t nfs 192.168.56.106:/var/nfs /mnt/nfs 
+## 10.135.0.18 is our nfs-server 
+mount -t nfs 10.135.0.18:/var/nfs /mnt/nfs 
 ls -la /mnt/nfs
 umount /mnt/nfs
 ```
@@ -4408,7 +3845,7 @@ spec:
   nfs:
     # NFS server's definition
     path: /var/nfs/tln<nr>/nginx
-    server: 10.135.0.8
+    server: 10.135.0.18
     readOnly: false
   storageClassName: ""
 ```
@@ -4421,11 +3858,11 @@ kubectl get pv
 ### Persistent Storage-Step 2: Create Persistent Volume Claim 
 
 ```
-nano 02-pvs.yml
+nano 02-pvc.yml
 ```
 
 ```
-## vi 02-pvs.yml 
+## vi 02-pvc.yml 
 ## now we want to claim space
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -4443,7 +3880,7 @@ spec:
 
 
 ```
-kubectl apply -f 02-pvs.yml
+kubectl apply -f 02-pvc.yml
 kubectl get pvc
 ```
 
@@ -4555,8 +3992,6 @@ kubectl run -it --rm curly --image=curlimages/curl -- /bin/sh
 
 
 
-## Kubernetes - Backups 
-
 ## Kubernetes - Wartung / Debugging 
 
 ### kubectl drain/uncordon
@@ -4641,6 +4076,1616 @@ kubectl run podtest --rm -ti --image busybox -- /bin/sh
 / # exit 
 ```
 
+### Curl from pod api-server
+
+
+https://nieldw.medium.com/curling-the-kubernetes-api-server-d7675cfc398c
+
+## Kubernetes - Tipps & Tricks 
+
+### Kubernetes Debuggen ClusterIP/PodIP
+
+
+### Situation 
+
+  * Kein Zugriff auf die Nodes, zum Testen von Verbindungen zu Pods und Services über die PodIP/ClusterIP 
+
+### Lösung 
+
+```
+## Wir starten eine Busybox und fragen per wget und port ab
+## busytester ist der name 
+## long version 
+kubectl run -it --rm --image=busybox busytester 
+## wget <pod-ip-des-ziels> 
+## exit 
+
+
+## quick and dirty 
+kubectl run -it --rm --image=busybox busytester -- wget <pod-ip-des-ziels>  
+
+```
+
+### Debugging pods
+
+
+### How ?
+
+  1. Which pod is in charge 
+  1. Problems when starting: kubectl describe po mypod 
+  1. Problems while running: kubectl logs mypod 
+
+### Taints und Tolerations
+
+
+### Taints 
+
+```
+Taints schliessen auf einer Node alle Pods aus, die nicht bestimmte taints haben:
+
+Möglichkeiten:
+
+o Sie werden nicht gescheduled - NoSchedule 
+o Sie werden nicht executed - NoExecute 
+o Sie werden möglichst nicht gescheduled. - PreferNoSchedule 
+
+```
+
+### Tolerations 
+
+```
+Tolerations werden auf Pod-Ebene vergeben: 
+tolerations: 
+
+Ein Pod kann (wenn es auf einem Node taints gibt), nur 
+gescheduled bzw. ausgeführt werden, wenn er die 
+Labels hat, die auch als
+Taints auf dem Node vergeben sind.
+```
+
+### Walkthrough  
+
+#### Step 1: Cordon the other nodes - scheduling will not be possible there 
+
+```
+## Cordon nodes n11 and n111 
+## You will see a taint here 
+kubectl cordon n11
+kubectl cordon n111
+kubectl describe n111 | grep -i taint 
+```
+
+
+
+### Step 2: Set taint on first node 
+
+```
+kubectl taint nodes n1 gpu=true:NoSchedule
+```
+
+### Step 3
+
+```
+cd 
+mkdir -p manifests
+cd manifests 
+mkdir tainttest 
+cd tainttest 
+nano 01-no-tolerations.yml
+```
+
+```
+##vi 01-no-tolerations.yml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-test-no-tol
+  labels:
+    env: test-env
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.21
+```
+
+```
+kubectl apply -f . 
+kubectl get po nginx-test-no-tol
+kubectl get describe nginx-test-no-tol
+```
+
+### Step 4:
+
+```
+## vi 02-nginx-test-wrong-tol.yml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-test-wrong-tol
+  labels:
+    env: test-env
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+  tolerations:
+  - key: "cpu"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
+```
+
+```
+kubectl apply -f .
+kubectl get po nginx-test-wrong-tol
+kubectl describe po nginx-test-wrong-tol
+```
+
+### Step 5:
+
+```
+## vi 03-good-tolerations.yml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-test-good-tol
+  labels:
+    env: test-env
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+  tolerations:
+  - key: "gpu"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
+```
+
+```
+kubectl apply -f .
+kubectl get po nginx-test-good-tol
+kubectl describe po nginx-test-good-tol
+```
+
+#### Taints rausnehmen 
+
+```
+kubectl taint nodes n1 gpu:true:NoSchedule-
+```
+
+#### uncordon other nodes 
+
+```
+kubectl uncordon n11
+kubectl uncordon n111
+```
+
+### References 
+  
+  * [Doku Kubernetes Taints and Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
+  * https://blog.kubecost.com/blog/kubernetes-taints/
+
+### Autoscaling Pods/Deployments
+
+
+### Example: 
+
+```
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+    name: busybox-1
+spec:
+    scaleTargetRef:
+        kind: Deployment
+        name: busybox-1
+    minReplicas: 3
+    maxReplicas: 4
+    targetCPUUtilizationPercentage: 80
+
+
+```
+
+### Reference 
+
+  * https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/#autoscaling-on-more-specific-metrics
+  * https://medium.com/expedia-group-tech/autoscaling-in-kubernetes-why-doesnt-the-horizontal-pod-autoscaler-work-for-me-5f0094694054
+
+## Kubernetes Advanced 
+
+### Curl api-server kubernetes aus pod heraus
+
+
+https://nieldw.medium.com/curling-the-kubernetes-api-server-d7675cfc398c
+
+## Kubernetes - Documentation 
+
+### Documentation zu microk8s plugins/addons
+
+  * https://microk8s.io/docs/addons
+
+### Shared Volumes - Welche gibt es ?
+
+  * https://kubernetes.io/docs/concepts/storage/volumes/
+
+## Kubernetes - Hardening 
+
+### Kubernetes Tipps Hardening
+
+
+### PSA (Pod Security Admission) 
+
+```
+Policies defined by namespace.
+e.g. not allowed to run container as root.
+
+Will complain/deny when creating such a pod with that container type
+
+```
+
+### Möglichkeiten in Pods und Containern 
+
+```
+## für die Pods
+kubectl explain pod.spec.securityContext 
+kubectl explain pod.spec.containers.securityContext
+```
+
+### Example (seccomp / security context) 
+
+```
+A. seccomp - profile
+https://github.com/docker/docker/blob/master/profiles/seccomp/default.json
+
+```
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: audit-pod
+  labels:
+    app: audit-pod
+spec:
+  securityContext:
+    seccompProfile:
+      type: Localhost
+      localhostProfile: profiles/audit.json
+
+  containers:
+
+  - name: test-container
+    image: hashicorp/http-echo:0.2.3
+    args:
+    - "-text=just made some syscalls!"
+    securityContext:
+      allowPrivilegeEscalation: false
+
+```
+
+### SecurityContext (auf Pod Ebene) 
+
+```
+kubectl explain pod.spec.containers.securityContext 
+
+```
+
+
+### NetworkPolicy 
+
+```
+## Firewall Kubernetes 
+```
+
+### Kubernetes Security Admission Controller Example
+
+
+
+### Seit: 1.2.22 Pod Security Admission 
+
+  * 1.2.22 - ALpha - D.h. ist noch nicht aktiviert und muss als Feature Gate aktiviert (Kind)
+  * 1.2.23 - Beta -> d.h. aktiviert  
+
+### Vorgefertigte Regelwerke 
+
+  * privileges - keinerlei Einschränkungen 
+  * baseline - einige Einschränkungen 
+  * restricted - sehr streng 
+
+### Praktisches Beispiel für Version ab 1.2.23 - Problemstellung 
+
+```
+mkdir -p manifests
+cd manifests
+mkdir psa 
+cd psa 
+nano 01-ns.yml 
+```
+
+```
+## Schritt 1: Namespace anlegen 
+## vi 01-ns.yml 
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns<tln>
+  labels:
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+
+```
+
+```
+kubectl apply -f 01-ns.yml 
+```
+
+```
+## Schritt 2: Testen mit nginx - pod 
+## vi 02-nginx.yml 
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  namespace: test-ns<tln>
+spec:
+  containers:
+    - image: nginx
+      name: nginx
+      ports:
+        - containerPort: 80
+
+```
+
+```
+## a lot of warnings will come up 
+kubectl apply -f 02-nginx.yml
+```
+
+```
+## Schritt 3:
+## Anpassen der Sicherheitseinstellung (Phase1) im Container 
+
+## vi 02-nginx.yml 
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  namespace: test-ns<tln>
+spec:
+  containers:
+    - image: nginx
+      name: nginx
+      ports:
+        - containerPort: 80
+      securityContext:     
+        seccompProfile:    
+          type: RuntimeDefault
+```
+
+```
+kubectl delete -f 02-nginx.yml
+kubectl apply -f 02-nginx.yml
+kubectl -n test-ns<tln> get pods 
+```
+
+```
+## Schritt 4: 
+## Weitere Anpassung runAsNotRoot 
+## vi 02-nginx.yml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  namespace: test-ns<tln>
+spec:
+  containers:
+    - image: nginx
+      name: nginx
+      ports:
+        - containerPort: 80
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        runAsNonRoot: true
+
+```
+
+```
+## pod kann erstellt werden, wird aber nicht gestartet 
+kubectl delete -f 02-nginx.yml 
+kubectl apply -f 02-nginx.yml 
+kubectl -n test-ns<tln> get pods
+kubectl -n test-ns<tln> describe pods nginx 
+```
+
+### Praktisches Beispiel für Version ab 1.2.23 -Lösung - Container als NICHT-Root laufen lassen
+
+  * Wir müssen ein image, dass auch als NICHT-Root laufen kann 
+  * .. oder selbst eines bauen (;o)) 
+  o bei nginx ist das bitnami/nginx 
+ 
+```
+## vi 03-nginx-bitnami.yml 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bitnami-nginx
+  namespace: test-ns<tln>
+spec:
+  containers:
+    - image: bitnami/nginx
+      name: bitnami-nginx
+      ports:
+        - containerPort: 80
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        runAsNonRoot: true
+```
+
+```
+## und er läuft als nicht root 
+kubectl apply -f 03_pod-bitnami.yml 
+kubectl -n test-ns<tln> get pods
+```
+
+## Kubernetes Interna / Misc.
+
+### OCI,Container,Images Standards
+
+
+### Schritt 1:
+
+```
+cd
+mkdir bautest
+cd bautest 
+```
+
+### Schritt 2:
+
+```
+## nano docker-compose.yml
+version: "3.8"
+
+services:
+  myubuntu:
+    build: ./myubuntu
+    restart: always
+```
+
+### Schritt 3:
+
+```
+mkdir myubuntu 
+cd myubuntu 
+```
+
+```
+nano hello.sh
+```
+
+```
+##!/bin/bash
+let i=0
+
+while true
+do
+  let i=i+1
+  echo $i:hello-docker
+  sleep 5
+done
+
+```
+
+```
+## nano Dockerfile 
+FROM ubuntu:latest
+RUN apt-get update; apt-get install -y inetutils-ping
+COPY hello.sh .
+RUN chmod u+x hello.sh
+CMD ["/hello.sh"]
+
+```
+
+### Schritt 4: 
+
+
+```
+cd ../
+## wichtig, im docker-compose - Ordner seiend 
+##pwd 
+##~/bautest
+docker-compose up -d 
+## wird image gebaut und container gestartet 
+
+## Bei Veränderung vom Dockerfile, muss man den Parameter --build mitangeben 
+docker-compose up -d --build 
+```
+
+### Geolocation Kubernetes Cluster
+
+  * https://learnk8s.io/bite-sized/connecting-multiple-kubernetes-clusters
+
+## Docker-Installation
+
+### Installation Docker unter Ubuntu mit snap
+
+
+```
+
+sudo su -
+snap install docker
+
+## for information retrieval 
+snap info docker
+systemctl list-units
+systemctl list-units -t service
+systemctl list-units -t service | grep docker
+
+systemctl status snap.docker.dockerd.service
+## oder (aber veraltet) 
+service snap.docker.dockerd status
+
+systemctl stop snap.docker.dockerd.service
+systemctl status snap.docker.dockerd.service
+systemctl start snap.docker.dockerd.service 
+
+## wird der docker-dienst beim nächsten reboot oder starten des Server gestartet ? 
+systemctl is-enabled snap.docker.dockerd.service
+
+```
+
+### Installation Docker unter SLES 15
+
+
+### Walkthrough 
+
+
+```
+sudo zypper search -v docker*
+sudo zypper install docker
+
+## Dem Nutzer /z.B. Nutzer kurs die Gruppe docker hinzufügen 
+## damit auch dieser den Docker-daemon verwenden darf 
+sudo groupadd docker
+sudo usermod -aG docker $USER
+
+### Unter SLES werden Dienste nicht automatisch aktiviert und gestartet !!! 
+## Service für start nach Boot aktivieren 
+newgrp docker 
+sudo systemctl enable docker.service
+## Docker dienst starten 
+sudo systemctl start docker.service
+```
+
+
+### Ausführlich mit Ausgaben 
+
+```
+sudo zypper search -v docker*
+
+Repository-Daten werden geladen...
+Installierte Pakete werden gelesen...
+
+sudo zypper install docker
+
+Dienst 'Basesystem_Module_x86_64' wird aktualisiert.
+Dienst 'Containers_Module_x86_64' wird aktualisiert.
+Dienst 'Desktop_Applications_Module_x86_64' wird aktualisiert.
+Dienst 'Development_Tools_Module_x86_64' wird aktualisiert.
+Dienst 'SUSE_Linux_Enterprise_Server_x86_64' wird aktualisiert.
+Dienst 'Server_Applications_Module_x86_64' wird aktualisiert.
+Repository-Daten werden geladen...
+Installierte Pakete werden gelesen...
+Paketabhängigkeiten werden aufgelöst...
+
+Das folgende empfohlene Paket wurde automatisch gewählt:
+  git-core
+
+Die folgenden 7 NEUEN Pakete werden installiert:
+  catatonit containerd docker docker-bash-completion git-core libsha1detectcoll1 runc
+
+7 neue Pakete zu installieren.
+Gesamtgröße des Downloads: 52,2 MiB. Bereits im Cache gespeichert: 0 B. Nach der Operation werden zusätzlich 242,1 MiB belegt.
+Fortfahren? [j/n/v/...? zeigt alle Optionen](j): j
+Paket libsha1detectcoll1-1.0.3-2.18.x86_64 abrufen                                                                                                                                                                          (1/7),  23,2 KiB ( 45,8 KiB entpackt)
+Abrufen: libsha1detectcoll1-1.0.3-2.18.x86_64.rpm .......................................................................................................................................................................................................[fertig]
+Paket catatonit-0.1.5-3.3.2.x86_64 abrufen                                                                                                                                                                                  (2/7), 257,2 KiB (696,5 KiB entpackt)
+Abrufen: catatonit-0.1.5-3.3.2.x86_64.rpm ...............................................................................................................................................................................................................[fertig]
+Paket runc-1.1.4-150000.33.4.x86_64 abrufen                                                                                                                                                                                 (3/7),   2,6 MiB (  9,1 MiB entpackt)
+Abrufen: runc-1.1.4-150000.33.4.x86_64.rpm ..............................................................................................................................................................................................................[fertig]
+Paket containerd-1.6.6-150000.73.2.x86_64 abrufen                                                                                                                                                                           (4/7),  17,7 MiB ( 74,2 MiB entpackt)
+Abrufen: containerd-1.6.6-150000.73.2.x86_64.rpm ........................................................................................................................................................................................................[fertig]
+Paket git-core-2.35.3-150300.10.15.1.x86_64 abrufen                                                                                                                                                                         (5/7),   4,8 MiB ( 26,6 MiB entpackt)
+Abrufen: git-core-2.35.3-150300.10.15.1.x86_64.rpm ......................................................................................................................................................................................................[fertig]
+Paket docker-20.10.17_ce-150000.166.1.x86_64 abrufen                                                                                                                                                                        (6/7),  26,6 MiB (131,4 MiB entpackt)
+Abrufen: docker-20.10.17_ce-150000.166.1.x86_64.rpm .....................................................................................................................................................................................................[fertig]
+Paket docker-bash-completion-20.10.17_ce-150000.166.1.noarch abrufen                                                                                                                                                        (7/7), 121,3 KiB (113,6 KiB entpackt)
+Abrufen: docker-bash-completion-20.10.17_ce-150000.166.1.noarch.rpm .....................................................................................................................................................................................[fertig]
+
+Überprüfung auf Dateikonflikte läuft: ...................................................................................................................................................................................................................[fertig]
+(1/7) Installieren: libsha1detectcoll1-1.0.3-2.18.x86_64 ................................................................................................................................................................................................[fertig]
+(2/7) Installieren: catatonit-0.1.5-3.3.2.x86_64 ........................................................................................................................................................................................................[fertig]
+(3/7) Installieren: runc-1.1.4-150000.33.4.x86_64 .......................................................................................................................................................................................................[fertig]
+(4/7) Installieren: containerd-1.6.6-150000.73.2.x86_64 .................................................................................................................................................................................................[fertig]
+(5/7) Installieren: git-core-2.35.3-150300.10.15.1.x86_64 ...............................................................................................................................................................................................[fertig]
+Updating /etc/sysconfig/docker ...
+(6/7) Installieren: docker-20.10.17_ce-150000.166.1.x86_64 ..............................................................................................................................................................................................[fertig]
+(7/7) Installieren: docker-bash-completion-20.10.17_ce-150000.166.1.noarch ..............................................................................................................................................................................[fertig]
+
+sudo groupadd docker
+sudo usermod -aG docker $USER
+// logout
+
+newgrp docker 
+sudo systemctl enable docker.service
+sudo systemctl start docker.service
+```
+
+## Dockerfile - Examples 
+
+### Nginx mit content aus html-ordner
+
+
+### Schritt 1: Simple Example 
+
+```
+## das gleich wie cd ~
+## Heimatverzeichnis des Benutzers root 
+cd
+mkdir nginx-test
+cd nginx-test
+mkdir html
+cd html/
+vi index.html
+
+```
+
+```
+Text, den du rein haben möchtest 
+```
+
+```
+cd ..
+vi Dockerfile 
+```
+
+```
+FROM nginx:latest
+COPY html /usr/share/nginx/html
+```
+
+```
+## nameskürzel z.B. jm1 
+docker build -t nginx-test  . 
+docker images
+
+```
+
+
+
+### Schritt 2: docker laufen lassen
+
+```
+## und direkt aus der Registry wieder runterladen 
+docker run --name hello-web -p 8080:80 -d nginx-test
+
+## laufenden Container anzeigen lassen
+docker container ls 
+## oder alt: deprecated 
+docker ps 
+
+curl http://localhost:8080 
+
+
+## 
+docker rm -f hello-web 
+
+```
+
+### ssh server
+
+
+```
+cd 
+mkdir devubuntu
+cd devubuntu 
+## vi Dockerfile 
+```
+
+```Dockerfile
+FROM ubuntu:latest
+
+RUN apt-get update && \
+    DEBIAN_FRONTEND="noninteractive" apt-get install -y inetutils-ping openssh-server && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN mkdir /run/sshd && \
+    echo 'root:root' | chpasswd && \
+    sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+    sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config && \
+    mkdir /root/.ssh
+
+EXPOSE 22/tcp
+
+CMD ["/usr/sbin/sshd","-D"]
+```
+
+```
+docker build -t devubuntu . 
+docker run --name=devjoy -p 2222:22  -d -t devubuntu3
+
+ssh root@localhost -p 2222
+## example, if your docker host ist 192.168.56.101 v
+ssh root@192.168.56.101 -p 2222
+```
+
+## Docker-Container Examples 
+
+### 2 Container mit Netzwerk anpingen
+
+
+```
+clear
+docker run --name dockerserver1 -dit ubuntu
+docker run --name dockerserver2 -dit ubuntu
+docker network ls
+docker network inspect bridge
+## dockerserver1 - 172.17.0.2
+## dockerserver2 - 172.17.0.3
+docker container ls
+docker exec -it dockerserver1 bash
+## im container 
+apt update; apt install -y iputils-ping 
+ping 172.17.0.3 
+```
+
+### Container mit eigenem privatem Netz erstellen
+
+
+```
+clear
+## use bridge as type
+## docker network create -d bridge test_net
+## by bridge is default 
+docker network create test_net
+docker network ls
+docker network inspect test_net
+
+## Container mit netzwerk starten 
+docker container run -d --name nginx1 --network test_net nginx
+docker network inspect test_net
+
+## Weiteres Netzwerk (bridged) erstellen
+docker network create demo_net
+docker network connect demo_net nginx1
+
+## Analyse 
+docker network inspect demo_net
+docker inspect nginx1
+
+## Verbindung lösen 
+docker network disconnect demo_net nginx1
+
+## Schauen, wir das Netz jetzt aussieht 
+docker network inspect demo_net
+
+```
+
+## Docker-Netzwerk 
+
+### Netzwerk
+
+
+### Übersicht
+
+```
+3 Typen 
+
+o none
+o bridge (Standard-Netzwerk) 
+o host 
+
+### Additionally possible to install
+o overlay (needed for multi-node)
+
+```
+
+
+### Kommandos 
+
+```
+## Netzwerk anzeigen 
+docker network ls 
+
+## bridge netzwerk anschauen 
+## Zeigt auch ip der docker container an  
+docker inspect bridge
+
+## im container sehen wir es auch
+docker inspect ubuntu-container 
+
+```
+
+### Eigenes Netz erstellen 
+
+```
+docker network create -d bridge test_net 
+docker network ls 
+
+docker container run -d --name nginx --network test_net nginx
+docker container run -d --name nginx_no_net --network none nginx 
+
+docker network inspect none 
+docker network inspect test_net 
+
+docker inspect nginx 
+docker inspect nginx_no_net 
+
+```
+
+### Netzwerk rausnehmen / hinzufügen 
+
+```
+docker network disconnect none nginx_no_net
+docker network connect test_net nginx_no_net 
+
+### Das Löschen von Netzwerken ist erst möglich, wenn es keine Endpoints 
+### d.h. container die das Netzwerk verwenden 
+docker network rm test_net 
+```
+
+
+
+## Docker Security 
+
+### Scanning docker image with docker scan/snyx
+
+
+### Prerequisites 
+
+```
+You need to be logged in on docker hub with docker login 
+(with your account credentials
+```
+
+
+### Example 
+
+```
+## Snyk (docker scan) 
+docker help scan
+docker scan --json --accept-license dockertrainereu/jm-hello-docker  > result.json
+```
+
+## Docker Compose
+
+### yaml-format
+
+
+```
+## Kommentare 
+
+## Listen 
+- rot
+- gruen
+- blau 
+
+## Mappings 
+Version: 3.7 
+
+## Mappings können auch Listen enthalten 
+expose: 
+  - "3000"
+  - "8000" 
+
+## Verschachtelte Mappings 
+build:
+  context: .
+  labels: 
+    label1: "bunt"
+    label2: "hell" 
+
+```
+
+### Example with Ubuntu and Dockerfile
+
+
+### Schritt 1:
+
+```
+cd
+mkdir bautest
+cd bautest 
+```
+
+### Schritt 2:
+
+```
+## nano docker-compose.yml
+version: "3.8"
+
+services:
+  myubuntu:
+    build: ./myubuntu
+    restart: always
+```
+
+### Schritt 3:
+
+```
+mkdir myubuntu 
+cd myubuntu 
+```
+
+```
+nano hello.sh
+```
+
+```
+##!/bin/bash
+let i=0
+
+while true
+do
+  let i=i+1
+  echo $i:hello-docker
+  sleep 5
+done
+
+```
+
+```
+## nano Dockerfile 
+FROM ubuntu:latest
+RUN apt-get update; apt-get install -y inetutils-ping
+COPY hello.sh .
+RUN chmod u+x hello.sh
+CMD ["/hello.sh"]
+
+```
+
+### Schritt 4: 
+
+
+```
+cd ../
+## wichtig, im docker-compose - Ordner seiend 
+##pwd 
+##~/bautest
+docker compose up -d 
+## wird image gebaut und container gestartet 
+
+## Bei Veränderung vom Dockerfile, muss man den Parameter --build mitangeben 
+docker compose up -d --build 
+```
+
+### docker-compose und replicas
+
+
+### Beispiel 
+
+```
+version: "3.9"
+services:
+  redis:
+    image: redis:latest
+    deploy:
+      replicas: 1
+    configs:
+      - my_config
+      - my_other_config
+configs:
+  my_config:
+    file: ./my_config.txt
+  my_other_config:
+    external: true
+```
+### Ref:
+
+  * https://docs.docker.com/compose/compose-file/compose-file-v3/
+
+### docker compose Reference
+
+  * https://docs.docker.com/compose/compose-file/compose-file-v3/
+
+## Docker Swarm 
+
+### Docker Swarm Beispiele
+
+
+### Generic examples 
+
+```
+## should be at least version 1.24 
+docker info
+
+## only for one network interface
+docker swarm init
+
+## in our case, we need to decide what interface
+docker swarm init --advertise-addr 192.168.56.101
+
+## is swarm active 
+docker info | grep -i swarm
+## When it is -> node command works 
+docker node ls
+## is the current node the manager 
+docker info | grep -i "is manager"
+
+## docker create additional overlay network 
+docker network ls
+
+## what about my own node -> self
+docker node inspect self
+docker node inspect --pretty self
+docker node inspect --pretty self | less
+
+```
+
+```
+## Create our first service 
+docker service create redis
+docker images
+docker service ls
+## if service-id start with  j 
+docker service inspect j
+docker service ps j
+docker service rm j
+docker service ls
+```
+
+```
+## Start with multiple replicas and name 
+docker service create --name my_redis --replicas 4 redis
+docker service ls
+## Welche tasks 
+docker service ps my_redis
+docker container ls
+docker service inspect my_redis
+
+## delete service
+docker service rm
+```
+
+### Add additional node 
+
+```
+## on first node, get join token 
+docker swarm join-token manager
+
+## on second node execute join command
+docker swarm join --token SWMTKN-1-07jy3ym29au7u3isf1hfhgd7wpfggc1nia2kwtqfnfc8hxfczw-2kuhwlnr9i0nkje8lz437d2d5 192.168.56.101:2377
+
+## check with node command
+docker node ls 
+
+## Make node a simple worker
+## Does not make, because no highavailable after crush node 1
+## Take at LEAST 3 NODES 
+docker node demote <node-name>
+
+```
+
+### expose port
+
+```
+docker service create --name my_web \
+                        --replicas 3 \
+                        --publish published=8080,target=80 \
+                        nginx
+```
+
+### Ref 
+
+  * https://docs.docker.com/engine/swarm/services/
+
+## Docker - Dokumentation 
+
+### Vulnerability Scanner with docker
+
+  * https://docs.docker.com/engine/scan/#prerequisites
+
+### Vulnerability Scanner mit snyk
+
+  * https://snyk.io/plans/
+
+### Parent/Base - Image bauen für Docker
+
+  * https://docs.docker.com/develop/develop-images/baseimages/
+
+## Kubernetes - Überblick
+
+### Installation - Welche Komponenten from scratch
+
+
+### Step 1: Server 1 (manuell installiert -> microk8s)
+
+```
+## Installation Ubuntu - Server 
+
+## cloud-init script 
+## s.u. BASIS (keine Voraussetzung - nur zum Einrichten des Nutzers 11trainingdo per ssh) 
+
+## Server 1 - manuell 
+## Ubuntu 20.04 LTS - Grundinstallation 
+
+## minimal Netzwerk - öffentlichen IP 
+## nichts besonderes eingerichtet - Standard Digitalocean 
+
+## Standard vo Installation microk8s 
+lo               UNKNOWN        127.0.0.1/8 ::1/128
+## public ip / interne 
+eth0             UP             164.92.255.234/20 10.19.0.6/16 fe80::c:66ff:fec4:cbce/64
+## private ip 
+eth1             UP             10.135.0.3/16 fe80::8081:aaff:feaa:780/64
+
+snap install microk8s --classic 
+## namensaufloesung fuer pods 
+microk8s enable dns 
+
+```
+
+```
+## Funktioniert microk8s 
+microk8s status
+```
+
+### Steps 2: Server 2+3 (automatische Installation -> microk8s ) 
+
+```
+## Was macht das ? 
+## 1. Basisnutzer (11trainingdo) - keine Voraussetzung für microk8s
+## 2. Installation von microk8s 
+##.>>>>>>> microk8s installiert <<<<<<<<
+## - snap install --classic microk8s 
+## >>>>>>> Zuordnung zur Gruppe microk8s - notwendig für bestimmte plugins (z.B. helm)  
+## usermod -a -G microk8s root 
+## >>>>>>> Setzen des .kube - Verzeichnisses auf den Nutzer microk8s -> nicht zwingend erforderlich 
+## chown -r -R microk8s ~/.kube 
+## >>>>>>> REQUIRED .. DNS aktivieren, wichtig für Namensauflösungen innerhalb der PODS
+## >>>>>>> sonst funktioniert das nicht !!! 
+## microk8s enable dns 
+## >>>>>>> kubectl alias gesetzt, damit man nicht immer microk8s kubectl eingeben muss
+## - echo "alias kubectl='microk8s kubectl'" >> /root/.bashrc
+
+## cloud-init script 
+## s.u. MITMICROK8S (keine Voraussetzung - nur zum Einrichten des Nutzers 11trainingdo per ssh) 
+##cloud-config
+users:
+  - name: 11trainingdo
+    shell: /bin/bash
+
+runcmd:
+  - sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config
+  - echo " " >> /etc/ssh/sshd_config 
+  - echo "AllowUsers 11trainingdo" >> /etc/ssh/sshd_config 
+  - echo "AllowUsers root" >> /etc/ssh/sshd_config 
+  - systemctl reload sshd 
+  - sed -i '/11trainingdo/c 11trainingdo:$6$HeLUJW3a$4xSfDFQjKWfAoGkZF3LFAxM4hgl3d6ATbr2kEu9zMOFwLxkYMO.AJF526mZONwdmsm9sg0tCBKl.SYbhS52u70:17476:0:99999:7:::' /etc/shadow
+  - echo "11trainingdo ALL=(ALL) ALL" > /etc/sudoers.d/11trainingdo
+  - chmod 0440 /etc/sudoers.d/11trainingdo
+  
+  - echo "Installing microk8s"
+  - snap install --classic microk8s
+  - usermod -a -G microk8s root
+  - chown -f -R microk8s ~/.kube
+  - microk8s enable dns 
+  - echo "alias kubectl='microk8s kubectl'" >> /root/.bashrc
+```
+```
+## Prüfen ob microk8s - wird automatisch nach Installation gestartet
+## kann eine Weile dauern
+microk8s status
+
+```
+
+### Step 3: Client - Maschine (wir sollten nicht auf control-plane oder cluster - node arbeiten
+
+```
+Weiteren Server hochgezogen. 
+Vanilla + BASIS 
+
+## Installation Ubuntu - Server 
+
+## cloud-init script 
+## s.u. BASIS (keine Voraussetzung - nur zum Einrichten des Nutzers 11trainingdo per ssh) 
+
+## Server 1 - manuell 
+## Ubuntu 20.04 LTS - Grundinstallation 
+
+## minimal Netzwerk - öffentlichen IP 
+## nichts besonderes eingerichtet - Standard Digitalocean 
+
+## Standard vo Installation microk8s 
+lo               UNKNOWN        127.0.0.1/8 ::1/128
+## public ip / interne 
+eth0             UP             164.92.255.232/20 10.19.0.6/16 fe80::c:66ff:fec4:cbce/64
+## private ip 
+eth1             UP             10.135.0.5/16 fe80::8081:aaff:feaa:780/64
+
+```
+
+```
+##### Installation von kubectl aus dem snap
+## NICHT .. keine microk8s - keine control-plane / worker-node 
+## NUR Client zum Arbeiten 
+snap install kubectl --classic 
+
+##### .kube/config 
+## Damit ein Zugriff auf die kube-server-api möglich
+## d.h. REST-API Interface, um das Cluster verwalten.
+## Hier haben uns für den ersten Control-Node entschieden
+## Alternativ wäre round-robin per dns möglich 
+
+## Mini-Schritt 1:
+## Auf dem Server 1: kubeconfig ausspielen 
+microk8s config > /root/kube-config 
+## auf das Zielsystem gebracht (client 1) 
+scp /root/kubeconfig 11trainingdo@10.135.0.5:/home/11trainingdo
+
+## Mini-Schritt 2:
+## Auf dem Client 1 (diese Maschine) kubeconfig an die richtige Stelle bringen 
+## Standardmäßig der Client nach eine Konfigurationsdatei sucht in ~/.kube/config 
+sudo su -
+cd 
+mkdir .kube 
+cd .kube 
+mv /home/11trainingdo/kube-config config 
+
+## Verbindungstest gemacht
+## Damit feststellen ob das funktioniert. 
+kubectl cluster-info 
+
+```
+
+### Schritt 4: Auf allen Servern IP's hinterlegen und richtigen Hostnamen überprüfen 
+
+```
+## Auf jedem Server 
+hostnamectl 
+## evtl. hostname setzen 
+## z.B. - auf jedem Server eindeutig 
+hostnamectl set-hostname n1.training.local 
+
+## Gleiche hosts auf allen server einrichten.
+## Wichtig, um Traffic zu minimieren verwenden, die interne (private) IP
+
+/etc/hosts 
+10.135.0.3 n1.training.local n1
+10.135.0.4 n2.training.local n2
+10.135.0.5 n3.training.local n3 
+
+```
+
+### Schritt 5: Cluster aufbauen 
+
+```
+## Mini-Schritt 1:
+## Server 1: connection - string (token) 
+microk8s add-node 
+## Zeigt Liste und wir nehmen den Eintrag mit der lokalen / öffentlichen ip
+## Dieser Token kann nur 1x verwendet werden und wir auf dem ANDEREN node ausgeführt
+## microk8s join 10.135.0.3:25000/e9cdaa11b5d6d24461c8643cdf107837/bcad1949221a
+
+## Mini-Schritt 2:
+## Dauert eine Weile, bis das durch ist. 
+## Server 2: Den Node hinzufügen durch den JOIN - Befehl 
+microk8s join 10.135.0.3:25000/e9cdaa11b5d6d24461c8643cdf107837/bcad1949221a
+
+## Mini-Schritt 3:
+## Server 1: token besorgen für node 3
+microk8s add-node 
+
+## Mini-Schritt 4:
+## Server 3: Den Node hinzufügen durch den JOIN-Befehl 
+microk8s join 10.135.0.3:25000/09c96e57ec12af45b2752fb45450530c/bcad1949221a
+
+## Mini-Schritt 5: Überprüfen ob HA-Cluster läuft 
+Server 1: (es kann auf jedem der 3 Server überprüft werden, auf einem reicht 
+microk8s status | grep high-availability 
+high-availability: yes 
+```
+
+### Ergänzend nicht notwendige Scripte 
+
+```
+## cloud-init script 
+## s.u. BASIS (keine Voraussetzung - nur zum Einrichten des Nutzers 11trainingdo per ssh) 
+
+## Digitalocean - unter user_data reingepastet beim Einrichten 
+
+##cloud-config
+users:
+  - name: 11trainingdo
+    shell: /bin/bash
+
+runcmd:
+  - sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config
+  - echo " " >> /etc/ssh/sshd_config 
+  - echo "AllowUsers 11trainingdo" >> /etc/ssh/sshd_config 
+  - echo "AllowUsers root" >> /etc/ssh/sshd_config 
+  - systemctl reload sshd 
+  - sed -i '/11trainingdo/c 11trainingdo:$6$HeLUJW3a$4xSfDFQjKWfAoGkZF3LFAxM4hgl3d6ATbr2kEu9zMOFwLxkYMO.AJF526mZONwdmsm9sg0tCBKl.SYbhS52u70:17476:0:99999:7:::' /etc/shadow
+  - echo "11trainingdo ALL=(ALL) ALL" > /etc/sudoers.d/11trainingdo
+  - chmod 0440 /etc/sudoers.d/11trainingdo
+```
+
+## Kubernetes - microk8s (Installation und Management) 
+
+### kubectl unter windows - Remote-Verbindung zu Kuberenets (microk8s) einrichten
+
+
+### Walkthrough (Installation)
+
+```
+## Step 1
+chocolatry installiert. 
+(powershell als Administrator ausführen)
+## https://docs.chocolatey.org/en-us/choco/setup
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+## Step 2
+choco install kubernetes-cli 
+
+## Step 3
+testen:
+kubectl version --client 
+
+## Step 4:
+## powershell als normaler benutzer öffnen 
+```
+
+### Walkthrough (autocompletion) 
+
+```
+in powershell (normaler Benutzer) 
+kubectl completion powershell | Out-String | Invoke-Expression
+```
+
+### kubectl - config - Struktur vorbereiten  
+
+```
+## in powershell im heimatordner des Benutzers .kube - ordnern anlegen
+## C:\Users\<dein-name>\
+mkdir .kube 
+cd .kube 
+```
+
+### IP von Cluster-Node bekommen 
+
+```
+## auf virtualbox - maschine per ssh einloggen 
+## öffentliche ip herausfinden - z.B. enp0s8 bei HostOnly - Adapter
+ip -br a 
+```
+
+### config für kubectl aus Cluster-Node auslesen (microk8s) 
+
+```
+## auf virtualbox - maschine per ssh einloggen / zum root wechseln 
+## abfragen
+microk8s config 
+
+## Alle Zeilen ins clipboard kopieren
+## und mit notepad++ in die Datei \Users\<dein-name>\.kube\config 
+## schreiben
+
+## Wichtig: Zeile cluster -> clusters / server 
+## Hier ip von letztem Schritt eintragen:
+## z.B. 
+Server: https://192.168.56.106/......
+```
+
+### Testen 
+
+```
+## in powershell
+## kann ich eine Verbindung zum Cluster aufbauen ? 
+kubectl cluster-info 
+```
+
+
+
+  * https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/
+
+### Arbeiten mit der Registry
+
+### Installation Kubernetes Dashboard
+
+
+### Reference:
+
+  * https://blog.tippybits.com/installing-kubernetes-in-virtualbox-3d49f666b4d6    
+
+## Kubernetes - RBAC 
+
+### Nutzer einrichten - kubernetes bis 1.24
+
+
+### Enable RBAC in microk8s 
+
+```
+## This is important, if not enable every user on the system is allowed to do everything 
+microk8s enable rbac 
+```
+
+### Schritt 1: Nutzer-Account auf Server anlegen / in Client 
+
+```
+cd 
+mkdir -p manifests/rbac
+cd manifests/rbac
+```
+
+####  Mini-Schritt 1: Definition für Nutzer 
+
+```
+## vi service-account.yml 
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: training
+  namespace: default
+```
+
+```
+kubectl apply -f service-account.yml 
+```
+
+
+#### Mini-Schritt 2: ClusterRolle festlegen - Dies gilt für alle namespaces, muss aber noch zugewiesen werden
+
+```
+### Bevor sie zugewiesen ist, funktioniert sie nicht - da sie keinem Nutzer zugewiesen ist 
+
+## vi pods-clusterrole.yml 
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pods-clusterrole
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
+```
+
+```
+kubectl apply -f pods-clusterrole.yml 
+```
+
+#### Mini-Schritt 3: Die ClusterRolle den entsprechenden Nutzern über RoleBinding zu ordnen 
+```
+## vi rb-training-ns-default-pods.yml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: rolebinding-ns-default-pods
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: pods-clusterrole 
+subjects:
+- kind: ServiceAccount
+  name: training
+  namespace: default
+```
+
+```
+kubectl apply -f rb-training-ns-default-pods.yml
+```
+
+#### Mini-Schritt 4: Testen (klappt der Zugang) 
+
+```
+kubectl auth can-i get pods -n default --as system:serviceaccount:default:training
+```
+
+### Schritt 2: Context anlegen / Credentials auslesen und in kubeconfig hinterlegen (bis Version 1.25.) 
+
+#### Mini-Schritt 1: kubeconfig setzen 
+
+```
+kubectl config set-context training-ctx --cluster microk8s-cluster --user training
+
+## extract name of the token from here 
+
+TOKEN=`kubectl get secret trainingtoken -o jsonpath='{.data.token}' | base64 --decode`
+echo $TOKEN
+kubectl config set-credentials training --token=$TOKEN
+kubectl config use-context training-ctx
+
+## Hier reichen die Rechte nicht aus 
+kubectl get deploy
+## Error from server (Forbidden): pods is forbidden: User "system:serviceaccount:kube-system:training" cannot list # resource "pods" in API group "" in the namespace "default"
+```
+
+#### Mini-Schritt 2:
+```
+kubectl config use-context training-ctx
+kubectl get pods 
+```
+
+### Refs:
+
+  * https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengaddingserviceaccttoken.htm
+  * https://microk8s.io/docs/multi-user
+  * https://faun.pub/kubernetes-rbac-use-one-role-in-multiple-namespaces-d1d08bb08286
+
+### Ref: Create Service Account Token 
+
+  * https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#create-token
+
+## kubectl 
+
+### Tipps&Tricks zu Deploymnent - Rollout
+
+
+### Warum 
+
+```
+Rückgängig machen von deploys, Deploys neu unstossen.
+(Das sind die wichtigsten Fähigkeiten
+
+```
+
+### Beispiele 
+
+```
+## Deployment nochmal durchführen 
+## z.B. nach kubectl uncordon n12.training.local 
+kubectl rollout restart deploy nginx-deployment 
+
+## Rollout rückgängig machen 
+kubectl rollout undo deploy nginx-deployment 
+
+```
+
+## Kubernetes - Monitoring (microk8s und vanilla) 
+
+### metrics-server aktivieren (microk8s und vanilla)
+
+
+### Warum ? Was macht er ? 
+
+```
+Der Metrics-Server sammelt Informationen von den einzelnen Nodes und Pods
+Er bietet mit 
+
+kubectl top pods
+kubectl top nodes 
+
+ein einfaches Interface, um einen ersten Eindruck über die Auslastung zu bekommen. 
+```
+
+### Walktrough 
+
+```
+## Auf einem der Nodes im Cluster (HA-Cluster) 
+microk8s enable metrics-server 
+
+## Es dauert jetzt einen Moment bis dieser aktiv ist auch nach der Installation 
+## Auf dem Client
+kubectl top nodes 
+kubectl top pods 
+
+```
+
+### Kubernetes 
+
+  * https://kubernetes-sigs.github.io/metrics-server/
+  * kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+## Kubernetes - Backups 
+
 ## Kubernetes - Tipps & Tricks 
 
 ### Assigning Pods to Nodes
@@ -4704,78 +5749,11 @@ spec:
 
   * https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
 
-### Kubernetes Debuggen ClusterIP/PodIP
-
-
-### Situation 
-
-  * Kein Zugriff auf die Nodes, zum Testen von Verbindungen zu Pods und Services über die PodIP/ClusterIP 
-
-### Lösung 
-
-```
-## Wir starten eine Busybox und fragen per wget und port ab
-## busytester ist der name 
-## long version 
-kubectl run -it --rm --image=busybox busytester 
-## wget <pod-ip-des-ziels> 
-## exit 
-
-
-## quick and dirty 
-kubectl run -it --rm --image=busybox busytester -- wget <pod-ip-des-ziels>  
-
-```
-
-### Debugging pods
-
-
-### How ?
-
-  1. Which pod is in charge 
-  1. Problems when starting: kubectl describe po mypod 
-  1. Problems while running: kubectl logs mypod 
-
-### Autoscaling Pods/Deployments
-
-
-### Example: 
-
-```
-
-apiVersion: autoscaling/v1
-kind: HorizontalPodAutoscaler
-metadata:
-    name: busybox-1
-spec:
-    scaleTargetRef:
-        kind: Deployment
-        name: busybox-1
-    minReplicas: 3
-    maxReplicas: 4
-    targetCPUUtilizationPercentage: 80
-
-
-```
-
-
-### Reference 
-
-  * https://medium.com/expedia-group-tech/autoscaling-in-kubernetes-why-doesnt-the-horizontal-pod-autoscaler-work-for-me-5f0094694054
-
 ## Kubernetes - Documentation 
-
-### Documentation zu microk8s plugins/addons
-
-  * https://microk8s.io/docs/addons
 
 ### LDAP-Anbindung
 
   * https://github.com/apprenda-kismatic/kubernetes-ldap
-
-### Shared Volumes - Welche gibt es ?
-
-  * https://kubernetes.io/docs/concepts/storage/volumes/
 
 ### Helpful to learn - Kubernetes
 
@@ -5242,80 +6220,6 @@ readinessProbe:
 
   * https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-readiness-probes
 
-## Kubernetes Interna 
-
-### OCI,Container,Images Standards
-
-
-### Schritt 1:
-
-```
-cd
-mkdir bautest
-cd bautest 
-```
-
-### Schritt 2:
-
-```
-## nano docker-compose.yml
-version: "3.8"
-
-services:
-  myubuntu:
-    build: ./myubuntu
-    restart: always
-```
-
-### Schritt 3:
-
-```
-mkdir myubuntu 
-cd myubuntu 
-```
-
-```
-nano hello.sh
-```
-
-```
-##!/bin/bash
-let i=0
-
-while true
-do
-  let i=i+1
-  echo $i:hello-docker
-  sleep 5
-done
-
-```
-
-```
-## nano Dockerfile 
-FROM ubuntu:latest
-RUN apt-get update; apt-get install -y inetutils-ping
-COPY hello.sh .
-RUN chmod u+x hello.sh
-CMD ["/hello.sh"]
-
-```
-
-### Schritt 4: 
-
-
-```
-cd ../
-## wichtig, im docker-compose - Ordner seiend 
-##pwd 
-##~/bautest
-docker-compose up -d 
-## wird image gebaut und container gestartet 
-
-## Bei Veränderung vom Dockerfile, muss man den Parameter --build mitangeben 
-docker-compose up -d --build 
-```
-
 ## Linux und Docker Tipps & Tricks allgemein 
 
 ### Auf ubuntu root-benutzer werden
@@ -5377,7 +6281,7 @@ cat override.conf
 ### vim einrückung für yaml-dateien
 
 
-### Ubuntu (im Unterverzeichnis /etc/vim - systemweit) 
+### Ubuntu (im Unterverzeichnis /etc/vim/vimrc.local - systemweit) 
 
 ```
 hi CursorColumn cterm=NONE ctermbg=lightred ctermfg=white
