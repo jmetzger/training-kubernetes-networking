@@ -1,5 +1,26 @@
 # Networking Internals Overview 
 
+## Network Namespace for each pod 
+
+### Overview 
+
+![Overview]()
+
+### General 
+
+  * Each pod will have its own network namespace
+    * with routing, networkdevices 
+  * Connection to default namespace to host is done through veth - Link to bridge on host network 
+    * similar like on docker to docker0 
+  * Every container is in the same Network Namespace, so they can communicate through localhost
+    * Example with hashicorp/http-echo container 1 and busybox container 2 ? 
+ 
+
+
+   
+    
+
+
 ## Hidden Pause Container 
 
 ### What is for ? 
