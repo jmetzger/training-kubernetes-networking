@@ -64,7 +64,7 @@ spec:
 kubectl apply -f 02-nginx.yml
 ```
 
-````
+```
 # Schritt 3:
 # Anpassen der Sicherheitseinstellung (Phase1) im Container 
 
@@ -88,7 +88,7 @@ spec:
 
 ```
 kubectl delete -f 02-nginx.yml
-kubectl apply -f 02_pod.yml
+kubectl apply -f 02-nginx.yml
 kubectl -n test-ns<tln> get pods 
 ```
 
@@ -100,7 +100,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: nginx
-  namespace: test-ns12
+  namespace: test-ns<tln>
 spec:
   containers:
     - image: nginx
@@ -116,8 +116,8 @@ spec:
 
 ```
 # pod kann erstellt werden, wird aber nicht gestartet 
-kubectl delete -f 02_pod.yml 
-kubectl apply -f 02_pod.yml 
+kubectl delete -f 02-nginx.yml 
+kubectl apply -f 02-nginx.yml 
 kubectl -n test-ns<tln> get pods
 kubectl -n test-ns<tln> describe pods nginx 
 ```
