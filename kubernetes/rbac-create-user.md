@@ -1,4 +1,4 @@
-# RBAC - Create user for kubeconfig with restricted permissions (microk8s) 
+# RBAC - Create user for kubeconfig with restricted permissions (microk8s) - bis Kubernetes 1.24
 
 ## Enable RBAC in microk8s 
 
