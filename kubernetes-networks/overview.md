@@ -60,6 +60,15 @@
 ### Referenz 
   * https://projectcalico.docs.tigera.io/security/calico-network-policy
 
+## Weave Net 
+
+  * Ähnlich calico 
+  * Verwendet overlay netzwerk
+  * Sehr stabil bzgl IPV4/IPV6 (Dual Stack) 
+  * Sehr grosses Feature-Set 
+  * mit das älteste Plugin 
+
+
 ## microk8s Vergleich 
 
   * https://microk8s.io/compare
