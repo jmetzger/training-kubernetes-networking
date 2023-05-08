@@ -22,6 +22,12 @@
      * [IPV4/IPV6 Dualstack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/)
      * [Ingress controller in microk8s aktivieren](microk8s/ingress.md) 
 
+  1. Kubernetes - Wartung / Debugging 
+     * [kubectl drain/uncordon](/kubectl/uncordon-drain.md)
+     * [Alte manifeste konvertieren mit convert plugin](/kubectl/convert-plugin.md)
+     * [Netzwerkverbindung zu pod testen](/tipps-tricks/verbindung-zu-pod-testen.md)
+     * [Curl from pod api-server](/kubernetes-advanced/curl-api-server.md)
+
   1. Kubernetes Praxis API-Objekte 
      * [Das Tool kubectl (Devs/Ops) - Spickzettel](/kubectl/spickzettel.md)
      * [kubectl example with run](/kubectl/run-with-example.md)
@@ -48,9 +54,7 @@
      * [Helm Example](/helm/example.md)
 
   1. Kubernetes - RBAC 
-     * [Nutzer einrichten microk8s ab kubernetes 1.25](/kubernetes/rbac-create-user-kubernetes-1-25.md) 
- 
- 
+     * [Nutzer einrichten microk8s ab kubernetes 1.25](/kubernetes/rbac-create-user-kubernetes-1-25.md)
    
   1. kubectl 
      * [Start pod (container with run && examples)](/kubectl/run-with-example.md)
@@ -60,12 +64,6 @@
 
   1. Kubernetes - Shared Volumes 
      * [Shared Volumes with nfs](shared-volumes/nfs-multi.md)
-
-  1. Kubernetes - Wartung / Debugging 
-     * [kubectl drain/uncordon](/kubectl/uncordon-drain.md)
-     * [Alte manifeste konvertieren mit convert plugin](/kubectl/convert-plugin.md)
-     * [Netzwerkverbindung zu pod testen](/tipps-tricks/verbindung-zu-pod-testen.md)
-     * [Curl from pod api-server](/kubernetes-advanced/curl-api-server.md)
 
   1. Kubernetes - Tipps & Tricks 
      * [Kubernetes Debuggen ClusterIP/PodIP](/tipps-tricks/cluster-ip-debug.md)
