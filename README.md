@@ -46,7 +46,12 @@
      * [Permanente Weiterleitung mit Ingress](/kubectl-examples/05-ingress-permanent-redirect.md)
      * [ConfigMap Example](/kubectl-examples/06-configmap.md)
      * [Configmap MariaDB - Example](kubectl-examples/06a-configmap-mariadb.md)
-     * [Configmap MariaDB my.cnf](kubectl-examples/06b-mariadb-configmap-configfile.md)
+     * [Configmap MariaDB my.cnf](kubectl-examples/06b-mariadb-configmap-configfile.md)     
+  
+  1. Kubernetes Deployment Scenarios 
+     * [Deployment green/blue,canary,rolling update](/kubernetes/deployment-strategies-en.md)
+     * [Service Blue/Green](/kubectl-examples/03c-service-blue-green-nginx.md)
+     * [Praxis-Übung A/B Deployment](/kubectl-examples/08-ab-deployment.md)   
      
   1. Helm (Kubernetes Paketmanager) 
      * [Helm Grundlagen](/helm/grundlagen.md)
@@ -55,11 +60,6 @@
 
   1. Kubernetes - RBAC 
      * [Nutzer einrichten microk8s ab kubernetes 1.25](/kubernetes/rbac-create-user-kubernetes-1-25.md)
-   
-  1. kubectl 
-     * [Start pod (container with run && examples)](/kubectl/run-with-example.md)
-     * [Bash completion for kubectl](/kubectl/bash-completion.md)
-     * [kubectl Spickzettel](/kubectl/spickzettel.md)
      * [Tipps&Tricks zu Deploymnent - Rollout](/kubectl/rollout.md) 
 
   1. Kubernetes - Shared Volumes 
