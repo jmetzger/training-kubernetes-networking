@@ -10,11 +10,16 @@
      * [Wann wird podIP vergeben ?](kubectl/run-with-example.md)
      * [Bash completion installieren](kubectl/bash-completion.md)
      * [Remote-Verbindung zu Kubernetes (microk8s) einrichten](microk8s/connect-from-remote.md)
-  
-  1. Kubernetes - microk8s (Installation und Management) 
-     * [Installation Ubuntu - snap](microk8s/installation-ubuntu-snap.md)
-     * [Create a cluster with microk8s](microk8s/cluster.md)
      * [vim support for yaml](vim/vim-yaml.md)
+     
+  1. Kubernetes - Netzwerk (CNI's) / Mesh
+     * [Netzwerk Interna](/kubernetes-networks/networking-internal-overview.md)
+     * [Übersicht Netzwerke](/kubernetes-networks/overview.md) 
+     * [Calico - nginx example NetworkPolicy](/kubernetes-network/callico/00-simple-example.md)
+     * [Beispiele Ingress Egress NetworkPolicy](kubernetes-networks/examples-ingress-egress.md)
+     * [Mesh / istio](sammlung-istio.md)  
+     * [Kubernetes Ports/Protokolle](https://kubernetes.io/docs/reference/networking/ports-and-protocols/)
+     * [IPV4/IPV6 Dualstack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/)
      * [Ingress controller in microk8s aktivieren](microk8s/ingress.md) 
 
   1. Kubernetes Praxis API-Objekte 
@@ -49,14 +54,7 @@
   1. Kubernetes - RBAC 
      * [Nutzer einrichten microk8s ab kubernetes 1.25](/kubernetes/rbac-create-user-kubernetes-1-25.md) 
  
-  1. Kubernetes - Netzwerk (CNI's) / Mesh
-     * [Netzwerk Interna](/kubernetes-networks/networking-internal-overview.md)
-     * [Übersicht Netzwerke](/kubernetes-networks/overview.md) 
-     * [Calico - nginx example NetworkPolicy](/kubernetes-network/callico/00-simple-example.md)
-     * [Beispiele Ingress Egress NetworkPolicy](kubernetes-networks/examples-ingress-egress.md)
-     * [Mesh / istio](sammlung-istio.md)  
-     * [Kubernetes Ports/Protokolle](https://kubernetes.io/docs/reference/networking/ports-and-protocols/)
-     * [IPV4/IPV6 Dualstack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/)
+ 
    
   1. kubectl 
      * [Start pod (container with run && examples)](/kubectl/run-with-example.md)
