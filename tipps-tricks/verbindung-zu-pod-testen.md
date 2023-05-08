@@ -11,6 +11,9 @@ Managed Cluster und ich kann nicht auf einzelne Nodes per ssh zugreifen
 ```
 # laengere Version 
 kubectl run podtest --rm -ti --image busybox -- /bin/sh
+```
+
+```
 # kuerzere Version 
 kubectl run podtest --rm -ti --image busybox 
 ```
