@@ -4,6 +4,7 @@
 
   1. Kubernetes - Überblick
      * [Aufbau Allgemein](/kubernetes/architecture.md)
+     * [Ports und Protokolle](https://kubernetes.io/docs/reference/networking/ports-and-protocols/)
   
   1. Kubernetes - microk8s (Installation und Management) 
      * [Installation Ubuntu - snap](microk8s/installation-ubuntu-snap.md)
