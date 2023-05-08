@@ -50,7 +50,7 @@ spec:
 ```
 
 ```
-# 02-svc.yml 
+# svc.yml 
 apiVersion: v1
 kind: Service
 metadata:
