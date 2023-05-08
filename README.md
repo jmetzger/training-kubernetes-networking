@@ -121,9 +121,6 @@
   1. Kubernetes - Hardening 
      * [Kubernetes Tipps Hardening](kubernetes-security/tipps-hardening.md)
 
-  1. Kubernetes Deployment Scenarios 
-     * [Deployment green/blue,canary,rolling update](/kubernetes/deployment-strategies-en.md)
-     * [Praxis-Übung A/B Deployment](/kubectl-examples/08-ab-deployment.md)
 
   1. Kubernetes Probes (Liveness and Readiness) 
      * [Übung Liveness-Probe](/probes/uebung-liveness.md)
