@@ -23,6 +23,9 @@
      * [Ingress controller in microk8s aktivieren](microk8s/ingress.md) 
      * [DNS - Resolution - Services](kubernetes-networks/dns-resolution-services)
 
+  1. Kubernetes - Ingress 
+     * [ingress mit ssl absichern](/kubernetes-security/ingress-ssl.md)
+
   1. Kubernetes - Wartung / Debugging 
      * [kubectl drain/uncordon](/kubectl/uncordon-drain.md)
      * [Alte manifeste konvertieren mit convert plugin](/kubectl/convert-plugin.md)
