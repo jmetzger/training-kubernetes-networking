@@ -1,5 +1,6 @@
 # Service mit blue / green 
 
+## Step 1: Deployment + Service 
 
 ```
 # vi blue.yml
@@ -62,4 +63,36 @@ spec:
   selector:
     app: nginx
 ```    
-    
+
+## Step 2: Ingress 
+
+```
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-config
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+    # with the ingress controller from helm, you need to set an annotation 
+    # old version useClassName instead 
+    # otherwice it does not know, which controller to use
+    # kubernetes.io/ingress.class: nginx 
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "app.lab1.t3isp.de"
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: svc-nginx 
+              port:
+                number: 80
+```
+
+```
+kubectl apply -f . 
+```
+
