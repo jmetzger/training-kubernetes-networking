@@ -15,7 +15,7 @@
   1. Kubernetes - Netzwerk (CNI's) / Mesh
      * [Netzwerk Interna](/kubernetes-networks/networking-internal-overview.md)
      * [Übersicht Netzwerke](/kubernetes-networks/overview.md) 
-     * [Calico - nginx example NetworkPolicy](/kubernetes-network/callico/00-simple-example.md)
+     * [Calico/Cilium - nginx example NetworkPolicy](/kubernetes-network/callico/00-simple-example.md)
      * [Beispiele Ingress Egress NetworkPolicy](kubernetes-networks/examples-ingress-egress.md)
      * [Mesh / istio](sammlung-istio.md)  
      * [Kubernetes Ports/Protokolle](https://kubernetes.io/docs/reference/networking/ports-and-protocols/)
