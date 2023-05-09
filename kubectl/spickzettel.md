@@ -47,6 +47,10 @@ kubectl get pods -o json
 # gilt natürluch auch für andere kommandos
 kubectl get deploy -o json 
 kubectl get deploy -o yaml 
+
+# get a specific value from the complete json - tree 
+kubectl get node k8s-nue-jo-ff1p1 -o=jsonpath='{.metadata.labels}'
+
 ```
 
 
