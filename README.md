@@ -74,6 +74,7 @@
      * [Debugging pods](tipps-tricks/debugging-pods.md)
      * [Taints und Tolerations](kubernetes/taints-tolerations.md)
      * [Autoscaling Pods/Deployments](/kubernetes/autoscaling.md)
+     * [pod aus deployment bei config - Änderung neu ausrollen](https://github.com/stakater/Reloader)
 
   1. Kubernetes Advanced 
      * [Curl api-server kubernetes aus pod heraus](kubernetes-advanced/curl-api-server.md)
@@ -124,7 +125,6 @@
 
   1. Kubernetes - Hardening 
      * [Kubernetes Tipps Hardening](kubernetes-security/tipps-hardening.md)
-
 
   1. Kubernetes Probes (Liveness and Readiness) 
      * [Übung Liveness-Probe](/probes/uebung-liveness.md)
