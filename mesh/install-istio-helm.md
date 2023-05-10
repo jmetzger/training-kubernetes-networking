@@ -27,6 +27,31 @@ kubectl get deployments -n istio-system --output wide
 helm install istio-ingress istio/gateway -n istio-ingress --create-namespace --wait
 ```
 
+## What about setting injection for the namespace 
+
+```
+# https://istio.io/latest/docs/setup/additional-setup/sidecar-injection/
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.17/samples/sleep/sleep.yaml
+
+# only 1 container in "sleep" pod 
+kubectl get pods 
+```
+
+```
+# Enable workspace with injection 
+kubectl label namespace default istio-injection=enabled --overwrite
+kubectl get namespace -L istio-injection
+
+```
+
+```
+# Delete pod and watch it being recreated 
+kubectl delete po -l app=sleep 
+kubectl get pods 
+# now we should see pods with 2 containers 
+
+
+```
 
 ## Reference 
 
