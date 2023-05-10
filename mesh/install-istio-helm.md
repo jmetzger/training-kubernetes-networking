@@ -54,6 +54,14 @@ kubectl get pods
 
 ```
 
+## Step 4: Rollout bookinfo samples 
+
+```
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.17/samples/bookinfo/platform/kube/bookinfo.yaml
+kubectl get pods 
+kubectl get svc 
+```
+
 ## Reference 
 
   * https://istio.io/latest/docs/setup/install/helm/
