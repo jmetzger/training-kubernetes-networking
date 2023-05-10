@@ -69,8 +69,9 @@
   1. Kubernetes QoS 
      * [Quality of Service - evict pods](kubernetes/qos-class.md)
 
-  1. Kubernetes - Shared Volumes 
-     * [Shared Volumes with nfs](shared-volumes/nfs-multi.md)
+  1. Kustomize 
+     * [Kustomize Overlay Beispiel](/kustomize/02-overlay-example.md)
+     * [Helm mit kustomize verheiraten](/kustomize/helm-kustomize-options.md)
 
   1. Kubernetes - Tipps & Tricks 
      * [Kubernetes Debuggen ClusterIP/PodIP](/tipps-tricks/cluster-ip-debug.md)
@@ -126,6 +127,9 @@
      * [Environment to learn](https://killercoda.com/killer-shell-cks)
      * [Environment to learn II](https://killercoda.com/)
      * [Youtube Channel](https://www.youtube.com/watch?v=01qcYSck1c4)
+
+  1. Kubernetes - Shared Volumes 
+     * [Shared Volumes with nfs](shared-volumes/nfs-multi.md)
 
   1. Kubernetes - Hardening 
      * [Kubernetes Tipps Hardening](kubernetes-security/tipps-hardening.md)
