@@ -1,4 +1,4 @@
-# Install istio with helm 
+# Install istio with helm + walkthrough
 
 ## Walkthrough (Base) - Step 1 
 
