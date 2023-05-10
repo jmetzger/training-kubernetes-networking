@@ -136,12 +136,21 @@ kubectl -n istio-ingress get service istio-ingress -o wide
 export INGRESS_HOST=$(kubectl -n istio-ingress get service istio-ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 export INGRESS_PORT=$(kubectl -n istio-ingress get service istio-ingress -o jsonpath='{.spec.ports[?(@.name=="http2")].port}')
 export SECURE_INGRESS_PORT=$(kubectl -n istio-ingress get service istio-ingress -o jsonpath='{.spec.ports[?(@.name=="https")].port}')
+export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
 ```
 
 ```
 echo $INGRESS_HOST 
 echo $INGRESS_PORT
 echo $SECURE_INGRESS_PORT
+echo $GATEWAY_URL 
+```
+
+## Step 8: Connect from the outside 
+
+```
+
+
 ```
 
 
