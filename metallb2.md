@@ -55,8 +55,10 @@ data:
     - name: default
       protocol: layer2
       addresses:
-      - 192.168.1.240-192.168.1.250
-
+      # Take the single address in case of digitalocean here.
+      # External ip 
+      # - 192.168.1.240-192.168.1.250
+      - 61.46.56.21
 ```
 
 ```
@@ -67,20 +69,29 @@ vi 02-svc.yml
 apiVersion: v1
 kind: Service
 metadata:
-  name: my-service
+  name: nginx-svc 
 spec:
   selector:
-    app: my-app
+
+# Adjust -> selector -> according to nginx below 
+    app: nginx 
   ports:
   - name: http
     port: 80
     targetPort: 80
   type: LoadBalancer
-  loadBalancerIP: 192.168.1.245
+  # uncomment to try, if you get it automatically 
+  loadBalancerIP: 61.46.56.21
 
 ```
 
 ```
 kubectl apply -f .
 kubectl -n metallb-system get svc my-service 
+```
+
+```
+kubectl create deployment nginx --image nginx:alpine --port 80 --replicas=1
+kubectl get svc nginx-svc
+# You can open 80 port on Firewall using Console and open http://167.99.99.99 for a test.
 ```
