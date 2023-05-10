@@ -150,5 +150,5 @@ spec:
 ```
 # und er läuft als nicht root 
 kubectl apply -f 03_pod-bitnami.yml 
-kubectl -n test-ns<tln> get pods
+kubectl -n test-ns1 get pods
 ```
