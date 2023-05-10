@@ -49,10 +49,14 @@ kubectl get namespace -L istio-injection
 kubectl delete po -l app=sleep 
 kubectl get pods 
 # now we should see pods with 2 containers 
-
+# NAME                    READY   STATUS    RESTARTS   AGE
+# sleep-bc9998558-zhqpz   2/2     Running   0          5s
 
 ```
+
+
 
 ## Reference 
 
   * https://istio.io/latest/docs/setup/install/helm/
+  * https://istio.io/latest/docs/setup/additional-setup/sidecar-injection/
