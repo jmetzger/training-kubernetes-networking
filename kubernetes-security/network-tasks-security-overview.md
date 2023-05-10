@@ -1,4 +1,4 @@
-- # Absichern Netzwerk (und darüber hinaus) 
+# Absichern Netzwerk (und darüber hinaus) 
 
 ## Bereich 1: Kubernetes (Cluster) 
 
