@@ -86,6 +86,7 @@
   1. Kubernetes - Hardening 
      * [Kubernetes Tipps Hardening](kubernetes-security/tipps-hardening.md)
      * [Kubernetes Security Admission Controller Example](kubernetes-security/pod-security-admission.md)
+     * [Was muss ich bei der Netzwerk-Sicherheit beachten ?](kubernetes-security/network-tasks-security-overview.md)
      
   1. Kubernetes Interna / Misc.
      * [OCI,Container,Images Standards](docker-alternatives-kubernetes.md)
