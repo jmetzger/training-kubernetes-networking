@@ -27,7 +27,7 @@ kubectl get deployments -n istio-system --output wide
 helm install istio-ingress istio/gateway -n istio-ingress --create-namespace --wait
 ```
 
-## What about setting injection for the namespace 
+## What about setting injection for the namespace ?
 
 ```
 # https://istio.io/latest/docs/setup/additional-setup/sidecar-injection/
