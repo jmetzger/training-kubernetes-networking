@@ -149,7 +149,18 @@ echo $GATEWAY_URL
 ## Step 8: Connect from the outside 
 
 ```
+# no trailing slash please !! 
+curl $GATEWAY_URL/productpage
 
+```
+
+# Step 9: Install kiali (graphical interface) 
+
+```
+kubectl apply -f https://github.com/istio/istio/tree/release-1.17/samples/addons
+kubectl rollout status deployment/kiali -n istio-system
+# Waiting for deployment "kiali" rollout to finish: 0 of 1 updated replicas are available...
+# deployment "kiali" successfully rolled out
 
 ```
 
