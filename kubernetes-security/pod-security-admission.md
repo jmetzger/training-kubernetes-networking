@@ -29,7 +29,7 @@ nano 01-ns.yml
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: test-ns<tln>
+  name: test-ns1
   labels:
     pod-security.kubernetes.io/enforce: baseline
     pod-security.kubernetes.io/audit: restricted
@@ -49,7 +49,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: nginx
-  namespace: test-ns<tln>
+  namespace: test-ns1
 spec:
   containers:
     - image: nginx
@@ -74,7 +74,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: nginx
-  namespace: test-ns<tln>
+  namespace: test-ns1
 spec:
   containers:
     - image: nginx
@@ -89,7 +89,7 @@ spec:
 ```
 kubectl delete -f 02-nginx.yml
 kubectl apply -f 02-nginx.yml
-kubectl -n test-ns<tln> get pods 
+kubectl -n test-ns1 get pods 
 ```
 
 ```
@@ -118,8 +118,8 @@ spec:
 # pod kann erstellt werden, wird aber nicht gestartet 
 kubectl delete -f 02-nginx.yml 
 kubectl apply -f 02-nginx.yml 
-kubectl -n test-ns<tln> get pods
-kubectl -n test-ns<tln> describe pods nginx 
+kubectl -n test-ns1 get pods
+kubectl -n test-ns1 describe pods nginx 
 ```
 
 ## Praktisches Beispiel für Version ab 1.2.23 -Lösung - Container als NICHT-Root laufen lassen
@@ -134,7 +134,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: bitnami-nginx
-  namespace: test-ns<tln>
+  namespace: test-ns1
 spec:
   containers:
     - image: bitnami/nginx
