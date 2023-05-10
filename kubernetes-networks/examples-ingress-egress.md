@@ -66,18 +66,31 @@ spec:
 ### Cilium
 
 ```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-static-web
+  labels:
+    webserver: nginx
+spec:
+  containers:
+  - name: web
+    image: nginx
+```
+
+```
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: "fqdn-pprof"
-  namespace: msp
+  # namespace: msp
 spec:
   endpointSelector:
     matchLabels:
-      app: pprof
+      webserver: nginx
   egress:
   - toFQDNs:
-    - matchPattern: '*.baidu.com'
+    - matchPattern: '*.google.com'
   - toPorts:
     - ports:
       - port: "53"
@@ -85,6 +98,10 @@ spec:
       rules:
         dns:
         - matchPattern: '*'
+```
+
+```
+kubectl apply -f .
 ```
 
 ### Calico 
