@@ -54,9 +54,9 @@ kubectl get pods
 
 ```
 
-
-
 ## Reference 
 
   * https://istio.io/latest/docs/setup/install/helm/
   * https://istio.io/latest/docs/setup/additional-setup/sidecar-injection/
+  * https://istio.io/latest/docs/setup/getting-started/#bookinfo
+  * https://istio.io/latest/docs/tasks/observability/kiali/
