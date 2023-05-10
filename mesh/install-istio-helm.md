@@ -62,6 +62,12 @@ kubectl get pods
 kubectl get svc 
 ```
 
+## Step 5: Check, if app is running 
+
+```
+kubectl exec "$(kubectl get pod -l app=ratings -o jsonpath='{.items[0].metadata.name}')" -c ratings -- curl -sS productpage:9080/productpage | grep -o "<title>.*</title>"
+```
+
 ## Reference 
 
   * https://istio.io/latest/docs/setup/install/helm/
