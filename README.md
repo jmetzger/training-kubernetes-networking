@@ -66,6 +66,9 @@
      * [Nutzer einrichten microk8s ab kubernetes 1.25](/kubernetes/rbac-create-user-kubernetes-1-25.md)
      * [Tipps&Tricks zu Deploymnent - Rollout](/kubectl/rollout.md) 
 
+  1. Kubernetes QoS 
+     * [Quality of Service - evict pods](kubernetes/qos-class.md)
+
   1. Kubernetes - Shared Volumes 
      * [Shared Volumes with nfs](shared-volumes/nfs-multi.md)
 
