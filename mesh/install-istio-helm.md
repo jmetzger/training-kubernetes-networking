@@ -164,6 +164,14 @@ kubectl rollout status deployment/kiali -n istio-system
 
 ```
 
+# Step 10
+
+```
+# only works with a local kubectl on desktop 
+kubectl port-forward svc/kiali 20001:20001 -n istio-system
+
+```
+
 
 ## Reference 
 
