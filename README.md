@@ -97,6 +97,7 @@
      * [OCI,Container,Images Standards](docker-alternatives-kubernetes.md)
      * [Geolocation Kubernetes Cluster](https://learnk8s.io/bite-sized/connecting-multiple-kubernetes-clusters)
      * [statische IP für Pod in calico](https://docs.tigera.io/calico/latest/networking/ipam/use-specific-ip)
+     * [yaml linting](https://www.kubeval.com/installation/)
   
 ## Backlog
 
