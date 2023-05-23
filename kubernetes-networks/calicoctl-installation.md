@@ -14,6 +14,7 @@ kubectl -n kube-system get ds calico-node -o=jsonpath='{.spec.template.spec.cont
 ### Pod erstellen für calicoctl auf Basis von 
 
 ```
+cd
 mkdir -p manifests
 cd manifests 
 mkdir calicoctl 
