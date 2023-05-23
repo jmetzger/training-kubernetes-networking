@@ -23,6 +23,7 @@
      * [IPV4/IPV6 Dualstack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/)
      * [Ingress controller in microk8s aktivieren](microk8s/ingress.md) 
      * [DNS - Resolution - Services](kubernetes-networks/dns-resolution-services)
+     * [Debug Container](kubernetes-networks/debug-container.md)
 
   1. Kubernetes - Ingress 
      * [ingress mit ssl absichern](/kubernetes-security/ingress-ssl.md)
