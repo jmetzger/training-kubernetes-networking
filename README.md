@@ -24,7 +24,7 @@
      * [Ingress controller in microk8s aktivieren](microk8s/ingress.md) 
      * [DNS - Resolution - Services](kubernetes-networks/dns-resolution-services)
      * [Debug Container](kubernetes-networks/debug-container.md)
-     * [Install calicoctl in pod](calicoctl-installation.md)
+     * [Install calicoctl in pod](/kubernetes-networks/calicoctl-installation.md)
 
   1. Kubernetes - Ingress 
      * [ingress mit ssl absichern](/kubernetes-security/ingress-ssl.md)
