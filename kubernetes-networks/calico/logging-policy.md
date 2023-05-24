@@ -92,7 +92,7 @@ journalctl -f | grep calico-packet
 
 ```
 # now open a debug pod 
-kubectl debug -it static-web --target --image=busybox 
+kubectl debug -it static-web --image=busybox 
 # in pod ping - this will not work, because we cannot retrieve dns 
 ping www.google.de
 ```
