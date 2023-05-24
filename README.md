@@ -29,6 +29,7 @@
    
   1. Kubernetes calico 
      * [Find corresponding networks](kubernetes-networks/calico/find-corresponding-interfaces.md)
+     * [Calico Logging Firewall Rules](kubernetes-networks/calico/logging-policy.md)
 
   1. Kubernetes - Ingress 
      * [ingress mit ssl absichern](/kubernetes-security/ingress-ssl.md)
