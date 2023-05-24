@@ -4,6 +4,7 @@
 
 ```
 # This is important, if not enable every user on the system is allowed to do everything 
+# do this on one of the nodes 
 microk8s enable rbac 
 ```
 
