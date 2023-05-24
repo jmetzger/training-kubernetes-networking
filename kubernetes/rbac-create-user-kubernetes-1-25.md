@@ -58,7 +58,7 @@ kubectl apply -f .
 ```
 ## Bevor sie zugewiesen ist, funktioniert sie nicht - da sie keinem Nutzer zugewiesen ist 
 
-# vi pods-clusterrole.yml 
+# vi 03-pods-clusterrole.yml 
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -70,7 +70,7 @@ rules:
 ```
 
 ```
-kubectl apply -f pods-clusterrole.yml 
+kubectl apply -f 03-pods-clusterrole.yml 
 ```
 
 ### Mini-Schritt 3: Die ClusterRolle den entsprechenden Nutzern über RoleBinding zu ordnen 
