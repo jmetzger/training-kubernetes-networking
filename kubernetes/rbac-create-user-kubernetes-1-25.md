@@ -19,7 +19,7 @@ cd manifests/rbac
 ###  Mini-Schritt 1: Definition für Nutzer 
 
 ```
-# vi service-account.yml 
+# vi 01-service-account.yml 
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -28,7 +28,7 @@ metadata:
 ```
 
 ```
-kubectl apply -f service-account.yml 
+kubectl apply -f .
 ```
 
 ### Mini-Schritt 1.5: Secret erstellen 
@@ -38,7 +38,7 @@ kubectl apply -f service-account.yml
   * https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#create-token
 
 ```
-# vi secret.yml 
+# vi 02-secret.yml 
 apiVersion: v1
 kind: Secret
 type: kubernetes.io/service-account-token
