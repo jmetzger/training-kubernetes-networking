@@ -4,7 +4,7 @@
 
 ```
 # Step 1: create pod 
-kubectl run -it nginx-master --image=nginx
+kubectl run nginx-master --image=nginx
 # Find out on which node it runs 
 kubectl get pods -o wide 
 # create a debug container 
