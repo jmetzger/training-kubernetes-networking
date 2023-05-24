@@ -109,6 +109,7 @@
    
   1. Kubernetes Load Balancer 
      * [Kubernetes Load Balancer](metallb.md)
+     * [Kubernetes Load Balancer new version for IpAdresses - object](loadbalancer/metallb.md)
  
   1. Kubernetes Documentation 
      * [Well-Known Annotations](https://kubernetes.io/docs/reference/labels-annotations-taints/)
