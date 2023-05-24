@@ -365,8 +365,9 @@ kubectl patch apiservice v3.projectcalico.org -p \
 ## Step 3: check if it is working 
 
 ```
-
-
+kubectl api-resources | grep '\sprojectcalico.org'
+# only available in v3 
+kubectl get clusterinfo 
 ```
 
 
