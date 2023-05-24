@@ -8,56 +8,11 @@
 
   * Use NetworkPolicy from calico (to apply it with kubectl - the calico api server needs to be installed) / or use calicoctl 
   * Enable Tracing 
-  * Use: 
+  * Use: https://kubernetes.io/blog/2019/04/19/introducing-kube-iptables-tailer/
   
 ## Solution 1: NetworkPolicy calico 
 
   * https://github.com/projectcalico/calico/issues/4344
-
-```
-cd 
-mkdir manifests 
-cd manifests 
-mkdir cpol 
-cd cpol 
-vi 04-pol.yaml 
-```
-
-```
-apiVersion: projectcalico.org/v3
-kind: NetworkPolicy
-metadata:
-  name: deny-all
-  namespace: hack-a
-spec:
-  ingress:
-  - action: Log
-    destination: {}
-    protocol: TCP
-    source: {}
-  - action: Deny
-    destination: {}
-    protocol: TCP
-    source: {}
-  types:
-  - Ingress
-  - Egress
-```
-
-```
-kubectl create ns hack-a 
-kubectl apply -f . 
-```
-
-```
-# create nginx-pod in namespace hack-a 
-kubectl -n hack-a run nginx-test --image=nginx-test
-# obtain pod-ip 
-kubectl -n hack-a get pods -o wide 
-
-# run a busybox to test connection 
-kubectl -n hack-a podtester --rm --image=busybox 
-```
 
 
 ## Logs 
@@ -124,23 +79,25 @@ spec:
 kubectl apply -f .
 # find the node, where it runs on 
 kubectl get pods -o wide 
+```
 
-kubectl debug static-web --target static-web --image=ubuntu 
-# in pod ping to google
-# this should not wor 
+```
+# login to that node with ssh (kubernetes node) 
+# e.g. ssh user@node 
+# switch to root: sudo su -
+tail -f /var/log/syslog | grep calico-packet 
+# or 
+journalctl -f | grep calico-packet 
+```
+
+```
+# now open a debug pod 
+kubectl debug -it static-web --target static-web --image=busybox 
+# in pod ping - this will not work, because we cannot retrieve dns 
 ping www.google.de
-# install iproute
-apt update
-apt install iproute2 
-# get the net work interface 
-# and note the number 
-ip -br -c a 
 ```
 
 ```
-# Log in to your node with ssh
-# because we also need iptables 
-# find the interface with the above number 
-ip -br -c a 
-# e.g. 
-``` 
+# watch output from other node in the meanwhile 
+```
+
