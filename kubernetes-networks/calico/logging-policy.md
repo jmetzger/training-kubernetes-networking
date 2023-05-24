@@ -101,3 +101,7 @@ ping www.google.de
 # watch output from other node in the meanwhile 
 ```
 
+## Reference 
+
+  * Eventually set a prefix for logging:
+  * https://docs.tigera.io/calico-cloud/visibility/iptables
