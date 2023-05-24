@@ -37,7 +37,7 @@ iptables -L -v | grep  cali42c2aab93f3
 ```
 
 ```
-# ...
+# ... That is what you see as an example 
 Chain cali-tw-cali42c2aab93f3 (1 references)
  pkts bytes target     prot opt in     out     source               destination 
    10  1384 ACCEPT     all  --  any    any     anywhere             anywhere             /* cali:WKA8EzdUNM0rVty1 */ ctstate RELATED,ESTABLISHED
