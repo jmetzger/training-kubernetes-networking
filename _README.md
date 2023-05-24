@@ -4,6 +4,7 @@
 ## Agenda
   1. Kubernetes - Überblick
      * [Aufbau Allgemein](#aufbau-allgemein)
+     * [Structure Kubernetes Deep Dive](https://github.com/jmetzger/training-kubernetes-advanced/assets/1933318/1ca0d174-f354-43b2-81cc-67af8498b56c)
      * [Ports und Protokolle](https://kubernetes.io/docs/reference/networking/ports-and-protocols/)
      
   1. Kubernetes - Misc 
@@ -22,6 +23,13 @@
      * [IPV4/IPV6 Dualstack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/)
      * [Ingress controller in microk8s aktivieren](#ingress-controller-in-microk8s-aktivieren)
      * [DNS - Resolution - Services](#dns---resolution---services)
+     * [Debug Container](#debug-container)
+     * [Install calicoctl in pod](#install-calicoctl-in-pod)
+     * [Install calico-api-server to use kubectl instead of calicoctl](#install-calico-api-server-to-use-kubectl-instead-of-calicoctl)
+   
+  1. Kubernetes calico 
+     * [Find corresponding networks](#find-corresponding-networks)
+     * [Calico Logging Firewall Rules](#calico-logging-firewall-rules)
 
   1. Kubernetes - Ingress 
      * [ingress mit ssl absichern](#ingress-mit-ssl-absichern)
@@ -95,6 +103,16 @@
   1. Kubernetes Interna / Misc.
      * [OCI,Container,Images Standards](#ocicontainerimages-standards)
      * [Geolocation Kubernetes Cluster](https://learnk8s.io/bite-sized/connecting-multiple-kubernetes-clusters)
+     * [statische IP für Pod in calico](https://docs.tigera.io/calico/latest/networking/ipam/use-specific-ip)
+     * [yaml linting](https://www.kubeval.com/installation/)
+     * [ssl terminierung über proxy nginx](#ssl-terminierung-über-proxy-nginx)
+   
+  1. Kubernetes Load Balancer 
+     * [Kubernetes Load Balancer](#kubernetes-load-balancer)
+     * [Kubernetes Load Balancer new version for IpAdresses - object](#kubernetes-load-balancer-new-version-for-ipadresses---object)
+ 
+  1. Kubernetes Documentation 
+     * [Well-Known Annotations](https://kubernetes.io/docs/reference/labels-annotations-taints/)
   
 ## Backlog
 
@@ -228,6 +246,10 @@ Er stellt sicher, dass Container in einem Pod ausgeführt werden.
 
   * https://www.redhat.com/de/topics/containers/kubernetes-architecture
 
+
+### Structure Kubernetes Deep Dive
+
+  * https://github.com/jmetzger/training-kubernetes-advanced/assets/1933318/1ca0d174-f354-43b2-81cc-67af8498b56c
 
 ### Ports und Protokolle
 
@@ -841,6 +863,733 @@ microk8s enable ingress
 
 ### DNS - Resolution - Services
 
+### Debug Container
+
+
+###  Walkthrough  Debug Container 
+
+```
+kubectl run ephemeral-demo --image=registry.k8s.io/pause:3.1 --restart=Never
+kubectl exec -it ephemeral-demo -- sh
+
+kubectl debug -it ephemeral-demo --image=ubuntu --target=ephemeral-demo
+
+```
+
+### Walkthrough Debug Node 
+
+```
+kubectl get nodes 
+kubectl debug node/mynode -it --image=ubuntu
+```
+
+
+
+### Reference 
+
+  * https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/#ephemeral-container
+
+### Install calicoctl in pod
+
+
+### General 
+
+#### It was like that ....
+
+  * calicoctl used to do validation locally in calicoctl for your manifests in the projectcalico/v3 api-version 
+  * This version was not available in kube-api-server 
+
+#### Now ....
+
+  * Validation takes place on server side. 
+  * For this to work the kube-api-server needs to be configured with calico 
+  * Now the preferred method is to use kubectl (without dependencies to calicoctl) but not for..... 
+    * calicoctl node
+    * calicoctl ipam
+    * calicoctl convert
+    * calicoctl version
+
+#### Reference: 
+
+  * https://docs.tigera.io/calico/latest/operations/calicoctl/configure/kdd
+
+
+
+
+
+### calicoctl Installation walkthrough (running in pod) 
+
+#### Find out version 
+
+```
+## welche version von calico setzen wir aktuell auf dem server ein 
+kubectl -n kube-system get ds calico-node -o=jsonpath='{.spec.template.spec.containers[0].image}'
+## docker.io/calico/node:v3.23.5
+
+```
+
+#### Pod erstellen für calicoctl auf Basis von 
+
+```
+cd
+mkdir -p manifests
+cd manifests 
+mkdir calicoctl 
+cd calicoctl 
+vi calicoctl.yaml
+```
+
+```
+### https://raw.githubusercontent.com/projectcalico/calico/v3.25.1/manifests/calicoctl.yaml
+### Calico Version master
+## https://projectcalico.docs.tigera.io/releases#master
+## This manifest includes the following component versions:
+##   calico/ctl:v3.25.1
+
+
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: calicoctl
+  namespace: kube-system
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: calicoctl
+  namespace: kube-system
+spec:
+  nodeSelector:
+    kubernetes.io/os: linux
+  hostNetwork: true
+  serviceAccountName: calicoctl
+  containers:
+  - name: calicoctl
+    image: calico/ctl:v3.23.5
+    command:
+      - /calicoctl
+    args:
+      - version
+      - --poll=1m
+    env:
+    - name: DATASTORE_TYPE
+      value: kubernetes
+
+---
+
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: calicoctl
+rules:
+  - apiGroups: [""]
+    resources:
+      - namespaces
+      - nodes
+    verbs:
+      - get
+      - list
+      - update
+  - apiGroups: [""]
+    resources:
+      - nodes/status
+    verbs:
+      - update
+  - apiGroups: [""]
+    resources:
+      - pods
+      - serviceaccounts
+    verbs:
+      - get
+      - list
+  - apiGroups: [""]
+    resources:
+      - pods/status
+    verbs:
+      - update
+  - apiGroups: ["crd.projectcalico.org"]
+    resources:
+      - bgppeers
+      - bgpconfigurations
+      - clusterinformations
+      - felixconfigurations
+      - globalnetworkpolicies
+      - globalnetworksets
+      - ippools
+      - ipreservations
+      - kubecontrollersconfigurations
+      - networkpolicies
+      - networksets
+      - hostendpoints
+      - ipamblocks
+      - blockaffinities
+      - ipamhandles
+      - ipamconfigs
+    verbs:
+      - create
+      - get
+      - list
+      - update
+      - delete
+  - apiGroups: ["networking.k8s.io"]
+    resources:
+      - networkpolicies
+    verbs:
+      - get
+      - list
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: calicoctl
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: calicoctl
+subjects:
+- kind: ServiceAccount
+  name: calicoctl
+  namespace: kube-system
+  
+```
+
+### calicoctl verwenden 
+
+```
+## this will always work, no matter what version 
+kubectl -n kube-system exec calicoctl -- /calicoctl version
+
+## this will only work without flags, if we have the same version
+## on both sides 
+
+```
+
+### Install calico-api-server to use kubectl instead of calicoctl
+
+
+### prepare kube-api-server for to be use for calico calls. 
+
+  * Possible from calico 3.20+ (GA) 
+  * https://docs.tigera.io/calico/latest/operations/install-apiserver
+
+
+#### Step 1: Apply manifests for api server 
+
+```
+cd
+mkdir -p manifests 
+cd manifests 
+## calico api server 
+mkdir cas 
+cd cas 
+vi cas.yaml 
+```
+
+
+```
+## taken from https://raw.githubusercontent.com/projectcalico/calico/v3.25.1/manifests/apiserver.yaml
+## but adjusted images version to corresponding installation 
+## kubectl -n kube-system get ds calico-node -o=jsonpath='{.spec.template.spec.containers[0].image}'
+## This is a tech-preview manifest which installs the Calico API server. Note that this manifest is liable to change
+## or be removed in future releases without further warning.
+##
+## Namespace and namespace-scoped resources.
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    name: calico-apiserver
+  name: calico-apiserver
+spec:
+
+---
+
+## Policy to ensure the API server isn't cut off. Can be modified, but ensure 
+## that the main API server is always able to reach the Calico API server.
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-apiserver
+  namespace: calico-apiserver
+spec:
+  podSelector:
+    matchLabels:
+      apiserver: "true"
+  ingress:
+  - ports:
+    - protocol: TCP
+      port: 5443
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: calico-api
+  namespace: calico-apiserver
+spec:
+  ports:
+  - name: apiserver
+    port: 443
+    protocol: TCP
+    targetPort: 5443
+  selector:
+    apiserver: "true"
+  type: ClusterIP
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    apiserver: "true"
+    k8s-app: calico-apiserver
+  name: calico-apiserver
+  namespace: calico-apiserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      apiserver: "true"
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        apiserver: "true"
+        k8s-app: calico-apiserver
+      name: calico-apiserver
+      namespace: calico-apiserver
+    spec:
+      containers:
+      - args:
+        - --secure-port=5443
+        # - -v=5 # not working in v3.23.5 not available as flag there 
+        env:
+        - name: DATASTORE_TYPE
+          value: kubernetes
+        image: calico/apiserver:v3.23.5
+        livenessProbe:
+          httpGet:
+            path: /version
+            port: 5443
+            scheme: HTTPS
+          initialDelaySeconds: 90
+          periodSeconds: 10
+        name: calico-apiserver
+        readinessProbe:
+          exec:
+            command:
+            - /code/filecheck
+          failureThreshold: 5
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        securityContext:
+          privileged: false
+          runAsUser: 0
+        volumeMounts:
+        - mountPath: /code/apiserver.local.config/certificates
+          name: calico-apiserver-certs
+      dnsPolicy: ClusterFirst
+      nodeSelector:
+        kubernetes.io/os: linux
+      restartPolicy: Always
+      serviceAccount: calico-apiserver
+      serviceAccountName: calico-apiserver
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
+      volumes:
+      - name: calico-apiserver-certs
+        secret:
+          secretName: calico-apiserver-certs
+
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: calico-apiserver 
+  namespace: calico-apiserver 
+
+---
+
+## Cluster-scoped resources below here.
+apiVersion: apiregistration.k8s.io/v1
+kind: APIService
+metadata:
+  name: v3.projectcalico.org
+spec:
+  group: projectcalico.org
+  groupPriorityMinimum: 1500
+  service:
+    name: calico-api
+    namespace: calico-apiserver
+    port: 443
+  version: v3
+  versionPriority: 200
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: calico-crds
+rules:
+- apiGroups:
+  - extensions
+  - networking.k8s.io
+  - ""
+  resources:
+  - networkpolicies
+  - nodes
+  - namespaces
+  - pods
+  - serviceaccounts
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - crd.projectcalico.org
+  resources:
+  - globalnetworkpolicies
+  - networkpolicies
+  - clusterinformations
+  - hostendpoints
+  - globalnetworksets
+  - networksets
+  - bgpconfigurations
+  - bgppeers
+  - felixconfigurations
+  - kubecontrollersconfigurations
+  - ippools
+  - ipreservations
+  - ipamblocks
+  - blockaffinities
+  - caliconodestatuses
+  - ipamconfigs
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - delete
+- apiGroups:
+  - policy
+  resourceNames:
+  - calico-apiserver
+  resources:
+  - podsecuritypolicies
+  verbs:
+  - use
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: calico-extension-apiserver-auth-access
+rules:
+- apiGroups:
+  - ""
+  resourceNames:
+  - extension-apiserver-authentication
+  resources:
+  - configmaps
+  verbs:
+  - list
+  - watch
+  - get
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - clusterroles
+  - clusterrolebindings
+  - roles
+  - rolebindings
+  verbs:
+  - get
+  - list
+  - watch
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: calico-webhook-reader
+rules:
+- apiGroups:
+  - admissionregistration.k8s.io
+  resources:
+  - mutatingwebhookconfigurations
+  - validatingwebhookconfigurations
+  verbs:
+  - get
+  - list
+  - watch
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: calico-apiserver-access-crds
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: calico-crds
+subjects:
+- kind: ServiceAccount
+  name: calico-apiserver
+  namespace: calico-apiserver
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: calico-apiserver-delegate-auth
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:auth-delegator
+subjects:
+- kind: ServiceAccount
+  name: calico-apiserver
+  namespace: calico-apiserver
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: calico-apiserver-webhook-reader
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: calico-webhook-reader
+subjects:
+- kind: ServiceAccount
+  name: calico-apiserver
+  namespace: calico-apiserver
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: calico-extension-apiserver-auth-access
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: calico-extension-apiserver-auth-access
+subjects:
+- kind: ServiceAccount
+  name: calico-apiserver
+  namespace: calico-apiserver
+
+```
+
+#### Step 2: create certificates 
+
+```
+openssl req -x509 -nodes -newkey rsa:4096 -keyout apiserver.key -out apiserver.crt -days 365 -subj "/" -addext "subjectAltName = DNS:calico-api.calico-apiserver.svc"
+kubectl create secret -n calico-apiserver generic calico-apiserver-certs --from-file=apiserver.key --from-file=apiserver.crt
+## configure server with ca-bundle 
+kubectl patch apiservice v3.projectcalico.org -p \
+    "{\"spec\": {\"caBundle\": \"$(kubectl get secret -n calico-apiserver calico-apiserver-certs -o go-template='{{ index .data "apiserver.crt" }}')\"}}"
+
+```
+
+### Step 3: check if it is working 
+
+```
+## pod should run 
+kubectl -n calico-apiserver get pods 
+## if not delete it 
+## e.g. 
+kubectl -n calico-apiserver delete po calico-apiserver-6f64fdcc5c-kz45t
+## it will get recreated because of deployment 
+```
+
+```
+kubectl api-resources | grep '\sprojectcalico.org'
+## only available in v3 
+kubectl get clusterinfo 
+```
+
+## Kubernetes calico 
+
+### Find corresponding networks
+
+
+### Walkthrough  
+
+```
+## Step 1: create pod 
+kubectl run nginx-master --image=nginx
+## Find out on which node it runs 
+kubectl get pods -o wide 
+## create a debug container 
+kubectl debug -it nginx-master --image=busybox 
+```
+
+```
+## now within debug pod found out interface 
+ ip a | grep @
+3: eth0@if22: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue
+```
+
+```
+## Log in to worker node and check interfaces 
+## show matched line starting with 22 and then another 4 lines 
+ip a | grep -A 5 ^22 
+## e.g. 
+## 
+ip a | grep -A 5 ^22
+22: cali42c2aab93f3@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
+    link/ether ee:ee:ee:ee:ee:ee brd ff:ff:ff:ff:ff:ff link-netns cni-5adf994b-3a7e-c344-5d82-ef1f7a293d88
+    inet6 fe80::ecee:eeff:feee:eeee/64 scope link
+       valid_lft forever preferred_lft forever
+```
+
+```
+## Now you are able to determine the firewall rules 
+## you will find fw and tw rules (fw - from workload and tw - to workload)
+iptables -L -v | grep  cali42c2aab93f3
+```
+
+```
+## ... That is what you see as an example 
+Chain cali-tw-cali42c2aab93f3 (1 references)
+ pkts bytes target     prot opt in     out     source               destination 
+   10  1384 ACCEPT     all  --  any    any     anywhere             anywhere             /* cali:WKA8EzdUNM0rVty1 */ ctstate RELATED,ESTABLISHED
+    0     0 DROP       all  --  any    any     anywhere             anywhere             /* cali:wr_OqGXKIN_LWnX0 */ ctstate INVALID
+    0     0 MARK       all  --  any    any     anywhere             anywhere             /* cali:kOUMqNj8np60A3Bi */ MARK and 0xfffeffff
+```
+
+
+
+### Calico Logging Firewall Rules
+
+
+### General
+
+ * NetworkPolicy of Kubernetes does not provide possibility to track 
+
+### Solutions 
+
+  * Use NetworkPolicy from calico (to apply it with kubectl - the calico api server needs to be installed) / or use calicoctl 
+  * Enable Tracing 
+  * Use: https://kubernetes.io/blog/2019/04/19/introducing-kube-iptables-tailer/
+  
+### Solution 1: NetworkPolicy calico 
+
+  * https://github.com/projectcalico/calico/issues/4344
+
+
+### Logs 
+
+```
+## Normally you should see it with (on the right kubernetes node)
+cat /var/log/syslog | grep calico-packet 
+
+## This is how a syslog entry looks like 
+Here is a example (default) Log:
+Apr  3 10:12:30 aks-workerpool1-13987120-vmss000000 kernel: [10821.860593] calico-packet: IN=calic440f455693 OUT=eth0 MAC=ee:ee:ee:ee:ee:ee:f2:f8:09:3d:97:03:08:00 SRC=10.244.2.7 DST=8.8.8.8 LEN=84 TOS=0x00 PREC=0x00 TTL=63 ID=33536 DF PROTO=ICMP TYPE=8 CODE=0 ID=32113 SEQ=43 
+```
+
+### Walkthrough 
+
+```
+cd
+mkdir -p manifests
+cd manifests 
+mkdir pol2
+cd pol2
+vi 01-pod.yaml 
+```
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: static-web
+  labels:
+    app: web
+spec:
+  containers:
+    - name: web
+      image: nginx
+      ports:
+        - name: web
+          containerPort: 80
+          protocol: TCP
+```
+
+```
+vi 02-pol.yaml 
+```
+
+```
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: log
+spec:
+  selector: app == 'web'
+  types:
+  - Ingress
+  - Egress
+  ingress:
+  - action: Log
+  egress:
+  - action: Log
+  - action: Deny
+```
+
+```
+kubectl apply -f .
+## find the node, where it runs on 
+kubectl get pods -o wide 
+```
+
+```
+## login to that node with ssh (kubernetes node) 
+## e.g. ssh user@node 
+## switch to root: sudo su -
+tail -f /var/log/syslog | grep calico-packet 
+## or 
+journalctl -f | grep calico-packet 
+```
+
+```
+## now open a debug pod 
+kubectl debug -it static-web --image=busybox 
+## in pod ping - this will not work, because we cannot retrieve dns 
+ping www.google.de
+```
+
+```
+## watch output from other node in the meanwhile 
+```
+
+### Reference 
+
+  * Eventually set a prefix for logging:
+  * https://docs.tigera.io/calico-cloud/visibility/iptables
+
 ## Kubernetes - Ingress 
 
 ### ingress mit ssl absichern
@@ -1149,6 +1898,7 @@ mkdir -p manifests
 cd manifests 
 mkdir 04-service 
 cd 04-service 
+vi 01-deploy.yml 
 ```
 
 ```
@@ -2425,6 +3175,7 @@ helm install my-wordpress bitnami/wordpress -f values
 
 ```
 ## This is important, if not enable every user on the system is allowed to do everything 
+## do this on one of the nodes 
 microk8s enable rbac 
 ```
 
@@ -2439,7 +3190,7 @@ cd manifests/rbac
 ####  Mini-Schritt 1: Definition für Nutzer 
 
 ```
-## vi service-account.yml 
+## vi 01-service-account.yml 
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -2448,7 +3199,7 @@ metadata:
 ```
 
 ```
-kubectl apply -f service-account.yml 
+kubectl apply -f .
 ```
 
 #### Mini-Schritt 1.5: Secret erstellen 
@@ -2458,7 +3209,7 @@ kubectl apply -f service-account.yml
   * https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#create-token
 
 ```
-## vi secret.yml 
+## vi 02-secret.yml 
 apiVersion: v1
 kind: Secret
 type: kubernetes.io/service-account-token
@@ -2478,7 +3229,7 @@ kubectl apply -f .
 ```
 ### Bevor sie zugewiesen ist, funktioniert sie nicht - da sie keinem Nutzer zugewiesen ist 
 
-## vi pods-clusterrole.yml 
+## vi 03-pods-clusterrole.yml 
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -2490,12 +3241,12 @@ rules:
 ```
 
 ```
-kubectl apply -f pods-clusterrole.yml 
+kubectl apply -f 03-pods-clusterrole.yml 
 ```
 
 #### Mini-Schritt 3: Die ClusterRolle den entsprechenden Nutzern über RoleBinding zu ordnen 
 ```
-## vi rb-training-ns-default-pods.yml
+## vi 04-rb-training-ns-default-pods.yml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
@@ -2512,13 +3263,16 @@ subjects:
 ```
 
 ```
-kubectl apply -f rb-training-ns-default-pods.yml
+kubectl apply -f .
 ```
 
 #### Mini-Schritt 4: Testen (klappt der Zugang) 
 
 ```
 kubectl auth can-i get pods -n default --as system:serviceaccount:default:training
+## yes 
+kubectl auth can-i get deployment -n default --as system:serviceaccount:default:training
+## no 
 ```
 
 ### Schritt 2: Context anlegen / Credentials auslesen und in kubeconfig hinterlegen (bis Version 1.25.) 
@@ -3488,6 +4242,185 @@ docker-compose up -d --build
 ### Geolocation Kubernetes Cluster
 
   * https://learnk8s.io/bite-sized/connecting-multiple-kubernetes-clusters
+
+### statische IP für Pod in calico
+
+  * https://docs.tigera.io/calico/latest/networking/ipam/use-specific-ip
+
+### yaml linting
+
+  * https://www.kubeval.com/installation/
+
+### ssl terminierung über proxy nginx
+
+
+### mit ssl 
+
+  * https://jackiechen.blog/2019/01/24/nginx-sample-config-of-http-and-ldaps-reverse-proxy/
+
+### Ohne ssl 
+
+  * https://kubernetes.github.io/ingress-nginx/user-guide/exposing-tcp-udp-services/
+
+## Kubernetes Load Balancer 
+
+### Kubernetes Load Balancer
+
+
+### Attention 
+
+  * On digitalocean, we will probably run into problems, that it is not working properly 
+
+### General 
+
+  * Supports bgp and arp 
+  * Divided into controller, speaker 
+
+### Installation Ways  
+
+  * helm 
+  * manifests 
+
+### Walkthrough Digitalocean 
+
+```
+## Just to show some basics 
+## Page from metallb says that digitalocean is not really supported well 
+## So we will not install the speaker .
+
+helm repo add metallb https://metallb.github.io/metallb 
+```
+
+```
+## Eventually disabling speaker 
+## vi values.yml 
+
+```
+
+```
+helm install metallb metallb/metallb --namespace=metallb-system --create-namespace 
+```
+
+```
+cd
+mkdir -p manifests
+cd manifests 
+mkdir mb 
+cd mb 
+vi 01-cm.yml 
+```
+
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: metallb-system
+  name: config
+data:
+  config: |
+    address-pools:
+    - name: default
+      protocol: layer2
+      addresses:
+      # Take the single address in case of digitalocean here.
+      # External ip 
+      # - 192.168.1.240-192.168.1.250
+      - 61.46.56.21
+```
+
+```
+vi 02-svc.yml 
+```
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc 
+spec:
+  selector:
+
+## Adjust -> selector -> according to nginx below 
+    app: nginx 
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  type: LoadBalancer
+  # uncomment to try, if you get it automatically 
+  loadBalancerIP: 61.46.56.21
+
+```
+
+```
+kubectl apply -f .
+kubectl -n metallb-system get svc my-service 
+```
+
+```
+kubectl create deployment nginx --image nginx:alpine --port 80 --replicas=1
+kubectl get svc nginx-svc
+## You can open 80 port on Firewall using Console and open http://167.99.99.99 for a test.
+```
+
+### Trafic Policy 
+
+ * https://metallb.universe.tf/usage/
+
+### Kubernetes Load Balancer new version for IpAdresses - object
+
+
+### Installatiion 
+
+ * Refs: https://metallb.universe.tf/installation/
+
+### Step 1: Installation: 
+
+```
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.9/config/manifests/metallb-native.yaml
+```
+
+### Step 2: Konfiguration 
+
+```
+mkdir -p manifests
+cd manifests 
+mkdir metallb 
+vi 01-pool.yaml 
+```
+
+```
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: first-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 192.168.1.240-192.168.1.250
+```
+
+```
+vi 02-l2.yaml
+
+```
+
+```
+## now we need to propagate
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: example
+  namespace: metallb-system
+```
+
+
+
+## Kubernetes Documentation 
+
+### Well-Known Annotations
+
+  * https://kubernetes.io/docs/reference/labels-annotations-taints/
 
 ## Kubernetes - Überblick
 
