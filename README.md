@@ -107,6 +107,8 @@
      * [yaml linting](https://www.kubeval.com/installation/)
      * [ssl terminierung über proxy nginx](ssl-nginx-termination.md) 
  
+  1. Kubernetes Documentation 
+     * [Well-Known Annotations](https://kubernetes.io/docs/reference/labels-annotations-taints/)
   
 ## Backlog
 
