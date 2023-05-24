@@ -1,5 +1,47 @@
 # Setup
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.5/manifests/namespace.yaml
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.5/manifests/metallb.yaml
-# On first install only
-kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey=”$(openssl rand -base64 128)”
+
+## Installatiion 
+
+ * Refs: https://metallb.universe.tf/installation/
+
+## Step 1: Installation: 
+
+```
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.9/config/manifests/metallb-native.yaml
+```
+
+## Step 2: Konfiguration 
+
+```
+mkdir -p manifests
+cd manifests 
+mkdir metallb 
+vi 01-pool.yaml 
+```
+
+```
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: first-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 192.168.1.240-192.168.1.250
+```
+
+```
+vi 02-l2.yaml
+
+```
+
+```
+# now we need to propagate
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: example
+  namespace: metallb-system
+```
+
+
