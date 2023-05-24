@@ -28,7 +28,7 @@
   * https://docs.tigera.io/calico/latest/operations/install-apiserver
 
 
-### Walkthrough 
+### Step 1: Apply manifests for api server 
 
 ```
 cd
@@ -120,7 +120,7 @@ spec:
       containers:
       - args:
         - --secure-port=5443
-        - -v=5
+        # - -v=5 # not working in v3.23.5 not available as flag there 
         env:
         - name: DATASTORE_TYPE
           value: kubernetes
@@ -351,8 +351,23 @@ subjects:
 
 ```
 
+### Step 2: create certificates 
+
+```
+openssl req -x509 -nodes -newkey rsa:4096 -keyout apiserver.key -out apiserver.crt -days 365 -subj "/" -addext "subjectAltName = DNS:calico-api.calico-apiserver.svc"
+kubectl create secret -n calico-apiserver generic calico-apiserver-certs --from-file=apiserver.key --from-file=apiserver.crt
+# configure server with ca-bundle 
+kubectl patch apiservice v3.projectcalico.org -p \
+    "{\"spec\": {\"caBundle\": \"$(kubectl get secret -n calico-apiserver calico-apiserver-certs -o go-template='{{ index .data "apiserver.crt" }}')\"}}"
+
+```
+
+## Step 3: check if it is working 
+
+```
 
 
+```
 
 
 ## calicoctl Installation walkthrough (running in pod) 
