@@ -144,5 +144,10 @@ subjects:
 ## calicoctl verwenden 
 
 ```
+# this will always work, no matter what version 
 kubectl -n kube-system exec calicoctl -- /calicoctl version
+
+# this will only work without flags, if we have the same version
+# on both sides 
+
 ```
