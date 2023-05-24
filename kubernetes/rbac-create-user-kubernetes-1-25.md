@@ -99,6 +99,9 @@ kubectl apply -f .
 
 ```
 kubectl auth can-i get pods -n default --as system:serviceaccount:default:training
+# yes 
+kubectl auth can-i get deployment -n default --as system:serviceaccount:default:training
+# no 
 ```
 
 ## Schritt 2: Context anlegen / Credentials auslesen und in kubeconfig hinterlegen (bis Version 1.25.) 
