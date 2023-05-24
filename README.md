@@ -28,7 +28,7 @@
      * [Install calico-api-server to use kubectl instead of calicoctl](kubernetes-networks/calico/install-calico-api-server.md)
    
   1. Kubernetes calico 
-     * [Find corresponding](kubernetes-networks/calico/find-corresponding-interfaces.md)
+     * [Find corresponding networks](kubernetes-networks/calico/find-corresponding-interfaces.md)
 
   1. Kubernetes - Ingress 
      * [ingress mit ssl absichern](/kubernetes-security/ingress-ssl.md)
