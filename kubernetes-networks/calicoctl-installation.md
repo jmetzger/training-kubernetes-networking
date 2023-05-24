@@ -141,3 +141,8 @@ subjects:
   
 ```
 
+## calicoctl verwenden 
+
+```
+kubectl -n kube-system exec calicoctl -- /calicoctl version
+```
