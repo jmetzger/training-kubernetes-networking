@@ -45,5 +45,6 @@ spec:
 ```
 
 ```
+kubectl create ns hack-a 
 kubectl apply -f . 
 ```
