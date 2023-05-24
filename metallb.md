@@ -95,3 +95,7 @@ kubectl create deployment nginx --image nginx:alpine --port 80 --replicas=1
 kubectl get svc nginx-svc
 # You can open 80 port on Firewall using Console and open http://167.99.99.99 for a test.
 ```
+
+## Trafic Policy 
+
+ * https://metallb.universe.tf/usage/
