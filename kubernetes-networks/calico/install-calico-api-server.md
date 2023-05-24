@@ -2,7 +2,7 @@
 
 ## prepare kube-api-server for to be use for calico calls. 
 
-  * Possible from calio 3.20+ (GA) 
+  * Possible from calico 3.20+ (GA) 
   * https://docs.tigera.io/calico/latest/operations/install-apiserver
 
 
