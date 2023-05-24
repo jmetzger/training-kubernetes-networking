@@ -343,6 +343,15 @@ kubectl patch apiservice v3.projectcalico.org -p \
 ## Step 3: check if it is working 
 
 ```
+# pod should run 
+kubectl -n calico-apiserver get pods 
+# if not delete it 
+# e.g. 
+kubectl -n calico-apiserver delete po calico-apiserver-6f64fdcc5c-kz45t
+# it will get recreated because of deployment 
+```
+
+```
 kubectl api-resources | grep '\sprojectcalico.org'
 # only available in v3 
 kubectl get clusterinfo 
