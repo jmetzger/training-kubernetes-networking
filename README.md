@@ -106,6 +106,9 @@
      * [statische IP für Pod in calico](https://docs.tigera.io/calico/latest/networking/ipam/use-specific-ip)
      * [yaml linting](https://www.kubeval.com/installation/)
      * [ssl terminierung über proxy nginx](ssl-nginx-termination.md) 
+   
+  1. Kubernetes Load Balancer 
+     * [Kubernetes Load Balancer](metallb.md)
  
   1. Kubernetes Documentation 
      * [Well-Known Annotations](https://kubernetes.io/docs/reference/labels-annotations-taints/)
