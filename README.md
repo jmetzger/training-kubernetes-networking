@@ -52,6 +52,7 @@
      * [Replicasets](kubectl-examples/01a-replicaset-nginx.md)
      * [kubectl/manifest/deployments](/kubectl-examples/03-nginx-deployment.md)
      * [Services - Aufbau](/kubernetes/services-aufbau.md)
+     * [Service Typen / Ebenen - Schaubild](service-ebenen.md)
      * [kubectl/manifest/service](/kubectl-examples/03b-service.md)
      * DaemonSets (Devs/Ops)
      * [Hintergrund Ingress](/kubernetes/ingress.md) 
