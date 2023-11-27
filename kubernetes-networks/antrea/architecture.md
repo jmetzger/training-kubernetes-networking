@@ -4,6 +4,12 @@
 
 ![Overview](https://antrea.io/docs/v1.3.0/docs/assets/arch.svg.png)
 
+## Basics
+
+  * Created by vmware
+  * Uses Open VShift (virtuell Switches)
+  * Kernel-Modul openswitch.ko takes care of traffic (performant)
+
 ## Components 
 
 ### antrea-controller 
