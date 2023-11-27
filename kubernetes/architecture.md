@@ -54,9 +54,9 @@
     * gemeinsam genutzter Speicher- und Netzwerkressourcen   
     * Befinden sich immer auf dem gleich virtuellen Server 
     
-## Control Plane Node (former: master) - components 
+## Control Plane (former: master node) - components 
 
-## Node (Minion) - components 
+## Worker Node - components 
 
 ### General 
 
