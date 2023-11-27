@@ -10,15 +10,7 @@
 
   * You will find this within antrea-agent
 
-```
-# on kube-system
-kubectl -n kube-system get üpods 
-kubectl -n kube-system exec -it ANTREA-AGENT_POD_NAME -n kube-system -c antrea-agent bash
 
-antctl help
-antctl log-level
-antctl get featuregates 
-```
 
 
 
