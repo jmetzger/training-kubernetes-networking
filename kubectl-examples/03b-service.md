@@ -8,7 +8,7 @@ mkdir -p manifests
 cd manifests 
 mkdir 04-service 
 cd 04-service 
-vi 01-deploy.yml 
+#vi 01-deploy.yml 
 ```
 
 ```
