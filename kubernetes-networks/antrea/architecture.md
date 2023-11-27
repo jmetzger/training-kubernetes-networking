@@ -23,14 +23,14 @@
 ## antctl 
 
   * cli for some debugging
-  * controller-mode on controller
-  * agent-mode on agent
+  * controller-mode on controller (accessing from within controller pod)
+  * agent-mode on agent (accessing from within agent-pod)
   * external also possible - uses kubeconfig to connect
     * Connection is done through kube-api-server
 
 ### Important antctl commands 
 
-  
+  * antclt help 
 
 ## Reference 
 
