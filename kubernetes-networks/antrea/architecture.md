@@ -12,10 +12,25 @@
     * pod
     * namespaces
     * NetworkPolicy
+  * Implementation of Controller - API-Server
+  * Reachable over kube-api-server by implementation https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/
    
 ### antrea-agent 
 
-  * Runs on every pod, deployed by Daemonset ? 
+  * Runs on every pod, deployed by Daemonset ?
+  * has an endpoint running gRPC which the controller connects to
+
+## antctl 
+
+  * cli for some debugging
+  * controller-mode on controller
+  * agent-mode on agent
+  * external also possible - uses kubeconfig to connect
+    * Connection is done through kube-api-server
+
+### Important antctl commands 
+
+  
 
 ## Reference 
 
