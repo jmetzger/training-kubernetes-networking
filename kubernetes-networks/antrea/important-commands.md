@@ -2,7 +2,7 @@
 
 ## Finding the bridge 
 
-  * ovs-vsctl connects to an ovsdb-server process that maintains an Open vSwitch configuration database
+  *  ovs-vsctl - utility for querying and configuring ovs-vswitchd
 
 ```
 # How to see the bridge
