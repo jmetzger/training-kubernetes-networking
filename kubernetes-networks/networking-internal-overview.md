@@ -95,7 +95,7 @@ spec:
 
 ```
 kubectl apply -f .
-
+# als root auf dem worker node 
 ctr -n k8s.io c list | grep pause
 ```
 
