@@ -19,7 +19,7 @@
 
  ![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/31ff3ae4-7b30-4ca1-908d-38b83afd1b7f)
 
-  * Alternative: kubectl logs <des-proxy-nodes>
+  * Alternative: kubectl logs des-proxy-pods
 
 ## UserSpace 
 
