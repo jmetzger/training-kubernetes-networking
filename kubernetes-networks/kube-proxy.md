@@ -15,7 +15,7 @@
     * https://kubernetes.io/blog/2018/07/09/ipvs-based-in-cluster-load-balancing-deep-dive/
     * Direkt im Kernel eingebautes LoadBalancing auf L4 (transport layer)
 
-## Wie finde icn den ProxyMode heraus ? 
+## Wie finde ich den ProxyMode heraus ? 
 
  ![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/31ff3ae4-7b30-4ca1-908d-38b83afd1b7f)
 
