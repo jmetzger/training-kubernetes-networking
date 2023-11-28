@@ -12,7 +12,3 @@
     * use encapsulation (vxlan) and encapsulate the packet into another packet.
     * These packets are udp packets 
     * By doing so i can reach pods on other hosts 
-
-## Alternatives
- 
-  * This is one possiblity, but how do others work ? 
