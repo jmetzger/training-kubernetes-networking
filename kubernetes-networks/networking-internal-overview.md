@@ -19,7 +19,7 @@
 ```
   
   * Every container is in the same Network Namespace, so they can communicate through localhost
-    * Example with hashicorp/http-echo container 1 and busybox container 2 ? 
+    * Example with hashicorp/http-echo container 1 and busybox container 2 
  
  
 ## Pod-To-Pod Communication (across nodes)  
