@@ -16,8 +16,9 @@ antctl version
 
 ## Shows feature-gates for controller and agent 
 
-   * Shows both, when you do it externally as client-tool from outside pod 
+   * Shows both (for controller and for agent), when you do it externally as client-tool from outside pod 
 
 ```
-antctl featuregates
+antctl get featuregates
 ```
+
