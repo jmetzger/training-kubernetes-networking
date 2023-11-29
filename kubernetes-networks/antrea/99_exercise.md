@@ -758,7 +758,7 @@ deny-preprod-to-dev      SecurityOps   101        2               2             
 kubectl -n preprod-app1-$KURZ exec deployments/ubuntu-20-04 -- ping 10.244.3.15
 ```
 
-## Schritt 3: Isolate Pods (only within the namespaces) 
+## Schritt 11: Isolate Pods (only within the namespaces) 
 
   * Aktuell ist das ping vom preprod-app1-<kurz-name> zum preprod-app2-<kurz-name> namespace noch möglich
   * Das wollen wir einschränken
@@ -883,6 +883,143 @@ spec:
 kubectl apply -f .
 ```
 
+## Schritt 12: Isolate traffic within app2 - namespaces (3-Tier-app) (Das kann leider nur er Trainer machen ;o() - wg der Labels 
+```
+# For dev-app2-<name-kurz> we want
+web->app (80)
+app->db (3306) 
+drop everything else 
+```
+
+```
+KURZ=jm;
+```
+
+```
+kubectl -n dev-app2-$KURZ describe pods | head -n 20
+kubectl -n preprod-app2-$KURZ describe pods | head -n 20
+```
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/bfd0b89b-aa47-4493-8952-3c2aff5f7f1c)
+
+  * we are using the label app=xxx
+
+```
+# nano 40-allow-web-app.yaml 
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 40-allow-web-app-<name-kurz>
+spec:
+    priority: 10
+    tier: application
+    appliedTo:
+      - podSelector:
+          matchLabels:
+            app: app
+    ingress:
+      - action: Allow
+        from:
+          - podSelector:
+              matchLabels:
+                app: nginx
+        ports:
+          - protocol: TCP
+            port: 80
+```
+
+```
+kubectl apply -f  .
+```
+
+```
+# nano 45-allow-app-db.yaml
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 02-allow-app-db-<name-kurz>
+spec:
+    priority: 20
+    tier: application
+    appliedTo:
+      - podSelector:
+          matchLabels:
+            app: mysql8
+    ingress:
+      - action: Allow
+        from:
+          - podSelector:
+              matchLabels:
+                app: app
+        ports:
+          - protocol: TCP
+            port: 3306
+```
+
+```
+kubectl apply -f .
+```
+
+```
+# nano 50-deny-any-to-app2.yaml
+# Deny everything else
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 03-deny-any-to-app2-<name-kurz>
+spec:
+    priority: 30
+    tier: application
+    appliedTo:
+      - namespaceSelector:
+          matchLabels:
+                  ns: dev-app2-<name-kurz>
+      - namespaceSelector:
+          matchLabels:
+                  ns: preprod-app2-<name-kurz>
+    ingress:
+      - action: Drop
+        from:
+          - namespaceSelector: {}
+
+```
+
+```
+kubectl apply -f .
+```
+
+## Schritt 13: Usage of the Emergency Tier - e.g. Attack (only Trainer)
+
+  * We have problems with Ubuntu 16.04. an we want to isolate it.
+
+```
+kubectl get tiers
+```
+
+```
+# nano 80-emergency.yaml 
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 50-deny-any-pod-ubuntu16-<name-kurz>
+spec:
+    priority: 50
+    tier: emergency
+    appliedTo:
+      - podSelector:
+          matchLabels:
+                  app: ubuntu-16-04
+    ingress:
+      - action: Drop
+        from:
+          - namespaceSelector: {}
+```
+
+```
+kubectl apply -f .
+```
+
+  * Because Emergency has the highest priority, the policy in application (allow any in ns-app1) has no Impact anymore.
 
 
 ## Reference: 
