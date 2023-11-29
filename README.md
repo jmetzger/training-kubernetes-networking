@@ -30,6 +30,7 @@
      * [Einfache Übung Network Policy](kubernetes-networkpolicy/00-simple-exercises-group.md)
  
   1. Kubernetes antrea (CNI-Plugin)
+     * [Unterschiede Dokus vmware (antrea mit nsx-t) und OpenSource Antrea](kubernetes-networks/antrea/00_documentation-open-source-vs-vmware.md)
      * [Overview Kubernetes Antrea CNI-Plugin](kubernetes-networks/antrea/overview.md)
    
   1. Kubernetes calico
