@@ -38,7 +38,7 @@ cd 10-antrea
 ```
 
 ```
-# nano 01-deployment-dev.yaml
+# nano 01-deployment-dev-app1.yaml
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -110,6 +110,9 @@ spec:
 ```
 
 ```
+# check if we have replaced all the kurz entries
+cat 01-deployment-dev-app1.yaml | grep kurz 
+
 kubectl apply -f .
 # kubectl -n dev-app1-<name-kurz> get pods 
 # z.B. kubectl -n dev-app1-jjm get pods 
@@ -118,6 +121,7 @@ kubectl apply -f .
 ## Step 2: Rollout the pods (dev-app2)
 
 ```
+# nano 02-deployment-dev-app2.yaml 
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -289,6 +293,85 @@ spec:
     protocol: TCP
   selector:
     app: mysql8
+```
+
+```
+kubectl apply -f .
+kubectl -n dev-app2-<name-kurz> get all 
+```
+
+## Schritt 3: rollout preprod-app1 
+
+```
+# nano 03-deployment-preprod-app1.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: preprod-app1-<name-kurz>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubuntu-16-04
+  labels:
+    app: ubuntu-16-04
+  namespace: preprod-app1-<name-kurz>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ubuntu-16-04
+  template:
+    metadata:
+      labels:
+        app: ubuntu-16-04
+    spec:
+      containers:
+      - name: ubuntu-16-04
+        image: ubuntu:16.04
+        imagePullPolicy: IfNotPresent
+        command: [ "/bin/bash", "-c" ]
+        args:
+          - apt-get update;
+            apt-get install iputils-ping -y;
+            apt-get install net-tools;
+            apt-get install curl -y;
+            sleep infinity;
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubuntu-20-04
+  labels:
+    app: ubuntu-20-04
+  namespace: preprod-app1-<name-kurz>
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ubuntu-20-04
+  template:
+    metadata:
+      labels:
+        app: ubuntu-20-04
+    spec:
+      containers:
+      - name: ubuntu-20-04
+        image: ubuntu:20.04
+        imagePullPolicy: IfNotPresent
+        command: [ "/bin/bash", "-c" ]
+        args:
+          - apt-get update;
+            apt-get install tcpdump -y;
+            apt-get install telnet -y;
+            apt-get install iputils-ping -y;
+            apt-get install nmap -y;
+            apt-get install net-tools;
+            apt-get install netdiscover -y;
+            apt-get install mysql-client -y;
+            apt-get install curl -y;
+            apt-get install dsniff -y;
+            sleep infinity;
 ```
 
 ```
