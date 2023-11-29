@@ -11,7 +11,7 @@ kubectl create ns policy-demo-$KURZ
 cd 
 mkdir -p manifests
 cd manifests
-mkdir np
+mkdir -p np
 cd np
 ```
 
