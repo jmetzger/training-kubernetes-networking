@@ -583,6 +583,62 @@ kubectl -n preprod-app2-$KURZ get pods -o=custom-columns=NAMESPACE:.metadata.nam
 # BITTE die Infos zwischen speichern oder Screenshot machen
 ```
 
+## Schritt 6: Zugriff auf dev-app2 klären 
+
+```
+# Das ändern 
+KURZ=jm
+```
+
+```
+kubectl get svc -n dev-app2-$KURZ nginx 
+```
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/00a9d952-732a-4e12-98d5-766734e96ba7)
+
+```
+curl -i http://10.135.0.5:32767
+# oder im Browser mit Public - IP
+```
+
+## Schritt 7: Zugriff auf preprod-app klären
+
+```
+# Das ändern 
+KURZ=jm
+```
+
+```
+kubectl get svc -n preprod-app2-$KURZ nginx 
+```
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/0f53b7a4-0fe2-4294-b3eb-f5ac968da47c)
+
+```
+curl -i http://10.135.0.5:31836 
+```
+
+## Schritt 8: Zugriff ohne antrea policy testen 
+
+```
+KURZ=jm
+kubectl exec -it -n dev-app1-$KURZ deployment/ubuntu-20-04 -- /bin/bash
+```
+
+```
+# scannen des netzes
+nmap 10.244.0.0/22
+```
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/33ee8c86-d3d9-46c6-9b67-93b3318a2739)
+
+ * Namen werden aufgelöst (rückwärtig) 
+ * alle ports sind einsehbar
+ * Verbindung funktioniert nach überall
+
+
+
+
 
 ## Reference: 
 
