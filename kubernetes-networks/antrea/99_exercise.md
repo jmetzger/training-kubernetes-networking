@@ -662,10 +662,10 @@ mysql -h 10-244-3-20.mysql8-service.preprod-app2-jm.svc.cluster.local -p
 KURZ=jm
 
 # Namspaces labeln
-kubectl label ns dev-app1-$KURZ env=dev ns=dev-app1
-kubectl label ns dev-app2-$KURZ env=dev ns=dev-app2
-kubectl label ns preprod-app1-$KURZ env=preprod ns=preprod-app1
-kubectl label ns preprod-app2-$KURZ env=preprod ns=preprod-app2
+kubectl label ns dev-app1-$KURZ env=dev-$KURZ ns=dev-app1-$KURZ
+kubectl label ns dev-app2-$KURZ env=dev-$KURZ ns=dev-app2-$KURZ
+kubectl label ns preprod-app1-$KURZ env=preprod-$KURZ ns=preprod-app1-$KURZ
+kubectl label ns preprod-app2-$KURZ env=preprod-$KURZ ns=preprod-app2-$KURZ
 
 kubectl describe ns dev-app1-$KURZ
 ```
