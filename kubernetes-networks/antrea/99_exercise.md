@@ -836,7 +836,7 @@ kubectl apply -f .
 # nano 30-allow-ns-preprod-app1-preprod-app1.yaml 
 # Same for preprod-app1
 # Allow all traffic within namespace 
-apiVersion: security.antrea.tanzu.vmware.com/v1alpha1
+apiVersion: crd.antrea.io/v1beta1
 kind: ClusterNetworkPolicy
 metadata:
   name: 30-allow-ns-preprod-app1-preprod-app1-<name-kurz>
@@ -858,6 +858,32 @@ spec:
 ```
 kubectl apply -f .
 ```
+
+```
+# disallow all traffic from other namespaces
+# nano 35-drop-any-ns-preprod-app1.yaml 
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 21-drop-any-ns-preprod-app1<name-kurz>
+spec:
+    priority: 130
+    tier: application
+    appliedTo:
+      - namespaceSelector:
+          matchLabels:
+            ns: preprod-app1-<name-kurz>
+    ingress:
+      - action: Drop
+        from:
+          - namespaceSelector: {}
+```
+
+```
+kubectl apply -f .
+```
+
+
 
 ## Reference: 
 
