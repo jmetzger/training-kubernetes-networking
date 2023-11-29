@@ -24,7 +24,7 @@ In app2 is a simple 3 Tier-App (WEB-APP-DB): dev-app2 / preprod-app2 (3tier-app)
 
 ![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/067f275e-152c-42b6-82fd-7bebc6921cbb)
 
-## Step 1: Rollout the pods 
+## Step 1: Rollout the pods (dev)
 
   * Important - you need to adjust the namespaces as follows:
     * dev-app1-<name-kurz> -> z.B. dev-app1-jjm (Deine Initialien)
