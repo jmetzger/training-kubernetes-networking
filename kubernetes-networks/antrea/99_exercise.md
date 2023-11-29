@@ -693,9 +693,59 @@ spec:
 ```
 
 ```
+KURZ=jm
+# Test ob ping von preprod nach dev funktioniert
+# Hier ein POD-IP raussuchen 
+kubectl -n dev-app1-$KURZ get pods -o wide
+kubectl -n preprod-app1-$KURZ exec deployments/ubuntu-20-04 -- ping 10.244.3.15
+
+# Test ob ping von dev nach preprod funktioniert
+# Hier eine POD-IP rausschen 
+kubectl -n preprod-app1-$KURZ get pods -o wide
+kubectl -n dev-app1-$KURZ exec deployments/ubuntu-20-04 -- ping 10.244.2.25
+```
+
+```
+# ClusterNetworkPolicy anwenden 
 kubectl apply -f .
 ```
 
+```
+# Jetzt nochmal die Pings testen von oben
+# ---> Ping ist immer noch möglich --> da keine Firewall - Regel 
+kubectl -n preprod-app1-$KURZ exec deployments/ubuntu-20-04 -- ping 10.244.3.15
+
+# in die andere Richtung geht es aber nicht !!
+kubectl -n dev-app1-$KURZ exec deployments/ubuntu-20-04 -- ping 10.244.2.25
+```
+
+```
+# ok jetzt in die andere richtung
+# nano 15-deny-preprod-to-dev.yaml 
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: deny-preprod-to-dev
+spec:
+    priority: 101
+    tier: SecurityOps
+    appliedTo:
+      - namespaceSelector:
+          matchLabels:
+            env: dev-<name-kurz>
+    ingress:
+      - action: Drop
+        from:
+          - namespaceSelector:
+              matchLabels:
+                env: preprod-<name-kurz>
+```
+
+```
+kubectl apply -f .
+# und jetzt geht pingen in die andere Richtung auch nicht mehr
+kubectl -n preprod-app1-$KURZ exec deployments/ubuntu-20-04 -- ping 10.244.3.15
+```
 
 ## Reference: 
 
