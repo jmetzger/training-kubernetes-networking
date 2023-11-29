@@ -758,7 +758,7 @@ deny-preprod-to-dev      SecurityOps   101        2               2             
 kubectl -n preprod-app1-$KURZ exec deployments/ubuntu-20-04 -- ping 10.244.3.15
 ```
 
-## Isolate Pods (only within the namespaces) 
+## Schritt 3: Isolate Pods (only within the namespaces) 
 
   * Aktuell ist das ping vom preprod-app1-<kurz-name> zum preprod-app2-<kurz-name> namespace noch möglich
   * Das wollen wir einschränken
