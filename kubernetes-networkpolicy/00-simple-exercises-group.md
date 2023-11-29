@@ -1,5 +1,51 @@
 # Simple Network Policy Example (for group in 1 cluster)
 
+## Schritt 1: Deployment und Service erstellen 
+
+```
+KURZ=jm
+kubectl create ns policy-demo-$KURZ 
+```
+
+```
+cd 
+mkdir -p manifests
+cd manifests
+mkdir np
+cd np
+```
+
+```
+# nano 01-deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 8
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.23
+        ports:
+        - containerPort: 80
+```
+
+```
+kubectl -n policy-demo-$KURZ apply -f . 
+```
+
+
+
+
+
 ```
 # Hier bitte Euer Kürzel eintragen 
 KURZ=jm
