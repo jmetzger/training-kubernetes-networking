@@ -5,12 +5,14 @@
   1. Kubernetes - Überblick
      * [Aufbau Allgemein](#aufbau-allgemein)
      * [Structure Kubernetes Deep Dive](https://github.com/jmetzger/training-kubernetes-advanced/assets/1933318/1ca0d174-f354-43b2-81cc-67af8498b56c)
+     * [CRI - Container Runtime interface](#cri---container-runtime-interface)
      * [Ports und Protokolle](https://kubernetes.io/docs/reference/networking/ports-and-protocols/)
      
   1. Kubernetes - Misc 
      * [Wann wird podIP vergeben ?](#wann-wird-podip-vergeben-)
      * [Bash completion installieren](#bash-completion-installieren)
      * [Remote-Verbindung zu Kubernetes (microk8s) einrichten](#remote-verbindung-zu-kubernetes-microk8s-einrichten)
+     * [kubectl verbindung mit namespace einrichten](#kubectl-verbindung-mit-namespace-einrichten)
      * [vim support for yaml](#vim-support-for-yaml)
      
   1. Kubernetes - Netzwerk (CNI's) / Mesh
@@ -21,17 +23,28 @@
      * [Mesh / istio](#mesh--istio)
      * [Kubernetes Ports/Protokolle](https://kubernetes.io/docs/reference/networking/ports-and-protocols/)
      * [IPV4/IPV6 Dualstack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/)
-     * [Ingress controller in microk8s aktivieren](#ingress-controller-in-microk8s-aktivieren)
      * [DNS - Resolution - Services](#dns---resolution---services)
      * [Debug Container](#debug-container)
+
+  1. Kubernetes NetworkPolicy
+     * [Einfache Übung Network Policy](#einfache-übung-network-policy)
+ 
+  1. Kubernetes antrea (CNI-Plugin)
+     * [Unterschiede Dokus vmware (antrea mit nsx-t) und OpenSource Antrea](#unterschiede-dokus-vmware-antrea-mit-nsx-t-und-opensource-antrea)
+     * [Overview Kubernetes Antrea CNI-Plugin](#overview-kubernetes-antrea-cni-plugin)
+     * [Antctl](#antctl)
+     * [Antrea view bridge and config](#antrea-view-bridge-and-config)
+     * [Antrea Exercise](#antrea-exercise)
+  
+  1. Kubernetes calico
      * [Install calicoctl in pod](#install-calicoctl-in-pod)
      * [Install calico-api-server to use kubectl instead of calicoctl](#install-calico-api-server-to-use-kubectl-instead-of-calicoctl)
-   
-  1. Kubernetes calico 
      * [Find corresponding networks](#find-corresponding-networks)
      * [Calico Logging Firewall Rules](#calico-logging-firewall-rules)
 
-  1. Kubernetes - Ingress 
+  1. Kubernetes - Ingress
+     * [Vom Browser über den Ingress bis zum Pod - Schaubild](#vom-browser-über-den-ingress-bis-zum-pod---schaubild)
+     * [Ingress controller in microk8s aktivieren](#ingress-controller-in-microk8s-aktivieren)
      * [ingress mit ssl absichern](#ingress-mit-ssl-absichern)
 
   1. Kubernetes - Wartung / Debugging 
@@ -44,8 +57,11 @@
      * [Das Tool kubectl (Devs/Ops) - Spickzettel](#das-tool-kubectl-devsops---spickzettel)
      * [kubectl example with run](#kubectl-example-with-run)
      * [Bauen einer Applikation mit Resource Objekten](#bauen-einer-applikation-mit-resource-objekten)
+     * [Pod manifest](#pod-manifest)
+     * [Replicasets](#replicasets)
      * [kubectl/manifest/deployments](#kubectlmanifestdeployments)
      * [Services - Aufbau](#services---aufbau)
+     * [Service Typen / Ebenen - Schaubild](#service-typen--ebenen---schaubild)
      * [kubectl/manifest/service](#kubectlmanifestservice)
      * DaemonSets (Devs/Ops)
      * [Hintergrund Ingress](#hintergrund-ingress)
@@ -221,9 +237,9 @@
     * gemeinsam genutzter Speicher- und Netzwerkressourcen   
     * Befinden sich immer auf dem gleich virtuellen Server 
     
-### Control Plane Node (former: master) - components 
+### Control Plane (former: master node) - components 
 
-### Node (Minion) - components 
+### Worker Node - components 
 
 #### General 
 
@@ -250,6 +266,8 @@ Er stellt sicher, dass Container in einem Pod ausgeführt werden.
 ### Structure Kubernetes Deep Dive
 
   * https://github.com/jmetzger/training-kubernetes-advanced/assets/1933318/1ca0d174-f354-43b2-81cc-67af8498b56c
+
+### CRI - Container Runtime interface
 
 ### Ports und Protokolle
 
@@ -361,6 +379,33 @@ kubectl --kubeconfig /home/myuser/.kube/myconfig
 
 ```
 
+### kubectl verbindung mit namespace einrichten
+
+
+### config einrichten 
+
+```
+cd
+mkdir .kube
+cd .kube
+cp -a /tmp/config config
+ls -la
+## nano config befüllen 
+## das bekommt ihr aus Eurem Cluster Management Tool 
+```
+
+```
+kubectl cluster-info
+```
+
+### Arbeitsbereich konfigurieren 
+
+```
+kubectl create ns jochen
+kubectl get ns
+kubectl config set-context --current --namespace jochen
+```
+
 ### vim support for yaml
 
 
@@ -406,7 +451,7 @@ Eigenschaft: <return> # springt eingerückt in die nächste Zeile um 2 spaces ei
 ```
   
   * Every container is in the same Network Namespace, so they can communicate through localhost
-    * Example with hashicorp/http-echo container 1 and busybox container 2 ? 
+    * Example with hashicorp/http-echo container 1 and busybox container 2 
  
  
 ### Pod-To-Pod Communication (across nodes)  
@@ -482,7 +527,7 @@ spec:
 
 ```
 kubectl apply -f .
-
+## als root auf dem worker node 
 ctr -n k8s.io c list | grep pause
 ```
 
@@ -848,19 +893,6 @@ kubectl label namespace default istio-injection=enabled
 
   * https://kubernetes.io/docs/concepts/services-networking/dual-stack/
 
-### Ingress controller in microk8s aktivieren
-
-
-### Aktivieren
-
-```
-microk8s enable ingress
-```
-
-### Referenz 
-
-  * https://microk8s.io/docs/addon-ingress
-
 ### DNS - Resolution - Services
 
 ### Debug Container
@@ -888,6 +920,1357 @@ kubectl debug node/mynode -it --image=ubuntu
 ### Reference 
 
   * https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/#ephemeral-container
+
+## Kubernetes NetworkPolicy
+
+### Einfache Übung Network Policy
+
+
+### Schritt 1: Deployment und Service erstellen 
+
+```
+KURZ=jm
+kubectl create ns policy-demo-$KURZ 
+```
+
+```
+cd 
+mkdir -p manifests
+cd manifests
+mkdir -p np
+cd np
+```
+
+```
+## nano 01-deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.23
+        ports:
+        - containerPort: 80
+```
+
+```
+kubectl -n policy-demo-$KURZ apply -f . 
+```
+
+```
+## nano 02-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  type: ClusterIP # Default Wert 
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: nginx
+```
+
+```
+kubectl -n policy-demo-$KURZ apply -f . 
+```
+
+### Schritt 2: Zugriff testen ohne Regeln 
+
+```
+## lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
+kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
+```
+
+```
+## innerhalb der shell 
+wget -q nginx -O -
+```
+
+```
+## Pod anzeigen
+kubectl -n policy-demo-$KURZ get pods --show-labels
+```
+
+### Schritt 3: Policy festlegen, dass kein Zugriff erlaubt ist. 
+
+```
+## nano 03-default-deny.yaml 
+## Schritt 2: Policy festlegen, dass kein Ingress-Traffic erlaubt
+## in diesem namespace: policy-demo-$KURZ 
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: default-deny
+spec:
+  podSelector:
+    matchLabels: {}
+```
+
+```
+kubectl -n policy-demo-$KURZ apply -f .
+```
+
+### Schritt 3.5: Verbindung mit deny all Regeln testen 
+
+```
+kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
+```
+
+```
+## innerhalb der shell 
+wget -q nginx -O -
+```
+
+### Schritt 4: Zugriff erlauben von pods mit dem Label run=access (alle mit run gestarteten pods mit namen access haben dieses label per default)
+
+```
+## nano 04-access-nginx.yaml 
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: access-nginx
+spec:
+  podSelector:
+    matchLabels:
+      app: nginx
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            run: access
+```
+
+```
+kubectl -n policy-demo-$KURZ apply -f . 
+```
+
+### Schritt 5: Testen (zugriff sollte funktionieren)
+
+```
+## lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
+## pod hat durch run -> access automatisch das label run:access zugewiesen 
+kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
+```
+
+```
+## innerhalb der shell 
+wget -q nginx -O -
+```
+
+
+### Schritt 6: Pod mit label run=no-access - da sollte es nicht gehen 
+
+``` 
+kubectl run --namespace=policy-demo-$KURZ no-access --rm -ti --image busybox
+```
+
+```
+## in der shell  
+wget -q nginx -O -
+```
+
+### Schritt 7: Aufräumen 
+
+```
+kubectl delete ns policy-demo-$KURZ 
+```
+
+
+### Ref:
+
+  * https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-basic
+
+## Kubernetes antrea (CNI-Plugin)
+
+### Unterschiede Dokus vmware (antrea mit nsx-t) und OpenSource Antrea
+
+
+  * OpenSource - Version has less features than closed version
+
+### Antrea (OpenSource) - Version 
+
+  * https://antrea.io/docs/v1.13.2/
+
+### vmware - spread across tanzu (AFAIK) 
+
+  * https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/2.4/tkg-deploy-mc/mgmt-reqs-network-antrea-tiering.html
+
+### Overview Kubernetes Antrea CNI-Plugin
+
+
+### Overview 
+
+![Overview](https://antrea.io/docs/v1.3.0/docs/assets/arch.svg.png)
+
+### Basics
+
+  * Created by vmware
+  * Uses Open VShift (virtuell Switches)
+  * Kernel-Modul openswitch.ko takes care of traffic (performant)
+
+### Components 
+
+#### antrea-controller (+api)
+
+  * Watches kube-api-server for changes on
+    * pod
+    * namespaces
+    * NetworkPolicy
+  * Implementation of Controller - API-Server
+  * Reachable over kube-api-server by implementation https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/apiserver-aggregation/
+  * Currently only 1 replica is supported
+  * computes NetworkPolicies and distributes them to the Antrea agents 
+
+##### antrea controller api - part (how authentication works) 
+
+  * The Controller API server delegates authentication and authorization to the Kubernetes API
+  * the Antrea Agent uses a Kubernetes ServiceAccount token to authenticate to the Controller,
+  * the Controller API server validates the token and whether the ServiceAccount is authorized for the API request with the Kubernetes API.
+
+#### antrea-agent 
+
+  * Runs on every pod, deployed by Daemonset 
+  * has an endpoint running gRPC which the controller connects to
+  * Agents connect to controller api by ClusterIP - wit a service Account
+  * Authentication is done through the kubernetes api server 
+
+### antctl 
+
+  * cli for some debugging
+  * controller-mode on controller (accessing from within controller pod)
+  * agent-mode on agent (accessing from within agent-pod)
+  * external also possible - uses kubeconfig to connect
+    * Connection is done through kube-api-server
+
+#### Important antctl commands 
+
+```
+## on kube-system
+kubectl -n kube-system get üpods 
+
+antctl get featuregates 
+```
+
+### Reference 
+
+  * https://antrea.io/docs/v1.3.0/docs/design/architecture/
+
+### Antctl
+
+
+### Install (externally as tool (not in pod)): uses .kube/config (Done by trainer) 
+
+```
+## as root
+cd /usr/local/sbin  
+curl -Lo ./antctl "https://github.com/antrea-io/antrea/releases/download/v1.13.2/antctl-$(uname)-x86_64"
+chmod +x ./antctl
+```
+
+```
+## run as unprivileged user having a .kube/config in homedir 
+antctl version
+```
+
+### Shows feature-gates for controller and agent (using antctl client externally)
+
+   * Shows both (for controller and for agent), when you do it externally as client-tool from outside pod 
+
+```
+antctl get featuregates
+```
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/285069b5-5d6f-4b40-b828-24f2b8879e16)
+
+### Use antctl from within agent 
+
+```
+kubectl -n kube-system exec -it ANTREA-AGENT_POD_NAME -n kube-system -c antrea-agent -- bash
+```
+  * or
+```
+kubectl -n kube-system exec -it daemonset/antrea-agent -n kube-system -c antrea-agent -- bash
+```
+
+```
+antctl help
+antctl log-level
+antctl get featuregates
+```
+
+### Antrea view bridge and config
+
+
+### Finding the bridge 
+
+  *  ovs-vsctl - utility for querying and configuring ovs-vswitchd
+
+```
+## How to see the bridge
+kubectl -n kube-system exec -it antrea-agent-79bx2 -c antrea-agent -- ovs-vsctl show
+
+## or: always shows the first pod it finds
+kubectl -n kube-system exec -it daemonset/antrea-agent -c antrea-agent -- ovs-vsctl show
+```
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/d369db27-630a-4b9f-9d9b-834075514737)
+
+### Show the configuraton settings of antrea (configmap) 
+
+```
+kubectl -n kube-system get cm antrea-config -o yaml 
+
+```
+
+### Antrea Exercise
+
+
+### Our Goal 
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/14cc372e-e3df-4075-9330-d9ca50eab959)
+
+### How the order of priorities work
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/8bf05e88-a7cd-4906-9271-eee2acc014a7)
+
+### Our Setup 
+
+```
+In app1 are some Ubuntu Servers for Testing: dev-app1 / preprod-app1
+
+1x Ubuntu Server 16.04
+2x Ubuntu Server 20.04
+In app2 is a simple 3 Tier-App (WEB-APP-DB): dev-app2 / preprod-app2 (3tier-app)
+
+1x nginx TCP/80 (NodePort)
+1x php TCP/80 (ClusterIP)
+1x mysql TCP/3306 (ClusterIP)
+```
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/067f275e-152c-42b6-82fd-7bebc6921cbb)
+
+### Step 1: Rollout the pods (dev-app1)
+
+  * Important - you need to adjust the namespaces as follows:
+    * dev-app1-<name-kurz> -> z.B. dev-app1-jjm (Deine Initialien)
+
+```
+cd
+mkdir -p manifests
+cd manifests
+mkdir 10-antrea
+cd 10-antrea
+```
+
+```
+## nano 01-deployment-dev-app1.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev-app1-<name-kurz>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubuntu-16-04
+  labels:
+    app: ubuntu-16-04
+  namespace: dev-app1-<name-kurz>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ubuntu-16-04
+  template:
+    metadata:
+      labels:
+        app: ubuntu-16-04
+    spec:
+      containers:
+      - name: ubuntu-16-04
+        image: ubuntu:16.04
+        imagePullPolicy: IfNotPresent
+        command: [ "/bin/bash", "-c" ]
+        args:
+          - apt-get update;
+            apt-get install iputils-ping -y;
+            apt-get install net-tools;
+            apt-get install curl -y;
+            sleep infinity;
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubuntu-20-04
+  labels:
+    app: ubuntu-20-04
+  namespace: dev-app1-<name-kurz>
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ubuntu-20-04
+  template:
+    metadata:
+      labels:
+        app: ubuntu-20-04
+    spec:
+      containers:
+      - name: ubuntu-20-04
+        image: ubuntu:20.04
+        imagePullPolicy: IfNotPresent
+        command: [ "/bin/bash", "-c" ]
+        args:
+          - apt-get update;
+            apt-get install tcpdump -y;
+            apt-get install telnet -y;
+            apt-get install iputils-ping -y;
+            apt-get install nmap -y;
+            apt-get install net-tools;
+            apt-get install netdiscover -y;
+            apt-get install mysql-client -y;
+            apt-get install curl -y;
+            apt-get install dsniff -y;
+            sleep infinity;
+```
+
+```
+## check if we have replaced all the kurz entries
+cat 01-deployment-dev-app1.yaml | grep kurz 
+
+kubectl apply -f .
+## kubectl -n dev-app1-<name-kurz> get pods 
+## z.B. kubectl -n dev-app1-jjm get pods 
+```
+
+### Step 2: Rollout the pods (dev-app2)
+
+```
+## nano 02-deployment-dev-app2.yaml 
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev-app2-<name-kurz>
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: default-conf
+  namespace: dev-app2-<name-kurz>
+data:
+  default.conf: |
+    server {
+    listen 80 default_server;
+
+    location / {
+      proxy_pass http://app-service;
+      proxy_http_version 1.1;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: dev-app2-<name-kurz>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+        service: web
+        kind: dev
+        type: internal
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /etc/nginx/conf.d # mount nginx-conf volumn to /etc/nginx
+          readOnly: true
+          name: default-conf
+        - mountPath: /var/log/nginx
+          name: log
+      volumes:
+      - name: default-conf
+        configMap:
+          name: default-conf # place ConfigMap `nginx-conf` on /etc/nginx
+          items:
+            - key: default.conf
+              path: default.conf
+      - name: log
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  namespace: dev-app2-<name-kurz>
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: nginx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appserver
+  labels:
+    app: app
+  namespace: dev-app2-<name-kurz>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+        kind: dev
+        type: internal
+    spec:
+      containers:
+      - name: php-apache
+        image: derstich/miserver:006
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service
+  labels:
+    app: app
+  namespace: dev-app2-<name-kurz>
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: app
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: dev-app2-<name-kurz>
+spec:
+  selector:
+    matchLabels:
+      app: mysql8
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql8
+        service: db
+        kind: dev
+        type: internal
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: .sweetpwd.
+        - name: MYSQL_DATABASE
+          value: my_db
+        - name: MYSQL_USER
+          value: db_user
+        - name: MYSQL_PASSWORD
+          value: .mypwd
+        args: ["--default-authentication-plugin=mysql_native_password"]
+        ports:
+        - containerPort: 3306
+          name: mysql8
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql8-service
+  labels:
+    app: mysql8
+  namespace: dev-app2-<name-kurz>
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3306
+    protocol: TCP
+  selector:
+    app: mysql8
+```
+
+```
+kubectl apply -f .
+kubectl -n dev-app2-<name-kurz> get all 
+```
+
+### Schritt 3: rollout preprod-app1 
+
+```
+## nano 03-deployment-preprod-app1.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: preprod-app1-<name-kurz>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubuntu-16-04
+  labels:
+    app: ubuntu-16-04
+  namespace: preprod-app1-<name-kurz>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ubuntu-16-04
+  template:
+    metadata:
+      labels:
+        app: ubuntu-16-04
+    spec:
+      containers:
+      - name: ubuntu-16-04
+        image: ubuntu:16.04
+        imagePullPolicy: IfNotPresent
+        command: [ "/bin/bash", "-c" ]
+        args:
+          - apt-get update;
+            apt-get install iputils-ping -y;
+            apt-get install net-tools;
+            apt-get install curl -y;
+            sleep infinity;
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubuntu-20-04
+  labels:
+    app: ubuntu-20-04
+  namespace: preprod-app1-<name-kurz>
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ubuntu-20-04
+  template:
+    metadata:
+      labels:
+        app: ubuntu-20-04
+    spec:
+      containers:
+      - name: ubuntu-20-04
+        image: ubuntu:20.04
+        imagePullPolicy: IfNotPresent
+        command: [ "/bin/bash", "-c" ]
+        args:
+          - apt-get update;
+            apt-get install tcpdump -y;
+            apt-get install telnet -y;
+            apt-get install iputils-ping -y;
+            apt-get install nmap -y;
+            apt-get install net-tools;
+            apt-get install netdiscover -y;
+            apt-get install mysql-client -y;
+            apt-get install curl -y;
+            apt-get install dsniff -y;
+            sleep infinity;
+```
+
+```
+kubectl apply -f .
+```
+
+### Schritt 4: Deploy preprod-app2
+
+```
+## nano 04-deployment-preprod-app2.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: preprod-app2-<name-kurz>
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: default-conf
+  namespace: preprod-app2-<name-kurz>
+data:
+  default.conf: |
+    server {
+    listen 80 default_server;
+
+    location / {
+      proxy_pass http://app-service;
+      proxy_http_version 1.1;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: preprod-app2-<name-kurz>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+        service: web
+        kind: dev
+        type: internal
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /etc/nginx/conf.d # mount nginx-conf volumn to /etc/nginx
+          readOnly: true
+          name: default-conf
+        - mountPath: /var/log/nginx
+          name: log
+      volumes:
+      - name: default-conf
+        configMap:
+          name: default-conf # place ConfigMap `nginx-conf` on /etc/nginx
+          items:
+            - key: default.conf
+              path: default.conf
+      - name: log
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  namespace: preprod-app2-<name-kurz>
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: nginx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appserver
+  labels:
+    app: app
+  namespace: preprod-app2-<name-kurz>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+        kind: dev
+        type: internal
+    spec:
+      containers:
+      - name: php-apache
+        image: derstich/miserver:005
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service
+  labels:
+    app: app
+  namespace: preprod-app2-<name-kurz>
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: app
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: preprod-app2-<name-kurz>
+spec:
+  selector:
+    matchLabels:
+      app: mysql8
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql8
+        service: db
+        kind: dev
+        type: internal
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: .sweetpwd.
+        - name: MYSQL_DATABASE
+          value: my_db
+        - name: MYSQL_USER
+          value: db_user
+        - name: MYSQL_PASSWORD
+          value: .mypwd
+        args: ["--default-authentication-plugin=mysql_native_password"]
+        ports:
+        - containerPort: 3306
+          name: mysql8
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql8-service
+  labels:
+    app: mysql8
+  namespace: preprod-app2-<name-kurz>
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3306
+    protocol: TCP
+  selector:
+    app: mysql8
+
+```
+
+```
+kubectl apply -f .
+```
+
+### Schritt 5: Daten auslesen 
+
+```
+## Das bitte anpassen
+KURZ=jm
+```
+
+```
+
+## dev-app1
+kubectl -n dev-app1-$KURZ get pods -o=custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,STATUS:.status.phase,IP:.status.podIP,NODE:.spec.nodeName
+
+## dev-app2 
+kubectl -n dev-app2-$KURZ get pods -o=custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,STATUS:.status.phase,IP:.status.podIP,NODE:.spec.nodeName
+
+## preprod-app1
+kubectl -n preprod-app1-$KURZ get pods -o=custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,STATUS:.status.phase,IP:.status.podIP,NODE:.spec.nodeName
+
+## preprod-app2 
+kubectl -n preprod-app2-$KURZ get pods -o=custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,STATUS:.status.phase,IP:.status.podIP,NODE:.spec.nodeName
+```
+
+```
+## BITTE die Infos zwischen speichern oder Screenshot machen
+```
+
+### Schritt 6: Zugriff auf dev-app2 klären 
+
+```
+## Das ändern 
+KURZ=jm
+```
+
+```
+kubectl get svc -n dev-app2-$KURZ nginx 
+```
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/00a9d952-732a-4e12-98d5-766734e96ba7)
+
+```
+curl -i http://10.135.0.5:32767
+## oder im Browser mit Public - IP
+```
+
+### Schritt 7: Zugriff auf preprod-app klären
+
+```
+## Das ändern 
+KURZ=jm
+```
+
+```
+kubectl get svc -n preprod-app2-$KURZ nginx 
+```
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/0f53b7a4-0fe2-4294-b3eb-f5ac968da47c)
+
+```
+curl -i http://10.135.0.5:31836 
+```
+
+### Schritt 8: Zugriff ohne antrea policy testen 
+
+```
+KURZ=jm
+kubectl exec -it -n dev-app1-$KURZ deployment/ubuntu-20-04 -- /bin/bash
+```
+
+```
+## scannen des netzes
+nmap 10.244.0.0/22
+```
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/33ee8c86-d3d9-46c6-9b67-93b3318a2739)
+
+ * Namen werden aufgelöst (rückwärtig) 
+ * alle ports sind einsehbar
+ * Verbindung funktioniert nach überall
+
+```
+## mysql preprod herausfinden
+nmap 10.244.0.0/22 | grep mysql | grep preprod
+```
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/852f4781-fb45-45f6-9c8b-22474be6e092)
+
+```
+## Oh, wir haben das Passwort herausgefunden (Social Engineering ;o)) 
+.sweetpwd. 
+```
+
+```
+mysql -h 10-244-3-20.mysql8-service.preprod-app2-jm.svc.cluster.local -p 
+```
+
+### Schritt 9: Isolate dev and preprod 
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/52d514ce-806b-48ed-bb90-8de5897537ef)
+
+
+```
+## entsprechend anpassen
+KURZ=jm
+```
+
+```
+## Namspaces labeln
+kubectl label ns dev-app1-$KURZ env=dev-$KURZ ns=dev-app1-$KURZ
+kubectl label ns dev-app2-$KURZ env=dev-$KURZ ns=dev-app2-$KURZ
+kubectl label ns preprod-app1-$KURZ env=preprod-$KURZ ns=preprod-app1-$KURZ
+kubectl label ns preprod-app2-$KURZ env=preprod-$KURZ ns=preprod-app2-$KURZ
+
+kubectl describe ns dev-app1-$KURZ
+```
+
+```
+## now create the policy
+## nano 10-deny-dev-to-preprod.yaml 
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: deny-dev-to-preprod-<name-kurz>
+spec:
+    priority: 100
+    tier: SecurityOps
+    appliedTo:
+      - namespaceSelector:
+          matchLabels:
+            env: preprod-<name-kurz>
+    ingress:
+      - action: Drop
+        from:
+          - namespaceSelector:
+              matchLabels:
+                env: dev-<name-kurz>
+```
+
+```
+KURZ=jm
+## Test ob ping von preprod nach dev funktioniert
+## Hier ein POD-IP raussuchen 
+kubectl -n dev-app1-$KURZ get pods -o wide
+kubectl -n preprod-app1-$KURZ exec deployments/ubuntu-20-04 -- ping 10.244.3.15
+
+## Test ob ping von dev nach preprod funktioniert - der sollte nicht funktionieren 
+## Hier eine POD-IP rausschen 
+kubectl -n preprod-app1-$KURZ get pods -o wide
+kubectl -n dev-app1-$KURZ exec deployments/ubuntu-20-04 -- ping 10.244.2.25
+```
+
+```
+## ClusterNetworkPolicy anwenden 
+kubectl apply -f .
+```
+
+```
+## Jetzt nochmal die Pings testen von oben
+## ---> Ping ist immer noch möglich --> da keine Firewall - Regel 
+kubectl -n preprod-app1-$KURZ exec deployments/ubuntu-20-04 -- ping 10.244.3.15
+
+## in die andere Richtung geht es aber nicht !!
+kubectl -n dev-app1-$KURZ exec deployments/ubuntu-20-04 -- ping 10.244.2.25
+```
+
+```
+## ok jetzt in die andere richtung
+## nano 15-deny-preprod-to-dev.yaml 
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: deny-preprod-to-dev-<kurz-name>
+spec:
+    priority: 101
+    tier: SecurityOps
+    appliedTo:
+      - namespaceSelector:
+          matchLabels:
+            env: dev-<name-kurz>
+    ingress:
+      - action: Drop
+        from:
+          - namespaceSelector:
+              matchLabels:
+                env: preprod-<name-kurz>
+```
+
+```
+kubectl apply -f .
+kubectl get clusternetworkpolicies
+```
+
+```
+## Only output 
+NAME                     TIER          PRIORITY   DESIRED NODES   CURRENT NODES   AGE
+deny-dev-to-preprod-jm   SecurityOps   100        2               2               16m
+deny-preprod-to-dev      SecurityOps   101        2               2               3m15s
+```
+
+```
+## und jetzt geht pingen in die andere Richtung auch nicht mehr
+kubectl -n preprod-app1-$KURZ exec deployments/ubuntu-20-04 -- ping 10.244.3.15
+```
+
+### Schritt 11: Isolate Pods (only within the namespaces) 
+
+  * Aktuell ist das ping vom preprod-app1-<kurz-name> zum preprod-app2-<kurz-name> namespace noch möglich
+  * Das wollen wir einschränken
+  * Ausserdem von dev-app1-<name-kurz> zu dev-app2-<name> 
+
+```
+## bei dir anpassen
+KURZ=jm
+```
+
+```
+## So sehen unsere Namespace - Labels aus
+kubectl describe namespace dev-app1-$KURZ 
+```
+
+```
+## Ausgabe, z.B. 
+Name:         dev-app1-jm
+Labels:       env=dev-jm
+              ns=dev-app1-jm
+```
+
+```
+## nano 20-allow-ns-dev-app1-dev-app1.yaml
+## Traffic innerhalb des Namespaces erlaubt 
+
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 20-allow-ns-dev-app1-dev-app1-<name-kurz>
+spec:
+    priority: 100
+    tier: application
+    appliedTo:
+      - namespaceSelector:
+          matchLabels:
+            ns: dev-app1-<name-kurz>
+    ingress:
+      - action: Allow
+        from:
+          - namespaceSelector:
+              matchLabels:
+                ns: dev-app1-<name-kurz>
+```
+
+```
+kubectl apply -f .
+```
+
+```
+## nano 25-drop-any-ns-dev-app2.yaml 
+## allen anderen Traffic zum namespace app2 hin verbieten aus anderen namespaces 
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 25-drop-any-ns-dev-app2-<name-kurz>
+spec:
+    priority: 110
+    tier: application
+    appliedTo:
+      - namespaceSelector:
+          matchLabels:
+            ns: dev-app2-<name-kurz>
+    ingress:
+      - action: Drop
+        from:
+          - namespaceSelector: {}
+```
+
+```
+kubectl apply -f .
+```
+
+```
+## nano 30-allow-ns-preprod-app1-preprod-app1.yaml 
+## Same for preprod-app1
+## Allow all traffic within namespace 
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 30-allow-ns-preprod-app1-preprod-app1-<name-kurz>
+spec:
+    priority: 120
+    tier: application
+    appliedTo:
+      - namespaceSelector:
+          matchLabels:
+            ns: preprod-app1-<name-kurz>
+    ingress:
+      - action: Allow
+        from:
+          - namespaceSelector:
+              matchLabels:
+                ns: preprod-app1-<name-kurz>
+```
+
+```
+kubectl apply -f .
+```
+
+```
+## disallow all traffic from other namespaces to prepr
+## nano 35-drop-any-ns-preprod-app2.yaml  
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 21-drop-any-ns-preprod-app2<name-kurz>
+spec:
+    priority: 130
+    tier: application
+    appliedTo:
+      - namespaceSelector:
+          matchLabels:
+            ns: preprod-app2-<name-kurz>
+    ingress:
+      - action: Drop
+        from:
+          - namespaceSelector: {}
+```
+
+```
+kubectl apply -f .
+```
+
+### Schritt 12: Isolate traffic within app2 - namespaces (3-Tier-app) (Das kann leider nur er Trainer machen ;o() - wg der Labels 
+```
+## For dev-app2-<name-kurz> we want
+web->app (80)
+app->db (3306) 
+drop everything else 
+```
+
+```
+KURZ=jm;
+```
+
+```
+kubectl -n dev-app2-$KURZ describe pods | head -n 20
+kubectl -n preprod-app2-$KURZ describe pods | head -n 20
+```
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/bfd0b89b-aa47-4493-8952-3c2aff5f7f1c)
+
+  * we are using the label app=xxx
+
+```
+## nano 40-allow-web-app.yaml 
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 40-allow-web-app-<name-kurz>
+spec:
+    priority: 10
+    tier: application
+    appliedTo:
+      - podSelector:
+          matchLabels:
+            app: app
+    ingress:
+      - action: Allow
+        from:
+          - podSelector:
+              matchLabels:
+                app: nginx
+        ports:
+          - protocol: TCP
+            port: 80
+```
+
+```
+kubectl apply -f  .
+```
+
+```
+## nano 45-allow-app-db.yaml
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 02-allow-app-db-<name-kurz>
+spec:
+    priority: 20
+    tier: application
+    appliedTo:
+      - podSelector:
+          matchLabels:
+            app: mysql8
+    ingress:
+      - action: Allow
+        from:
+          - podSelector:
+              matchLabels:
+                app: app
+        ports:
+          - protocol: TCP
+            port: 3306
+```
+
+```
+kubectl apply -f .
+```
+
+```
+## nano 50-deny-any-to-app2.yaml
+## Deny everything else
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 03-deny-any-to-app2-<name-kurz>
+spec:
+    priority: 30
+    tier: application
+    appliedTo:
+      - namespaceSelector:
+          matchLabels:
+                  ns: dev-app2-<name-kurz>
+      - namespaceSelector:
+          matchLabels:
+                  ns: preprod-app2-<name-kurz>
+    ingress:
+      - action: Drop
+        from:
+          - namespaceSelector: {}
+
+```
+
+```
+kubectl apply -f .
+```
+
+### Schritt 13: Usage of the Emergency Tier - e.g. Attack (only Trainer)
+
+  * We have problems with Ubuntu 16.04. an we want to isolate it.
+
+```
+kubectl get tiers
+```
+
+```
+## nano 80-emergency.yaml 
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 50-deny-any-pod-ubuntu16-<name-kurz>
+spec:
+    priority: 50
+    tier: emergency
+    appliedTo:
+      - podSelector:
+          matchLabels:
+                  app: ubuntu-16-04
+    ingress:
+      - action: Drop
+        from:
+          - namespaceSelector: {}
+```
+
+```
+kubectl apply -f .
+```
+
+  * Because Emergency has the highest priority, the policy in application (allow any in ns-app1) has no Impact anymore.
+
+
+### Reference: 
+
+  * https://www.vrealize.it/2020/09/28/securing-you-k8s-network-with-antrea-clusternetworkpolicy/
+
+
+## Kubernetes calico
 
 ### Install calicoctl in pod
 
@@ -1429,8 +2812,6 @@ kubectl api-resources | grep '\sprojectcalico.org'
 kubectl get clusterinfo 
 ```
 
-## Kubernetes calico 
-
 ### Find corresponding networks
 
 
@@ -1590,7 +2971,25 @@ ping www.google.de
   * Eventually set a prefix for logging:
   * https://docs.tigera.io/calico-cloud/visibility/iptables
 
-## Kubernetes - Ingress 
+## Kubernetes - Ingress
+
+### Vom Browser über den Ingress bis zum Pod - Schaubild
+
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/c0e5ceba-c636-479b-b000-d866c8caf82c)
+
+### Ingress controller in microk8s aktivieren
+
+
+### Aktivieren
+
+```
+microk8s enable ingress
+```
+
+### Referenz 
+
+  * https://microk8s.io/docs/addon-ingress
 
 ### ingress mit ssl absichern
 
@@ -1841,6 +3240,85 @@ kubectl describe pods foo2
 
 ![Bauen einer Webanwendung](images/WebApp.drawio.png)
 
+### Pod manifest
+
+
+### Walkthrough 
+
+```
+cd 
+mkdir -p manifests
+cd manifests
+mkdir -p web
+cd web
+```
+
+```
+## vi nginx-static.yml 
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-static-web
+  labels:
+    webserver: nginx
+spec:
+  containers:
+  - name: web
+    image: nginx
+
+```
+
+```
+kubectl apply -f nginx-static.yml 
+kubectl describe pod nginx-static-web 
+## show config 
+kubectl get pod/nginx-static-web -o yaml
+kubectl get pod/nginx-static-web -o wide 
+```
+
+### Replicasets
+
+
+```
+cd
+mkdir -p manifests
+cd manifests
+mkdir 02-rs 
+cd 02-rs 
+## vi rs.yml
+```
+
+```
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-replica-set
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      name: template-nginx-replica-set
+      labels:
+        tier: frontend
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.21
+          ports:
+            - containerPort: 80
+             
+
+             
+```
+
+```
+kubectl apply -f rs.yml 
+```
+
 ### kubectl/manifest/deployments
 
 
@@ -1887,6 +3365,11 @@ kubectl apply -f deploy.yml
 
 ![Services Aufbau](/images/kubernetes-services.drawio.svg)
 
+### Service Typen / Ebenen - Schaubild
+
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/9dd21328-d477-49ec-84b3-6fc4bfbd590b)
+
 ### kubectl/manifest/service
 
 
@@ -1898,7 +3381,7 @@ mkdir -p manifests
 cd manifests 
 mkdir 04-service 
 cd 04-service 
-vi 01-deploy.yml 
+##vi 01-deploy.yml 
 ```
 
 ```
