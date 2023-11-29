@@ -97,7 +97,7 @@ spec:
 kubectl -n policy-demo-$KURZ apply -f .
 ```
 
-## Schritt 4: Verbindung mit deny all Regeln testen 
+## Schritt 3.5: Verbindung mit deny all Regeln testen 
 
 ```
 kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
@@ -116,7 +116,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: access-nginx
- spec:
+spec:
   podSelector:
     matchLabels:
       app: nginx
