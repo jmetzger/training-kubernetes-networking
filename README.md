@@ -39,6 +39,7 @@
      * [Calico Logging Firewall Rules](kubernetes-networks/calico/logging-policy.md)
 
   1. Kubernetes - Ingress
+     * [Vom Browser über den Ingress bis zum Pod - Schaubild](/kubernetes/ingress/schaubild.md)
      * [Ingress controller in microk8s aktivieren](microk8s/ingress.md) 
      * [ingress mit ssl absichern](/kubernetes-security/ingress-ssl.md)
 
