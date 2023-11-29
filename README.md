@@ -33,8 +33,8 @@
      * [Unterschiede Dokus vmware (antrea mit nsx-t) und OpenSource Antrea](kubernetes-networks/antrea/00_documentation-open-source-vs-vmware.md)
      * [Overview Kubernetes Antrea CNI-Plugin](kubernetes-networks/antrea/01_overview.md)
      * [Antctl](kubernetes-networks/antrea/10_antctl.md)
-
-   
+     * [Antrea view bridge and config](kubernetes-networks/antrea/20-view-bridge-and-config.md)
+  
   1. Kubernetes calico
      * [Install calicoctl in pod](/kubernetes-networks/calicoctl-installation.md)
      * [Install calico-api-server to use kubectl instead of calicoctl](kubernetes-networks/calico/install-calico-api-server.md)
