@@ -73,6 +73,11 @@ kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
 wget -q nginx -O -
 ```
 
+```
+# Pod anzeigen
+kubectl -n policy-demo-$KURZ get pods --show-labels
+```
+
 ## Schritt 3: Policy festlegen, dass kein Zugriff erlaubt ist. 
 
 ```
