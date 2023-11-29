@@ -560,6 +560,29 @@ spec:
 kubectl apply -f .
 ```
 
+## Schritt 5: Daten auslesen 
+
+```
+# Das bitte anpassen
+KURZ=jm
+
+# dev-app1
+kubectl -n dev-app1-$KURZ get pods -o=custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,STATUS:.status.phase,IP:.status.podIP,NODE:.spec.nodeName
+
+# dev-app2 
+kubectl -n dev-app2-$KURZ get pods -o=custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,STATUS:.status.phase,IP:.status.podIP,NODE:.spec.nodeName
+
+# preprod-app1
+kubectl -n preprod-app1-$KURZ get pods -o=custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,STATUS:.status.phase,IP:.status.podIP,NODE:.spec.nodeName
+
+# preprod-app2 
+kubectl -n preprod-app2-$KURZ get pods -o=custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,STATUS:.status.phase,IP:.status.podIP,NODE:.spec.nodeName
+```
+
+```
+# BITTE die Infos zwischen speichern oder Screenshot machen
+```
+
 
 ## Reference: 
 
