@@ -1,4 +1,4 @@
-# Simple Network Policy Example 
+# Simple Network Policy Example (for group in 1 cluster)
 
 ```
 # Hier bitte Euer Kürzel eintragen 
