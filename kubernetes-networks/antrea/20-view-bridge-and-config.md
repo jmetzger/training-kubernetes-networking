@@ -1,4 +1,4 @@
-# Important commands: antrea 
+# antrea - view bridge and config 
 
 ## Finding the bridge 
 
