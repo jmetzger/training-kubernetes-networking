@@ -42,18 +42,26 @@ spec:
 kubectl -n policy-demo-$KURZ apply -f . 
 ```
 
-
-
-
+```
+# nano 02-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  type: ClusterIP # Default Wert 
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: nginx
+```
 
 ```
-# Hier bitte Euer Kürzel eintragen 
-KURZ=jm
+kubectl -n policy-demo-$KURZ apply -f . 
 ```
 
 ```
-
-kubectl expose --namespace=policy-demo-$KURZ deployment nginx --port=80
 # lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
 kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
 ```
