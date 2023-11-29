@@ -7,16 +7,18 @@ KURZ=jm
 
 ```
 # Schritt 1:
-kubectl create ns policy-demo-<name-kurz>
+kubectl create ns policy-demo-$KURZ
 kubectl create deployment --namespace=policy-demo-$KURZ nginx --image=nginx:1.21
 kubectl expose --namespace=policy-demo-$KURZ deployment nginx --port=80
 # lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
 kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
 ```
+
 ```
 # innerhalb der shell 
 wget -q nginx -O -
 ```
+
 ```
 # Schritt 2: Policy festlegen, dass kein Ingress-Traffic erlaubt
 # in diesem namespace: policy-demo-$KURZ 
