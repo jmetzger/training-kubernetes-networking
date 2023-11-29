@@ -25,6 +25,9 @@
      * [IPV4/IPV6 Dualstack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/)
      * [DNS - Resolution - Services](kubernetes-networks/dns-resolution-services)
      * [Debug Container](kubernetes-networks/debug-container.md)
+
+  1. Kubernetes NetworkPolicy
+     * [Einfache Übung Network Policy](kubernetes-networkpolicy/00-simple-exercises-group.md)
  
   1. Kubernetes antrea (CNI-Plugin)
      * [Overview Kubernetes Antrea CNI-Plugin](kubernetes-networks/antrea/overview.md)
