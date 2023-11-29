@@ -34,6 +34,7 @@
      * [Overview Kubernetes Antrea CNI-Plugin](kubernetes-networks/antrea/01_overview.md)
      * [Antctl](kubernetes-networks/antrea/10_antctl.md)
      * [Antrea view bridge and config](kubernetes-networks/antrea/20-view-bridge-and-config.md)
+     * [Antrea Exercise](kubernetes-networks/antrea/99_exercise.md)
   
   1. Kubernetes calico
      * [Install calicoctl in pod](/kubernetes-networks/calicoctl-installation.md)
