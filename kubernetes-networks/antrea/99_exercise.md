@@ -378,6 +378,188 @@ spec:
 kubectl apply -f .
 ```
 
+## Schritt 4: Deploy preprod-app2
+
+```
+# nano 04-deployment-preprod-app2.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: preprod-app2-<name-kurz>
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: default-conf
+  namespace: preprod-app2-<name-kurz>
+data:
+  default.conf: |
+    server {
+    listen 80 default_server;
+
+    location / {
+      proxy_pass http://app-service;
+      proxy_http_version 1.1;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: preprod-app2-<name-kurz>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+        service: web
+        kind: dev
+        type: internal
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /etc/nginx/conf.d # mount nginx-conf volumn to /etc/nginx
+          readOnly: true
+          name: default-conf
+        - mountPath: /var/log/nginx
+          name: log
+      volumes:
+      - name: default-conf
+        configMap:
+          name: default-conf # place ConfigMap `nginx-conf` on /etc/nginx
+          items:
+            - key: default.conf
+              path: default.conf
+      - name: log
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  namespace: preprod-app2-<name-kurz>
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: nginx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appserver
+  labels:
+    app: app
+  namespace: preprod-app2-<name-kurz>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+        kind: dev
+        type: internal
+    spec:
+      containers:
+      - name: php-apache
+        image: derstich/miserver:005
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service
+  labels:
+    app: app
+  namespace: preprod-app2-<name-kurz>
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: app
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: preprod-app2-<name-kurz>
+spec:
+  selector:
+    matchLabels:
+      app: mysql8
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql8
+        service: db
+        kind: dev
+        type: internal
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: .sweetpwd.
+        - name: MYSQL_DATABASE
+          value: my_db
+        - name: MYSQL_USER
+          value: db_user
+        - name: MYSQL_PASSWORD
+          value: .mypwd
+        args: ["--default-authentication-plugin=mysql_native_password"]
+        ports:
+        - containerPort: 3306
+          name: mysql8
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql8-service
+  labels:
+    app: mysql8
+  namespace: preprod-app2-<name-kurz>
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3306
+    protocol: TCP
+  selector:
+    app: mysql8
+
+```
+
+```
+kubectl apply -f .
+```
+
 
 ## Reference: 
 
