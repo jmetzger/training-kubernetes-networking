@@ -704,7 +704,7 @@ KURZ=jm
 kubectl -n dev-app1-$KURZ get pods -o wide
 kubectl -n preprod-app1-$KURZ exec deployments/ubuntu-20-04 -- ping 10.244.3.15
 
-# Test ob ping von dev nach preprod funktioniert
+# Test ob ping von dev nach preprod funktioniert - der sollte nicht funktionieren 
 # Hier eine POD-IP rausschen 
 kubectl -n preprod-app1-$KURZ get pods -o wide
 kubectl -n dev-app1-$KURZ exec deployments/ubuntu-20-04 -- ping 10.244.2.25
