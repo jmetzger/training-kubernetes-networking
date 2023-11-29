@@ -636,8 +636,39 @@ nmap 10.244.0.0/22
  * alle ports sind einsehbar
  * Verbindung funktioniert nach überall
 
+```
+# mysql preprod herausfinden
+nmap 10.244.0.0/22 | grep mysql | grep preprod
+```
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/852f4781-fb45-45f6-9c8b-22474be6e092)
+
+```
+# Oh, wir haben das Passwort herausgefunden (Social Engineering ;o)) 
+.sweetpwd. 
+```
+
+```
+mysql -h 10-244-3-20.mysql8-service.preprod-app2-jm.svc.cluster.local -p 
+```
+
+## Schritt 9: Isolate dev and preprod 
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/52d514ce-806b-48ed-bb90-8de5897537ef)
 
 
+```
+# entsprechend anpassen
+KURZ=jm
+
+# Namspaces labeln
+kubectl label ns dev-app1-$KURZ env=dev ns=dev-app1
+kubectl label ns dev-app2-$KURZ env=dev ns=dev-app2
+kubectl label ns preprod-app1-$KURZ env=preprod ns=preprod-app1
+kubectl label ns preprod-app2-$KURZ env=preprod ns=preprod-app2
+
+kubectl describe ns dev-app1-$KURZ
+```
 
 
 ## Reference: 
