@@ -145,7 +145,7 @@ wget -q nginx -O -
 ```
 
 
-## Schritt 6: Pod mit label run=no-access - da solte es nicht gehen 
+## Schritt 6: Pod mit label run=no-access - da sollte es nicht gehen 
 
 ``` 
 kubectl run --namespace=policy-demo-$KURZ no-access --rm -ti --image busybox
