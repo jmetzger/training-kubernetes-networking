@@ -61,6 +61,8 @@ spec:
 kubectl -n policy-demo-$KURZ apply -f . 
 ```
 
+## Schritt 2: Zugriff testen ohne Regeln 
+
 ```
 # lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
 kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
@@ -71,7 +73,10 @@ kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
 wget -q nginx -O -
 ```
 
+## Schritt 3: Policy festlegen, dass kein Zugriff erlaubt ist. 
+
 ```
+# nano 03-default-deny.yaml 
 # Schritt 2: Policy festlegen, dass kein Ingress-Traffic erlaubt
 # in diesem namespace: policy-demo-$KURZ 
 kubectl create -f - <<EOF
@@ -79,12 +84,18 @@ kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
   name: default-deny
-  namespace: policy-demo-$KURZ
 spec:
   podSelector:
     matchLabels: {}
-EOF
-# lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
+```
+
+```
+kubectl -n policy-demo-$KURZ apply -f .
+```
+
+## Schritt 4: Verbindung mit deny all Regeln testen 
+
+```
 kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
 ```
 
@@ -93,15 +104,15 @@ kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
 wget -q nginx -O -
 ```
 
+## Schritt 4: Zugriff erlauben von pods mit dem Label run=access (alle mit run gestarteten pods mit namen access haben dieses label per default)
+
 ```
-# Schritt 3: Zugriff erlauben von pods mit dem Label run=access 
-kubectl create -f - <<EOF
-kind: NetworkPolicy
+# nano 04-access-nginx.yaml 
 apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
 metadata:
   name: access-nginx
-  namespace: policy-demo-$KURZ
-spec:
+ spec:
   podSelector:
     matchLabels:
       app: nginx
@@ -110,8 +121,15 @@ spec:
       - podSelector:
           matchLabels:
             run: access
-EOF
+```
 
+```
+kubectl -n policy-demo-$KURZ apply -f . 
+```
+
+## Schritt 5: Testen (zugriff sollte funktionieren)
+
+```
 # lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
 # pod hat durch run -> access automatisch das label run:access zugewiesen 
 kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
@@ -122,6 +140,9 @@ kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
 wget -q nginx -O -
 ```
 
+
+## Schritt 6: Pod mit label run=no-access - da solte es nicht gehen 
+
 ``` 
 kubectl run --namespace=policy-demo-$KURZ no-access --rm -ti --image busybox
 ```
@@ -131,10 +152,10 @@ kubectl run --namespace=policy-demo-$KURZ no-access --rm -ti --image busybox
 wget -q nginx -O -
 ```
 
+## Schritt 7: Aufräumen 
+
 ```
-
 kubectl delete ns policy-demo-$KURZ 
-
 ```
 
 
