@@ -1,12 +1,17 @@
-# Simple Example Calico/Cilium/Antrea 
+# Simple Network Policy Example 
+
+```
+# Hier bitte Euer Kürzel eintragen 
+KURZ=jm
+```
 
 ```
 # Schritt 1:
-kubectl create ns policy-demo
-kubectl create deployment --namespace=policy-demo nginx --image=nginx:1.21
-kubectl expose --namespace=policy-demo deployment nginx --port=80
+kubectl create ns policy-demo-<name-kurz>
+kubectl create deployment --namespace=policy-demo-$KURZ nginx --image=nginx:1.21
+kubectl expose --namespace=policy-demo-$KURZ deployment nginx --port=80
 # lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
-kubectl run --namespace=policy-demo access --rm -ti --image busybox
+kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
 ```
 ```
 # innerhalb der shell 
@@ -14,19 +19,19 @@ wget -q nginx -O -
 ```
 ```
 # Schritt 2: Policy festlegen, dass kein Ingress-Traffic erlaubt
-# in diesem namespace: policy-demo 
+# in diesem namespace: policy-demo-$KURZ 
 kubectl create -f - <<EOF
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
   name: default-deny
-  namespace: policy-demo
+  namespace: policy-demo-$KURZ
 spec:
   podSelector:
     matchLabels: {}
 EOF
 # lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
-kubectl run --namespace=policy-demo access --rm -ti --image busybox
+kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
 ```
 
 ```
@@ -41,7 +46,7 @@ kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
   name: access-nginx
-  namespace: policy-demo
+  namespace: policy-demo-$KURZ
 spec:
   podSelector:
     matchLabels:
@@ -55,7 +60,7 @@ EOF
 
 # lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
 # pod hat durch run -> access automatisch das label run:access zugewiesen 
-kubectl run --namespace=policy-demo access --rm -ti --image busybox
+kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
 ```
 
 ```
@@ -64,7 +69,7 @@ wget -q nginx -O -
 ```
 
 ``` 
-kubectl run --namespace=policy-demo no-access --rm -ti --image busybox
+kubectl run --namespace=policy-demo-$KURZ no-access --rm -ti --image busybox
 ```
 
 ```
@@ -74,7 +79,7 @@ wget -q nginx -O -
 
 ```
 
-kubectl delete ns policy-demo 
+kubectl delete ns policy-demo-$KURZ 
 
 ```
 
