@@ -670,6 +670,32 @@ kubectl label ns preprod-app2-$KURZ env=preprod-$KURZ ns=preprod-app2-$KURZ
 kubectl describe ns dev-app1-$KURZ
 ```
 
+```
+# now create the policy
+# nano 10-deny-dev-to-preprod.yaml 
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: deny-dev-to-preprod-<name-kurz>
+spec:
+    priority: 100
+    tier: SecurityOps
+    appliedTo:
+      - namespaceSelector:
+          matchLabels:
+            env: preprod-<name-kurz>
+    ingress:
+      - action: Drop
+        from:
+          - namespaceSelector:
+              matchLabels:
+                env: dev-<name-kurz>
+```
+
+```
+kubectl apply -f .
+```
+
 
 ## Reference: 
 
