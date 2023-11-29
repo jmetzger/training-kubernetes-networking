@@ -565,6 +565,9 @@ kubectl apply -f .
 ```
 # Das bitte anpassen
 KURZ=jm
+```
+
+```
 
 # dev-app1
 kubectl -n dev-app1-$KURZ get pods -o=custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,STATUS:.status.phase,IP:.status.podIP,NODE:.spec.nodeName
