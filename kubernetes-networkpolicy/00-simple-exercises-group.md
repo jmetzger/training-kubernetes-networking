@@ -84,7 +84,6 @@ kubectl -n policy-demo-$KURZ get pods --show-labels
 # nano 03-default-deny.yaml 
 # Schritt 2: Policy festlegen, dass kein Ingress-Traffic erlaubt
 # in diesem namespace: policy-demo-$KURZ 
-kubectl create -f - <<EOF
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
