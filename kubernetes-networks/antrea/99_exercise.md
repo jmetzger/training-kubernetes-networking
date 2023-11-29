@@ -725,7 +725,7 @@ kubectl -n dev-app1-$KURZ exec deployments/ubuntu-20-04 -- ping 10.244.2.25
 apiVersion: crd.antrea.io/v1beta1
 kind: ClusterNetworkPolicy
 metadata:
-  name: deny-preprod-to-dev
+  name: deny-preprod-to-dev-<kurz-name>
 spec:
     priority: 101
     tier: SecurityOps
@@ -743,8 +743,120 @@ spec:
 
 ```
 kubectl apply -f .
+kubectl get clusternetworkpolicies
+```
+
+```
+# Only output 
+NAME                     TIER          PRIORITY   DESIRED NODES   CURRENT NODES   AGE
+deny-dev-to-preprod-jm   SecurityOps   100        2               2               16m
+deny-preprod-to-dev      SecurityOps   101        2               2               3m15s
+```
+
+```
 # und jetzt geht pingen in die andere Richtung auch nicht mehr
 kubectl -n preprod-app1-$KURZ exec deployments/ubuntu-20-04 -- ping 10.244.3.15
+```
+
+## Isolate Pods (only within the namespaces) 
+
+  * Aktuell ist das ping vom preprod-app1-<kurz-name> zum preprod-app2-<kurz-name> namespace noch möglich
+  * Das wollen wir einschränken
+  * Ausserdem von dev-app1-<name-kurz> zu dev-app2-<name> 
+
+```
+# bei dir anpassen
+KURZ=jm
+```
+
+```
+# So sehen unsere Namespace - Labels aus
+kubectl describe namespace dev-app1-$KURZ 
+```
+
+```
+# Ausgabe, z.B. 
+Name:         dev-app1-jm
+Labels:       env=dev-jm
+              ns=dev-app1-jm
+```
+
+```
+# nano 20-allow-ns-dev-app1-dev-app1.yaml
+# Traffic innerhalb des Namespaces erlaubt 
+
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 20-allow-ns-dev-app1-dev-app1-<name-kurz>
+spec:
+    priority: 100
+    tier: application
+    appliedTo:
+      - namespaceSelector:
+          matchLabels:
+            ns: dev-app1-<name-kurz>
+    ingress:
+      - action: Allow
+        from:
+          - namespaceSelector:
+              matchLabels:
+                ns: dev-app1-<name-kurz>
+```
+
+```
+kubectl apply -f .
+```
+
+```
+# nano 25-drop-any-ns-dev-app1.yaml 
+# allen anderen Traffic zum namespace hin verbieten aus anderen namespaces 
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 25-drop-any-ns-dev-app1-<name-kurz>
+spec:
+    priority: 110
+    tier: application
+    appliedTo:
+      - namespaceSelector:
+          matchLabels:
+            ns: dev-app1-<name-kurz>
+    ingress:
+      - action: Drop
+        from:
+          - namespaceSelector: {}
+```
+
+```
+kubectl apply -f .
+```
+
+```
+# nano 30-allow-ns-preprod-app1-preprod-app1.yaml 
+# Same for preprod-app1
+# Allow all traffic within namespace 
+apiVersion: security.antrea.tanzu.vmware.com/v1alpha1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 30-allow-ns-preprod-app1-preprod-app1-<name-kurz>
+spec:
+    priority: 120
+    tier: application
+    appliedTo:
+      - namespaceSelector:
+          matchLabels:
+            ns: preprod-app1-<name-kurz>
+    ingress:
+      - action: Allow
+        from:
+          - namespaceSelector:
+              matchLabels:
+                ns: preprod-app1-<name-kurz>
+```
+
+```
+kubectl apply -f .
 ```
 
 ## Reference: 
