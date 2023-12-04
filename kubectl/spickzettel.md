@@ -81,6 +81,8 @@ kubectl delete pod nginx
 
 # Kommando in pod ausführen 
 kubectl exec -it nginx -- bash 
+# direkt in den 1. Pod des Deployments wechseln
+kubectl exec -it deployment/name-des-deployments -- bash 
 
 ```
 
