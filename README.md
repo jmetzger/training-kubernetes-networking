@@ -23,7 +23,7 @@
      * [Mesh / istio](sammlung-istio.md)  
      * [Kubernetes Ports/Protokolle](https://kubernetes.io/docs/reference/networking/ports-and-protocols/)
      * [IPV4/IPV6 Dualstack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/)
-     * [DNS - Resolution - Services](kubernetes-networks/dns-resolution-services)
+     * [DNS - Resolution - Services](kubernetes-networks/dns-resolution-services.md)
      * [Debug Container](kubernetes-networks/debug-container.md)
 
   1. Kubernetes NetworkPolicy
