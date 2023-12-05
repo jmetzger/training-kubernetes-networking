@@ -36,3 +36,7 @@ Service Controller
 ### api - domain is hardcoded in cloud controller manager for digitalocean  
 
 ![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/d3b2d698-9fcb-4a46-981e-6bb38067aadc)
+
+## References:
+
+  * [Good explanation](https://medium.com/@m.json/the-kubernetes-cloud-controller-manager-d440af0d2be5)
