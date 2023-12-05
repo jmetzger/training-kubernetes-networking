@@ -74,7 +74,7 @@ wget -q nginx -O -
 ```
 
 ```
-# Pod anzeigen
+# Optional: Pod anzeigen in 2. ssh-session zu jump-host
 kubectl -n policy-demo-$KURZ get pods --show-labels
 ```
 
