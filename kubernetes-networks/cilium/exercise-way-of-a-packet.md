@@ -103,7 +103,7 @@ kubectl exec curl -- ip link show eth0
 ```
 
 ```
-# Ausgabe:
+# Ausgabe: / OH eine ganz andere MAC ! 
 256: eth0@if257: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue state UP qlen 1000
     link/ether 9a:b4:aa:83:18:62 brd ff:ff:ff:ff:ff:ff
 ```
@@ -126,6 +126,8 @@ ip link | grep -A1 ^257
 257: lxced3096cb2cb1@if256: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue qlen 1000
     link/ether f6:25:f2:9e:91:49 brd ff:ff:ff:ff:ff:ff
 ```
+
+  *  **Cilium hijacks ARP table of POD1, forces the next hop to be the peer end (host side) of the veth pair.**
 
 ## Schritt 3.5 Statt der Bridge, was ? 
 
