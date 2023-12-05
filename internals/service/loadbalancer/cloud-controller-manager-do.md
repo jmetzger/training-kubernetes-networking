@@ -27,9 +27,12 @@ Service Controller
 ```
 
 
-## Example of skeleton for LoadBalancer:
+## Load Balancer Implementation in DigitalOcean (DO)
 
-
+  
   * https://github.com/digitalocean/digitalocean-cloud-controller-manager/tree/master
+  * https://github.com/digitalocean/digitalocean-cloud-controller-manager/blob/master/cloud-controller-manager/do/loadbalancers.go
+
+### api - domain is hardcoded in cloud controller manager for digitalocean  
 
 ![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/d3b2d698-9fcb-4a46-981e-6bb38067aadc)
