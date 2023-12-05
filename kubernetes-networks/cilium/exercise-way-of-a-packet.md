@@ -58,7 +58,7 @@ kubectl get po httpbin -o wide
 10.244.1.246
 ```
 
-## Schritt 3: Zielsystem from Anfrager ausrufen (curl-pod) 
+## Schritt 3: Ziel-Pod (httpbin auf NODE2) von curl auf NODE1 aus aufrufen
 
 ```
 # Verbindung funktioniert 
