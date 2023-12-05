@@ -90,7 +90,8 @@
 
   * Zuständig dafür, dass die Agents auf den einzelnen Nodes ausgerollt werden
   * Es gibt ihn nur 1x im Cluster
-  * Ist unkritisch, sobald alles ausgerollt ist, wenn diese nicht läuft funktioniert das Networkin trotzdem
+  * Ist unkritisch, sobald alles ausgerollt ist.
+    * wenn dieser nicht läuft funktioniert das Networking trotzdem
 
 #### cilium CNI - Plugin 
 
@@ -104,7 +105,7 @@
   * Diese Resource Objekte werden von Cilium definiert und angelegt.
     * Wenn Sie angelegt sind, sind die Daten dadurch automatisch im etc - Speicher
     * Mit der weiteren Möglichkeit den Status zu speichern.   
-  * Alternative: Speichern der Daten direkt in etc. 
+  * Alternative: Speichern der Daten direkt in etcd
 
 ### Generell 
 
