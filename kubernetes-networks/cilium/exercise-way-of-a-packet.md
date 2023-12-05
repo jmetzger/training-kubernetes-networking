@@ -4,8 +4,8 @@
 
 ```
 # Achtung: Nodes anpassen
-NODE1=node/telekom-xwkb3
-NODE2=node/telekom-xwkb8
+NODE1=telekom-xwkb3
+NODE2=telekom-xwkb8
 ```
 
 ```
