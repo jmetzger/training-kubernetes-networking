@@ -16,6 +16,7 @@
   * Canal 
   * Calico 
   * Cilium
+  * Antrea (vmware)
   * Weave Net 
   
 ## Flannel
@@ -23,17 +24,21 @@
 ### Overlay - Netzwerk 
 
   * virtuelles Netzwerk was sich oben drüber und eigentlich auf Netzwerkebene nicht existiert
-  * VXLAN 
+  * VXLAN
 
 ### Vorteile 
 
   * Guter einfacher Einstieg 
-  * redziert auf eine Binary flanneld 
+  * reduziert auf eine Binary flanneld 
 
 ### Nachteile 
 
   * keine Firewall - Policies möglich 
   * keine klassichen Netzwerk-Tools zum Debuggen möglich. 
+
+### Guter Einstieg in flannel 
+
+  * https://mvallim.github.io/kubernetes-under-the-hood/documentation/kube-flannel.html
 
 ## Canal 
 
@@ -61,6 +66,15 @@
   * https://projectcalico.docs.tigera.io/security/calico-network-policy
 
 ## Cilium 
+
+### Generell 
+
+### Vorteile 
+
+  * Höhere Leistung mit eBPF-Ansatz. (extended Berkely Packet Filter)
+    * JIT - Just in time compiled -> bytecode (Miniprogramme im Kernel)
+  * Wird an vielen Stellen statt iptables verwendet. 
+
 
 
 ## Weave Net 
