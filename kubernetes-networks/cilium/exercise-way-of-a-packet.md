@@ -267,10 +267,13 @@ ip link | grep -B1 -i da:22
 ```
 
 ```
-# connect to pod
-kubectl exec -httpbin -- ip link
-## achtung geht nicht container daneben ausführen
-kubectl exec -n default httpbin -- ip link
+# connect to pod second debug container 
+kubectl debug -it httpbin --image=busybox
+```
+
+```
+# im debug container mit busybox
+ip link show | grep ^130 
 ```
 
 
