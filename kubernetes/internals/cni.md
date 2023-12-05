@@ -1,7 +1,7 @@
 # CNI 
 
 ## Ablauf 
-   * Containerd ruft CNI plugin über subcommandos: ADD, DEL, CHECK auf (mehr subcommandos gibt es nicht)
+   * Containerd ruft CNI plugin über subcommandos: ADD, DEL, CHECK, VERSION auf (mehr subcommandos gibt es nicht)
    * Was gemacht werden soll wird über JSON-Objekt übergeben
    * Die Antwort kommt auch wieder als JSON zurück 
 
