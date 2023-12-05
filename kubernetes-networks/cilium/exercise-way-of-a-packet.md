@@ -113,7 +113,7 @@ kubectl exec curl -- ip link show eth0
 ## Schritt 3.4 Das Interface auf dem Host-System finden 
 
 ```
-kubectl debug --rm -it node/$NODE1 --image=busybox -- sh
+kubectl debug -it node/$NODE1 --image=busybox -- sh
 ```
 
 ```
