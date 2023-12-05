@@ -67,15 +67,22 @@
 
 ## Cilium 
 
+![Cilium Architecture](https://docs.cilium.io/en/stable/_images/cilium-arch.png)
+
 ### Generell 
+
+  * Verwendet keine Bridge sondern Hooks im Kernel, die mit eBPF aufgesetzt werden
+    * Bessere Performance
+  * eBPF wird auch für NetworkPolicies unter der Haube eingesetzt
+  * Mit Ciliums Cluster Mesh lassen sich mehrere Cluster miteinander verbinden:
 
 ### Vorteile 
 
   * Höhere Leistung mit eBPF-Ansatz. (extended Berkely Packet Filter)
-    * JIT - Just in time compiled -> bytecode (Miniprogramme im Kernel)
-  * Wird an vielen Stellen statt iptables verwendet. 
-
-
+    * JIT - Just in time compiled -
+    * Bytecode wird zu MaschineCode kompiliert (Miniprogramme im Kernel)
+  * Ersatz für iptables (wesentlich schneller und keine Degredation wie iptables ab 5000 Services)
+  * Gut geeignet für größere Cluster 
 
 ## Weave Net 
 
