@@ -252,7 +252,7 @@ kubectl exec -n kube-system $cilium2 -c cilium-agent -- cilium map get cilium_lx
 ```
 
 ```
-kubectl debug -it node/telekom-xwkb8 --image=busybox -- sh 
+kubectl debug -it node/$NODE2 --image=busybox -- sh 
 ```
 
 ```
