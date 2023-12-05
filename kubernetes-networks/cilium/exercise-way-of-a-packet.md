@@ -129,7 +129,7 @@ ip link | grep -A1 ^257
 
 ## Schritt 3.5 Statt der Bridge, was ? 
 
-  * Bei cilium wird keine Bridge verwendet, sondern der Weg geht über eBPF (barkeley package filter programme in der Kernel geladen)
+  * Bei cilium wird keine Bridge verwendet, sondern der Weg geht über eBPF (berkeley packet filter programme in der Kernel geladen)
 
 ![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/b6e102e3-08a5-459e-a421-97349bb92d44)
 
