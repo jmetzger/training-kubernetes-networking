@@ -78,7 +78,7 @@
 #### Cilium Agent 
 
   * Läuft auf jeder Node im Cluster
-  * Lauscht auf events from Orchestrierer (z.B. container gestoppedund gestartet)
+  * Lauscht auf events from Orchestrierer (z.B. container gestoppt und gestartet)
   * Managed die eBPF - Programme, die Linux kernel verwendet um den Netzwerkzugriff aus und in die Container zu kontrollieren
 
 #### Client (CLI)
