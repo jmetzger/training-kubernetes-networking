@@ -160,5 +160,67 @@ lxced3096cb2cb1(257) clsact/ingress cil_from_container-lxced3096cb2cb1 id 2490
 flow_dissector:
 ```
 
+## Schritt 3.6 Weitere Details (über das geladene Programm 
+
+  * Wir bekommen weitere Details über die id 2490
+
+```
+kubectl exec -n kube-system $cilium1 -c cilium-agent -- bpftool prog show id 2490
+```
+
+```
+# Beispiel ausgabe
+kubectl exec -n kube-system $cilium1 -c cilium-agent -- bpftool prog show id 2490
+2490: sched_cls  name cil_from_container  tag 2547a15a9196a2d0  gpl
+        loaded_at 2023-12-05T07:09:11+0000  uid 0
+        xlated 696B  jited 532B  memlock 4096B  map_ids 1161,53
+        btf_id 1551
+```
+
+## Schritt 3.7. Wie geht es weiter ? 
+
+```
+It can be seen that the from-container part of the BPF program bpf_lxc.o is loaded here. Go to the __section("from-container") part of Cilium's source code bpf_lxc.c, program namehandle_xgress:
+```
+
+```
+# So sieht der Code hier aus:
+handle_xgress #1
+  validate_ethertype(ctx, &proto)
+  tail_handle_ipv4 #2
+    handle_ipv4_from_lxc #3
+      lookup_ip4_remote_endpoint => ipcache_lookup4 #4
+      policy_can_access #5
+      if TUNNEL_MODE #6
+        encap_and_redirect_lxc
+          ctx_redirect(ctx, ENCAP_IFINDEX, 0)
+      if ENABLE_ROUTING
+        ipv4_l3
+      return CTX_ACT_OK;
+```
+
+```
+# Das passiert hier:
+```
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/46b99c31-7623-45c8-b1b3-3044f34051da)
+
+## Schritt 3.8. Wie finden wir den Tunnel ? 
+
+  * kubectl exec -n kube-system $cilium1 -c cilium-agent -- cilium map get cilium_ipcache | grep 10.244.1.246
+
+```
+# Beispielausgabe:
+10.244.1.246/32     identity=2735 encryptkey=0 tunnelendpoint=10.135.0.12    sync
+```
+
+```
+kubectl get nodes -o wide 
+```
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/49076bc1-537e-4ff2-ad18-bc955f97f9a7)
 
 
+## Reference:
+
+  * https://addozhang.medium.com/kubernetes-network-learning-with-cilium-and-ebpf-aafbf3163840
