@@ -53,9 +53,14 @@
 
 ## Calico
 
+### Komponenten 
+
+
+
 ### Generell 
 
-  * klassische Netzwerk (BGP)
+  * klassische Netzwerk (BGP) - kein Overlay
+  * klassische Netzwerk-Tools können verwendet werden.
 
 ### Vorteile gegenüber Flannel 
 
@@ -133,17 +138,3 @@
   * Sehr stabil bzgl IPV4/IPV6 (Dual Stack) 
   * Sehr grosses Feature-Set 
   * mit das älteste Plugin 
-
-
-## microk8s Vergleich 
-
-  * https://microk8s.io/compare
-
-```
-snap.microk8s.daemon-flanneld
-Flannel is a CNI which gives a subnet to each host for use with container runtimes.
-
-Flanneld runs if ha-cluster is not enabled. If ha-cluster is enabled, calico is run instead.
-
-The flannel daemon is started using the arguments in ${SNAP_DATA}/args/flanneld. For more information on the configuration, see the flannel documentation.
-```
