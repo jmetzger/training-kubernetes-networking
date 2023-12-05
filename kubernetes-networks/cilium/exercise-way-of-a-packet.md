@@ -1,5 +1,10 @@
 # Exercise way of a packet 
 
+## What we want to check ? 
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/d1f4a4a7-9a14-4f85-a621-baec232c7430)
+
+
 ## Schritt 1: Vorbereitung:
 
 ```
