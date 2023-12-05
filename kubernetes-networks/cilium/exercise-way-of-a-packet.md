@@ -131,6 +131,9 @@ ip link | grep -A1 ^257
 
   * Bei cilium wird keine Bridge verwendet, sondern der Weg geht über eBPF (barkeley package filter programme in der Kernel geladen)
 
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/b6e102e3-08a5-459e-a421-97349bb92d44)
+
+
 ```
 # Wir wollen jetzt rausfinden, welche Regeln dort greift, dazu Fragen wir den cilium - Agenten auf Node 1
 # den wir in der Variablen cilium1 gesetzt haben 
@@ -219,6 +222,41 @@ kubectl get nodes -o wide
 ```
 
 ![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/49076bc1-537e-4ff2-ad18-bc955f97f9a7)
+
+
+## Schritt 4: On Node 2: 
+
+```
+kubectl exec -n kube-system $cilium2 -c cilium-agent -- cilium map get cilium_lxc | grep 10.244.1.246
+```
+
+```
+# output
+10.244.1.246:0     id=1574  sec_id=2735  flags=0x0000 ifindex=131 mac=C2:36:A6:D2:9C:CE nodemac=DA:22:1A:46:FE:6A   sync
+```
+
+```
+kubectl debug -it node/telekom-xwkb8 --image=busybox -- sh 
+```
+
+```
+# find interface by using nodemac
+ip link | grep -B1 -i da:22
+```
+
+```
+# Output - target interace if130 
+131: lxc0f9f206e5d0b@if130: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue qlen 1000
+    link/ether da:22:1a:46:fe:6a brd ff:ff:ff:ff:ff:ff
+```
+
+```
+# connect to pod
+kubectl exec -httpbin -- ip link
+## achtung geht nicht container daneben ausführen
+kubectl exec -n default httpbin -- ip link
+```
+
 
 
 ## Reference:
