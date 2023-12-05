@@ -211,6 +211,12 @@ cil_from_container
 
 * [https://github.com/cilium/cilium/blob/main/bpf/bpf_lxc.c#L1388](https://github.com/cilium/cilium/blob/c01a86062c012aac01ddc8a1e051886fad371173/bpf/bpf_lxc.c#L1388)
 
+```
+# Wenn ein Rückgabewert CTX_ACT_OK geht es zurück ans Kernel routing 
+case bpf_htons(ETH_P_ARP):
+		ret = CTX_ACT_OK;
+		break;
+```
 
 ```
 # Das passiert hier:
