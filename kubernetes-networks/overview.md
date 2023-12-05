@@ -109,6 +109,10 @@
 
 ### Generell 
 
+![Cilium](https://www.inovex.de/wp-content/uploads/2020/05/Cilium.png)
+
+  * Quelle: https://www.inovex.de/de/blog/kubernetes-networking-2-calico-cilium-weavenet/
+
   * Verwendet keine Bridge sondern Hooks im Kernel, die mit eBPF aufgesetzt werden
     * Bessere Performance
   * eBPF wird auch für NetworkPolicies unter der Haube eingesetzt
