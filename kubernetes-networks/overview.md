@@ -69,6 +69,14 @@
 
 ![Cilium Architecture](https://docs.cilium.io/en/stable/_images/cilium-arch.png)
 
+### Komponenten:
+
+#### Cilium Agent 
+
+  * Läuft auf jeder Node im Cluster
+  * Lauscht auf events from Orchestrierer (z.B. container gestoppedund gestartet)
+  * Managed die eBPF - Programme, die Linux kernel verwendet um den Netzwerkzugriff aus und in die Container zu kontrollieren
+
 ### Generell 
 
   * Verwendet keine Bridge sondern Hooks im Kernel, die mit eBPF aufgesetzt werden
