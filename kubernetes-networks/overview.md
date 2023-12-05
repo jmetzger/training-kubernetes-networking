@@ -21,6 +21,10 @@
   
 ## Flannel
 
+### Generell
+
+  * Flannel is a CNI which gives a subnet to each host for use with container runtimes.
+
 ### Overlay - Netzwerk 
 
   * virtuelles Netzwerk was sich oben drüber und eigentlich auf Netzwerkebene nicht existiert
@@ -76,6 +80,31 @@
   * Läuft auf jeder Node im Cluster
   * Lauscht auf events from Orchestrierer (z.B. container gestoppedund gestartet)
   * Managed die eBPF - Programme, die Linux kernel verwendet um den Netzwerkzugriff aus und in die Container zu kontrollieren
+
+#### Client (CLI)
+
+  * Wird im Agent mit installiert (interagiert mit dem agent auf dem gleichen Node)
+  * Kann aber auch auf dem Client installiert werden auf dem kubectl läuft.
+
+#### Cilium Operator
+
+  * Zuständig dafür, dass die Agents auf den einzelnen Nodes ausgerollt werden
+  * Es gibt ihn nur 1x im Cluster
+  * Ist unkritisch, sobald alles ausgerollt ist, wenn diese nicht läuft funktioniert das Networkin trotzdem
+
+#### cilium CNI - Plugin 
+
+  * Ist ein binary auf dem server (worker)
+  * wird durch die Container Runtime ausgeführt.
+  * cilium cni plugin interagiert mit der Cilium API auf dem Node 
+
+### Datastore 
+
+  * Daten werden per Default in CRD (Custom Resource Defintions) gespeichert
+  * Diese Resource Objekte werden von Cilium definiert und angelegt.
+    * Wenn Sie angelegt sind, sind die Daten dadurch automatisch im etc - Speicher
+    * Mit der weiteren Möglichkeit den Status zu speichern.   
+  * Alternative: Speichern der Daten direkt in etc. 
 
 ### Generell 
 
