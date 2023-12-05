@@ -38,6 +38,15 @@ EOF
 
 ```
 
+## Schritt 1.5: Wir ziehen die Namen der cilium-agents für die zugehörigen Nodes 
+
+  * Und speichernn diese als Variablen 
+
+```
+cilium1=$(kubectl get po -n kube-system -l k8s-app=cilium --field-selector spec.nodeName=$NODE1 -o jsonpath='{.items[0].metadata.name}')
+cilium2=$(kubectl get po -n kube-system -l k8s-app=cilium --field-selector spec.nodeName=$NODE2 -o jsonpath='{.items[0].metadata.name}')
+```
+
 ## Schritt 2: Pod-IP des Ziels ausfindig machen und aufrufen. 
 
 ```
@@ -100,5 +109,56 @@ kubectl exec curl -- ip link show eth0
 ```
 
   * **ACHTUNG** - andere MAC und Teil eines veth - Paares (eth0@if257)- der andere Teil ist das Interface 257 auf dem Host (Worker Node) 
+
+## Schritt 3.4 Das Interface auf dem Host-System finden 
+
+```
+kubectl debug --rm -it node/$NODE1 --image=busybox -- sh
+```
+
+```
+# in der shell nr bitte anpassen
+ip link | grep -A1 ^257 
+```
+
+```
+# Beispielausgabe # OK !!! gleiche MAC wie aus Schritt 3.3. 
+257: lxced3096cb2cb1@if256: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue qlen 1000
+    link/ether f6:25:f2:9e:91:49 brd ff:ff:ff:ff:ff:ff
+```
+
+## Schritt 3.5 Statt der Bridge, was ? 
+
+  * Bei cilium wird keine Bridge verwendet, sondern der Weg geht über eBPF (barkeley package filter programme in der Kernel geladen)
+
+```
+# Wir wollen jetzt rausfinden, welche Regeln dort greift, dazu Fragen wir den cilium - Agenten auf Node 1
+# den wir in der Variablen cilium1 gesetzt haben 
+# und wir brauchen das interface aus 3.4.
+# ohne @
+lxced3096cb2cb1
+```
+
+```
+# Bemerkung:
+# Since the container's eth0 and the host network namespace's lxc constitute a channel, the container's egress (Egress) traffic is the lxc ingress Ingress traffic. Similarly, the container's ingress traffic is the lxc egress traffic.
+# Wir fragen also nach Ingress - Regeln
+```
+
+```
+kubectl exec -n kube-system $cilium1 -c cilium-agent -- bpftool net show dev lxced3096cb2cb1
+```
+
+```
+# Beispielausgabe:
+# es gibt also eine regel die an tc gebunden ist für ingress 
+xdp:
+
+tc:
+lxced3096cb2cb1(257) clsact/ingress cil_from_container-lxced3096cb2cb1 id 2490
+
+flow_dissector:
+```
+
 
 
