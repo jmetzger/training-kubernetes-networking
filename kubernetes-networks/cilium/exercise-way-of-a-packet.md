@@ -1,6 +1,6 @@
 # Exercise way of a packet 
 
-## Vorbereitung:
+## Schritt 1: Vorbereitung:
 
 ```
 # Achtung: Nodes anpassen
