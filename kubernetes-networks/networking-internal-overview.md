@@ -30,7 +30,7 @@
    * Each pod receives a unique IP address, valid anywhere in the cluster. Kubernetes requires this address to not be subject to network address   translation (NAT)
    * Pods on the same node through virtual bridge (see image above)
  
-### General (what needs to be done) - and could be doen manually
+### General (what needs to be done) - and could be done manually
  
    * local bridge networks of all nodes need to be connected
    * there needs to be an IPAM (IP-Address Managemenet) so addresses are only used once
@@ -38,7 +38,7 @@
    * Plus: There needs to be a rule for incoming network
    * Also: A tunnel needs to be set up to the outside world.
 
-### General - Pod-to-Pod Communiation (across nodes) - what would need to be done
+### General - Pod-to-Pod Communication (across nodes) - what would need to be done
 
 ![pod to pod across nodes](https://www.inovex.de/wp-content/uploads/2020/05/Pod-to-Pod-Networking.png)
 
