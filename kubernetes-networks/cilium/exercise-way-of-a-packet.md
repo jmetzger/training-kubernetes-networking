@@ -9,7 +9,7 @@ NODE2=node/telekom-xwkb8
 ```
 
 ```
-kubectl apply -n default -f - <<EOF
+kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Pod
 metadata:
