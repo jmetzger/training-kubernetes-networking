@@ -68,3 +68,24 @@ wget -O - http://www.google.de
 # sollte nicht funktionieren
 wget -O - http://my-nginx
 ```
+
+## Step 4: Traffic erlauben für nginx 
+
+```
+apiVersion: crd.projectcalico.org/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-nginx-ingress
+spec:
+  selector: run == 'my-nginx'
+  types:
+  - Ingress
+  ingress:
+  - action: Allow
+    source:
+      selector: run == 'access'
+```
+
+```
+kubectl apply -f .
+```
