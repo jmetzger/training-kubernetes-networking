@@ -9,12 +9,12 @@ cd
 cd manifests
 mkdir sw
 cd sw 
-curl https://raw.githubusercontent.com/cilium/cilium/1.14.4/examples/minikube/http-sw-app.yaml
+curl https://raw.githubusercontent.com/cilium/cilium/1.14.4/examples/minikube/http-sw-app.yaml > sw.yaml
 ```
 
 ```
 # Should get installed into your namespace / different than on overview image  
-kubectl apply -f http-sw-app.yaml
+kubectl apply -f .
 ```
 
 ## Step 2: Produce some traffic 
