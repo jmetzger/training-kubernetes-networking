@@ -53,6 +53,10 @@
 
 ## Calico
 
+
+![calica](https://tanzu.vmware.com/developer/guides/container-networking-calico-refarch/images/calico-components.png)
+
+
 ### Komponenten 
 
 #### Calico API server
