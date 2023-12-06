@@ -17,9 +17,27 @@ cilium status
 cilium hubble enable --ui
 ```
 
+## Client needed 
+
+  * hubble client zu installieren
+  * https://docs.cilium.io/en/stable/gettingstarted/hubble_setup/
+
+
+## References 
+
+  * https://docs.cilium.io/en/stable/gettingstarted/hubble_setup
+
+
 ![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/33d346c3-44ab-4274-9f3c-af36c2122a0a)
 
-## Activate hubble (on digitalocean doks) 
+
+
+
+## Probleme (evtl.)
+
+### Digitalocean 
+
+Activate hubble (on digitalocean doks) 
 
 ```
 # Enable hubble
