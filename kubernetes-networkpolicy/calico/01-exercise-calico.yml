@@ -52,3 +52,19 @@ spec:
   egress:
   - action: Allow
 ```
+
+```
+kubectl apply -f .
+```
+
+```
+kubectl run -it --rm podtest --image=busybox
+```
+
+```
+# sollte gehen 
+wget -O - http://www.google.de
+
+# sollte nicht funktionieren
+wget -O - http://my-nginx
+```
