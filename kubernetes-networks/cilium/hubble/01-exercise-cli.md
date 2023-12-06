@@ -17,7 +17,39 @@ curl https://raw.githubusercontent.com/cilium/cilium/1.14.4/examples/minikube/ht
 kubectl apply -f .
 ```
 
-## Step 2: Produce some traffic 
+## Step 2: calico fw- Regel
+
+```
+nano rules.yaml
+```
+
+```
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "rule1"
+spec:
+  description: "L3-L4 policy to restrict deathstar access to empire ships only"
+  endpointSelector:
+    matchLabels:
+      org: empire
+      class: deathstar
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        org: empire
+    toPorts:
+    - ports:
+      - port: "80"
+        protocol: TCP
+```
+
+```
+kubectl apply -f .
+```
+
+
+## Step 3: Produce some traffic 
 
 ```
 # Let's produce some traffic
@@ -26,3 +58,6 @@ kubectl apply -f .
 kubectl exec tiefighter -- curl -s -XPOST deathstar.jochen.svc.cluster.local/v1/request-landing
 ```
 
+## Reference 
+
+  * https://docs.cilium.io/en/stable/gettingstarted/demo/#starwars-demo
