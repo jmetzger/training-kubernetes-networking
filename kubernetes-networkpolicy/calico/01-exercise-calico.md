@@ -41,7 +41,7 @@ wget -O - http://my-nginx
 ## Step 3: Traffic erlauben egress von busybox 
 
 ```
-apiVersion: projectcalico.org/v3
+apiVersion: crd.projectcalico.org/v1
 kind: NetworkPolicy
 metadata:
   name: allow-busybox-egress
@@ -58,7 +58,7 @@ kubectl apply -f .
 ```
 
 ```
-kubectl run -it --rm podtest --image=busybox
+kubectl run -it --rm access --image=busybox
 ```
 
 ```
