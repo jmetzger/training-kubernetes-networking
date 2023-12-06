@@ -4,7 +4,7 @@
 
 ```
 # dadurch auf Jump-Server wenn es dort einen Browser gäbe: http://localhost:30080
-kubectl -n kube-system port-forward svc/hubble-ui 30080:80 # --address='0.0.0.0' von extern notwendig 
+kubectl -n kube-system port-forward svc/hubble-ui 30080:80 --address='0.0.0.0' von extern notwendig 
 ```
 
 
