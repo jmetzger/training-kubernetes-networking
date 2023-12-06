@@ -122,6 +122,8 @@ Typha maintains a single datastore connection on behalf of all of its clients li
 
   * klassische Netzwerk (BGP) - kein Overlay
   * klassische Netzwerk-Tools können verwendet werden.
+  * eBPF ist implementiert, aber muss aktiviert
+  * Standardmäßig helm - Standard (vxlan) 
 
 ### Vorteile gegenüber Flannel 
 
