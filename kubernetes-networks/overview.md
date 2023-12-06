@@ -55,7 +55,64 @@
 
 ### Komponenten 
 
+#### Calico API server
 
+  * Lets you manage Calico resources directly with kubectl.
+
+#### Felix
+
+```
+Main task: Programs routes and ACLs, and anything else required on the host to provide desired connectivity for the endpoints on that host. Runs on each machine that hosts endpoints. Runs as an agent daemon. 
+```
+
+#### BIRD
+
+  * Gets routes from Felix and distributes to BGP peers on the network for inter-host routing. Runs on each node that hosts a Felix agent. Open source, internet routing daemon.
+
+### confd
+
+```
+Monitors Calico datastore for changes to BGP configuration and global defaults such as AS number, logging levels, and IPAM information. Open source, lightweight configuration management tool.
+
+Confd dynamically generates BIRD configuration files based on the updates to data in the datastore. When the configuration file changes, confd triggers BIRD to load the new files
+```
+
+### Dikastes
+
+```
+Enforces NetworkPolicy for istio service mesh
+```
+
+### CNI plugin
+
+### Datastore plugin
+
+### IPAM plugin
+
+### kube-controllers
+
+```
+Main task: Monitors the Kubernetes API and performs actions based on cluster state. kube-controllers.
+
+The tigera/kube-controllers container includes the following controllers:
+
+Policy controller
+Namespace controller
+Serviceaccount controller
+Workloadendpoint controller
+Node controller
+```
+
+### Typha
+
+```
+Typha maintains a single datastore connection on behalf of all of its clients like Felix and confd. It caches the datastore state and deduplicates events so that they can be fanned out to many listeners.
+```
+
+### calicoctl
+
+  * Wird heute selten gebraucht, da das meiste heute mit kubectl über den Calico API Server realisiert werden kann
+  * Früher haben die neuesten NetworkPolicies/v3 nur über calioctl funktioniert 
 
 ### Generell 
 
