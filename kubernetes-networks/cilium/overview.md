@@ -11,6 +11,12 @@
 cilium status
 ```
 
+## How to activate 
+
+```
+cilium hubble enable --ui
+```
+
 ![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/33d346c3-44ab-4274-9f3c-af36c2122a0a)
 
 ## Activate hubble (on digitalocean doks) 
