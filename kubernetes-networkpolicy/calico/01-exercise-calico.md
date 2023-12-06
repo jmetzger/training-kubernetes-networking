@@ -30,7 +30,7 @@ kubectl apply -f 02-service.yml
 ```
 
 ```
-kubectl run -it --rm podtest --image=busybox 
+kubectl run -it --rm access --image=busybox 
 ```
 
 ```
@@ -91,7 +91,7 @@ kubectl apply -f .
 ```
 
 ```
-kubectl run -it --rm podtest --image=busybox 
+kubectl run -it --rm access --image=busybox 
 ```
 
 ```
