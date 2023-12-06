@@ -89,3 +89,12 @@ spec:
 ```
 kubectl apply -f .
 ```
+
+```
+kubectl run -it --rm podtest --image=busybox 
+```
+
+```
+# In der Bbusybox 
+wget -O - http://my-nginx 
+```
