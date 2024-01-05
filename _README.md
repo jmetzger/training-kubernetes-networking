@@ -17,6 +17,7 @@
      
   1. Kubernetes - Netzwerk (CNI's) / Mesh
      * [Netzwerk Interna](#netzwerk-interna)
+     * [Wirkweise cni](#wirkweise-cni)
      * [Übersicht Netzwerke](#übersicht-netzwerke)
      * [Calico/Cilium - nginx example NetworkPolicy](#calicocilium---nginx-example-networkpolicy)
      * [Beispiele Ingress Egress NetworkPolicy](#beispiele-ingress-egress-networkpolicy)
@@ -122,6 +123,7 @@
      * [statische IP für Pod in calico](https://docs.tigera.io/calico/latest/networking/ipam/use-specific-ip)
      * [yaml linting](https://www.kubeval.com/installation/)
      * [ssl terminierung über proxy nginx](#ssl-terminierung-über-proxy-nginx)
+     * [LoadBalancer / Cluster Controller Manager](#loadbalancer--cluster-controller-manager)
    
   1. Kubernetes Load Balancer 
      * [Kubernetes Load Balancer](#kubernetes-load-balancer)
@@ -269,6 +271,38 @@ Er stellt sicher, dass Container in einem Pod ausgeführt werden.
 
 ### CRI - Container Runtime interface
 
+
+### Where is it embedded 
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/7f54d63d-6337-41e9-9ab6-8323f12b290e)
+
+### What is it for ?
+
+  * Abstraction layer called by kubelet to make it possible to use other container runtimes 
+  * The CRI uses gRPC as its communication protocol.
+
+### kubelet calls the CRI with its subcommands 
+
+  * Expected commands are
+
+```
+Sandbox:
+  Delete
+  Create
+  List
+Image:
+  Pull
+  List
+Container.
+  Create
+  Start
+  Exec
+```
+
+### Steps in the CRI 
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/4f38ac6a-a221-4257-8a36-cfcdbb18b254)
+
 ### Ports und Protokolle
 
   * https://kubernetes.io/docs/reference/networking/ports-and-protocols/
@@ -287,7 +321,7 @@ kubectl get pods
 ## Synopsis (most simplistic example 
 ## kubectl run NAME --image=IMAGE_EG_FROM_DOCKER
 ## example
-kubectl run nginx --image=nginx 
+kubectl run nginx --image=nginx:1.23
 
 kubectl get pods 
 ## on which node does it run ? 
@@ -462,7 +496,7 @@ Eigenschaft: <return> # springt eingerückt in die nächste Zeile um 2 spaces ei
    * Each pod receives a unique IP address, valid anywhere in the cluster. Kubernetes requires this address to not be subject to network address   translation (NAT)
    * Pods on the same node through virtual bridge (see image above)
  
-#### General (what needs to be done) - and could be doen manually
+#### General (what needs to be done) - and could be done manually
  
    * local bridge networks of all nodes need to be connected
    * there needs to be an IPAM (IP-Address Managemenet) so addresses are only used once
@@ -470,7 +504,7 @@ Eigenschaft: <return> # springt eingerückt in die nächste Zeile um 2 spaces ei
    * Plus: There needs to be a rule for incoming network
    * Also: A tunnel needs to be set up to the outside world.
 
-#### General - Pod-to-Pod Communiation (across nodes) - what would need to be done
+#### General - Pod-to-Pod Communication (across nodes) - what would need to be done
 
 ![pod to pod across nodes](https://www.inovex.de/wp-content/uploads/2020/05/Pod-to-Pod-Networking.png)
 
@@ -537,6 +571,42 @@ ctr -n k8s.io c list | grep pause
   * https://www.inovex.de/de/blog/kubernetes-networking-part-1-en/
   * https://www.inovex.de/de/blog/kubernetes-networking-2-calico-cilium-weavenet/
 
+### Wirkweise cni
+
+
+### Ablauf 
+   * Containerd ruft CNI plugin über subcommandos: ADD, DEL, CHECK, VERSION auf (mehr subcommandos gibt es nicht)
+   * Was gemacht werden soll wird über JSON-Objekt übergeben
+   * Die Antwort kommt auch wieder als JSON zurück 
+
+### Plugins die Standardmäßig schon da sind 
+ 
+   * https://www.cni.dev/plugins/current/
+
+### CNI-Plugin: 
+
+   * Ein Kubernetes-Cluster braucht immer ein CNI-Plugin, sonst funktioniert die Kmmunikation nicht und die Nodes im Cluster steht auf NotReady 
+   * Beispiele: Calico, WeaveNet, Antrea, Cilium, Flannel 
+
+### IPAM - IP Address Management 
+
+   * Ziel ist, dass Adressen nicht mehrmals vergeben werden.
+   * Dazu wird ein Pool bereitgestellt.
+   * Es gibt 3 CNI IPAM - Module:
+     * host-local
+     * dhcp
+     * static  
+```
+* IPAM: IP address allocation 
+dhcp : Runs a daemon on the host to make DHCP requests on behalf of a container
+host-local : Maintains a local database of allocated IPs
+static : Allocates static IPv4/IPv6 addresses to containers
+```
+
+### Beispiel json für antrea (wird verwendet beim Aufruf von CNI) 
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/85dcbcf4-0c01-4fe0-a737-dd0f7d04231f)
+
 ### Übersicht Netzwerke
 
 
@@ -556,24 +626,33 @@ ctr -n k8s.io c list | grep pause
   * Canal 
   * Calico 
   * Cilium
+  * Antrea (vmware)
   * Weave Net 
   
 ### Flannel
 
+#### Generell
+
+  * Flannel is a CNI which gives a subnet to each host for use with container runtimes.
+
 #### Overlay - Netzwerk 
 
   * virtuelles Netzwerk was sich oben drüber und eigentlich auf Netzwerkebene nicht existiert
-  * VXLAN 
+  * VXLAN
 
 #### Vorteile 
 
   * Guter einfacher Einstieg 
-  * redziert auf eine Binary flanneld 
+  * reduziert auf eine Binary flanneld 
 
 #### Nachteile 
 
   * keine Firewall - Policies möglich 
   * keine klassichen Netzwerk-Tools zum Debuggen möglich. 
+
+#### Guter Einstieg in flannel 
+
+  * https://mvallim.github.io/kubernetes-under-the-hood/documentation/kube-flannel.html
 
 ### Canal 
 
@@ -584,9 +663,77 @@ ctr -n k8s.io c list | grep pause
 
 ### Calico
 
+
+![calica](https://tanzu.vmware.com/developer/guides/container-networking-calico-refarch/images/calico-components.png)
+
+
+#### Komponenten 
+
+##### Calico API server
+
+  * Lets you manage Calico resources directly with kubectl.
+
+##### Felix
+
+```
+Main task: Programs routes and ACLs, and anything else required on the host to provide desired connectivity for the endpoints on that host. Runs on each machine that hosts endpoints. Runs as an agent daemon. 
+```
+
+##### BIRD
+
+  * Gets routes from Felix and distributes to BGP peers on the network for inter-host routing. Runs on each node that hosts a Felix agent. Open source, internet routing daemon.
+
+#### confd
+
+```
+Monitors Calico datastore for changes to BGP configuration and global defaults such as AS number, logging levels, and IPAM information. Open source, lightweight configuration management tool.
+
+Confd dynamically generates BIRD configuration files based on the updates to data in the datastore. When the configuration file changes, confd triggers BIRD to load the new files
+```
+
+#### Dikastes
+
+```
+Enforces NetworkPolicy for istio service mesh
+```
+
+#### CNI plugin
+
+#### Datastore plugin
+
+#### IPAM plugin
+
+#### kube-controllers
+
+```
+Main task: Monitors the Kubernetes API and performs actions based on cluster state. kube-controllers.
+
+The tigera/kube-controllers container includes the following controllers:
+
+Policy controller
+Namespace controller
+Serviceaccount controller
+Workloadendpoint controller
+Node controller
+```
+
+#### Typha
+
+```
+Typha maintains a single datastore connection on behalf of all of its clients like Felix and confd. It caches the datastore state and deduplicates events so that they can be fanned out to many listeners.
+```
+
+#### calicoctl
+
+  * Wird heute selten gebraucht, da das meiste heute mit kubectl über den Calico API Server realisiert werden kann
+  * Früher haben die neuesten NetworkPolicies/v3 nur über calioctl funktioniert 
+
 #### Generell 
 
-  * klassische Netzwerk (BGP)
+  * klassische Netzwerk (BGP) - kein Overlay
+  * klassische Netzwerk-Tools können verwendet werden.
+  * eBPF ist implementiert, aber muss aktiviert
+  * Standardmäßig helm - Standard (vxlan) 
 
 #### Vorteile gegenüber Flannel 
 
@@ -602,6 +749,60 @@ ctr -n k8s.io c list | grep pause
 
 ### Cilium 
 
+![Cilium Architecture](https://docs.cilium.io/en/stable/_images/cilium-arch.png)
+
+#### Komponenten:
+
+##### Cilium Agent 
+
+  * Läuft auf jeder Node im Cluster
+  * Lauscht auf events from Orchestrierer (z.B. container gestoppt und gestartet)
+  * Managed die eBPF - Programme, die Linux kernel verwendet um den Netzwerkzugriff aus und in die Container zu kontrollieren
+
+##### Client (CLI)
+
+  * Wird im Agent mit installiert (interagiert mit dem agent auf dem gleichen Node)
+  * Kann aber auch auf dem Client installiert werden auf dem kubectl läuft.
+
+##### Cilium Operator
+
+  * Zuständig dafür, dass die Agents auf den einzelnen Nodes ausgerollt werden
+  * Es gibt ihn nur 1x im Cluster
+  * Ist unkritisch, sobald alles ausgerollt ist.
+    * wenn dieser nicht läuft funktioniert das Networking trotzdem
+
+##### cilium CNI - Plugin 
+
+  * Ist ein binary auf dem server (worker)
+  * wird durch die Container Runtime ausgeführt.
+  * cilium cni plugin interagiert mit der Cilium API auf dem Node 
+
+#### Datastore 
+
+  * Daten werden per Default in CRD (Custom Resource Defintions) gespeichert
+  * Diese Resource Objekte werden von Cilium definiert und angelegt.
+    * Wenn Sie angelegt sind, sind die Daten dadurch automatisch im etc - Speicher
+    * Mit der weiteren Möglichkeit den Status zu speichern.   
+  * Alternative: Speichern der Daten direkt in etcd
+
+#### Generell 
+
+![Cilium](https://www.inovex.de/wp-content/uploads/2020/05/Cilium.png)
+
+  * Quelle: https://www.inovex.de/de/blog/kubernetes-networking-2-calico-cilium-weavenet/
+
+  * Verwendet keine Bridge sondern Hooks im Kernel, die mit eBPF aufgesetzt werden
+    * Bessere Performance
+  * eBPF wird auch für NetworkPolicies unter der Haube eingesetzt
+  * Mit Ciliums Cluster Mesh lassen sich mehrere Cluster miteinander verbinden:
+
+#### Vorteile 
+
+  * Höhere Leistung mit eBPF-Ansatz. (extended Berkely Packet Filter)
+    * JIT - Just in time compiled -
+    * Bytecode wird zu MaschineCode kompiliert (Miniprogramme im Kernel)
+  * Ersatz für iptables (wesentlich schneller und keine Degredation wie iptables ab 5000 Services)
+  * Gut geeignet für größere Cluster 
 
 ### Weave Net 
 
@@ -611,50 +812,110 @@ ctr -n k8s.io c list | grep pause
   * Sehr grosses Feature-Set 
   * mit das älteste Plugin 
 
-
-### microk8s Vergleich 
-
-  * https://microk8s.io/compare
-
-```
-snap.microk8s.daemon-flanneld
-Flannel is a CNI which gives a subnet to each host for use with container runtimes.
-
-Flanneld runs if ha-cluster is not enabled. If ha-cluster is enabled, calico is run instead.
-
-The flannel daemon is started using the arguments in ${SNAP_DATA}/args/flanneld. For more information on the configuration, see the flannel documentation.
-```
-
 ### Calico/Cilium - nginx example NetworkPolicy
 
 
+### Schritt 1: Deployment und Service erstellen 
+
 ```
-## Schritt 1:
-kubectl create ns policy-demo
-kubectl create deployment --namespace=policy-demo nginx --image=nginx:1.21
-kubectl expose --namespace=policy-demo deployment nginx --port=80
+KURZ=jm
+kubectl create ns policy-demo-$KURZ 
+```
+
+```
+cd 
+mkdir -p manifests
+cd manifests
+mkdir -p np
+cd np
+```
+
+```
+## nano 01-deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.23
+        ports:
+        - containerPort: 80
+```
+
+```
+kubectl -n policy-demo-$KURZ apply -f . 
+```
+
+```
+## nano 02-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  type: ClusterIP # Default Wert 
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: nginx
+```
+
+```
+kubectl -n policy-demo-$KURZ apply -f . 
+```
+
+### Schritt 2: Zugriff testen ohne Regeln 
+
+```
 ## lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
-kubectl run --namespace=policy-demo access --rm -ti --image busybox
+kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
 ```
+
 ```
 ## innerhalb der shell 
 wget -q nginx -O -
 ```
+
 ```
+## Optional: Pod anzeigen in 2. ssh-session zu jump-host
+kubectl -n policy-demo-$KURZ get pods --show-labels
+```
+
+### Schritt 3: Policy festlegen, dass kein Zugriff erlaubt ist. 
+
+```
+## nano 03-default-deny.yaml 
 ## Schritt 2: Policy festlegen, dass kein Ingress-Traffic erlaubt
-## in diesem namespace: policy-demo 
-kubectl create -f - <<EOF
+## in diesem namespace: policy-demo-$KURZ 
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
   name: default-deny
-  namespace: policy-demo
 spec:
   podSelector:
     matchLabels: {}
-EOF
-## lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
-kubectl run --namespace=policy-demo access --rm -ti --image busybox
+```
+
+```
+kubectl -n policy-demo-$KURZ apply -f .
+```
+
+### Schritt 3.5: Verbindung mit deny all Regeln testen 
+
+```
+kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
 ```
 
 ```
@@ -662,14 +923,14 @@ kubectl run --namespace=policy-demo access --rm -ti --image busybox
 wget -q nginx -O -
 ```
 
+### Schritt 4: Zugriff erlauben von pods mit dem Label run=access (alle mit run gestarteten pods mit namen access haben dieses label per default)
+
 ```
-## Schritt 3: Zugriff erlauben von pods mit dem Label run=access 
-kubectl create -f - <<EOF
-kind: NetworkPolicy
+## nano 04-access-nginx.yaml 
 apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
 metadata:
   name: access-nginx
-  namespace: policy-demo
 spec:
   podSelector:
     matchLabels:
@@ -679,11 +940,18 @@ spec:
       - podSelector:
           matchLabels:
             run: access
-EOF
+```
 
+```
+kubectl -n policy-demo-$KURZ apply -f . 
+```
+
+### Schritt 5: Testen (zugriff sollte funktionieren)
+
+```
 ## lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
 ## pod hat durch run -> access automatisch das label run:access zugewiesen 
-kubectl run --namespace=policy-demo access --rm -ti --image busybox
+kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
 ```
 
 ```
@@ -691,8 +959,11 @@ kubectl run --namespace=policy-demo access --rm -ti --image busybox
 wget -q nginx -O -
 ```
 
+
+### Schritt 6: Pod mit label run=no-access - da sollte es nicht gehen 
+
 ``` 
-kubectl run --namespace=policy-demo no-access --rm -ti --image busybox
+kubectl run --namespace=policy-demo-$KURZ no-access --rm -ti --image busybox
 ```
 
 ```
@@ -700,10 +971,10 @@ kubectl run --namespace=policy-demo no-access --rm -ti --image busybox
 wget -q nginx -O -
 ```
 
+### Schritt 7: Aufräumen 
+
 ```
-
-kubectl delete ns policy-demo 
-
+kubectl delete ns policy-demo-$KURZ 
 ```
 
 
@@ -895,6 +1166,30 @@ kubectl label namespace default istio-injection=enabled
 
 ### DNS - Resolution - Services
 
+
+```
+kubectl run podtest --rm -ti --image busybox -- /bin/sh
+If you don't see a command prompt, try pressing enter.
+/ # wget -O - http://apple-service.jochen
+Connecting to apple-service.jochen (10.245.39.214:80)
+writing to stdout
+apple-tln1
+-                    100% |**************************************************************************************************************|    11  0:00:00 ETA
+written to stdout
+/ # wget -O - http://apple-service.jochen.svc.cluster.local
+Connecting to apple-service.jochen.svc.cluster.local (10.245.39.214:80)
+writing to stdout
+apple-tln1
+-                    100% |**************************************************************************************************************|    11  0:00:00 ETA
+written to stdout
+/ # wget -O - http://apple-service
+Connecting to apple-service (10.245.39.214:80)
+writing to stdout
+apple-tln1
+-                    100% |**************************************************************************************************************|    11  0:00:00 ETA
+written to stdout
+```
+
 ### Debug Container
 
 
@@ -1000,7 +1295,7 @@ wget -q nginx -O -
 ```
 
 ```
-## Pod anzeigen
+## Optional: Pod anzeigen in 2. ssh-session zu jump-host
 kubectl -n policy-demo-$KURZ get pods --show-labels
 ```
 
@@ -3174,6 +3469,8 @@ kubectl delete pod nginx
 
 ## Kommando in pod ausführen 
 kubectl exec -it nginx -- bash 
+## direkt in den 1. Pod des Deployments wechseln
+kubectl exec -it deployment/name-des-deployments -- bash 
 
 ```
 
@@ -3214,7 +3511,7 @@ kubectl get pods
 ## Synopsis (most simplistic example 
 ## kubectl run NAME --image=IMAGE_EG_FROM_DOCKER
 ## example
-kubectl run nginx --image=nginx 
+kubectl run nginx --image=nginx:1.23
 
 kubectl get pods 
 ## on which node does it run ? 
@@ -3342,7 +3639,7 @@ spec:
   selector:
     matchLabels:
       app: nginx
-  replicas: 8 # tells deployment to run 2 pods matching the template
+  replicas: 8 # tells deployment to run 8 pods matching the template
   template:
     metadata:
       labels:
@@ -5744,6 +6041,51 @@ docker-compose up -d --build
 ### Ohne ssl 
 
   * https://kubernetes.github.io/ingress-nginx/user-guide/exposing-tcp-udp-services/
+
+### LoadBalancer / Cluster Controller Manager
+
+
+### Keypart: Cluster Controller Manager (CCM) 
+
+  * was decoupled from Kube Controller Manager
+    * to make it easier for cloud providers to implement their specific environment/workings (e.g. LoadBalancer)
+  * To do this a skeleton was provided.
+
+![CCM](https://kubernetes.io/images/docs/post-ccm-arch.png)
+
+### Control Loops in the CCM 
+
+  * Der CCM erbt seine Funktionen von Komponenten des Kubernetes, die von einem Cloud Provider abhängig sind.
+  * Die meisten Funktionen des CCM stammen aus dem KCM. Wie im vorherigen Abschnitt erwähnt, führt das CCM die folgenden Steuerschleifen durch:
+
+```
+Node Controller
+Route Controller
+Service Controller
+```
+
+### Service Controller 
+
+```
+Der Service Controller ist verantwortlich für das Abhören von Ereignissen zum Erstellen, Aktualisieren und Löschen von Diensten. Basierend auf dem aktuellen Stand der Services in Kubernetes konfiguriert es Cloud Load Balancer (wie ELB, Google LB oder Oracle Cloud Infrastructure LB), um den Zustand der Services in Kubernetes abzubilden. Darüber hinaus wird sichergestellt, dass die Service Backends für Cloud Loadbalancer auf dem neuesten Stand sind.
+
+```
+
+
+### Load Balancer Implementation in DigitalOcean (DO)
+
+  
+  * https://github.com/digitalocean/digitalocean-cloud-controller-manager/tree/master
+  * https://github.com/digitalocean/digitalocean-cloud-controller-manager/blob/master/cloud-controller-manager/do/loadbalancers.go
+
+#### api - domain is hardcoded in cloud controller manager for digitalocean  
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/d3b2d698-9fcb-4a46-981e-6bb38067aadc)
+
+### References:
+
+  * [Good explanation](https://medium.com/@m.json/the-kubernetes-cloud-controller-manager-d440af0d2be5)
+  * [Zugrundeliegende Konzepte](https://kubernetes.io/de/docs/concepts/architecture/cloud-controller/)
 
 ## Kubernetes Load Balancer 
 
