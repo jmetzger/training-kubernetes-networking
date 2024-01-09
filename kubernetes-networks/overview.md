@@ -49,13 +49,12 @@
 ### General 
 
   * Auch ein Overlay - Netzwerk 
-  * Unterstüzt auch policies 
+  * Unterstüzt auch policies
+  * Kombination auf Flannel (Overlay) und den NetworkPolicies aus Calico 
 
 ## Calico
 
-
-![calica](https://tanzu.vmware.com/developer/guides/container-networking-calico-refarch/images/calico-components.png)
-
+![calico](https://tanzu.vmware.com/developer/guides/container-networking-calico-refarch/images/calico-components.png)
 
 ### Komponenten 
 
@@ -123,7 +122,6 @@ Typha maintains a single datastore connection on behalf of all of its clients li
   * klassische Netzwerk (BGP) - kein Overlay
   * klassische Netzwerk-Tools können verwendet werden.
   * eBPF ist implementiert, aber muss aktiviert
-  * Standardmäßig helm - Standard (vxlan) 
 
 ### Vorteile gegenüber Flannel 
 
