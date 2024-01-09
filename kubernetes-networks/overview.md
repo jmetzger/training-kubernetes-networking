@@ -49,7 +49,7 @@
 ### General 
 
   * Auch ein Overlay - Netzwerk 
-  * Unterstüzt auch policies
+  * Unterstützt auch policies
   * Kombination auf Flannel (Overlay) und den NetworkPolicies aus Calico 
 
 ## Calico
