@@ -11,5 +11,5 @@
 ## Pod-CIDR (works for all CNI's) 
 
 ```
-kubectl describe nodes | grep -B 20 -i podcidr
+kubectl describe nodes | grep -B 25 -i podcidr
 ```
