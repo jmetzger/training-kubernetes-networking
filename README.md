@@ -39,7 +39,7 @@
   
   1. Kubernetes calico (CNI-Plugin)
      * [Install calicoctl in pod](/kubernetes-networks/calicoctl-installation.md)
-     * [Wann calicoctl (Stand 2024/01 calico 3.27)](kubernetes-networks/calico/wann-calicoctl.md)
+     * [Wann calicoctl (Stand 2024/01 calico 3.27)](calico/wann-calicoctl.md)
      * [Install calico-api-server to use kubectl instead of calicoctl](kubernetes-networks/calico/install-calico-api-server.md)
      * [Find corresponding networks](kubernetes-networks/calico/find-corresponding-interfaces.md)
      * [Calico Logging Firewall Rules](kubernetes-networks/calico/logging-policy.md)
