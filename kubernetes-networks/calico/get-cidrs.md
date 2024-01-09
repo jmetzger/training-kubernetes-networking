@@ -4,7 +4,7 @@
 
   * kubectl cluster-info dump | grep -m 1 service-cluster-ip-range
 
-## Cluster-CIDIR 
+## Cluster-CIDR 
 
   * kubectl cluster-info dump | grep -m1 cluster-cidr 
 
