@@ -19,7 +19,7 @@ kubectl debug -it nginx-master --image=busybox
 
 ```
 # Log in to worker node  where pod runs and check interfaces
-kubectl debug -it -node/worker1 --image=busybox
+kubectl debug -it node/worker1 --image=busybox
 ```
 
 ```
