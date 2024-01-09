@@ -6,7 +6,10 @@
 
 ## Cluster-CIDR 
 
-  * kubectl cluster-info dump | grep -m1 cluster-cidr 
+  * kubectl cluster-info dump | grep -m1 cluster-cidr
+  * or # look into calico ippool / default is setup on installation of cni (calico)
+  * kubectl -n calico-system describe ippool default-ipv4-ippool
+
 
 ## Pod-CIDR (works for all CNI's) 
 
