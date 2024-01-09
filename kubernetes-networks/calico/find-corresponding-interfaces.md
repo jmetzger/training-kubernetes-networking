@@ -18,7 +18,12 @@ kubectl debug -it nginx-master --image=busybox
 ```
 
 ```
-# Log in to worker node and check interfaces 
+# Log in to worker node  where pod runs and check interfaces
+kubectl debug -it -node/worker1 --image=busybox
+```
+
+```
+# on worker node 
 # show matched line starting with 22 and then another 4 lines 
 ip a | grep -A 5 ^22 
 # e.g. 
