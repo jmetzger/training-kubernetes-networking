@@ -1,4 +1,4 @@
-# Mixed Routing BGP / vxlancrossnet
+# Mixed Routing-Mode BGP / vxlancrossnet
 
 ## What does it do ? 
 
