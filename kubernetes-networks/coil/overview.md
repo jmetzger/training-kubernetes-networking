@@ -28,4 +28,8 @@ metadata:
 spec:
 ```
 
+## Reference  
+
   * Refs: https://blog.kintone.io/entry/coilv2
+  * https://github.com/cybozu-go/coil
+
