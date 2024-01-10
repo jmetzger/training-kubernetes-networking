@@ -50,6 +50,7 @@
 
   1. Kubernetes multus (Meta-CNI - Plugin)
      * [Multus Überblick](kubernetes-networks/multus/overview.md)
+     * [sr-iov mit multus](kubernetes-networks/multus/sr-iov.md)
 
   1. Kubernetes coil (egress - gateway)
      * [coil](kubernetes-networks/coil/overview.md)
