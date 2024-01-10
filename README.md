@@ -48,6 +48,9 @@
      * [Internals - Pod to Pod - Communication on Worker3 (node))](kubernetes-networks/calico/pod-2-pod-on-node-internals.md)
      * [Internals - Inter-Pod - Communication (worker 3 -> worker 1](kubernetes-networks/calico/routing-modes/vxlan/internals-routing-inter-pod-communication.md)
 
+  1. Kubernetes multus (Meta-CNI - Plugin)
+     * [Multus Überblick](kubernetes-networks/multus/overview.md)
+
   1. Kubernetes - Ingress
      * [Vom Browser über den Ingress bis zum Pod - Schaubild](/kubernetes/ingress/schaubild.md)
      * [Ingress controller in microk8s aktivieren](microk8s/ingress.md) 
