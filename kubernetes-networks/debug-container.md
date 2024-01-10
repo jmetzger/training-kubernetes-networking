@@ -6,8 +6,7 @@
 kubectl run ephemeral-demo --image=registry.k8s.io/pause:3.1 --restart=Never
 kubectl exec -it ephemeral-demo -- sh
 
-kubectl debug -it ephemeral-demo --image=ubuntu --target=ephemeral-demo
-
+kubectl debug -it ephemeral-demo --image=busybox 
 ```
 
 ## Walkthrough Debug Node 
