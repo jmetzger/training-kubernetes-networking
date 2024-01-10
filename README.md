@@ -32,6 +32,7 @@
 
   1. Calico NetworkPolicy
      * [Protecting Services](kubernetes-networkpolicy/calico/02-example-protecting-services.md)
+     * [Exercise calico Network Policy](kubernetes-networkpolicy/calico/01-exercise-calico.md)
  
   1. Kubernetes antrea (CNI-Plugin)
      * [Unterschiede Dokus vmware (antrea mit nsx-t) und OpenSource Antrea](kubernetes-networks/antrea/00_documentation-open-source-vs-vmware.md)
