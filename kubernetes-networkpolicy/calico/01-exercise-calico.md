@@ -1,4 +1,4 @@
-# Exercise networkpolicy callico
+# Exercise networkpolicy calico
 
 ## Step 1: Set global policy (Trainer only) 
 
