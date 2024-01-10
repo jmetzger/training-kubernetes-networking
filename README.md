@@ -51,6 +51,9 @@
   1. Kubernetes multus (Meta-CNI - Plugin)
      * [Multus Überblick](kubernetes-networks/multus/overview.md)
 
+  1. Kubernetes coil (egress - gateway)
+     * [coil](kubernetes-networks/coil/overview.md)
+
   1. Kubernetes - Ingress
      * [Vom Browser über den Ingress bis zum Pod - Schaubild](/kubernetes/ingress/schaubild.md)
      * [Ingress controller in microk8s aktivieren](microk8s/ingress.md) 
