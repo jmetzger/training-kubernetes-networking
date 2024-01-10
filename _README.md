@@ -29,6 +29,10 @@
 
   1. Kubernetes NetworkPolicy
      * [Einfache Übung Network Policy](#einfache-übung-network-policy)
+
+  1. Calico NetworkPolicy
+     * [Protecting Services](#protecting-services)
+     * [Exercise calico Network Policy](#exercise-calico-network-policy)
  
   1. Kubernetes antrea (CNI-Plugin)
      * [Unterschiede Dokus vmware (antrea mit nsx-t) und OpenSource Antrea](#unterschiede-dokus-vmware-antrea-mit-nsx-t-und-opensource-antrea)
@@ -37,11 +41,23 @@
      * [Antrea view bridge and config](#antrea-view-bridge-and-config)
      * [Antrea Exercise](#antrea-exercise)
   
-  1. Kubernetes calico
+  1. Kubernetes calico (CNI-Plugin)
+     * [Welcher Routing-Mode wird im aktuellen Cluster verwendet](#welcher-routing-mode-wird-im-aktuellen-cluster-verwendet)
      * [Install calicoctl in pod](#install-calicoctl-in-pod)
+     * [Wann calicoctl (Stand 2024/01 calico 3.27)](#wann-calicoctl-stand-202401-calico-327)
      * [Install calico-api-server to use kubectl instead of calicoctl](#install-calico-api-server-to-use-kubectl-instead-of-calicoctl)
      * [Find corresponding networks](#find-corresponding-networks)
      * [Calico Logging Firewall Rules](#calico-logging-firewall-rules)
+     * [Calico Default Routing Mode BGP & vxlancrossnet](#calico-default-routing-mode-bgp--vxlancrossnet)
+     * [Internals - Pod to Pod - Communication on Worker3 (node))](#internals---pod-to-pod---communication-on-worker3-node)
+     * [Internals - Inter-Pod - Communication (worker 3 -> worker 1](#internals---inter-pod---communication-worker-3-->-worker-1)
+
+  1. Kubernetes multus (Meta-CNI - Plugin)
+     * [Multus Überblick](#multus-überblick)
+     * [sr-iov mit multus](#sr-iov-mit-multus)
+
+  1. Kubernetes coil (egress - gateway)
+     * [coil](#coil)
 
   1. Kubernetes - Ingress
      * [Vom Browser über den Ingress bis zum Pod - Schaubild](#vom-browser-über-den-ingress-bis-zum-pod---schaubild)
@@ -659,13 +675,12 @@ static : Allocates static IPv4/IPv6 addresses to containers
 #### General 
 
   * Auch ein Overlay - Netzwerk 
-  * Unterstüzt auch policies 
+  * Unterstützt auch policies
+  * Kombination auf Flannel (Overlay) und den NetworkPolicies aus Calico 
 
 ### Calico
 
-
-![calica](https://tanzu.vmware.com/developer/guides/container-networking-calico-refarch/images/calico-components.png)
-
+![calico](https://tanzu.vmware.com/developer/guides/container-networking-calico-refarch/images/calico-components.png)
 
 #### Komponenten 
 
@@ -733,7 +748,6 @@ Typha maintains a single datastore connection on behalf of all of its clients li
   * klassische Netzwerk (BGP) - kein Overlay
   * klassische Netzwerk-Tools können verwendet werden.
   * eBPF ist implementiert, aber muss aktiviert
-  * Standardmäßig helm - Standard (vxlan) 
 
 #### Vorteile gegenüber Flannel 
 
@@ -1199,8 +1213,7 @@ written to stdout
 kubectl run ephemeral-demo --image=registry.k8s.io/pause:3.1 --restart=Never
 kubectl exec -it ephemeral-demo -- sh
 
-kubectl debug -it ephemeral-demo --image=ubuntu --target=ephemeral-demo
-
+kubectl debug -it ephemeral-demo --image=busybox 
 ```
 
 ### Walkthrough Debug Node 
@@ -1387,6 +1400,159 @@ kubectl delete ns policy-demo-$KURZ
 ### Ref:
 
   * https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-basic
+
+## Calico NetworkPolicy
+
+### Protecting Services
+
+
+### Example 
+
+```
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: allow-cluster-ips
+spec:
+  selector: k8s-role == 'node'
+  types:
+  - Ingress
+  applyOnForward: true
+  preDNAT: true
+  ingress:
+   # Allow 50.60.0.0/16 to access Cluster IP A
+  - action: Allow
+    source:
+      nets:
+      - 50.60.0.0/16
+    destination:
+      nets:
+      - 10.20.30.40/32  Cluster IP A
+   # Allow 70.80.90.0/24 to access Cluster IP B
+  - action: Allow
+    source:
+      nets:
+      - 70.80.90.0/24
+    destination:
+      nets:
+      - 10.20.30.41/32  Cluster IP B
+```
+
+### Referenz 
+
+  * https://docs.tigera.io/calico/latest/network-policy/services/services-cluster-ips
+
+### Exercise calico Network Policy
+
+
+### Step 1: Set global policy (Trainer only) 
+
+```
+apiVersion: crd.projectcalico.org/v1
+kind: GlobalNetworkPolicy
+metadata:
+  name: default-deny
+spec:
+  namespaceSelector: kubernetes.io/metadata.name != "kube-system"
+  types:
+  - Ingress
+  - Egress
+
+```
+
+```
+kubectl apply -f . 
+```
+
+### Step 2: nginx ausrollen aus manifests/04-service und testen
+
+```
+cd 
+cd manifests 
+cd 04-service 
+kubectl apply -f 01-deploy.yml
+kubectl apply -f 02-service.yml
+```
+
+```
+kubectl run -it --rm access --image=busybox 
+```
+
+```
+## In der Bbusybox 
+wget -O - http://my-nginx 
+```
+
+### Step 3: Traffic erlauben egress von busybox 
+
+```
+cd
+cd manifests
+mkdir cnp
+cd cnp
+```
+
+
+```
+## vi 02-egress-allow-busybox.yml
+apiVersion: crd.projectcalico.org/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-busybox-egress
+spec:
+  selector: run == 'access'
+  types:
+  - Egress
+  egress:
+  - action: Allow
+```
+
+```
+kubectl apply -f . 
+```
+
+```
+kubectl run -it --rm access --image=busybox
+```
+
+```
+## sollte gehen 
+wget -O - http://www.google.de
+
+## sollte nicht funktionieren
+wget -O - http://my-nginx
+```
+
+### Step 4: Traffic erlauben für nginx 
+
+```
+## 03-allow-ingress-my-nginx.yml 
+apiVersion: crd.projectcalico.org/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-nginx-ingress
+spec:
+  selector: run == 'my-nginx'
+  types:
+  - Ingress
+  ingress:
+  - action: Allow
+    source:
+      selector: run == 'access'
+```
+
+```
+kubectl apply -f .
+```
+
+```
+kubectl run -it --rm access --image=busybox 
+```
+
+```
+## In der Bbusybox 
+wget -O - http://my-nginx 
+```
 
 ## Kubernetes antrea (CNI-Plugin)
 
@@ -2565,7 +2731,48 @@ kubectl apply -f .
   * https://www.vrealize.it/2020/09/28/securing-you-k8s-network-with-antrea-clusternetworkpolicy/
 
 
-## Kubernetes calico
+## Kubernetes calico (CNI-Plugin)
+
+### Welcher Routing-Mode wird im aktuellen Cluster verwendet
+
+
+```
+kubectl -n calico-system describe ds calico-node
+```
+
+```
+Environment:
+      DATASTORE_TYPE:                      kubernetes
+      WAIT_FOR_DATASTORE:                  true
+      CLUSTER_TYPE:                        k8s,operator,bgp
+      CALICO_DISABLE_FILE_LOGGING:         false
+      FELIX_DEFAULTENDPOINTTOHOSTACTION:   ACCEPT
+      FELIX_HEALTHENABLED:                 true
+      FELIX_HEALTHPORT:                    9099
+      NODENAME:                             (v1:spec.nodeName)
+      NAMESPACE:                            (v1:metadata.namespace)
+      FELIX_TYPHAK8SNAMESPACE:             calico-system
+      FELIX_TYPHAK8SSERVICENAME:           calico-typha
+      FELIX_TYPHACAFILE:                   /etc/pki/tls/certs/tigera-ca-bundle.crt
+      FELIX_TYPHACERTFILE:                 /node-certs/tls.crt
+      FELIX_TYPHAKEYFILE:                  /node-certs/tls.key
+      FIPS_MODE_ENABLED:                   false
+      FELIX_TYPHACN:                       typha-server
+      CALICO_MANAGE_CNI:                   true
+      CALICO_IPV4POOL_CIDR:                192.168.0.0/16
+      CALICO_IPV4POOL_VXLAN:               CrossSubnet
+      CALICO_IPV4POOL_BLOCK_SIZE:          26
+      CALICO_IPV4POOL_NODE_SELECTOR:       all()
+      CALICO_IPV4POOL_DISABLE_BGP_EXPORT:  false
+      CALICO_NETWORKING_BACKEND:           bird
+      IP:                                  autodetect
+      IP_AUTODETECTION_METHOD:             first-found
+      IP6:                                 none
+      FELIX_IPV6SUPPORT:                   false
+      KUBERNETES_SERVICE_HOST:             10.96.0.1
+      KUBERNETES_SERVICE_PORT:             443
+    Mounts:
+```
 
 ### Install calicoctl in pod
 
@@ -2746,6 +2953,19 @@ kubectl -n kube-system exec calicoctl -- /calicoctl version
 ## on both sides 
 
 ```
+
+### Wann calicoctl (Stand 2024/01 calico 3.27)
+
+
+### Für Informationen über die Nodes (z.B. BGP) - direkt auf Node ausführen 
+
+ * calicoctl get nodes
+
+### Um Zusatzinformationen abzufragen, die nur in calicoctl zur Verfügung stehen 
+
+  * z.B
+  * calicoctl get web -n namespace-der-application
+
 
 ### Install calico-api-server to use kubectl instead of calicoctl
 
@@ -3128,7 +3348,12 @@ kubectl debug -it nginx-master --image=busybox
 ```
 
 ```
-## Log in to worker node and check interfaces 
+## Log in to worker node  where pod runs and check interfaces
+kubectl debug -it node/worker1 --image=busybox
+```
+
+```
+## on worker node 
 ## show matched line starting with 22 and then another 4 lines 
 ip a | grep -A 5 ^22 
 ## e.g. 
@@ -3265,6 +3490,191 @@ ping www.google.de
 
   * Eventually set a prefix for logging:
   * https://docs.tigera.io/calico-cloud/visibility/iptables
+
+### Calico Default Routing Mode BGP & vxlancrossnet
+
+
+### What does it do ? 
+
+  * BGP is used, when other node is on same subnet
+  * vxlan is used, when worker node to reach is in other subnet
+
+### Grafics
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/a2766737-e1e5-4ee0-8e03-9216a0379d97)
+
+### How to find out, if this node is used 
+
+```
+kubectl -n calico-system get ippool -o yaml | grep vxlan 
+```
+
+### Internals - Pod to Pod - Communication on Worker3 (node))
+
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/ba9d497d-36ed-467f-9965-faad76a201cd)
+
+### Internals - Inter-Pod - Communication (worker 3 -> worker 1
+
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/305e0dac-5d13-4f6c-88b0-3b06b88eba7c)
+
+## Kubernetes multus (Meta-CNI - Plugin)
+
+### Multus Überblick
+
+
+### Problem, Warum multus ? 
+
+  * Aktuell kann seitens kubernetes nur ein Interface verwaltet werden, weil der CNI-Call nur 1x ausgeführt wird. (eigentlich 2x wenn man localhost mit einbezieht)
+
+### Prerequisites 
+
+  * a CNI, that manages the network needs to be installed before hand, like Calico, Cilium
+
+### Graphics 
+
+![Multus](https://github.com/k8snetworkplumbingwg/multus-cni/raw/master/docs/images/multus-pod-image.svg)
+
+### General 
+
+  * Multus is a meta-plugin, which makes it possible to attach additional networks to your pod (multi - homing)
+
+### macvlan plugin 
+
+### Example macvlan 
+
+  * https://github.com/k8snetworkplumbingwg/multus-cni/blob/master/examples/macvlan-pod.yml
+
+```
+---
+## This net-attach-def defines macvlan-conf with 
+##   + ips capabilities to specify ip in pod annotation and 
+##   + mac capabilities to specify mac address in pod annotation
+## default gateway is defined as well
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
+  name: macvlan-conf
+spec: 
+  config: '{
+      "cniVersion": "0.3.1",
+      "plugins": [
+        {
+          "type": "macvlan",
+          "capabilities": { "ips": true },
+          "master": "eth0",
+          "mode": "bridge",
+          "ipam": {
+            "type": "static",
+            "routes": [
+              {
+                "dst": "0.0.0.0/0",
+                "gw": "10.1.1.1"
+              }
+            ] 
+          }
+        }, {
+          "capabilities": { "mac": true },
+          "type": "tuning"
+        }
+      ]
+    }'
+---
+## Define a pod with macvlan-conf, defined above, with ip address and mac, and 
+## "gateway" overrides default gateway to use macvlan-conf's one. 
+## without "gateway" in k8s.v1.cni.cncf.io/networks, default route will be cluster
+## network interface, eth0, even tough macvlan-conf has default gateway config.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: samplepod
+  annotations:
+    k8s.v1.cni.cncf.io/networks: '[
+            { "name": "macvlan-conf",
+              "ips": [ "10.1.1.101/24" ],
+              "mac": "c2:b0:57:49:47:f1",
+              "gateway": [ "10.1.1.1" ]
+            }]'
+spec:
+  containers:
+  - name: samplepod
+    command: ["/bin/bash", "-c", "trap : TERM INT; sleep infinity & wait"]
+    image: dougbtv/centos-network
+    ports:
+    - containerPort: 80
+
+```
+
+### sr-iov mit multus
+
+
+### Voraussetzung: Multus:
+
+### Konzept SR-IOV
+
+  * Direkte Hardwareanbindung der Netzwerkkarte
+  * Offload wird auf Netzwerkkarte gemacht (nicht im Kernel)
+  * bessere Performance
+
+### Generell 
+
+  * Erweiterung des PCI-Express Standarads 
+  * Eine Netzwerkkarte wird mehrmals angeboten und Kommunikation erfolgt direkt und nicht über den Umweg Kernel
+
+### Vorbereitung
+
+ * https://github.com/k8snetworkplumbingwg/sriov-network-device-plugin
+ * https://github.com/k8snetworkplumbingwg/sriov-network-device-plugin/tree/db98d96cc0d6ad3fff917ba238bd1cc5cc3f7e82#config-parameters
+
+### Einbindung 
+
+  * https://github.com/k8snetworkplumbingwg/sriov-network-device-plugin#example-deployments
+  * https://github.com/k8snetworkplumbingwg/multus-cni/blob/master/examples/sriov-pod.yml
+
+
+
+ 
+
+
+## Kubernetes coil (egress - gateway)
+
+### coil
+
+
+### Opt-In egress-gateway (NAT-Service)
+
+```
+apiVersion: coil.cybozu.com/v2
+kind: Egress
+metadata:
+  namespace: internet-egress
+  name: nat
+spec:
+  replicas: 2
+  destinations:
+  - 0.0.0.0/0
+  - ::/0
+```
+
+  * Not all Pods become the client of Egress. To become a client, Pods need to have special annotations like this:
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: default
+  name: nat-client
+  annotations:
+    egress.coil.cybozu.com/internet-egress: nat
+spec:
+```
+
+### Reference  
+
+  * Refs: https://blog.kintone.io/entry/coilv2
+  * https://github.com/cybozu-go/coil
+
 
 ## Kubernetes - Ingress
 
