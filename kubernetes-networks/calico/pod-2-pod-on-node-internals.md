@@ -1,0 +1,3 @@
+# Pod 2 Pod Internals 
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/ba9d497d-36ed-467f-9965-faad76a201cd)
