@@ -41,6 +41,15 @@ wget -O - http://my-nginx
 ## Step 3: Traffic erlauben egress von busybox 
 
 ```
+cd
+cd manifests
+mkdir cnp
+cd cnp
+```
+
+
+```
+# vi 02-egress-allow-busybox.yml
 apiVersion: crd.projectcalico.org/v1
 kind: NetworkPolicy
 metadata:
@@ -72,6 +81,7 @@ wget -O - http://my-nginx
 ## Step 4: Traffic erlauben für nginx 
 
 ```
+# 03-allow-ingress-my-nginx.yml 
 apiVersion: crd.projectcalico.org/v1
 kind: NetworkPolicy
 metadata:
