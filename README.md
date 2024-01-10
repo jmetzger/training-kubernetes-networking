@@ -45,6 +45,7 @@
      * [Find corresponding networks](kubernetes-networks/calico/find-corresponding-interfaces.md)
      * [Calico Logging Firewall Rules](kubernetes-networks/calico/logging-policy.md)
      * [Calico Default Routing Mode BGP & vxlancrossnet](kubernetes-networks/calico/routing-modes/bgp-vxlancrossnet.md)
+     * [Interals - Pod to Pod - Communication on Worker3 (node))](kubernetes-networks/calico/pod-2-pod-on-node-internals.md)
 
   1. Kubernetes - Ingress
      * [Vom Browser über den Ingress bis zum Pod - Schaubild](/kubernetes/ingress/schaubild.md)
