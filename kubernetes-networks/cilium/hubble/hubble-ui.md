@@ -6,7 +6,7 @@
 hubble  ui 
 ```
 
-## Variante B: jump-server ohne browser
+## Variante B: jump-server (wenn dieser keinen Browser hat)
 
 ### Auf dem Jump-Server Port-Forwarding aktivieren 
 
