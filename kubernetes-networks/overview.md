@@ -19,7 +19,7 @@
   * Antrea (vmware)
   * Weave Net 
   
-## Flannel
+## Flanel
 
 ### Generell
 
