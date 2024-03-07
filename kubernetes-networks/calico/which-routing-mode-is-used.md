@@ -1,7 +1,7 @@
 # Which routing mode is used 
 
 ```
-kubectl -n calico-system describe ds calico-node
+kubectl -n calico-system describe ds calico-node | grep -A 35  calico-node 
 ```
 
 ```
