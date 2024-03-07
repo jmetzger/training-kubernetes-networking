@@ -6,6 +6,25 @@
 
 ## Um Zusatzinformationen abzufragen, die nur in calicoctl zur Verfügung stehen 
 
-  * z.B
-  * calicoctl get web -n namespace-der-application
+```
+# namespace in command needs to be written at then end
+calicoctl get wep -n namespace-der-application
 
+# get version
+calicoctl version
+
+# show cidr / the ippool 
+calicoctl ipam show
+calicoctl ipam check 
+
+```
+
+## Calico - only on one of nodes (e.g. controlplane - need to login with ssh) 
+
+```
+# .kube/config does not need to be configured 
+calicoctl node status
+calicoctl ipam status 
+
+
+```
