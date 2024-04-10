@@ -44,4 +44,9 @@ metadata:
   namespace: metallb-system
 ```
 
+## References 
 
+  * https://microk8s.io/docs/addon-metallb
+  * https://metallb.universe.tf/
+  * Calico Issues: https://metallb.universe.tf/configuration/calico/
+  
