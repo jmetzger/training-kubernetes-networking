@@ -43,6 +43,7 @@
   
   1. Kubernetes calico (CNI-Plugin)
      * [Welcher Routing-Mode wird im aktuellen Cluster verwendet](/kubernetes-networks/calico/which-routing-mode-is-used.md)
+     * [Wird eBPF verwendet ?](/kubernetes-networks/calico/is-ebpf-used.md)
      * [Install calicoctl in pod](/kubernetes-networks/calicoctl-installation.md)
      * [Wann calicoctl (Stand 2024/01 calico 3.27)](calico/wann-calicoctl.md)
      * [Install calico-api-server to use kubectl instead of calicoctl](kubernetes-networks/calico/install-calico-api-server.md)
