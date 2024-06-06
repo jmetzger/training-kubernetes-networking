@@ -36,20 +36,72 @@ kubectl apply -f .
 ## Step 2: nginx ausrollen aus manifests/04-service und testen
 
 ```
-cd 
-cd manifests 
+cd
+mkdir -p manifests
+cd manifests
+mkdir 04-service 
 cd 04-service 
-kubectl apply -f 01-deploy.yml
-kubectl apply -f 02-service.yml
+```
+
+```
+nano deploy.yml 
+```
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-nginx
+spec:
+  selector:
+    matchLabels:
+      web: my-nginx
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        web: my-nginx
+    spec:
+      containers:
+      - name: cont-nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+```
+
+```
+nano service.yml
+```
+
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-nginx
+  labels:
+    run: svc-my-nginx
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    web: my-nginx      
+        
+```        
+
+```
+kubectl apply -f . 
 ```
 
 ```
 kubectl run -it --rm access --image=busybox 
 ```
-
 ```
+
 # In der Bbusybox 
-wget -O - http://my-nginx 
+wget -O - http://svc-nginx 
 ```
 
 ## Step 3: Traffic erlauben egress von busybox 
