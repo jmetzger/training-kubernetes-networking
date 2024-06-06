@@ -12,6 +12,20 @@ spec:
   types:
   - Ingress
   - Egress
+  egress:
+   # allow all namespaces to communicate to DNS pods
+  - action: Allow
+    protocol: UDP
+    destination:
+      selector: 'k8s-app == "kube-dns"'
+      ports:
+      - 53
+  - action: Allow
+    protocol: TCP
+    destination:
+      selector: 'k8s-app == "kube-dns"'
+      ports:
+      - 53
 
 ```
 
