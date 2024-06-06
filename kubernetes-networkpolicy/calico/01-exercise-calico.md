@@ -1,6 +1,6 @@
 # Exercise networkpolicy calico
 
-## Step 1: Set global policy (Trainer only) 
+## Step 1: Set global policy
 
 ```
 apiVersion: crd.projectcalico.org/v1
