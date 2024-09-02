@@ -19,13 +19,7 @@
      * [Netzwerk Interna](/kubernetes-networks/networking-internal-overview.md)
      * [Wirkweise cni](/kubernetes/internals/cni.md)
      * [Übersicht Netzwerke](/kubernetes-networks/overview.md) 
-     * [Calico/Cilium - nginx example NetworkPolicy](kubernetes-networkpolicy/00-simple-exercises-group.md)
-     * [Beispiele Ingress Egress NetworkPolicy](kubernetes-networks/examples-ingress-egress.md)
-     * [Mesh / istio](sammlung-istio.md)  
-     * [Kubernetes Ports/Protokolle](https://kubernetes.io/docs/reference/networking/ports-and-protocols/)
-     * [IPV4/IPV6 Dualstack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/)
      * [DNS - Resolution - Services](kubernetes-networks/dns-resolution-services.md)
-     * [Debug Container](kubernetes-networks/debug-container.md)
 
   1. Kubernetes NetworkPolicy
      * [Einfache Übung Network Policy](kubernetes-networkpolicy/00-simple-exercises-group.md)
@@ -62,8 +56,6 @@
 
   1. Kubernetes - Ingress
      * [Vom Browser über den Ingress bis zum Pod - Schaubild](/kubernetes/ingress/schaubild.md)
-     * [Ingress controller in microk8s aktivieren](microk8s/ingress.md) 
-     * [ingress mit ssl absichern](/kubernetes-security/ingress-ssl.md)
 
   1. Kubernetes - Wartung / Debugging 
      * [kubectl drain/uncordon](/kubectl/uncordon-drain.md)
@@ -148,7 +140,20 @@
  
   1. Kubernetes Documentation 
      * [Well-Known Annotations](https://kubernetes.io/docs/reference/labels-annotations-taints/)
+
+
+## Backlog 
+
+  1. Kubernetes - Netzwerk (CNI's) / Mesh
+     * [Calico/Cilium - nginx example NetworkPolicy](kubernetes-networkpolicy/00-simple-exercises-group.md)
+     * [Beispiele Ingress Egress NetworkPolicy](kubernetes-networks/examples-ingress-egress.md)
+     * [Mesh / istio](sammlung-istio.md)  
+     * [DNS - Resolution - Services](kubernetes-networks/dns-resolution-services.md)
   
+  1. Kubernetes - Ingress
+     * [Ingress controller in microk8s aktivieren](microk8s/ingress.md) 
+     * [ingress mit ssl absichern](/kubernetes-security/ingress-ssl.md)
+
 ## Backlog
 
   1. Kubernetes - Überblick
