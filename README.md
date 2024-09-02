@@ -23,18 +23,7 @@
 
   1. Kubernetes NetworkPolicy
      * [Einfache Übung Network Policy](kubernetes-networkpolicy/00-simple-exercises-group.md)
-
-  1. Calico NetworkPolicy
-     * [Protecting Services](kubernetes-networkpolicy/calico/02-example-protecting-services.md)
-     * [Exercise calico Network Policy](kubernetes-networkpolicy/calico/01-exercise-calico.md)
  
-  1. Kubernetes antrea (CNI-Plugin)
-     * [Unterschiede Dokus vmware (antrea mit nsx-t) und OpenSource Antrea](kubernetes-networks/antrea/00_documentation-open-source-vs-vmware.md)
-     * [Overview Kubernetes Antrea CNI-Plugin](kubernetes-networks/antrea/01_overview.md)
-     * [Antctl](kubernetes-networks/antrea/10_antctl.md)
-     * [Antrea view bridge and config](kubernetes-networks/antrea/20-view-bridge-and-config.md)
-     * [Antrea Exercise](kubernetes-networks/antrea/99_exercise.md)
-  
   1. Kubernetes calico (CNI-Plugin)
      * [Welcher Routing-Mode wird im aktuellen Cluster verwendet](/kubernetes-networks/calico/which-routing-mode-is-used.md)
      * [Wird eBPF verwendet ?](/kubernetes-networks/calico/is-ebpf-used.md)
@@ -149,10 +138,23 @@
      * [Beispiele Ingress Egress NetworkPolicy](kubernetes-networks/examples-ingress-egress.md)
      * [Mesh / istio](sammlung-istio.md)  
      * [DNS - Resolution - Services](kubernetes-networks/dns-resolution-services.md)
-  
+
+  1. Calico NetworkPolicy
+     * [Protecting Services](kubernetes-networkpolicy/calico/02-example-protecting-services.md)
+     * [Exercise calico Network Policy](kubernetes-networkpolicy/calico/01-exercise-calico.md)
+ 
+  1. Kubernetes antrea (CNI-Plugin)
+     * [Unterschiede Dokus vmware (antrea mit nsx-t) und OpenSource Antrea](kubernetes-networks/antrea/00_documentation-open-source-vs-vmware.md)
+     * [Overview Kubernetes Antrea CNI-Plugin](kubernetes-networks/antrea/01_overview.md)
+     * [Antctl](kubernetes-networks/antrea/10_antctl.md)
+     * [Antrea view bridge and config](kubernetes-networks/antrea/20-view-bridge-and-config.md)
+     * [Antrea Exercise](kubernetes-networks/antrea/99_exercise.md)
+     
   1. Kubernetes - Ingress
      * [Ingress controller in microk8s aktivieren](microk8s/ingress.md) 
      * [ingress mit ssl absichern](/kubernetes-security/ingress-ssl.md)
+    
+     
 
 ## Backlog
 
@@ -196,6 +198,3 @@
      * [Übung Liveness-Probe](/probes/uebung-liveness.md)
      * [Funktionsweise Readiness-Probe vs. Liveness-Probe](/probes/readiness.md) 
        
-
-     
-
