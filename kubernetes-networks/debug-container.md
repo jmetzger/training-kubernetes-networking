@@ -9,6 +9,15 @@ kubectl exec -it ephemeral-demo -- sh
 kubectl debug -it ephemeral-demo --image=busybox 
 ```
 
+## Example with nginx
+
+```
+kubectl run --image=nginx nginx
+## debug this container
+kubectl debug -it nginx --image=busybox
+```
+
+
 ## Walkthrough Debug Node 
 
 ```
