@@ -36,21 +36,13 @@
      * [Internals - Pod to Pod - Communication on Worker3 (node))](kubernetes-networks/calico/pod-2-pod-on-node-internals.md)
      * [Internals - Inter-Pod - Communication (worker 3 -> worker 1](kubernetes-networks/calico/routing-modes/vxlan/internals-routing-inter-pod-communication.md)
 
-  1. Kubernetes multus (Meta-CNI - Plugin)
-     * [Multus Überblick](kubernetes-networks/multus/overview.md)
-     * [sr-iov mit multus](kubernetes-networks/multus/sr-iov.md)
-
-  1. Kubernetes coil (egress - gateway)
-     * [coil](kubernetes-networks/coil/overview.md)
-
   1. Kubernetes - Ingress
      * [Vom Browser über den Ingress bis zum Pod - Schaubild](/kubernetes/ingress/schaubild.md)
 
   1. Kubernetes - Wartung / Debugging 
-     * [kubectl drain/uncordon](/kubectl/uncordon-drain.md)
-     * [Alte manifeste konvertieren mit convert plugin](/kubectl/convert-plugin.md)
      * [Netzwerkverbindung zu pod testen](/tipps-tricks/verbindung-zu-pod-testen.md)
-     * [Curl from pod api-server](/kubernetes-advanced/curl-api-server.md)
+
+  1. Kubernetes Praxis (zum Verständnis von Netzwerk) 
 
   1. Kubernetes Praxis API-Objekte 
      * [Das Tool kubectl (Devs/Ops) - Spickzettel](/kubectl/spickzettel.md)
@@ -74,7 +66,42 @@
      * [ConfigMap Example](/kubectl-examples/06-configmap.md)
      * [Configmap MariaDB - Example](kubectl-examples/06a-configmap-mariadb.md)
      * [Configmap MariaDB my.cnf](kubectl-examples/06b-mariadb-configmap-configfile.md)     
-  
+     
+  1. Kubernetes Load Balancer 
+     * [Kubernetes Load Balancer](metallb.md)
+     * [Kubernetes Load Balancer new version for IpAdresses - object](loadbalancer/metallb.md)
+ 
+## Backlog 
+
+  1. Kubernetes - Netzwerk (CNI's) / Mesh
+     * [Calico/Cilium - nginx example NetworkPolicy](kubernetes-networkpolicy/00-simple-exercises-group.md)
+     * [Beispiele Ingress Egress NetworkPolicy](kubernetes-networks/examples-ingress-egress.md)
+     * [Mesh / istio](sammlung-istio.md)  
+     * [DNS - Resolution - Services](kubernetes-networks/dns-resolution-services.md)
+
+  1. Calico NetworkPolicy
+     * [Protecting Services](kubernetes-networkpolicy/calico/02-example-protecting-services.md)
+     * [Exercise calico Network Policy](kubernetes-networkpolicy/calico/01-exercise-calico.md)
+
+  1. Kubernetes multus (Meta-CNI - Plugin)
+     * [Multus Überblick](kubernetes-networks/multus/overview.md)
+     * [sr-iov mit multus](kubernetes-networks/multus/sr-iov.md)
+
+  1. Kubernetes coil (egress - gateway)
+     * [coil](kubernetes-networks/coil/overview.md)
+ 
+  1. Kubernetes antrea (CNI-Plugin)
+     * [Unterschiede Dokus vmware (antrea mit nsx-t) und OpenSource Antrea](kubernetes-networks/antrea/00_documentation-open-source-vs-vmware.md)
+     * [Overview Kubernetes Antrea CNI-Plugin](kubernetes-networks/antrea/01_overview.md)
+     * [Antctl](kubernetes-networks/antrea/10_antctl.md)
+     * [Antrea view bridge and config](kubernetes-networks/antrea/20-view-bridge-and-config.md)
+     * [Antrea Exercise](kubernetes-networks/antrea/99_exercise.md)
+
+  1. Kubernetes - Wartung / Debugging 
+     * [kubectl drain/uncordon](/kubectl/uncordon-drain.md)
+     * [Alte manifeste konvertieren mit convert plugin](/kubectl/convert-plugin.md)
+     * [Curl from pod api-server](/kubernetes-advanced/curl-api-server.md)
+
   1. Kubernetes Deployment Scenarios 
      * [Deployment green/blue,canary,rolling update](/kubernetes/deployment-strategies-en.md)
      * [Service Blue/Green](/kubectl-examples/03c-service-blue-green-nginx.md)
@@ -122,39 +149,14 @@
      * [yaml linting](https://www.kubeval.com/installation/)
      * [ssl terminierung über proxy nginx](ssl-nginx-termination.md)
      * [LoadBalancer / Cluster Controller Manager](/internals/service/loadbalancer/cloud-controller-manager-do.md)
-   
-  1. Kubernetes Load Balancer 
-     * [Kubernetes Load Balancer](metallb.md)
-     * [Kubernetes Load Balancer new version for IpAdresses - object](loadbalancer/metallb.md)
- 
-  1. Kubernetes Documentation 
-     * [Well-Known Annotations](https://kubernetes.io/docs/reference/labels-annotations-taints/)
 
-
-## Backlog 
-
-  1. Kubernetes - Netzwerk (CNI's) / Mesh
-     * [Calico/Cilium - nginx example NetworkPolicy](kubernetes-networkpolicy/00-simple-exercises-group.md)
-     * [Beispiele Ingress Egress NetworkPolicy](kubernetes-networks/examples-ingress-egress.md)
-     * [Mesh / istio](sammlung-istio.md)  
-     * [DNS - Resolution - Services](kubernetes-networks/dns-resolution-services.md)
-
-  1. Calico NetworkPolicy
-     * [Protecting Services](kubernetes-networkpolicy/calico/02-example-protecting-services.md)
-     * [Exercise calico Network Policy](kubernetes-networkpolicy/calico/01-exercise-calico.md)
- 
-  1. Kubernetes antrea (CNI-Plugin)
-     * [Unterschiede Dokus vmware (antrea mit nsx-t) und OpenSource Antrea](kubernetes-networks/antrea/00_documentation-open-source-vs-vmware.md)
-     * [Overview Kubernetes Antrea CNI-Plugin](kubernetes-networks/antrea/01_overview.md)
-     * [Antctl](kubernetes-networks/antrea/10_antctl.md)
-     * [Antrea view bridge and config](kubernetes-networks/antrea/20-view-bridge-and-config.md)
-     * [Antrea Exercise](kubernetes-networks/antrea/99_exercise.md)
-     
+         
   1. Kubernetes - Ingress
      * [Ingress controller in microk8s aktivieren](microk8s/ingress.md) 
      * [ingress mit ssl absichern](/kubernetes-security/ingress-ssl.md)
     
-     
+  1. Kubernetes Documentation 
+     * [Well-Known Annotations](https://kubernetes.io/docs/reference/labels-annotations-taints/)    
 
 ## Backlog
 
