@@ -41,14 +41,14 @@
   1. Kubernetes - Wartung / Debugging 
      * [Netzwerkverbindung zu pod testen](/tipps-tricks/verbindung-zu-pod-testen.md)
 
-  1. Kubernetes Praxis (zum Verständnis von Netzwerk) 
+  1. Kubernetes Praxis (zum Verständnis von Netzwerk)
+     * [kubectl example with run](/kubectl/run-with-example.md)
      * [Das Tool kubectl (Devs/Ops) - Spickzettel](/kubectl/spickzettel.md)
      * [Service Typen / Ebenen - Schaubild](service-ebenen.md)
      * [kubectl/manifest/service](/kubectl-examples/03b-service.md)
+     * [Ingress Controller auf Digitalocean (doks) mit helm installieren](/digitalocean/ingress-auf-digitalocean-mit-helm.md)
 
   1. Kubernetes Praxis API-Objekte 
-
-     * [kubectl example with run](/kubectl/run-with-example.md)
      * [Bauen einer Applikation mit Resource Objekten](bauen-einer-webanwendung.md)
      * [Pod manifest](kubectl-examples/01-pod-nginx.md)
      * [Replicasets](kubectl-examples/01a-replicaset-nginx.md)
