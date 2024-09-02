@@ -1,14 +1,5 @@
 # Ingress Nginx 
 
-## Prerequisits
-
-```
-# Ingress Controller muss aktiviert sein 
-## Nur der Fall wenn man microk8s zum Einrichten verwendet 
-## Ubuntu 
-microk8s enable ingress
-```
-
 ## Walkthrough 
 
 ### Step 1: pods and services
