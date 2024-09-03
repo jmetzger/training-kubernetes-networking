@@ -12,7 +12,7 @@
 
 ## Welche gibt es ? 
 
-  * Flanel
+  * Flannel
   * Canal 
   * Calico 
   * Cilium
