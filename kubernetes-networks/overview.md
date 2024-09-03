@@ -50,7 +50,7 @@
 
   * Auch ein Overlay - Netzwerk 
   * Unterstützt auch policies
-  * Kombination auf Flannel (Overlay) und den NetworkPolicies aus Calico 
+  * Kombination aus Flannel (Overlay) und den NetworkPolicies aus Calico 
 
 ## Calico
 
