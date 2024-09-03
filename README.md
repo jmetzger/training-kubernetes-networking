@@ -50,23 +50,7 @@
      * [kubectl/manifest/service](/kubectl-examples/03b-service.md)
      * [Ingress Controller auf Digitalocean (doks) mit helm installieren](/digitalocean/ingress-auf-digitalocean-mit-helm.md)
      * [Beispiel mit Hostnamen](/kubectl-examples/04-ingress-nginx-with-hostnames.md)
-
-  1. Kubernetes Praxis API-Objekte 
-     * [Bauen einer Applikation mit Resource Objekten](bauen-einer-webanwendung.md)
-     * [Pod manifest](kubectl-examples/01-pod-nginx.md)
-     * [Replicasets](kubectl-examples/01a-replicaset-nginx.md)
-     * [kubectl/manifest/deployments](/kubectl-examples/03-nginx-deployment.md)
-     * [Services - Aufbau](/kubernetes/services-aufbau.md)
-     * DaemonSets (Devs/Ops)
-     * [Hintergrund Ingress](/kubernetes/ingress.md) 
-     * [Documentation for default ingress nginx](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/)
-     * [Beispiel Ingress](/kubectl-examples/04-ingress-nginx.md)
-     * [Achtung: Ingress mit Helm - annotations](/ingress-mit-helm-class-achtung.md)
-     * [Permanente Weiterleitung mit Ingress](/kubectl-examples/05-ingress-permanent-redirect.md)
-     * [ConfigMap Example](/kubectl-examples/06-configmap.md)
-     * [Configmap MariaDB - Example](kubectl-examples/06a-configmap-mariadb.md)
-     * [Configmap MariaDB my.cnf](kubectl-examples/06b-mariadb-configmap-configfile.md)     
-     
+           
   1. Kubernetes Load Balancer 
      * [Kubernetes Load Balancer](metallb.md)
      * [Kubernetes Load Balancer new version for IpAdresses - object](loadbalancer/metallb.md)
@@ -82,6 +66,22 @@
   1. Calico NetworkPolicy
      * [Protecting Services](kubernetes-networkpolicy/calico/02-example-protecting-services.md)
      * [Exercise calico Network Policy](kubernetes-networkpolicy/calico/01-exercise-calico.md)
+  
+  1. Kubernetes Praxis API-Objekte 
+     * [Bauen einer Applikation mit Resource Objekten](bauen-einer-webanwendung.md)
+     * [Pod manifest](kubectl-examples/01-pod-nginx.md)
+     * [Replicasets](kubectl-examples/01a-replicaset-nginx.md)
+     * [kubectl/manifest/deployments](/kubectl-examples/03-nginx-deployment.md)
+     * [Services - Aufbau](/kubernetes/services-aufbau.md)
+     * DaemonSets (Devs/Ops)
+     * [Hintergrund Ingress](/kubernetes/ingress.md) 
+     * [Documentation for default ingress nginx](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/)
+     * [Beispiel Ingress](/kubectl-examples/04-ingress-nginx.md)
+     * [Achtung: Ingress mit Helm - annotations](/ingress-mit-helm-class-achtung.md)
+     * [Permanente Weiterleitung mit Ingress](/kubectl-examples/05-ingress-permanent-redirect.md)
+     * [ConfigMap Example](/kubectl-examples/06-configmap.md)
+     * [Configmap MariaDB - Example](kubectl-examples/06a-configmap-mariadb.md)
+     * [Configmap MariaDB my.cnf](kubectl-examples/06b-mariadb-configmap-configfile.md)  
 
   1. Kubernetes multus (Meta-CNI - Plugin)
      * [Multus Überblick](kubernetes-networks/multus/overview.md)
