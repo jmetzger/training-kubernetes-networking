@@ -22,6 +22,7 @@
 
   1. Kubernetes NetworkPolicy
      * [Einfache Übung Network Policy](kubernetes-networkpolicy/00-simple-exercises-group.md)
+     * [NetworkPolicy from IPBlock](kubernetes-networkpolicy/01-example-from-ipblock.md)
  
   1. Kubernetes calico (CNI-Plugin)
      * [Welcher Routing-Mode wird im aktuellen Cluster verwendet](/kubernetes-networks/calico/which-routing-mode-is-used.md)
