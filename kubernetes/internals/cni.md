@@ -11,7 +11,7 @@
 
 ## CNI-Plugin: 
 
-   * Ein Kubernetes-Cluster braucht immer ein CNI-Plugin, sonst funktioniert die Kmmunikation nicht und die Nodes im Cluster steht auf NotReady 
+   * Ein Kubernetes-Cluster braucht immer ein CNI-Provider, sonst funktioniert die Kmmunikation nicht und die Nodes im Cluster stehen auf NotReady 
    * Beispiele: Calico, WeaveNet, Antrea, Cilium, Flannel 
 
 ## IPAM - IP Address Management 
