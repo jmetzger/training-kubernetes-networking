@@ -41,9 +41,11 @@
   1. Kubernetes - Wartung / Debugging 
      * [Netzwerkverbindung zu pod testen](/tipps-tricks/verbindung-zu-pod-testen.md)
 
+  1. Kubernetes Cheatsheet/Spickzettel 
+     * [Das Tool kubectl (Devs/Ops) - Spickzettel](/kubectl/spickzettel.md)
+      
   1. Kubernetes Praxis (zum Verständnis von Netzwerk)
      * [kubectl example with run](/kubectl/run-with-example.md)
-     * [Das Tool kubectl (Devs/Ops) - Spickzettel](/kubectl/spickzettel.md)
      * [Service Typen / Ebenen - Schaubild](service-ebenen.md)
      * [kubectl/manifest/service](/kubectl-examples/03b-service.md)
      * [Ingress Controller auf Digitalocean (doks) mit helm installieren](/digitalocean/ingress-auf-digitalocean-mit-helm.md)
