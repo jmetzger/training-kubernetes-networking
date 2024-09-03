@@ -23,19 +23,13 @@
   1. Kubernetes NetworkPolicy
      * [Einfache Übung Network Policy](kubernetes-networkpolicy/00-simple-exercises-group.md)
      * [NetworkPolicy from IPBlock](kubernetes-networkpolicy/01-example-from-ipblock.md)
+
+ 1. Kubernetes calico (CNI-Plugin)
  
-  1. Kubernetes calico (CNI-Plugin)
-     * [Welcher Routing-Mode wird im aktuellen Cluster verwendet](/kubernetes-networks/calico/which-routing-mode-is-used.md)
-     * [Wird eBPF verwendet ?](/kubernetes-networks/calico/is-ebpf-used.md)
-     * [Install calicoctl in pod](/kubernetes-networks/calicoctl-installation.md)
-     * [Wann calicoctl (Stand 2024/01 calico 3.27)](calico/wann-calicoctl.md)
-     * [Install calico-api-server to use kubectl instead of calicoctl](kubernetes-networks/calico/install-calico-api-server.md)
      * [Find corresponding networks](kubernetes-networks/calico/find-corresponding-interfaces.md)
      * [Calico Logging Firewall Rules](kubernetes-networks/calico/logging-policy.md)
      * [Calico Default Routing Mode BGP & vxlancrossnet](kubernetes-networks/calico/routing-modes/bgp-vxlancrossnet.md)
-     * [Internals - Pod to Pod - Communication on Worker3 (node))](kubernetes-networks/calico/pod-2-pod-on-node-internals.md)
-     * [Internals - Inter-Pod - Communication (worker 3 -> worker 1](kubernetes-networks/calico/routing-modes/vxlan/internals-routing-inter-pod-communication.md)
-
+  
   1. Kubernetes - Ingress
      * [Vom Browser über den Ingress bis zum Pod - Schaubild](/kubernetes/ingress/schaubild.md)
 
@@ -67,6 +61,17 @@
   1. Calico NetworkPolicy
      * [Protecting Services](kubernetes-networkpolicy/calico/02-example-protecting-services.md)
      * [Exercise calico Network Policy](kubernetes-networkpolicy/calico/01-exercise-calico.md)
+
+  1. Kubernetes calico (CNI-Plugin)
+     * [Welcher Routing-Mode wird im aktuellen Cluster verwendet](/kubernetes-networks/calico/which-routing-mode-is-used.md)
+     * [Wird eBPF verwendet ?](/kubernetes-networks/calico/is-ebpf-used.md)
+     * [Install calicoctl in pod](/kubernetes-networks/calicoctl-installation.md)
+     * [Wann calicoctl (Stand 2024/01 calico 3.27)](calico/wann-calicoctl.md)
+     * [Install calico-api-server to use kubectl instead of calicoctl](kubernetes-networks/calico/install-calico-api-server.md)
+     * [Calico Default Routing Mode BGP & vxlancrossnet](kubernetes-networks/calico/routing-modes/bgp-vxlancrossnet.md)
+     * [Internals - Pod to Pod - Communication on Worker3 (node))](kubernetes-networks/calico/pod-2-pod-on-node-internals.md)
+     * [Internals - Inter-Pod - Communication (worker 3 -> worker 1](kubernetes-networks/calico/routing-modes/vxlan/internals-routing-inter-pod-communication.md)
+
   
   1. Kubernetes Praxis API-Objekte 
      * [Bauen einer Applikation mit Resource Objekten](bauen-einer-webanwendung.md)
