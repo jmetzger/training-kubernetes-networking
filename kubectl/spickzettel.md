@@ -86,6 +86,15 @@ kubectl exec -it deployment/name-des-deployments -- bash
 
 ```
 
+## Logs ausgeben 
+
+```
+kubectl logs podname
+# -n = namespace
+# | less -> seitenweise Ausgabe
+kubectl -n ingress logs nginx-ingress-ingress-nginx-controller-7bc7c7776d-jpj5h | less
+```
+
 ## Arbeiten mit namespaces 
 
 ```
