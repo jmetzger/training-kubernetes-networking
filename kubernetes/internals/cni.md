@@ -9,7 +9,7 @@
  
    * https://www.cni.dev/plugins/current/
 
-## CNI-Plugin: 
+## CNI-Provider 
 
    * Ein Kubernetes-Cluster braucht immer ein CNI-Provider, sonst funktioniert die Kmmunikation nicht und die Nodes im Cluster stehen auf NotReady 
    * Beispiele: Calico, WeaveNet, Antrea, Cilium, Flannel 
