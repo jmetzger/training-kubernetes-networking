@@ -42,60 +42,108 @@ mkdir mb
 cd mb 
 vi 01-cm.yml 
 ```
+## Step 2: addresspool und Propagation-type (config) 
 
 ```
-apiVersion: v1
-kind: ConfigMap
+cd
+mkdir -p manifests
+cd manifests
+mkdir lb
+cd lb
+vi 01-addresspool.yml 
+```
+
+```
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
 metadata:
+  name: first-pool
   namespace: metallb-system
-  name: config
-data:
-  config: |
-    address-pools:
-    - name: default
-      protocol: layer2
-      addresses:
-      # Take the single address in case of digitalocean here.
-      # External ip 
-      # - 192.168.1.240-192.168.1.250
-      - 61.46.56.21
-```
-
-```
-vi 02-svc.yml 
-```
-
-```
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginx-svc 
 spec:
-  selector:
-
-# Adjust -> selector -> according to nginx below 
-    app: nginx 
-  ports:
-  - name: http
-    port: 80
-    targetPort: 80
-  type: LoadBalancer
-  # uncomment to try, if you get it automatically 
-  loadBalancerIP: 61.46.56.21
-
+  addresses:
+  # we will use our external ip here 
+  - 134.209.231.154-134.209.231.154
+  # both notations are possible 
+  - 157.230.113.124/32
 ```
 
 ```
 kubectl apply -f .
-kubectl -n metallb-system get svc my-service 
 ```
 
 ```
-kubectl create deployment nginx --image nginx:alpine --port 80 --replicas=1
-kubectl get svc nginx-svc
-# You can open 80 port on Firewall using Console and open http://167.99.99.99 for a test.
+vi 02-advertisement.yml
 ```
 
-## Trafic Policy 
+```
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: example
+  namespace: metallb-system
+```
 
- * https://metallb.universe.tf/usage/
+```
+kubectl apply -f .
+```
+
+## Schritt 4: Test do i get an external ip 
+
+```
+vi 03-deploy.yml
+```
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx
+spec:
+  selector:
+    matchLabels:
+      run: web-nginx
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        run: web-nginx
+    spec:
+      containers:
+      - name: cont-nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+
+```
+
+
+```
+vi 04-service.yml
+```
+
+```
+# 02-svc.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-nginx
+  labels:
+    svc: nginx
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    run: web-nginx
+```
+
+
+```
+kubectl apply -f .
+kubectl get pods
+kubectl get svc
+```
+
+```
+kubectl delete -f 03-deploy.yml 04-service.yml 
