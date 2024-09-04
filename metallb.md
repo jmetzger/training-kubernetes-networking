@@ -34,14 +34,6 @@ helm repo add metallb https://metallb.github.io/metallb
 helm install metallb metallb/metallb --namespace=metallb-system --create-namespace 
 ```
 
-```
-cd
-mkdir -p manifests
-cd manifests 
-mkdir mb 
-cd mb 
-vi 01-cm.yml 
-```
 ## Step 2: addresspool und Propagation-type (config) 
 
 ```
@@ -50,7 +42,7 @@ mkdir -p manifests
 cd manifests
 mkdir lb
 cd lb
-vi 01-addresspool.yml 
+nano 01-addresspool.yml 
 ```
 
 ```
@@ -72,7 +64,7 @@ kubectl apply -f .
 ```
 
 ```
-vi 02-advertisement.yml
+nano 02-advertisement.yml
 ```
 
 ```
