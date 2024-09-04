@@ -294,7 +294,7 @@ nano 02-deployment-preprod-app1-app2.yaml
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: preprod
+  name: preprod-app1
 ---
 apiVersion: apps/v1
 kind: Deployment
