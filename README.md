@@ -35,6 +35,7 @@
 
   1. Kubernetes - Wartung / Debugging 
      * [Netzwerkverbindung zu pod testen](/tipps-tricks/verbindung-zu-pod-testen.md)
+     * [Arbeiten mit tcpdump in pods / ingress controller](/debugging/tcpdump.md)
 
   1. Kubernetes Cheatsheet/Spickzettel 
      * [Das Tool kubectl (Devs/Ops) - Spickzettel](/kubectl/spickzettel.md)
