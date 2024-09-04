@@ -1846,19 +1846,19 @@ kubectl apply -f .
 ```
 
 ```
-## nano 25-drop-any-ns-dev-app2.yaml 
+## nano 25-drop-any-ns-dev-app1.yaml 
 ## allen anderen Traffic zum namespace app2 hin verbieten aus anderen namespaces 
 apiVersion: crd.antrea.io/v1beta1
 kind: ClusterNetworkPolicy
 metadata:
-  name: 25-drop-any-ns-dev-app2
+  name: 25-drop-any-ns-dev-app1
 spec:
     priority: 110
     tier: application
     appliedTo:
       - namespaceSelector:
           matchLabels:
-            ns: dev-app2
+            ns: dev-app1
     ingress:
       - action: Drop
         from:
@@ -1898,18 +1898,18 @@ kubectl apply -f .
 
 ```
 ## disallow all traffic from other namespaces to prepr
-## nano 35-drop-any-ns-preprod-app2.yaml  
+## nano 35-drop-any-ns-preprod-app1.yaml  
 apiVersion: crd.antrea.io/v1beta1
 kind: ClusterNetworkPolicy
 metadata:
-  name: 21-drop-any-ns-preprod-app2
+  name: 35-drop-any-ns-preprod-app1
 spec:
     priority: 130
     tier: application
     appliedTo:
       - namespaceSelector:
           matchLabels:
-            ns: preprod-app2
+            ns: preprod-app1
     ingress:
       - action: Drop
         from:
@@ -1919,6 +1919,17 @@ spec:
 ```
 kubectl apply -f .
 ```
+
+```
+## TESTEN
+## Pod ausfinding machen, und ip vom 2. Pod finden in preprod-app1
+kubectl -n preprod-app1 get pods -o wide
+kubectl -n preprod-app1 exec -it ubuntu-16-04-b7d656f5b-f55rs -- ping 192.168.1.12
+## ping aus anderem Namespace sollte nicht gehen 
+kubectl -n preprod-app2 get pods -o wide
+kubectl -n preprod-app2 exec -it appserver-98bc7fd55-bjv94 -- ping 192.168.1.12
+```
+
 
 ### Schritt 8: Isolate traffic within app2 - namespaces (3-Tier-app)
 ```
@@ -1999,7 +2010,7 @@ kubectl apply -f .
 apiVersion: crd.antrea.io/v1beta1
 kind: ClusterNetworkPolicy
 metadata:
-  name: 03-deny-any-to-app2
+  name: 50-deny-any-to-app2
 spec:
     priority: 30
     tier: application
@@ -2019,6 +2030,16 @@ spec:
 
 ```
 kubectl apply -f .
+```
+
+```
+## TESTEN -> das sollte gehen // VOM web->app 
+kubectl -n dev-app2 get pods -l app=app -o wide
+kubectl -n dev-app2 exec -it nginx-655cc89789-cjfmh -- curl -i http://192.168.1.9
+
+## TESTEN -> geht nicht // VOM app->web 
+kubectl -n dev-app2 get pods -l app=nginx -o wide
+kubectl -n dev-app2 exec -it appserver-8596ff696-jd9k4 -- wget -O - 192.168.2.8
 ```
 
 ### Schritt 9: Usage of the Emergency Tier - e.g. Attack 
@@ -2054,6 +2075,13 @@ kubectl apply -f .
 
   * Because Emergency has the highest priority, the policy in application (allow any in ns-app1) has no Impact anymore.
 
+```
+## TESTEN
+## GET IP 
+kubectl -n dev-app1 get pods -l app=ubuntu-16-04 -o wide
+## Use that IP for testing, e.g. 192.168.1.8
+kubectl -n dev-app1 exec -it ubuntu-20-04-66598645fd-dfx7f -- ping 192.168.1.8
+```
 
 ### Reference: 
 
