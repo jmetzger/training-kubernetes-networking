@@ -11,7 +11,6 @@
   1. Kubernetes - Misc 
      * [Wann wird podIP vergeben ?](#wann-wird-podip-vergeben-)
      * [Bash completion installieren](#bash-completion-installieren)
-     * [Remote-Verbindung zu Kubernetes (microk8s) einrichten](#remote-verbindung-zu-kubernetes-microk8s-einrichten)
      * [kubectl verbindung mit namespace einrichten](#kubectl-verbindung-mit-namespace-einrichten)
      * [vim support for yaml](#vim-support-for-yaml)
      
@@ -19,38 +18,79 @@
      * [Netzwerk Interna](#netzwerk-interna)
      * [Wirkweise cni](#wirkweise-cni)
      * [Übersicht Netzwerke](#übersicht-netzwerke)
-     * [Calico/Cilium - nginx example NetworkPolicy](#calicocilium---nginx-example-networkpolicy)
-     * [Beispiele Ingress Egress NetworkPolicy](#beispiele-ingress-egress-networkpolicy)
-     * [Mesh / istio](#mesh--istio)
-     * [Kubernetes Ports/Protokolle](https://kubernetes.io/docs/reference/networking/ports-and-protocols/)
-     * [IPV4/IPV6 Dualstack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/)
      * [DNS - Resolution - Services](#dns---resolution---services)
-     * [Debug Container](#debug-container)
 
   1. Kubernetes NetworkPolicy
      * [Einfache Übung Network Policy](#einfache-übung-network-policy)
+     * [NetworkPolicy from IPBlock](#networkpolicy-from-ipblock)
+    
+  1. Kubernetes (Antrea-)NetworkPolicy
+     * [Antrea NetworkPolicy Exercise - Each trainee has its own cluster](#antrea-networkpolicy-exercise---each-trainee-has-its-own-cluster)
+
+  1. Kubernetes calico (CNI-Plugin)
+ 
+     * [Find corresponding networks](#find-corresponding-networks)
+     * [Calico Logging Firewall Rules](#calico-logging-firewall-rules)
+     * [Calico Default Routing Mode BGP & vxlancrossnet](#calico-default-routing-mode-bgp--vxlancrossnet)
+  
+  1. Kubernetes - Ingress
+     * [Vom Browser über den Ingress bis zum Pod - Schaubild](#vom-browser-über-den-ingress-bis-zum-pod---schaubild)
+
+  1. Kubernetes - Wartung / Debugging 
+     * [Netzwerkverbindung zu pod testen](#netzwerkverbindung-zu-pod-testen)
+     * [Arbeiten mit tcpdump in pods / ingress controller](#arbeiten-mit-tcpdump-in-pods--ingress-controller)
+
+  1. Kubernetes Cheatsheet/Spickzettel 
+     * [Das Tool kubectl (Devs/Ops) - Spickzettel](#das-tool-kubectl-devsops---spickzettel)
+      
+  1. Kubernetes Praxis (zum Verständnis von Netzwerk)
+     * [kubectl example with run](#kubectl-example-with-run)
+     * [Service Typen / Ebenen - Schaubild](#service-typen--ebenen---schaubild)
+     * [kubectl/manifest/service](#kubectlmanifestservice)
+     * [Ingress Controller auf Digitalocean (doks) mit helm installieren](#ingress-controller-auf-digitalocean-doks-mit-helm-installieren)
+     * [Beispiel mit Hostnamen](#beispiel-mit-hostnamen)
+           
+  1. Kubernetes Load Balancer 
+     * [Kubernetes Load Balancer](#kubernetes-load-balancer)
+     * [Kubernetes Load Balancer new version for IpAdresses - object](#kubernetes-load-balancer-new-version-for-ipadresses---object)
+ 
+## Backlog 
+
+  1. Kubernetes - Netzwerk (CNI's) / Mesh
+     * [Calico/Cilium - nginx example NetworkPolicy](#calicocilium---nginx-example-networkpolicy)
+     * [Beispiele Ingress Egress NetworkPolicy](#beispiele-ingress-egress-networkpolicy)
+     * [Mesh / istio](#mesh--istio)
+     * [DNS - Resolution - Services](#dns---resolution---services)
 
   1. Calico NetworkPolicy
      * [Protecting Services](#protecting-services)
      * [Exercise calico Network Policy](#exercise-calico-network-policy)
- 
-  1. Kubernetes antrea (CNI-Plugin)
-     * [Unterschiede Dokus vmware (antrea mit nsx-t) und OpenSource Antrea](#unterschiede-dokus-vmware-antrea-mit-nsx-t-und-opensource-antrea)
-     * [Overview Kubernetes Antrea CNI-Plugin](#overview-kubernetes-antrea-cni-plugin)
-     * [Antctl](#antctl)
-     * [Antrea view bridge and config](#antrea-view-bridge-and-config)
-     * [Antrea Exercise](#antrea-exercise)
-  
+
   1. Kubernetes calico (CNI-Plugin)
      * [Welcher Routing-Mode wird im aktuellen Cluster verwendet](#welcher-routing-mode-wird-im-aktuellen-cluster-verwendet)
+     * [Wird eBPF verwendet ?](#wird-ebpf-verwendet-)
      * [Install calicoctl in pod](#install-calicoctl-in-pod)
      * [Wann calicoctl (Stand 2024/01 calico 3.27)](#wann-calicoctl-stand-202401-calico-327)
      * [Install calico-api-server to use kubectl instead of calicoctl](#install-calico-api-server-to-use-kubectl-instead-of-calicoctl)
-     * [Find corresponding networks](#find-corresponding-networks)
-     * [Calico Logging Firewall Rules](#calico-logging-firewall-rules)
      * [Calico Default Routing Mode BGP & vxlancrossnet](#calico-default-routing-mode-bgp--vxlancrossnet)
      * [Internals - Pod to Pod - Communication on Worker3 (node))](#internals---pod-to-pod---communication-on-worker3-node)
      * [Internals - Inter-Pod - Communication (worker 3 -> worker 1](#internals---inter-pod---communication-worker-3-->-worker-1)
+
+  1. Kubernetes Praxis API-Objekte 
+     * [Bauen einer Applikation mit Resource Objekten](#bauen-einer-applikation-mit-resource-objekten)
+     * [Pod manifest](#pod-manifest)
+     * [Replicasets](#replicasets)
+     * [kubectl/manifest/deployments](#kubectlmanifestdeployments)
+     * [Services - Aufbau](#services---aufbau)
+     * DaemonSets (Devs/Ops)
+     * [Hintergrund Ingress](#hintergrund-ingress)
+     * [Documentation for default ingress nginx](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/)
+     * [Beispiel Ingress](#beispiel-ingress)
+     * [Achtung: Ingress mit Helm - annotations](#achtung-ingress-mit-helm---annotations)
+     * [Permanente Weiterleitung mit Ingress](#permanente-weiterleitung-mit-ingress)
+     * [ConfigMap Example](#configmap-example)
+     * [Configmap MariaDB - Example](#configmap-mariadb---example)
+     * [Configmap MariaDB my.cnf](#configmap-mariadb-mycnf)
 
   1. Kubernetes multus (Meta-CNI - Plugin)
      * [Multus Überblick](#multus-überblick)
@@ -58,41 +98,19 @@
 
   1. Kubernetes coil (egress - gateway)
      * [coil](#coil)
-
-  1. Kubernetes - Ingress
-     * [Vom Browser über den Ingress bis zum Pod - Schaubild](#vom-browser-über-den-ingress-bis-zum-pod---schaubild)
-     * [Ingress controller in microk8s aktivieren](#ingress-controller-in-microk8s-aktivieren)
-     * [ingress mit ssl absichern](#ingress-mit-ssl-absichern)
+ 
+  1. Kubernetes antrea (CNI-Plugin)
+     * [Unterschiede Dokus vmware (antrea mit nsx-t) und OpenSource Antrea](#unterschiede-dokus-vmware-antrea-mit-nsx-t-und-opensource-antrea)
+     * [Overview Kubernetes Antrea CNI-Plugin](#overview-kubernetes-antrea-cni-plugin)
+     * [Antctl](#antctl)
+     * [Antrea view bridge and config](#antrea-view-bridge-and-config)
+     * [Antrea NetworkPolicy Exercise - 1 Cluster in Group](#antrea-networkpolicy-exercise---1-cluster-in-group)
 
   1. Kubernetes - Wartung / Debugging 
      * [kubectl drain/uncordon](#kubectl-drainuncordon)
      * [Alte manifeste konvertieren mit convert plugin](#alte-manifeste-konvertieren-mit-convert-plugin)
-     * [Netzwerkverbindung zu pod testen](#netzwerkverbindung-zu-pod-testen)
      * [Curl from pod api-server](#curl-from-pod-api-server)
 
-  1. Kubernetes Praxis API-Objekte 
-     * [Das Tool kubectl (Devs/Ops) - Spickzettel](#das-tool-kubectl-devsops---spickzettel)
-     * [kubectl example with run](#kubectl-example-with-run)
-     * [Bauen einer Applikation mit Resource Objekten](#bauen-einer-applikation-mit-resource-objekten)
-     * [Pod manifest](#pod-manifest)
-     * [Replicasets](#replicasets)
-     * [kubectl/manifest/deployments](#kubectlmanifestdeployments)
-     * [Services - Aufbau](#services---aufbau)
-     * [Service Typen / Ebenen - Schaubild](#service-typen--ebenen---schaubild)
-     * [kubectl/manifest/service](#kubectlmanifestservice)
-     * DaemonSets (Devs/Ops)
-     * [Hintergrund Ingress](#hintergrund-ingress)
-     * [Ingress Controller auf Digitalocean (doks) mit helm installieren](#ingress-controller-auf-digitalocean-doks-mit-helm-installieren)
-     * [Documentation for default ingress nginx](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/)
-     * [Beispiel Ingress](#beispiel-ingress)
-     * [Install Ingress On Digitalocean DOKS](#install-ingress-on-digitalocean-doks)
-     * [Beispiel mit Hostnamen](#beispiel-mit-hostnamen)
-     * [Achtung: Ingress mit Helm - annotations](#achtung-ingress-mit-helm---annotations)
-     * [Permanente Weiterleitung mit Ingress](#permanente-weiterleitung-mit-ingress)
-     * [ConfigMap Example](#configmap-example)
-     * [Configmap MariaDB - Example](#configmap-mariadb---example)
-     * [Configmap MariaDB my.cnf](#configmap-mariadb-mycnf)
-  
   1. Kubernetes Deployment Scenarios 
      * [Deployment green/blue,canary,rolling update](#deployment-greenbluecanaryrolling-update)
      * [Service Blue/Green](#service-bluegreen)
@@ -140,14 +158,15 @@
      * [yaml linting](https://www.kubeval.com/installation/)
      * [ssl terminierung über proxy nginx](#ssl-terminierung-über-proxy-nginx)
      * [LoadBalancer / Cluster Controller Manager](#loadbalancer--cluster-controller-manager)
-   
-  1. Kubernetes Load Balancer 
-     * [Kubernetes Load Balancer](#kubernetes-load-balancer)
-     * [Kubernetes Load Balancer new version for IpAdresses - object](#kubernetes-load-balancer-new-version-for-ipadresses---object)
- 
+
+         
+  1. Kubernetes - Ingress
+     * [Ingress controller in microk8s aktivieren](#ingress-controller-in-microk8s-aktivieren)
+     * [ingress mit ssl absichern](#ingress-mit-ssl-absichern)
+    
   1. Kubernetes Documentation 
      * [Well-Known Annotations](https://kubernetes.io/docs/reference/labels-annotations-taints/)
-  
+
 ## Backlog
 
   1. Kubernetes - Überblick
@@ -191,9 +210,6 @@
      * [Funktionsweise Readiness-Probe vs. Liveness-Probe](#funktionsweise-readiness-probe-vs-liveness-probe)
        
 
-     
-
-
 <div class="page-break"></div>
 
 ## Kubernetes - Überblick
@@ -203,7 +219,7 @@
 
 ### Schaubild 
 
-![Kubernetes Architecture - src: syseleven](https://www.syseleven.de/wp-content/uploads/2020/11/syseleven-webiste-loesungen-kubernetes-modell-800x400-web.jpg)
+![image](https://github.com/user-attachments/assets/751339d5-f279-483b-a9c5-1ba196c4c3b6)
 
 ### Komponenten / Grundbegriffe
 
@@ -394,41 +410,6 @@ complete -F __start_kubectl k
 
   * https://kubernetes.io/docs/tasks/tools/included/optional-kubectl-configs-bash-linux/
 
-### Remote-Verbindung zu Kubernetes (microk8s) einrichten
-
-
-```
-## on CLIENT install kubectl 
-sudo snap install kubectl --classic 
-
-## On MASTER -server get config 
-## als root
-cd
-microk8s config > /home/kurs/remote_config 
-
-## Download (scp config file) and store in .kube - folder  
-cd ~
-mkdir .kube
-cd .kube  # Wichtig: config muss nachher im verzeichnis .kube liegen 
-## scp kurs@master_server:/path/to/remote_config config 
-## z.B. 
-scp kurs@192.168.56.102:/home/kurs/remote_config config
-## oder benutzer 11trainingdo
-scp 11trainingdo@192.168.56.102:/home/11trainingdo/remote_config config 
-
-##### Evtl. IP-Adresse in config zum Server aendern 
-
-## Ultimative 1. Test auf CLIENT 
-kubectl cluster-info 
-
-## or if using kubectl or alias 
-kubectl get pods 
-
-## if you want to use a different kube config file, you can do like so 
-kubectl --kubeconfig /home/myuser/.kube/myconfig
-
-```
-
 ### kubectl verbindung mit namespace einrichten
 
 
@@ -454,6 +435,7 @@ kubectl cluster-info
 kubectl create ns jochen
 kubectl get ns
 kubectl config set-context --current --namespace jochen
+kubectl get pods 
 ```
 
 ### vim support for yaml
@@ -599,9 +581,9 @@ ctr -n k8s.io c list | grep pause
  
    * https://www.cni.dev/plugins/current/
 
-### CNI-Plugin: 
+### CNI-Provider 
 
-   * Ein Kubernetes-Cluster braucht immer ein CNI-Plugin, sonst funktioniert die Kmmunikation nicht und die Nodes im Cluster steht auf NotReady 
+   * Ein Kubernetes-Cluster braucht immer ein CNI-Provider, sonst funktioniert die Kmmunikation nicht und die Nodes im Cluster stehen auf NotReady 
    * Beispiele: Calico, WeaveNet, Antrea, Cilium, Flannel 
 
 ### IPAM - IP Address Management 
@@ -638,7 +620,7 @@ static : Allocates static IPv4/IPv6 addresses to containers
 
 ### Welche gibt es ? 
 
-  * Flanel
+  * Flannel
   * Canal 
   * Calico 
   * Cilium
@@ -676,7 +658,7 @@ static : Allocates static IPv4/IPv6 addresses to containers
 
   * Auch ein Overlay - Netzwerk 
   * Unterstützt auch policies
-  * Kombination auf Flannel (Overlay) und den NetworkPolicies aus Calico 
+  * Kombination aus Flannel (Overlay) und den NetworkPolicies aus Calico 
 
 ### Calico
 
@@ -825,6 +807,2168 @@ Typha maintains a single datastore connection on behalf of all of its clients li
   * Sehr stabil bzgl IPV4/IPV6 (Dual Stack) 
   * Sehr grosses Feature-Set 
   * mit das älteste Plugin 
+
+### DNS - Resolution - Services
+
+
+```
+kubectl run podtest --rm -ti --image busybox -- /bin/sh
+If you don't see a command prompt, try pressing enter.
+/ # wget -O - http://apple-service.jochen
+Connecting to apple-service.jochen (10.245.39.214:80)
+writing to stdout
+apple-tln1
+-                    100% |**************************************************************************************************************|    11  0:00:00 ETA
+written to stdout
+/ # wget -O - http://apple-service.jochen.svc.cluster.local
+Connecting to apple-service.jochen.svc.cluster.local (10.245.39.214:80)
+writing to stdout
+apple-tln1
+-                    100% |**************************************************************************************************************|    11  0:00:00 ETA
+written to stdout
+/ # wget -O - http://apple-service
+Connecting to apple-service (10.245.39.214:80)
+writing to stdout
+apple-tln1
+-                    100% |**************************************************************************************************************|    11  0:00:00 ETA
+written to stdout
+```
+
+## Kubernetes NetworkPolicy
+
+### Einfache Übung Network Policy
+
+
+### Schritt 1: Deployment und Service erstellen 
+
+```
+KURZ=jm
+kubectl create ns policy-demo-$KURZ 
+```
+
+```
+cd 
+mkdir -p manifests
+cd manifests
+mkdir -p np
+cd np
+```
+
+```
+## nano 01-deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.23
+        ports:
+        - containerPort: 80
+```
+
+```
+kubectl -n policy-demo-$KURZ apply -f . 
+```
+
+```
+## nano 02-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  type: ClusterIP # Default Wert 
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: nginx
+```
+
+```
+kubectl -n policy-demo-$KURZ apply -f . 
+```
+
+### Schritt 2: Zugriff testen ohne Regeln 
+
+```
+## lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
+kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
+```
+
+```
+## innerhalb der shell 
+wget -q nginx -O -
+```
+
+```
+## Optional: Pod anzeigen in 2. ssh-session zu jump-host
+kubectl -n policy-demo-$KURZ get pods --show-labels
+```
+
+### Schritt 3: Policy festlegen, dass kein Zugriff erlaubt ist. 
+
+```
+## nano 03-default-deny.yaml 
+## Schritt 2: Policy festlegen, dass kein Ingress-Traffic erlaubt
+## in diesem namespace: policy-demo-$KURZ 
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: default-deny
+spec:
+  podSelector:
+    matchLabels: {}
+```
+
+```
+kubectl -n policy-demo-$KURZ apply -f .
+```
+
+### Schritt 3.5: Verbindung mit deny all Regeln testen 
+
+```
+kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
+```
+
+```
+## innerhalb der shell 
+wget -q nginx -O -
+```
+
+### Schritt 4: Zugriff erlauben von pods mit dem Label run=access (alle mit run gestarteten pods mit namen access haben dieses label per default)
+
+```
+## nano 04-access-nginx.yaml 
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: access-nginx
+spec:
+  podSelector:
+    matchLabels:
+      app: nginx
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            run: access
+```
+
+```
+kubectl -n policy-demo-$KURZ apply -f . 
+```
+
+### Schritt 5: Testen (zugriff sollte funktionieren)
+
+```
+## lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
+## pod hat durch run -> access automatisch das label run:access zugewiesen 
+kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
+```
+
+```
+## innerhalb der shell 
+wget -q nginx -O -
+```
+
+
+### Schritt 6: Pod mit label run=no-access - da sollte es nicht gehen 
+
+``` 
+kubectl run --namespace=policy-demo-$KURZ no-access --rm -ti --image busybox
+```
+
+```
+## in der shell  
+wget -q nginx -O -
+```
+
+### Schritt 7: Aufräumen 
+
+```
+kubectl delete ns policy-demo-$KURZ 
+```
+
+
+### Ref:
+
+  * https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-basic
+
+### NetworkPolicy from IPBlock
+
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: traefik/whoami
+        ports:
+        - containerPort: 80
+---
+## nano 02-service.yaml 
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  type: NodePort # Default Wert
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: nginx
+---
+## nano 03-default-deny.yaml
+## Schritt 2: Policy festlegen, dass kein Ingress-Traffic erlaubt
+## in diesem namespace: policy-demo-$KURZ
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: default-deny
+spec:
+  podSelector:
+    matchLabels: {}
+---
+## nano 05-from-access.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: access-nginx
+spec:
+  podSelector:
+    matchLabels:
+      app: nginx
+  ingress:
+    - from:
+      - ipBlock:
+          cidr: 138.197.181.70/32
+
+
+```
+
+## Kubernetes (Antrea-)NetworkPolicy
+
+### Antrea NetworkPolicy Exercise - Each trainee has its own cluster
+
+
+### Our Goal 
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/14cc372e-e3df-4075-9330-d9ca50eab959)
+
+### How the order of priorities work
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/8bf05e88-a7cd-4906-9271-eee2acc014a7)
+
+### Our Setup 
+
+```
+In app1 are some Ubuntu Servers for Testing: dev-app1 / preprod-app1
+
+1x Ubuntu Server 16.04
+2x Ubuntu Server 20.04
+In app2 is a simple 3 Tier-App (WEB-APP-DB): dev-app2 / preprod-app2 (3tier-app)
+
+1x nginx TCP/80 (NodePort)
+1x php TCP/80 (ClusterIP)
+1x mysql TCP/3306 (ClusterIP)
+```
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/067f275e-152c-42b6-82fd-7bebc6921cbb)
+
+### Step 1: Rollout the pods (dev-app1/dev-app2)
+
+```
+cd
+mkdir -p manifests
+cd manifests
+mkdir 10-antrea
+cd 10-antrea
+nano 01-pods-dev-app1-app2.yaml 
+```
+
+```
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev-app1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubuntu-16-04
+  labels:
+    app: ubuntu-16-04
+  namespace: dev-app1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ubuntu-16-04
+  template:
+    metadata:
+      labels:
+        app: ubuntu-16-04
+    spec:
+      containers:
+      - name: ubuntu-16-04
+        image: ubuntu:16.04
+        imagePullPolicy: IfNotPresent
+        command: [ "/bin/bash", "-c" ]
+        args:
+          - apt-get update;
+            apt-get install iputils-ping -y;
+            apt-get install net-tools;
+            apt-get install curl -y;
+            sleep infinity;
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubuntu-20-04
+  labels:
+    app: ubuntu-20-04
+  namespace: dev-app1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ubuntu-20-04
+  template:
+    metadata:
+      labels:
+        app: ubuntu-20-04
+    spec:
+      containers:
+      - name: ubuntu-20-04
+        image: ubuntu:20.04
+        imagePullPolicy: IfNotPresent
+        command: [ "/bin/bash", "-c" ]
+        args:
+          - apt-get update;
+            apt-get install tcpdump -y;
+            apt-get install telnet -y;
+            apt-get install iputils-ping -y;
+            apt-get install nmap -y;
+            apt-get install net-tools;
+            apt-get install netdiscover -y;
+            apt-get install mysql-client -y;
+            apt-get install curl -y;
+            apt-get install dsniff -y;
+            sleep infinity;
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev-app2
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: default-conf
+  namespace: dev-app2
+data:
+  default.conf: |
+    server {
+    listen 80 default_server;
+
+    location / {
+      proxy_pass http://app-service;
+      proxy_http_version 1.1;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: dev-app2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+        service: web
+        kind: dev
+        type: internal
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /etc/nginx/conf.d # mount nginx-conf volumn to /etc/nginx
+          readOnly: true
+          name: default-conf
+        - mountPath: /var/log/nginx
+          name: log
+      volumes:
+      - name: default-conf
+        configMap:
+          name: default-conf # place ConfigMap `nginx-conf` on /etc/nginx
+          items:
+            - key: default.conf
+              path: default.conf
+      - name: log
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  namespace: dev-app2
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: nginx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appserver
+  labels:
+    app: app
+  namespace: dev-app2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+        kind: dev
+        type: internal
+    spec:
+      containers:
+      - name: php-apache
+        image: derstich/miserver:006
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service
+  labels:
+    app: app
+  namespace: dev-app2
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: app
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: dev-app2
+spec:
+  selector:
+    matchLabels:
+      app: mysql8
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql8
+        service: db
+        kind: dev
+        type: internal
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: .sweetpwd.
+        - name: MYSQL_DATABASE
+          value: my_db
+        - name: MYSQL_USER
+          value: db_user
+        - name: MYSQL_PASSWORD
+          value: .mypwd
+        args: ["--default-authentication-plugin=mysql_native_password"]
+        ports:
+        - containerPort: 3306
+          name: mysql8
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql8-service
+  labels:
+    app: mysql8
+  namespace: dev-app2
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3306
+    protocol: TCP
+  selector:
+    app: mysql8
+```
+
+```
+kubectl apply -f .
+kubectl -n dev-app1 get all
+kubectl -n dev-app2 get all 
+```
+
+### Schritt 2: rollout preprod-app1/preprod-app2 
+
+```
+nano 02-deployment-preprod-app1-app2.yaml
+```
+
+```
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: preprod-app1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubuntu-16-04
+  labels:
+    app: ubuntu-16-04
+  namespace: preprod-app1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ubuntu-16-04
+  template:
+    metadata:
+      labels:
+        app: ubuntu-16-04
+    spec:
+      containers:
+      - name: ubuntu-16-04
+        image: ubuntu:16.04
+        imagePullPolicy: IfNotPresent
+        command: [ "/bin/bash", "-c" ]
+        args:
+          - apt-get update;
+            apt-get install iputils-ping -y;
+            apt-get install net-tools;
+            apt-get install curl -y;
+            sleep infinity;
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubuntu-20-04
+  labels:
+    app: ubuntu-20-04
+  namespace: preprod-app1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ubuntu-20-04
+  template:
+    metadata:
+      labels:
+        app: ubuntu-20-04
+    spec:
+      containers:
+      - name: ubuntu-20-04
+        image: ubuntu:20.04
+        imagePullPolicy: IfNotPresent
+        command: [ "/bin/bash", "-c" ]
+        args:
+          - apt-get update;
+            apt-get install tcpdump -y;
+            apt-get install telnet -y;
+            apt-get install iputils-ping -y;
+            apt-get install nmap -y;
+            apt-get install net-tools;
+            apt-get install netdiscover -y;
+            apt-get install mysql-client -y;
+            apt-get install curl -y;
+            apt-get install dsniff -y;
+            sleep infinity;
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: preprod-app2
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: default-conf
+  namespace: preprod-app2
+data:
+  default.conf: |
+    server {
+    listen 80 default_server;
+
+    location / {
+      proxy_pass http://app-service;
+      proxy_http_version 1.1;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: preprod-app2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+        service: web
+        kind: dev
+        type: internal
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /etc/nginx/conf.d # mount nginx-conf volumn to /etc/nginx
+          readOnly: true
+          name: default-conf
+        - mountPath: /var/log/nginx
+          name: log
+      volumes:
+      - name: default-conf
+        configMap:
+          name: default-conf # place ConfigMap `nginx-conf` on /etc/nginx
+          items:
+            - key: default.conf
+              path: default.conf
+      - name: log
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  namespace: preprod-app2
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: nginx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appserver
+  labels:
+    app: app
+  namespace: preprod-app2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+        kind: dev
+        type: internal
+    spec:
+      containers:
+      - name: php-apache
+        image: derstich/miserver:005
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service
+  labels:
+    app: app
+  namespace: preprod-app2
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: app
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: preprod-app2
+spec:
+  selector:
+    matchLabels:
+      app: mysql8
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql8
+        service: db
+        kind: dev
+        type: internal
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: .sweetpwd.
+        - name: MYSQL_DATABASE
+          value: my_db
+        - name: MYSQL_USER
+          value: db_user
+        - name: MYSQL_PASSWORD
+          value: .mypwd
+        args: ["--default-authentication-plugin=mysql_native_password"]
+        ports:
+        - containerPort: 3306
+          name: mysql8
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql8-service
+  labels:
+    app: mysql8
+  namespace: preprod-app2
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3306
+    protocol: TCP
+  selector:
+    app: mysql8
+
+```
+
+```
+kubectl apply -f .
+```
+
+### Schritt 3: Daten auslesen 
+
+```
+
+## dev-app1
+kubectl -n dev-app1 get pods -o=custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,STATUS:.status.phase,IP:.status.podIP,NODE:.spec.nodeName
+
+## dev-app2 
+kubectl -n dev-app2 get pods -o=custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,STATUS:.status.phase,IP:.status.podIP,NODE:.spec.nodeName
+
+## preprod-app1
+kubectl -n preprod-app1 get pods -o=custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,STATUS:.status.phase,IP:.status.podIP,NODE:.spec.nodeName
+
+## preprod-app2 
+kubectl -n preprod-app2 get pods -o=custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,STATUS:.status.phase,IP:.status.podIP,NODE:.spec.nodeName
+```
+
+```
+## BITTE die Infos zwischen speichern oder Screenshot machen
+```
+
+### Schritt 4: Zugriffe auf dev-app2/prepod-app2 klären 
+
+```
+## nodeip rausbekommen
+kubectl get nodes -o wide
+```
+
+
+```
+kubectl get svc -n dev-app2 nginx 
+```
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/00a9d952-732a-4e12-98d5-766734e96ba7)
+
+```
+curl -i http://10.135.0.5:32767
+## oder im Browser mit Public - IP
+```
+
+```
+kubectl get svc -n preprod-app2 nginx 
+```
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/0f53b7a4-0fe2-4294-b3eb-f5ac968da47c)
+
+```
+curl -i http://10.135.0.5:31836 
+```
+
+### Schritt 5: Zugriff ohne antrea policy testen 
+
+```
+kubectl exec -it -n dev-app1 deployment/ubuntu-20-04 -- /bin/bash
+```
+
+```
+## scannen des netzes
+## !!! Achtung Netz kann anders sein !!!
+nmap 10.244.0.0/22
+```
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/33ee8c86-d3d9-46c6-9b67-93b3318a2739)
+
+ * Namen werden aufgelöst (rückwärtig) 
+ * alle ports sind einsehbar
+ * Verbindung funktioniert nach überall
+
+```
+## mysql preprod herausfinden
+## !!! Achtung Netz ändern 
+nmap 10.244.0.0/22 | grep mysql | grep preprod
+```
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/852f4781-fb45-45f6-9c8b-22474be6e092)
+
+```
+## Oh, wir haben das Passwort herausgefunden (Social Engineering ;o)) 
+.sweetpwd. 
+```
+
+```
+mysql -h 10-244-3-20.mysql8-service.preprod-app2.svc.cluster.local -p 
+```
+
+### Schritt 6: Isolieren von dev und preprod 
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/52d514ce-806b-48ed-bb90-8de5897537ef)
+
+```
+## Namspaces labeln
+kubectl label ns dev-app1 env=dev ns=dev-app1
+kubectl label ns dev-app2 env=dev ns=dev-app2
+kubectl label ns preprod-app1 env=preprod ns=preprod-app1
+kubectl label ns preprod-app2 env=preprod ns=preprod-app2
+
+kubectl describe ns dev-app1
+```
+
+```
+## now create the policy
+## nano 10-deny-dev-to-preprod.yaml 
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: deny-dev-to-preprod
+spec:
+    priority: 100
+    tier: SecurityOps
+    appliedTo:
+      - namespaceSelector:
+          matchLabels:
+            env: preprod
+    ingress:
+      - action: Drop
+        from:
+          - namespaceSelector:
+              matchLabels:
+                env: dev
+```
+
+```
+## Test ob ping von preprod nach dev funktioniert
+## Hier ein POD-IP raussuchen 
+kubectl -n dev-app1 get pods -o wide
+kubectl -n preprod-app1 exec deployments/ubuntu-20-04 -- ping 10.244.3.15
+
+## Test ob ping von dev nach preprod funktioniert - der sollte nicht funktionieren 
+## Hier eine POD-IP rausschen 
+kubectl -n preprod-app1 get pods -o wide
+kubectl -n dev-app1 exec deployments/ubuntu-20-04 -- ping 10.244.2.25
+```
+
+```
+## ClusterNetworkPolicy anwenden 
+kubectl apply -f .
+```
+
+```
+## Jetzt nochmal die Pings testen von oben
+## ---> Ping ist immer noch möglich --> da keine Firewall - Regel 
+kubectl -n preprod-app1 exec deployments/ubuntu-20-04 -- ping 10.244.3.15
+
+## in die andere Richtung geht es aber nicht !!
+kubectl -n dev-app1 exec deployments/ubuntu-20-04 -- ping 10.244.2.25
+```
+
+```
+## ok jetzt in die andere richtung
+## nano 15-deny-preprod-to-dev.yaml 
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: deny-preprod-to-dev
+spec:
+    priority: 101
+    tier: SecurityOps
+    appliedTo:
+      - namespaceSelector:
+          matchLabels:
+            env: dev
+    ingress:
+      - action: Drop
+        from:
+          - namespaceSelector:
+              matchLabels:
+                env: preprod
+```
+
+```
+kubectl apply -f .
+kubectl get clusternetworkpolicies
+```
+
+```
+## Only output 
+NAME                     TIER          PRIORITY   DESIRED NODES   CURRENT NODES   AGE
+deny-dev-to-preprod-jm   SecurityOps   100        2               2               16m
+deny-preprod-to-dev      SecurityOps   101        2               2               3m15s
+```
+
+```
+## und jetzt geht pingen in die andere Richtung auch nicht mehr
+kubectl -n preprod-app1 exec deployments/ubuntu-20-04 -- ping 10.244.3.15
+```
+
+### Schritt 7: Isolate Pods (allow only traffic within the namespaces) 
+
+  * Aktuell ist das ping vom preprod-app1 zum preprod-app2 namespace noch möglich
+  * Das wollen wir einschränken
+  * Ausserdem von dev-app1 zu dev-app2 
+
+```
+## So sehen unsere Namespace - Labels aus
+kubectl describe namespace dev-app1 
+```
+
+```
+## Ausgabe, z.B. 
+Name:         dev-app1-jm
+Labels:       env=dev-jm
+              ns=dev-app1-jm
+```
+
+```
+## nano 20-allow-ns-dev-app1-dev-app1.yaml
+## Traffic innerhalb des Namespaces erlaubt 
+
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 20-allow-ns-dev-app1-dev-app1
+spec:
+    priority: 100
+    tier: application
+    appliedTo:
+      - namespaceSelector:
+          matchLabels:
+            ns: dev-app1
+    ingress:
+      - action: Allow
+        from:
+          - namespaceSelector:
+              matchLabels:
+                ns: dev-app1
+```
+
+```
+kubectl apply -f .
+```
+
+```
+## nano 25-drop-any-ns-dev-app2.yaml 
+## allen anderen Traffic zum namespace app2 hin verbieten aus anderen namespaces 
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 25-drop-any-ns-dev-app2
+spec:
+    priority: 110
+    tier: application
+    appliedTo:
+      - namespaceSelector:
+          matchLabels:
+            ns: dev-app2
+    ingress:
+      - action: Drop
+        from:
+          - namespaceSelector: {}
+```
+
+```
+kubectl apply -f .
+```
+
+```
+## nano 30-allow-ns-preprod-app1-preprod-app1.yaml 
+## Same for preprod-app1
+## Allow all traffic within namespace 
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 30-allow-ns-preprod-app1-preprod-app1
+spec:
+    priority: 120
+    tier: application
+    appliedTo:
+      - namespaceSelector:
+          matchLabels:
+            ns: preprod-app1
+    ingress:
+      - action: Allow
+        from:
+          - namespaceSelector:
+              matchLabels:
+                ns: preprod-app1
+```
+
+```
+kubectl apply -f .
+```
+
+```
+## disallow all traffic from other namespaces to prepr
+## nano 35-drop-any-ns-preprod-app2.yaml  
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 21-drop-any-ns-preprod-app2
+spec:
+    priority: 130
+    tier: application
+    appliedTo:
+      - namespaceSelector:
+          matchLabels:
+            ns: preprod-app2
+    ingress:
+      - action: Drop
+        from:
+          - namespaceSelector: {}
+```
+
+```
+kubectl apply -f .
+```
+
+### Schritt 8: Isolate traffic within app2 - namespaces (3-Tier-app)
+```
+## For dev-app2 we want
+web->app (80)
+app->db (3306) 
+drop everything else 
+```
+
+```
+kubectl -n dev-app2 describe pods | head -n 20
+kubectl -n preprod-app2 describe pods | head -n 20
+```
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/bfd0b89b-aa47-4493-8952-3c2aff5f7f1c)
+
+  * we are using the label app=xxx
+
+```
+## nano 40-allow-web-app.yaml 
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 40-allow-web-app
+spec:
+    priority: 10
+    tier: application
+    appliedTo:
+      - podSelector:
+          matchLabels:
+            app: app
+    ingress:
+      - action: Allow
+        from:
+          - podSelector:
+              matchLabels:
+                app: nginx
+        ports:
+          - protocol: TCP
+            port: 80
+```
+
+```
+kubectl apply -f  .
+```
+
+```
+## nano 45-allow-app-db.yaml
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 02-allow-app-db
+spec:
+    priority: 20
+    tier: application
+    appliedTo:
+      - podSelector:
+          matchLabels:
+            app: mysql8
+    ingress:
+      - action: Allow
+        from:
+          - podSelector:
+              matchLabels:
+                app: app
+        ports:
+          - protocol: TCP
+            port: 3306
+```
+
+```
+kubectl apply -f .
+```
+
+```
+## nano 50-deny-any-to-app2.yaml
+## Deny everything else
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 03-deny-any-to-app2
+spec:
+    priority: 30
+    tier: application
+    appliedTo:
+      - namespaceSelector:
+          matchLabels:
+                  ns: dev-app2
+      - namespaceSelector:
+          matchLabels:
+                  ns: preprod-app2
+    ingress:
+      - action: Drop
+        from:
+          - namespaceSelector: {}
+
+```
+
+```
+kubectl apply -f .
+```
+
+### Schritt 9: Usage of the Emergency Tier - e.g. Attack 
+
+  * We have problems with Ubuntu 16.04. an we want to isolate it.
+
+```
+kubectl get tiers
+```
+
+```
+## nano 80-emergency.yaml 
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 50-deny-any-pod-ubuntu16
+spec:
+    priority: 50
+    tier: emergency
+    appliedTo:
+      - podSelector:
+          matchLabels:
+                  app: ubuntu-16-04
+    ingress:
+      - action: Drop
+        from:
+          - namespaceSelector: {}
+```
+
+```
+kubectl apply -f .
+```
+
+  * Because Emergency has the highest priority, the policy in application (allow any in ns-app1) has no Impact anymore.
+
+
+### Reference: 
+
+  * https://www.vrealize.it/2020/09/28/securing-you-k8s-network-with-antrea-clusternetworkpolicy/
+
+
+## Kubernetes calico (CNI-Plugin)
+
+### Find corresponding networks
+
+
+### Walkthrough  
+
+```
+## Step 1: create pod 
+kubectl run nginx-master --image=nginx
+## Find out on which node it runs 
+kubectl get pods -o wide 
+## create a debug container 
+kubectl debug -it nginx-master --image=busybox 
+```
+
+```
+## now within debug pod found out interface 
+ ip a | grep @
+3: eth0@if22: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue
+```
+
+```
+## Log in to worker node  where pod runs and check interfaces
+kubectl debug -it node/worker1 --image=busybox
+```
+
+```
+## on worker node 
+## show matched line starting with 22 and then another 4 lines 
+ip a | grep -A 5 ^22 
+## e.g. 
+## 
+ip a | grep -A 5 ^22
+22: cali42c2aab93f3@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
+    link/ether ee:ee:ee:ee:ee:ee brd ff:ff:ff:ff:ff:ff link-netns cni-5adf994b-3a7e-c344-5d82-ef1f7a293d88
+    inet6 fe80::ecee:eeff:feee:eeee/64 scope link
+       valid_lft forever preferred_lft forever
+```
+
+```
+## Now you are able to determine the firewall rules 
+## you will find fw and tw rules (fw - from workload and tw - to workload)
+iptables -L -v | grep  cali42c2aab93f3
+```
+
+```
+## ... That is what you see as an example 
+Chain cali-tw-cali42c2aab93f3 (1 references)
+ pkts bytes target     prot opt in     out     source               destination 
+   10  1384 ACCEPT     all  --  any    any     anywhere             anywhere             /* cali:WKA8EzdUNM0rVty1 */ ctstate RELATED,ESTABLISHED
+    0     0 DROP       all  --  any    any     anywhere             anywhere             /* cali:wr_OqGXKIN_LWnX0 */ ctstate INVALID
+    0     0 MARK       all  --  any    any     anywhere             anywhere             /* cali:kOUMqNj8np60A3Bi */ MARK and 0xfffeffff
+```
+
+
+
+### Calico Logging Firewall Rules
+
+
+### General
+
+ * NetworkPolicy of Kubernetes does not provide possibility to track 
+
+### Solutions 
+
+  * Use NetworkPolicy from calico (to apply it with kubectl - the calico api server needs to be installed) / or use calicoctl 
+  * Enable Tracing 
+  * Use: https://kubernetes.io/blog/2019/04/19/introducing-kube-iptables-tailer/
+  
+### Solution 1: NetworkPolicy calico 
+
+  * https://github.com/projectcalico/calico/issues/4344
+
+
+### Logs 
+
+```
+## Normally you should see it with (on the right kubernetes node)
+cat /var/log/syslog | grep calico-packet 
+
+## This is how a syslog entry looks like 
+Here is a example (default) Log:
+Apr  3 10:12:30 aks-workerpool1-13987120-vmss000000 kernel: [10821.860593] calico-packet: IN=calic440f455693 OUT=eth0 MAC=ee:ee:ee:ee:ee:ee:f2:f8:09:3d:97:03:08:00 SRC=10.244.2.7 DST=8.8.8.8 LEN=84 TOS=0x00 PREC=0x00 TTL=63 ID=33536 DF PROTO=ICMP TYPE=8 CODE=0 ID=32113 SEQ=43 
+```
+
+### Walkthrough 
+
+```
+cd
+mkdir -p manifests
+cd manifests 
+mkdir pol2
+cd pol2
+vi 01-pod.yaml 
+```
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: static-web
+  labels:
+    app: web
+spec:
+  containers:
+    - name: web
+      image: nginx
+      ports:
+        - name: web
+          containerPort: 80
+          protocol: TCP
+```
+
+```
+vi 02-pol.yaml 
+```
+
+```
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: log
+spec:
+  selector: app == 'web'
+  types:
+  - Ingress
+  - Egress
+  ingress:
+  - action: Log
+  egress:
+  - action: Log
+  - action: Deny
+```
+
+```
+kubectl apply -f .
+## find the node, where it runs on 
+kubectl get pods -o wide 
+```
+
+```
+## login to that node with ssh (kubernetes node) 
+## e.g. ssh user@node 
+## switch to root: sudo su -
+tail -f /var/log/syslog | grep calico-packet 
+## or 
+journalctl -f | grep calico-packet 
+```
+
+```
+## now open a debug pod 
+kubectl debug -it static-web --image=busybox 
+## in pod ping - this will not work, because we cannot retrieve dns 
+ping www.google.de
+```
+
+```
+## watch output from other node in the meanwhile 
+```
+
+### Reference 
+
+  * Eventually set a prefix for logging:
+  * https://docs.tigera.io/calico-cloud/visibility/iptables
+
+### Calico Default Routing Mode BGP & vxlancrossnet
+
+
+### What does it do ? 
+
+  * BGP is used, when other node is on same subnet
+  * vxlan is used, when worker node to reach is in other subnet
+
+### Grafics
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/a2766737-e1e5-4ee0-8e03-9216a0379d97)
+
+### How to find out, if this node is used 
+
+```
+kubectl -n calico-system get ippool -o yaml | grep vxlan 
+```
+
+## Kubernetes - Ingress
+
+### Vom Browser über den Ingress bis zum Pod - Schaubild
+
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/c0e5ceba-c636-479b-b000-d866c8caf82c)
+
+## Kubernetes - Wartung / Debugging 
+
+### Netzwerkverbindung zu pod testen
+
+
+### Situation 
+
+```
+Managed Cluster und ich kann nicht auf einzelne Nodes per ssh zugreifen
+```
+
+### Behelf: Eigenen Pod starten mit busybox 
+
+```
+## laengere Version 
+kubectl run podtest --rm -ti --image busybox -- /bin/sh
+```
+
+```
+## kuerzere Version 
+kubectl run podtest --rm -ti --image busybox 
+```
+
+### Example test connection 
+
+```
+## wget befehl zum Kopieren
+wget -O - http://10.244.0.99
+```
+
+```
+## -O -> Output (grosses O (buchstabe)) 
+kubectl run podtest --rm -ti --image busybox -- /bin/sh
+/ # wget -O - http://10.244.0.99
+/ # exit 
+```
+
+### Arbeiten mit tcpdump in pods / ingress controller
+
+
+### Prerequisites: Project abi is up and running 
+
+
+
+### Debug traffic to pod  
+
+```
+## IP des pod apple-app rausfiltern
+kubectl get pods -o wide
+
+kubectl debug apple-app -it --image nicolaka/netshoot
+## Show processes of other container first 
+kubectl debug apple-app -it --image nicolaka/netshoot --target=apple-app
+```
+#### in pod
+```
+ps aux
+tcpdump -n port 5678 
+```
+ 
+#### in 2. Session (kubectl)
+
+```
+kubectl run -it --rm podtester --image=busybox
+```
+
+```
+wget -O - <ip-des-apple-pods>:5678
+```
+
+### Debug traffic to ingress controller 
+
+#### mit netshoot connecten
+
+##### Variante 1: Direkt 
+
+```
+kubectl -n ingress debug nginx-ingress-ingress-nginx-controller-7bc7c7776d-jpj5h -it --image nicolaka/netshoot
+```
+
+```
+## in der shell
+tcpdump -n port 80
+## write to file in pcap format
+Older versions of tcpdump truncate packets to 68 or 96 bytes. If this is the case, use -s to capture full-sized packets:
+tcpdump -i <interface> -s 65535 -w <file>
+```
+
+#### Variante 2: Im Hintergrund laufen lassen und connecten 
+
+```
+kubectl -n ingress debug nginx-ingress-ingress-nginx-controller-7bc7c7776d-jpj5h --image nicolaka/netshoot -- sleep infinite
+kubectl -n ingress exec -it nginx-ingress-ingress-nginx-controller-7bc7c7776d-jpj5h -c debugger-gwvsr -- zsh
+```
+
+```
+## in der shell
+tcpdump -n port 80
+## write to file in pcap format
+Older versions of tcpdump truncate packets to 68 or 96 bytes. If this is the case, use -s to capture full-sized packets:
+tcpdump -i <interface> -s 65535 -w <file>
+```
+
+
+#### Testen
+
+```
+## Im browser url aufrufen
+## z.B.
+http://jochen.lab1.t3isp.de 
+```
+
+## Kubernetes Cheatsheet/Spickzettel 
+
+### Das Tool kubectl (Devs/Ops) - Spickzettel
+
+
+### Allgemein 
+
+```
+## Zeige Information über das Cluster 
+kubectl cluster-info 
+
+## Welche api-resources gibt es ?
+kubectl api-resources 
+
+## Hilfe zu object und eigenschaften bekommen
+kubectl explain pod 
+kubectl explain pod.metadata
+kubectl explain pod.metadata.name 
+
+```
+
+### Arbeiten mit manifesten 
+
+```
+kubectl apply -f nginx-replicaset.yml 
+## Wie ist aktuell die hinterlegte config im system
+kubectl get -o yaml -f nginx-replicaset.yml 
+
+## Änderung in nginx-replicaset.yml z.B. replicas: 4 
+## dry-run - was wird geändert 
+kubectl diff -f nginx-replicaset.yml 
+
+## anwenden 
+kubectl apply -f nginx-replicaset.yml 
+
+## Alle Objekte aus manifest löschen
+kubectl delete -f nginx-replicaset.yml 
+
+
+```
+
+### Ausgabeformate 
+
+```
+## Ausgabe kann in verschiedenen Formaten erfolgen 
+kubectl get pods -o wide # weitere informationen 
+## im json format
+kubectl get pods -o json 
+
+## gilt natürluch auch für andere kommandos
+kubectl get deploy -o json 
+kubectl get deploy -o yaml 
+
+## get a specific value from the complete json - tree 
+kubectl get node k8s-nue-jo-ff1p1 -o=jsonpath='{.metadata.labels}'
+
+```
+
+
+
+### Zu den Pods 
+
+```
+## Start einen pod // BESSER: direkt manifest verwenden
+## kubectl run podname image=imagename 
+kubectl run nginx image=nginx 
+
+## Pods anzeigen 
+kubectl get pods 
+kubectl get pod
+## Format weitere Information 
+kubectl get pod -o wide 
+## Zeige labels der Pods
+kubectl get pods --show-labels 
+
+## Zeige pods mit einem bestimmten label 
+kubectl get pods -l app=nginx 
+
+## Status eines Pods anzeigen 
+kubectl describe pod nginx 
+
+## Pod löschen 
+kubectl delete pod nginx 
+
+## Kommando in pod ausführen 
+kubectl exec -it nginx -- bash 
+## direkt in den 1. Pod des Deployments wechseln
+kubectl exec -it deployment/name-des-deployments -- bash 
+
+```
+
+### Logs ausgeben 
+
+```
+kubectl logs podname
+## -n = namespace
+## | less -> seitenweise Ausgabe
+kubectl -n ingress logs nginx-ingress-ingress-nginx-controller-7bc7c7776d-jpj5h | less
+```
+
+### Arbeiten mit namespaces 
+
+```
+## Welche namespaces auf dem System 
+kubectl get ns 
+kubectl get namespaces 
+## Standardmäßig wird immer der default namespace verwendet 
+## wenn man kommandos aufruft 
+kubectl get deployments 
+
+## Möchte ich z.B. deployment vom kube-system (installation) aufrufen, 
+## kann ich den namespace angeben
+kubectl get deployments --namespace=kube-system 
+kubectl get deployments -n kube-system 
+
+## wir wollen unseren default namespace ändern 
+kubectl config set-context --current --namespace <dein-namespace>
+```
+
+
+
+### Referenz
+
+  * https://kubernetes.io/de/docs/reference/kubectl/cheatsheet/
+
+## Kubernetes Praxis (zum Verständnis von Netzwerk)
+
+### kubectl example with run
+
+
+### Example (that does work)
+
+```
+## Show the pods that are running 
+kubectl get pods 
+
+## Synopsis (most simplistic example 
+## kubectl run NAME --image=IMAGE_EG_FROM_DOCKER
+## example
+kubectl run nginx --image=nginx:1.23
+
+kubectl get pods 
+## on which node does it run ? 
+kubectl get pods -o wide 
+```
+
+### Example (that does not work) 
+
+```
+kubectl run foo2 --image=foo2
+## ImageErrPull - Image konnte nicht geladen werden 
+kubectl get pods 
+## Weitere status - info 
+kubectl describe pods foo2 
+```
+
+### Ref:
+
+  * https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#run
+
+### Service Typen / Ebenen - Schaubild
+
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/9dd21328-d477-49ec-84b3-6fc4bfbd590b)
+
+### kubectl/manifest/service
+
+
+### Schritt 1: Deployment 
+
+```
+cd
+mkdir -p manifests
+cd manifests 
+mkdir 04-service 
+cd 04-service 
+##vi 01-deploy.yml 
+```
+
+```
+## 01-deploy.yml 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx
+spec:
+  selector:
+    matchLabels:
+      app: my-nginx
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: my-nginx
+    spec:
+      containers:
+      - name: my-nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+```
+
+```
+kubectl apply -f .
+```
+
+### Schritt 2:
+
+
+```
+## 02-svc.yml 
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx
+  labels:
+    svc: nginx
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: my-nginx
+```
+
+```
+kubectl apply -f . 
+```
+
+
+### Ref.
+
+  * https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/
+
+### Ingress Controller auf Digitalocean (doks) mit helm installieren
+
+
+### Basics 
+
+  * Das Verfahren funktioniert auch so auf anderen Plattformen, wenn helm verwendet wird und noch kein IngressController vorhanden
+  * Ist kein IngressController vorhanden, werden die Ingress-Objekte zwar angelegt, es funktioniert aber nicht. 
+
+### Prerequisites 
+
+  * kubectl muss eingerichtet sein 
+
+### Walkthrough (Setup Ingress Controller) 
+
+```
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+helm show values ingress-nginx/ingress-nginx
+
+## It will be setup with type loadbalancer - so waiting to retrieve an ip from the external loadbalancer
+## This will take a little. 
+helm install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress --create-namespace --set controller.publishService.enabled=true 
+
+## See when the external ip comes available
+kubectl -n ingress get all
+kubectl --namespace ingress get services -o wide -w nginx-ingress-ingress-nginx-controller
+
+## Output  
+NAME                                     TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)                      AGE     SELECTOR
+nginx-ingress-ingress-nginx-controller   LoadBalancer   10.245.78.34   157.245.20.222   80:31588/TCP,443:30704/TCP   4m39s   app.kubernetes.io/component=controller,app.kubernetes.io/instance=nginx-ingress,app.kubernetes.io/name=ingress-nginx
+
+## Now setup wildcard - domain for training purpose 
+## inwx.com
+*.lab1.t3isp.de A 157.245.20.222 
+
+
+```
+
+
+### Beispiel mit Hostnamen
+
+
+### Walkthrough 
+
+#### Step 1: pods and services
+
+```
+cd
+mkdir -p manifests
+cd manifests 
+mkdir abi
+cd abi
+```
+
+```
+## apple.yml 
+## vi apple.yml 
+kind: Pod
+apiVersion: v1
+metadata:
+  name: apple-app
+  labels:
+    app: apple
+spec:
+  containers:
+    - name: apple-app
+      image: hashicorp/http-echo
+      args:
+        - "-text=apple-<dein-name>"
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: apple-service
+spec:
+  selector:
+    app: apple
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5678 # Default port for image
+```
+
+```
+kubectl apply -f apple.yml 
+```
+
+```
+## banana
+## vi banana.yml
+kind: Pod
+apiVersion: v1
+metadata:
+  name: banana-app
+  labels:
+    app: banana
+spec:
+  containers:
+    - name: banana-app
+      image: hashicorp/http-echo
+      args:
+        - "-text=banana-<dein-name>"
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: banana-service
+spec:
+  selector:
+    app: banana
+  ports:
+    - port: 80
+      targetPort: 5678 # Default port for image
+```
+
+```
+kubectl apply -f banana.yml
+```
+
+### Step 2: Ingress 
+
+```
+## Ingress
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: example-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+    # with the ingress controller from helm, you need to set an annotation 
+    # otherwice it does not know, which controller to use
+    # old version... use ingressClassName instead 
+    # kubernetes.io/ingress.class: nginx
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "<euername>.lab<nr>.t3isp.de"
+    http:
+      paths:
+        - path: /apple
+          backend:
+            serviceName: apple-service
+            servicePort: 80
+        - path: /banana
+          backend:
+            serviceName: banana-service
+            servicePort: 80
+```
+
+```
+## ingress 
+kubectl apply -f ingress.yml
+kubectl get ing 
+```
+
+### Reference 
+
+  * https://matthewpalmer.net/kubernetes-app-developer/articles/kubernetes-ingress-guide-nginx-example.html
+
+### Find the problem 
+
+```
+## Hints 
+
+## 1. Which resources does our version of kubectl support 
+## Can we find Ingress as "Kind" here.
+kubectl api-ressources 
+
+## 2. Let's see, how the configuration works 
+kubectl explain --api-version=networking.k8s.io/v1 ingress.spec.rules.http.paths.backend.service
+
+## now we can adjust our config 
+```
+
+### Solution
+
+```
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+    # with the ingress controller from helm, you need to set an annotation 
+    # old version useClassName instead 
+    # otherwice it does not know, which controller to use
+    # kubernetes.io/ingress.class: nginx 
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "app12.lab.t3isp.de"
+    http:
+      paths:
+        - path: /apple
+          pathType: Prefix
+          backend:
+            service:
+              name: apple-service
+              port:
+                number: 80
+        - path: /banana
+          pathType: Prefix
+          backend:
+            service:
+              name: banana-service
+              port:
+                number: 80                
+```
+
+## Kubernetes Load Balancer 
+
+### Kubernetes Load Balancer
+
+
+### Attention 
+
+  * On digitalocean, we will probably run into problems, that it is not working properly 
+
+### General 
+
+  * Supports bgp and arp 
+  * Divided into controller, speaker 
+
+### Installation Ways  
+
+  * helm 
+  * manifests 
+
+### Walkthrough Digitalocean 
+
+```
+## Just to show some basics 
+## Page from metallb says that digitalocean is not really supported well 
+## So we will not install the speaker .
+
+helm repo add metallb https://metallb.github.io/metallb 
+```
+
+```
+## Eventually disabling speaker 
+## vi values.yml 
+
+```
+
+```
+helm install metallb metallb/metallb --namespace=metallb-system --create-namespace 
+```
+
+```
+cd
+mkdir -p manifests
+cd manifests 
+mkdir mb 
+cd mb 
+vi 01-cm.yml 
+```
+
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: metallb-system
+  name: config
+data:
+  config: |
+    address-pools:
+    - name: default
+      protocol: layer2
+      addresses:
+      # Take the single address in case of digitalocean here.
+      # External ip 
+      # - 192.168.1.240-192.168.1.250
+      - 61.46.56.21
+```
+
+```
+vi 02-svc.yml 
+```
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc 
+spec:
+  selector:
+
+## Adjust -> selector -> according to nginx below 
+    app: nginx 
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  type: LoadBalancer
+  # uncomment to try, if you get it automatically 
+  loadBalancerIP: 61.46.56.21
+
+```
+
+```
+kubectl apply -f .
+kubectl -n metallb-system get svc my-service 
+```
+
+```
+kubectl create deployment nginx --image nginx:alpine --port 80 --replicas=1
+kubectl get svc nginx-svc
+## You can open 80 port on Firewall using Console and open http://167.99.99.99 for a test.
+```
+
+### Trafic Policy 
+
+ * https://metallb.universe.tf/usage/
+
+### Kubernetes Load Balancer new version for IpAdresses - object
+
+
+### Installatiion 
+
+ * Refs: https://metallb.universe.tf/installation/
+
+### Step 1: Installation: 
+
+```
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.9/config/manifests/metallb-native.yaml
+```
+
+### Step 2: Konfiguration 
+
+```
+mkdir -p manifests
+cd manifests 
+mkdir metallb 
+vi 01-pool.yaml 
+```
+
+```
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: first-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 192.168.1.240-192.168.1.250
+```
+
+```
+vi 02-l2.yaml
+
+```
+
+```
+## now we need to propagate
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: example
+  namespace: metallb-system
+```
+
+### References 
+
+  * https://microk8s.io/docs/addon-metallb
+  * https://metallb.universe.tf/
+  * Calico Issues: https://metallb.universe.tf/configuration/calico/
+  
+
+## Kubernetes - Netzwerk (CNI's) / Mesh
 
 ### Calico/Cilium - nginx example NetworkPolicy
 
@@ -1170,14 +3314,6 @@ kubectl label namespace default istio-injection=enabled
 
   * https://istio.io/latest/blog/2022/introducing-ambient-mesh/
 
-### Kubernetes Ports/Protokolle
-
-  * https://kubernetes.io/docs/reference/networking/ports-and-protocols/
-
-### IPV4/IPV6 Dualstack
-
-  * https://kubernetes.io/docs/concepts/services-networking/dual-stack/
-
 ### DNS - Resolution - Services
 
 
@@ -1203,203 +3339,6 @@ apple-tln1
 -                    100% |**************************************************************************************************************|    11  0:00:00 ETA
 written to stdout
 ```
-
-### Debug Container
-
-
-###  Walkthrough  Debug Container 
-
-```
-kubectl run ephemeral-demo --image=registry.k8s.io/pause:3.1 --restart=Never
-kubectl exec -it ephemeral-demo -- sh
-
-kubectl debug -it ephemeral-demo --image=busybox 
-```
-
-### Walkthrough Debug Node 
-
-```
-kubectl get nodes 
-kubectl debug node/mynode -it --image=ubuntu
-```
-
-
-
-### Reference 
-
-  * https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/#ephemeral-container
-
-## Kubernetes NetworkPolicy
-
-### Einfache Übung Network Policy
-
-
-### Schritt 1: Deployment und Service erstellen 
-
-```
-KURZ=jm
-kubectl create ns policy-demo-$KURZ 
-```
-
-```
-cd 
-mkdir -p manifests
-cd manifests
-mkdir -p np
-cd np
-```
-
-```
-## nano 01-deployment.yml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deployment
-spec:
-  selector:
-    matchLabels:
-      app: nginx
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:1.23
-        ports:
-        - containerPort: 80
-```
-
-```
-kubectl -n policy-demo-$KURZ apply -f . 
-```
-
-```
-## nano 02-service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginx
-spec:
-  type: ClusterIP # Default Wert 
-  ports:
-  - port: 80
-    protocol: TCP
-  selector:
-    app: nginx
-```
-
-```
-kubectl -n policy-demo-$KURZ apply -f . 
-```
-
-### Schritt 2: Zugriff testen ohne Regeln 
-
-```
-## lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
-kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
-```
-
-```
-## innerhalb der shell 
-wget -q nginx -O -
-```
-
-```
-## Optional: Pod anzeigen in 2. ssh-session zu jump-host
-kubectl -n policy-demo-$KURZ get pods --show-labels
-```
-
-### Schritt 3: Policy festlegen, dass kein Zugriff erlaubt ist. 
-
-```
-## nano 03-default-deny.yaml 
-## Schritt 2: Policy festlegen, dass kein Ingress-Traffic erlaubt
-## in diesem namespace: policy-demo-$KURZ 
-kind: NetworkPolicy
-apiVersion: networking.k8s.io/v1
-metadata:
-  name: default-deny
-spec:
-  podSelector:
-    matchLabels: {}
-```
-
-```
-kubectl -n policy-demo-$KURZ apply -f .
-```
-
-### Schritt 3.5: Verbindung mit deny all Regeln testen 
-
-```
-kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
-```
-
-```
-## innerhalb der shell 
-wget -q nginx -O -
-```
-
-### Schritt 4: Zugriff erlauben von pods mit dem Label run=access (alle mit run gestarteten pods mit namen access haben dieses label per default)
-
-```
-## nano 04-access-nginx.yaml 
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: access-nginx
-spec:
-  podSelector:
-    matchLabels:
-      app: nginx
-  ingress:
-    - from:
-      - podSelector:
-          matchLabels:
-            run: access
-```
-
-```
-kubectl -n policy-demo-$KURZ apply -f . 
-```
-
-### Schritt 5: Testen (zugriff sollte funktionieren)
-
-```
-## lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
-## pod hat durch run -> access automatisch das label run:access zugewiesen 
-kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
-```
-
-```
-## innerhalb der shell 
-wget -q nginx -O -
-```
-
-
-### Schritt 6: Pod mit label run=no-access - da sollte es nicht gehen 
-
-``` 
-kubectl run --namespace=policy-demo-$KURZ no-access --rm -ti --image busybox
-```
-
-```
-## in der shell  
-wget -q nginx -O -
-```
-
-### Schritt 7: Aufräumen 
-
-```
-kubectl delete ns policy-demo-$KURZ 
-```
-
-
-### Ref:
-
-  * https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-basic
 
 ## Calico NetworkPolicy
 
@@ -1445,7 +3384,7 @@ spec:
 ### Exercise calico Network Policy
 
 
-### Step 1: Set global policy (Trainer only) 
+### Step 1: Set global policy
 
 ```
 apiVersion: crd.projectcalico.org/v1
@@ -1457,6 +3396,20 @@ spec:
   types:
   - Ingress
   - Egress
+  egress:
+   # allow all namespaces to communicate to DNS pods
+  - action: Allow
+    protocol: UDP
+    destination:
+      selector: 'k8s-app == "kube-dns"'
+      ports:
+      - 53
+  - action: Allow
+    protocol: TCP
+    destination:
+      selector: 'k8s-app == "kube-dns"'
+      ports:
+      - 53
 
 ```
 
@@ -1467,20 +3420,72 @@ kubectl apply -f .
 ### Step 2: nginx ausrollen aus manifests/04-service und testen
 
 ```
-cd 
-cd manifests 
+cd
+mkdir -p manifests
+cd manifests
+mkdir 04-service 
 cd 04-service 
-kubectl apply -f 01-deploy.yml
-kubectl apply -f 02-service.yml
+```
+
+```
+nano deploy.yml 
+```
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-nginx
+spec:
+  selector:
+    matchLabels:
+      web: my-nginx
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        web: my-nginx
+    spec:
+      containers:
+      - name: cont-nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+```
+
+```
+nano service.yml
+```
+
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-nginx
+  labels:
+    run: svc-my-nginx
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    web: my-nginx      
+        
+```        
+
+```
+kubectl apply -f . 
 ```
 
 ```
 kubectl run -it --rm access --image=busybox 
 ```
-
 ```
+
 ## In der Bbusybox 
-wget -O - http://my-nginx 
+wget -O - http://svc-nginx 
 ```
 
 ### Step 3: Traffic erlauben egress von busybox 
@@ -1553,6 +3558,1469 @@ kubectl run -it --rm access --image=busybox
 ## In der Bbusybox 
 wget -O - http://my-nginx 
 ```
+
+## Kubernetes calico (CNI-Plugin)
+
+### Welcher Routing-Mode wird im aktuellen Cluster verwendet
+
+
+```
+kubectl -n calico-system describe ds calico-node | grep -A 35  calico-node
+## or specific
+kubectl -n calico-system describe ds calico-node | egrep -i -e vxlan  -e cluster_type
+
+```
+
+```
+Environment:
+      DATASTORE_TYPE:                      kubernetes
+      WAIT_FOR_DATASTORE:                  true
+      CLUSTER_TYPE:                        k8s,operator,bgp
+      CALICO_DISABLE_FILE_LOGGING:         false
+      FELIX_DEFAULTENDPOINTTOHOSTACTION:   ACCEPT
+      FELIX_HEALTHENABLED:                 true
+      FELIX_HEALTHPORT:                    9099
+      NODENAME:                             (v1:spec.nodeName)
+      NAMESPACE:                            (v1:metadata.namespace)
+      FELIX_TYPHAK8SNAMESPACE:             calico-system
+      FELIX_TYPHAK8SSERVICENAME:           calico-typha
+      FELIX_TYPHACAFILE:                   /etc/pki/tls/certs/tigera-ca-bundle.crt
+      FELIX_TYPHACERTFILE:                 /node-certs/tls.crt
+      FELIX_TYPHAKEYFILE:                  /node-certs/tls.key
+      FIPS_MODE_ENABLED:                   false
+      FELIX_TYPHACN:                       typha-server
+      CALICO_MANAGE_CNI:                   true
+      CALICO_IPV4POOL_CIDR:                192.168.0.0/16
+      CALICO_IPV4POOL_VXLAN:               CrossSubnet
+      CALICO_IPV4POOL_BLOCK_SIZE:          26
+      CALICO_IPV4POOL_NODE_SELECTOR:       all()
+      CALICO_IPV4POOL_DISABLE_BGP_EXPORT:  false
+      CALICO_NETWORKING_BACKEND:           bird
+      IP:                                  autodetect
+      IP_AUTODETECTION_METHOD:             first-found
+      IP6:                                 none
+      FELIX_IPV6SUPPORT:                   false
+      KUBERNETES_SERVICE_HOST:             10.96.0.1
+      KUBERNETES_SERVICE_PORT:             443
+    Mounts:
+```
+
+### Wird eBPF verwendet ?
+
+
+  * Hint: By default this should not be activated
+
+### Version microk8s 
+
+```
+kubectl -n kube-system logs calico-node-78s8q | grep -i bpfenabled
+```
+
+### Version installed on your own in cluster, e.g. kubeadm 
+
+```
+## Is in different namespace in this case 
+kubectl -n calico-system logs calico-node-78s8q | grep -i bpfenabled
+```
+
+### Install calicoctl in pod
+
+
+### General 
+
+#### It was like that ....
+
+  * calicoctl used to do validation locally in calicoctl for your manifests in the projectcalico/v3 api-version 
+  * This version was not available in kube-api-server 
+
+#### Now ....
+
+  * Validation takes place on server side. 
+  * For this to work the kube-api-server needs to be configured with calico 
+  * Now the preferred method is to use kubectl (without dependencies to calicoctl) but not for..... 
+    * calicoctl node
+    * calicoctl ipam
+    * calicoctl convert
+    * calicoctl version
+
+#### Reference: 
+
+  * https://docs.tigera.io/calico/latest/operations/calicoctl/configure/kdd
+
+
+
+
+
+### calicoctl Installation walkthrough (running in pod) 
+
+#### Find out version 
+
+```
+## welche version von calico setzen wir aktuell auf dem server ein 
+kubectl -n kube-system get ds calico-node -o=jsonpath='{.spec.template.spec.containers[0].image}'
+## docker.io/calico/node:v3.23.5
+
+```
+
+#### Pod erstellen für calicoctl auf Basis von 
+
+```
+cd
+mkdir -p manifests
+cd manifests 
+mkdir calicoctl 
+cd calicoctl 
+vi calicoctl.yaml
+```
+
+```
+### https://raw.githubusercontent.com/projectcalico/calico/v3.25.1/manifests/calicoctl.yaml
+### Calico Version master
+## https://projectcalico.docs.tigera.io/releases#master
+## This manifest includes the following component versions:
+##   calico/ctl:v3.25.1
+
+
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: calicoctl
+  namespace: kube-system
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: calicoctl
+  namespace: kube-system
+spec:
+  nodeSelector:
+    kubernetes.io/os: linux
+  hostNetwork: true
+  serviceAccountName: calicoctl
+  containers:
+  - name: calicoctl
+    image: calico/ctl:v3.23.5
+    command:
+      - /calicoctl
+    args:
+      - version
+      - --poll=1m
+    env:
+    - name: DATASTORE_TYPE
+      value: kubernetes
+
+---
+
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: calicoctl
+rules:
+  - apiGroups: [""]
+    resources:
+      - namespaces
+      - nodes
+    verbs:
+      - get
+      - list
+      - update
+  - apiGroups: [""]
+    resources:
+      - nodes/status
+    verbs:
+      - update
+  - apiGroups: [""]
+    resources:
+      - pods
+      - serviceaccounts
+    verbs:
+      - get
+      - list
+  - apiGroups: [""]
+    resources:
+      - pods/status
+    verbs:
+      - update
+  - apiGroups: ["crd.projectcalico.org"]
+    resources:
+      - bgppeers
+      - bgpconfigurations
+      - clusterinformations
+      - felixconfigurations
+      - globalnetworkpolicies
+      - globalnetworksets
+      - ippools
+      - ipreservations
+      - kubecontrollersconfigurations
+      - networkpolicies
+      - networksets
+      - hostendpoints
+      - ipamblocks
+      - blockaffinities
+      - ipamhandles
+      - ipamconfigs
+    verbs:
+      - create
+      - get
+      - list
+      - update
+      - delete
+  - apiGroups: ["networking.k8s.io"]
+    resources:
+      - networkpolicies
+    verbs:
+      - get
+      - list
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: calicoctl
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: calicoctl
+subjects:
+- kind: ServiceAccount
+  name: calicoctl
+  namespace: kube-system
+  
+```
+
+### calicoctl verwenden 
+
+```
+## this will always work, no matter what version 
+kubectl -n kube-system exec calicoctl -- /calicoctl version
+
+## this will only work without flags, if we have the same version
+## on both sides 
+
+```
+
+### Wann calicoctl (Stand 2024/01 calico 3.27)
+
+
+### Für Informationen über die Nodes (z.B. BGP) - direkt auf Node ausführen 
+
+ * calicoctl get nodes
+
+### Um Zusatzinformationen abzufragen, die nur in calicoctl zur Verfügung stehen 
+
+```
+## namespace in command needs to be written at then end
+calicoctl get wep -n namespace-der-application
+
+## get version
+calicoctl version
+
+## show cidr / the ippool 
+calicoctl ipam show
+calicoctl ipam check 
+
+```
+
+### Calico - only on one of nodes (e.g. controlplane - need to login with ssh) 
+
+```
+## .kube/config does not need to be configured 
+calicoctl node status
+calicoctl ipam status 
+
+
+```
+
+### Install calico-api-server to use kubectl instead of calicoctl
+
+
+### prepare kube-api-server for to be use for calico calls. 
+
+  * Possible from calico 3.20+ (GA) 
+  * https://docs.tigera.io/calico/latest/operations/install-apiserver
+
+
+#### Step 1: Apply manifests for api server 
+
+```
+cd
+mkdir -p manifests 
+cd manifests 
+## calico api server 
+mkdir cas 
+cd cas 
+vi cas.yaml 
+```
+
+
+```
+## taken from https://raw.githubusercontent.com/projectcalico/calico/v3.25.1/manifests/apiserver.yaml
+## but adjusted images version to corresponding installation 
+## kubectl -n kube-system get ds calico-node -o=jsonpath='{.spec.template.spec.containers[0].image}'
+## This is a tech-preview manifest which installs the Calico API server. Note that this manifest is liable to change
+## or be removed in future releases without further warning.
+##
+## Namespace and namespace-scoped resources.
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    name: calico-apiserver
+  name: calico-apiserver
+spec:
+
+---
+
+## Policy to ensure the API server isn't cut off. Can be modified, but ensure 
+## that the main API server is always able to reach the Calico API server.
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-apiserver
+  namespace: calico-apiserver
+spec:
+  podSelector:
+    matchLabels:
+      apiserver: "true"
+  ingress:
+  - ports:
+    - protocol: TCP
+      port: 5443
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: calico-api
+  namespace: calico-apiserver
+spec:
+  ports:
+  - name: apiserver
+    port: 443
+    protocol: TCP
+    targetPort: 5443
+  selector:
+    apiserver: "true"
+  type: ClusterIP
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    apiserver: "true"
+    k8s-app: calico-apiserver
+  name: calico-apiserver
+  namespace: calico-apiserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      apiserver: "true"
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        apiserver: "true"
+        k8s-app: calico-apiserver
+      name: calico-apiserver
+      namespace: calico-apiserver
+    spec:
+      containers:
+      - args:
+        - --secure-port=5443
+        # - -v=5 # not working in v3.23.5 not available as flag there 
+        env:
+        - name: DATASTORE_TYPE
+          value: kubernetes
+        image: calico/apiserver:v3.23.5
+        livenessProbe:
+          httpGet:
+            path: /version
+            port: 5443
+            scheme: HTTPS
+          initialDelaySeconds: 90
+          periodSeconds: 10
+        name: calico-apiserver
+        readinessProbe:
+          exec:
+            command:
+            - /code/filecheck
+          failureThreshold: 5
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        securityContext:
+          privileged: false
+          runAsUser: 0
+        volumeMounts:
+        - mountPath: /code/apiserver.local.config/certificates
+          name: calico-apiserver-certs
+      dnsPolicy: ClusterFirst
+      nodeSelector:
+        kubernetes.io/os: linux
+      restartPolicy: Always
+      serviceAccount: calico-apiserver
+      serviceAccountName: calico-apiserver
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
+      volumes:
+      - name: calico-apiserver-certs
+        secret:
+          secretName: calico-apiserver-certs
+
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: calico-apiserver 
+  namespace: calico-apiserver 
+
+---
+
+## Cluster-scoped resources below here.
+apiVersion: apiregistration.k8s.io/v1
+kind: APIService
+metadata:
+  name: v3.projectcalico.org
+spec:
+  group: projectcalico.org
+  groupPriorityMinimum: 1500
+  service:
+    name: calico-api
+    namespace: calico-apiserver
+    port: 443
+  version: v3
+  versionPriority: 200
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: calico-crds
+rules:
+- apiGroups:
+  - extensions
+  - networking.k8s.io
+  - ""
+  resources:
+  - networkpolicies
+  - nodes
+  - namespaces
+  - pods
+  - serviceaccounts
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - crd.projectcalico.org
+  resources:
+  - globalnetworkpolicies
+  - networkpolicies
+  - clusterinformations
+  - hostendpoints
+  - globalnetworksets
+  - networksets
+  - bgpconfigurations
+  - bgppeers
+  - felixconfigurations
+  - kubecontrollersconfigurations
+  - ippools
+  - ipreservations
+  - ipamblocks
+  - blockaffinities
+  - caliconodestatuses
+  - ipamconfigs
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - delete
+- apiGroups:
+  - policy
+  resourceNames:
+  - calico-apiserver
+  resources:
+  - podsecuritypolicies
+  verbs:
+  - use
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: calico-extension-apiserver-auth-access
+rules:
+- apiGroups:
+  - ""
+  resourceNames:
+  - extension-apiserver-authentication
+  resources:
+  - configmaps
+  verbs:
+  - list
+  - watch
+  - get
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - clusterroles
+  - clusterrolebindings
+  - roles
+  - rolebindings
+  verbs:
+  - get
+  - list
+  - watch
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: calico-webhook-reader
+rules:
+- apiGroups:
+  - admissionregistration.k8s.io
+  resources:
+  - mutatingwebhookconfigurations
+  - validatingwebhookconfigurations
+  verbs:
+  - get
+  - list
+  - watch
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: calico-apiserver-access-crds
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: calico-crds
+subjects:
+- kind: ServiceAccount
+  name: calico-apiserver
+  namespace: calico-apiserver
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: calico-apiserver-delegate-auth
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:auth-delegator
+subjects:
+- kind: ServiceAccount
+  name: calico-apiserver
+  namespace: calico-apiserver
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: calico-apiserver-webhook-reader
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: calico-webhook-reader
+subjects:
+- kind: ServiceAccount
+  name: calico-apiserver
+  namespace: calico-apiserver
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: calico-extension-apiserver-auth-access
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: calico-extension-apiserver-auth-access
+subjects:
+- kind: ServiceAccount
+  name: calico-apiserver
+  namespace: calico-apiserver
+
+```
+
+#### Step 2: create certificates 
+
+```
+openssl req -x509 -nodes -newkey rsa:4096 -keyout apiserver.key -out apiserver.crt -days 365 -subj "/" -addext "subjectAltName = DNS:calico-api.calico-apiserver.svc"
+kubectl create secret -n calico-apiserver generic calico-apiserver-certs --from-file=apiserver.key --from-file=apiserver.crt
+## configure server with ca-bundle 
+kubectl patch apiservice v3.projectcalico.org -p \
+    "{\"spec\": {\"caBundle\": \"$(kubectl get secret -n calico-apiserver calico-apiserver-certs -o go-template='{{ index .data "apiserver.crt" }}')\"}}"
+
+```
+
+### Step 3: check if it is working 
+
+```
+## pod should run 
+kubectl -n calico-apiserver get pods 
+## if not delete it 
+## e.g. 
+kubectl -n calico-apiserver delete po calico-apiserver-6f64fdcc5c-kz45t
+## it will get recreated because of deployment 
+```
+
+```
+kubectl api-resources | grep '\sprojectcalico.org'
+## only available in v3 
+kubectl get clusterinfo 
+```
+
+### Calico Default Routing Mode BGP & vxlancrossnet
+
+
+### What does it do ? 
+
+  * BGP is used, when other node is on same subnet
+  * vxlan is used, when worker node to reach is in other subnet
+
+### Grafics
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/a2766737-e1e5-4ee0-8e03-9216a0379d97)
+
+### How to find out, if this node is used 
+
+```
+kubectl -n calico-system get ippool -o yaml | grep vxlan 
+```
+
+### Internals - Pod to Pod - Communication on Worker3 (node))
+
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/ba9d497d-36ed-467f-9965-faad76a201cd)
+
+### Internals - Inter-Pod - Communication (worker 3 -> worker 1
+
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/305e0dac-5d13-4f6c-88b0-3b06b88eba7c)
+
+## Kubernetes Praxis API-Objekte 
+
+### Bauen einer Applikation mit Resource Objekten
+
+
+![Bauen einer Webanwendung](images/WebApp.drawio.png)
+
+### Pod manifest
+
+
+### Walkthrough 
+
+```
+cd 
+mkdir -p manifests
+cd manifests
+mkdir -p web
+cd web
+```
+
+```
+## vi nginx-static.yml 
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-static-web
+  labels:
+    webserver: nginx
+spec:
+  containers:
+  - name: web
+    image: nginx
+
+```
+
+```
+kubectl apply -f nginx-static.yml 
+kubectl describe pod nginx-static-web 
+## show config 
+kubectl get pod/nginx-static-web -o yaml
+kubectl get pod/nginx-static-web -o wide 
+```
+
+### Replicasets
+
+
+```
+cd
+mkdir -p manifests
+cd manifests
+mkdir 02-rs 
+cd 02-rs 
+## vi rs.yml
+```
+
+```
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-replica-set
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      name: template-nginx-replica-set
+      labels:
+        tier: frontend
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.21
+          ports:
+            - containerPort: 80
+             
+
+             
+```
+
+```
+kubectl apply -f rs.yml 
+```
+
+### kubectl/manifest/deployments
+
+
+```
+cd
+mkdir -p manifests
+cd manifests
+mkdir 03-deploy
+cd 03-deploy 
+nano deploy.yml 
+```
+
+```
+
+## vi deploy.yml 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 8 # tells deployment to run 8 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.21
+        ports:
+        - containerPort: 80
+        
+```
+
+```
+kubectl apply -f deploy.yml 
+```
+
+### Services - Aufbau
+
+
+![Services Aufbau](/images/kubernetes-services.drawio.svg)
+
+### Hintergrund Ingress
+
+
+
+
+### Ref. / Dokumentation 
+
+  * https://matthewpalmer.net/kubernetes-app-developer/articles/kubernetes-ingress-guide-nginx-example.html
+
+### Documentation for default ingress nginx
+
+  * https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/
+
+### Beispiel Ingress
+
+
+### Prerequisits
+
+```
+## Ingress Controller muss aktiviert sein 
+microk8s enable ingress
+```
+
+### Walkthrough 
+
+#### Schritt 1:
+
+```
+cd 
+mkdir -p manifests
+cd manifests 
+mkdir abi
+cd abi 
+```
+
+
+```
+## apple.yml 
+## vi apple.yml 
+kind: Pod
+apiVersion: v1
+metadata:
+  name: apple-app
+  labels:
+    app: apple
+spec:
+  containers:
+    - name: apple-app
+      image: hashicorp/http-echo
+      args:
+        - "-text=apple"
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: apple-service
+spec:
+  selector:
+    app: apple
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5678 # Default port for image
+```
+
+```
+kubectl apply -f apple.yml 
+```
+
+```
+## banana
+## vi banana.yml
+kind: Pod
+apiVersion: v1
+metadata:
+  name: banana-app
+  labels:
+    app: banana
+spec:
+  containers:
+    - name: banana-app
+      image: hashicorp/http-echo
+      args:
+        - "-text=banana"
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: banana-service
+spec:
+  selector:
+    app: banana
+  ports:
+    - port: 80
+      targetPort: 5678 # Default port for image
+```
+
+```
+kubectl apply -f banana.yml
+```
+
+#### Schritt 2:
+
+```
+## Ingress
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: example-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+        - path: /apple
+          backend:
+            serviceName: apple-service
+            servicePort: 80
+        - path: /banana
+          backend:
+            serviceName: banana-service
+            servicePort: 80
+```
+
+```
+## ingress 
+kubectl apply -f ingress.yml
+kubectl get ing 
+```
+
+### Reference 
+
+  * https://matthewpalmer.net/kubernetes-app-developer/articles/kubernetes-ingress-guide-nginx-example.html
+
+### Find the problem 
+
+```
+## Hints 
+
+## 1. Which resources does our version of kubectl support 
+## Can we find Ingress as "Kind" here.
+kubectl api-ressources 
+
+## 2. Let's see, how the configuration works 
+kubectl explain --api-version=networking.k8s.io/v1 ingress.spec.rules.http.paths.backend.service
+
+## now we can adjust our config 
+```
+
+### Solution
+
+```
+## in kubernetes 1.22.2 - ingress.yml needs to be modified like so.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+        - path: /apple
+          pathType: Prefix
+          backend:
+            service:
+              name: apple-service
+              port:
+                number: 80
+        - path: /banana
+          pathType: Prefix
+          backend:
+            service:
+              name: banana-service
+              port:
+                number: 80                
+```
+
+### Achtung: Ingress mit Helm - annotations
+
+### Permanente Weiterleitung mit Ingress
+
+
+### Example
+
+```
+## redirect.yml 
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: my-namespace
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/permanent-redirect: https://www.google.de
+    nginx.ingress.kubernetes.io/permanent-redirect-code: "308"
+  creationTimestamp: null
+  name: destination-home
+  namespace: my-namespace
+spec:
+  rules:
+  - host: web.training.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: http-svc
+            port:
+              number: 80
+        path: /source
+        pathType: ImplementationSpecific
+```
+
+```
+Achtung: host-eintrag auf Rechner machen, von dem aus man zugreift 
+
+/etc/hosts 
+45.23.12.12 web.training.local
+```
+
+
+```
+curl -I  http://web.training.local/source
+HTTP/1.1 308 
+Permanent Redirect 
+
+```
+
+### Umbauen zu google ;o) 
+
+```
+This annotation allows to return a permanent redirect instead of sending data to the upstream. For example nginx.ingress.kubernetes.io/permanent-redirect: https://www.google.com would redirect everything to Google.
+
+```
+
+### Refs:
+
+  * https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md#permanent-redirect
+  * 
+
+### ConfigMap Example
+
+
+### Schritt 1: configmap vorbereiten 
+```
+cd 
+mkdir -p manifests 
+cd manifests
+mkdir configmaptests 
+cd configmaptests
+nano 01-configmap.yml
+```
+
+```
+### 01-configmap.yml
+kind: ConfigMap 
+apiVersion: v1 
+metadata:
+  name: example-configmap 
+data:
+  # als Wertepaare
+  database: mongodb
+  database_uri: mongodb://localhost:27017
+```
+
+```
+kubectl apply -f 01-configmap.yml 
+kubectl get cm
+kubectl get cm -o yaml
+```
+
+### Schrit 2: Beispiel als Datei 
+
+
+```
+nano 02-pod.yml
+```
+
+```
+kind: Pod 
+apiVersion: v1 
+metadata:
+  name: pod-mit-configmap 
+
+spec:
+  # Add the ConfigMap as a volume to the Pod
+  volumes:
+    # `name` here must match the name
+    # specified in the volume mount
+    - name: example-configmap-volume
+      # Populate the volume with config map data
+      configMap:
+        # `name` here must match the name 
+        # specified in the ConfigMap's YAML 
+        name: example-configmap
+
+  containers:
+    - name: container-configmap
+      image: nginx:latest
+      # Mount the volume that contains the configuration data 
+      # into your container filesystem
+      volumeMounts:
+        # `name` here must match the name
+        # from the volumes section of this pod
+        - name: example-configmap-volume
+          mountPath: /etc/config
+
+
+```
+
+```
+kubectl apply -f 02-pod.yml 
+```
+
+```
+##Jetzt schauen wir uns den Container/Pod mal an
+kubectl exec pod-mit-configmap -- ls -la /etc/config
+kubectl exec -it pod-mit-configmap --  bash
+## ls -la /etc/config 
+```
+
+### Schritt 3: Beispiel. ConfigMap als env-variablen 
+
+```
+nano 03-pod-mit-env.yml
+```
+
+```
+## 03-pod-mit-env.yml 
+kind: Pod 
+apiVersion: v1 
+metadata:
+  name: pod-env-var 
+spec:
+  containers:
+    - name: env-var-configmap
+      image: nginx:latest 
+      envFrom:
+        - configMapRef:
+            name: example-configmap
+
+```
+
+```
+kubectl apply -f 03-pod-mit-env.yml
+```
+
+```
+## und wir schauen uns das an 
+##Jetzt schauen wir uns den Container/Pod mal an
+kubectl exec pod-env-var -- env
+kubectl exec -it pod-env-var --  bash
+## env
+
+```
+
+
+### Reference: 
+
+ * https://matthewpalmer.net/kubernetes-app-developer/articles/ultimate-configmap-guide-kubernetes.html
+
+### Configmap MariaDB - Example
+
+
+### Schritt 1: configmap 
+
+```
+cd 
+mkdir -p manifests
+cd manifests
+mkdir cftest 
+cd cftest 
+nano 01-configmap.yml 
+```
+
+```
+### 01-configmap.yml
+kind: ConfigMap 
+apiVersion: v1 
+metadata:
+  name: mariadb-configmap 
+data:
+  # als Wertepaare
+  MARIADB_ROOT_PASSWORD: 11abc432
+```
+
+```
+kubectl apply -f .
+kubectl get cm
+kubectl get cm mariadb-configmap -o yaml
+```
+
+
+### Schritt 2: Deployment 
+```
+nano 02-deploy.yml
+```
+
+```
+##deploy.yml 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb-deployment
+spec:
+  selector:
+    matchLabels:
+      app: mariadb
+  replicas: 1 
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+      - name: mariadb-cont
+        image: mariadb:latest
+        envFrom:
+        - configMapRef:
+            name: mariadb-configmap
+
+```
+
+```
+kubectl apply -f .
+```
+
+### Important Sidenode 
+
+  * If configmap changes, deployment does not know
+  * So kubectl apply -f deploy.yml will not have any effect
+  * to fix, use stakater/reloader: https://github.com/stakater/Reloader
+
+
+### Configmap MariaDB my.cnf
+
+
+### configmap zu fuss 
+
+```
+vi mariadb-config2.yml 
+```
+
+```
+kind: ConfigMap 
+apiVersion: v1 
+metadata:
+  name: example-configmap 
+data:
+  # als Wertepaare
+  database: mongodb
+  my.cnf: |
+ [mysqld]
+ slow_query_log = 1
+ innodb_buffer_pool_size = 1G 
+  
+```
+
+```
+kubectl apply -f .
+```
+
+```
+##deploy.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb-deployment
+spec:
+  selector:
+    matchLabels:
+      app: mariadb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+      - name: mariadb-cont
+        image: mariadb:latest
+        envFrom:
+        - configMapRef:
+            name: mariadb-configmap
+
+        volumeMounts:
+          - name: example-configmap-volume
+            mountPath: /etc/my
+
+      volumes:
+      - name: example-configmap-volume
+        configMap:
+          name: example-configmap
+```
+
+```
+kubectl apply -f .
+```
+
+## Kubernetes multus (Meta-CNI - Plugin)
+
+### Multus Überblick
+
+
+### Problem, Warum multus ? 
+
+  * Aktuell kann seitens kubernetes nur ein Interface verwaltet werden, weil der CNI-Call nur 1x ausgeführt wird. (eigentlich 2x wenn man localhost mit einbezieht)
+
+### Prerequisites 
+
+  * a CNI, that manages the network needs to be installed before hand, like Calico, Cilium
+
+### Graphics 
+
+![Multus](https://github.com/k8snetworkplumbingwg/multus-cni/raw/master/docs/images/multus-pod-image.svg)
+
+### General 
+
+  * Multus is a meta-plugin, which makes it possible to attach additional networks to your pod (multi - homing)
+
+### macvlan plugin 
+
+### Example macvlan 
+
+  * https://github.com/k8snetworkplumbingwg/multus-cni/blob/master/examples/macvlan-pod.yml
+
+```
+---
+## This net-attach-def defines macvlan-conf with 
+##   + ips capabilities to specify ip in pod annotation and 
+##   + mac capabilities to specify mac address in pod annotation
+## default gateway is defined as well
+apiVersion: "k8s.cni.cncf.io/v1"
+kind: NetworkAttachmentDefinition
+metadata:
+  name: macvlan-conf
+spec: 
+  config: '{
+      "cniVersion": "0.3.1",
+      "plugins": [
+        {
+          "type": "macvlan",
+          "capabilities": { "ips": true },
+          "master": "eth0",
+          "mode": "bridge",
+          "ipam": {
+            "type": "static",
+            "routes": [
+              {
+                "dst": "0.0.0.0/0",
+                "gw": "10.1.1.1"
+              }
+            ] 
+          }
+        }, {
+          "capabilities": { "mac": true },
+          "type": "tuning"
+        }
+      ]
+    }'
+---
+## Define a pod with macvlan-conf, defined above, with ip address and mac, and 
+## "gateway" overrides default gateway to use macvlan-conf's one. 
+## without "gateway" in k8s.v1.cni.cncf.io/networks, default route will be cluster
+## network interface, eth0, even tough macvlan-conf has default gateway config.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: samplepod
+  annotations:
+    k8s.v1.cni.cncf.io/networks: '[
+            { "name": "macvlan-conf",
+              "ips": [ "10.1.1.101/24" ],
+              "mac": "c2:b0:57:49:47:f1",
+              "gateway": [ "10.1.1.1" ]
+            }]'
+spec:
+  containers:
+  - name: samplepod
+    command: ["/bin/bash", "-c", "trap : TERM INT; sleep infinity & wait"]
+    image: dougbtv/centos-network
+    ports:
+    - containerPort: 80
+
+```
+
+### sr-iov mit multus
+
+
+### Voraussetzung: Multus:
+
+### Konzept SR-IOV
+
+  * Direkte Hardwareanbindung der Netzwerkkarte
+  * Offload wird auf Netzwerkkarte gemacht (nicht im Kernel)
+  * bessere Performance
+
+### Generell 
+
+  * Erweiterung des PCI-Express Standarads 
+  * Eine Netzwerkkarte wird mehrmals angeboten und Kommunikation erfolgt direkt und nicht über den Umweg Kernel
+
+### Vorbereitung
+
+ * https://github.com/k8snetworkplumbingwg/sriov-network-device-plugin
+ * https://github.com/k8snetworkplumbingwg/sriov-network-device-plugin/tree/db98d96cc0d6ad3fff917ba238bd1cc5cc3f7e82#config-parameters
+
+### Einbindung 
+
+  * https://github.com/k8snetworkplumbingwg/sriov-network-device-plugin#example-deployments
+  * https://github.com/k8snetworkplumbingwg/multus-cni/blob/master/examples/sriov-pod.yml
+
+
+
+ 
+
+
+## Kubernetes coil (egress - gateway)
+
+### coil
+
+
+### Opt-In egress-gateway (NAT-Service)
+
+```
+apiVersion: coil.cybozu.com/v2
+kind: Egress
+metadata:
+  namespace: internet-egress
+  name: nat
+spec:
+  replicas: 2
+  destinations:
+  - 0.0.0.0/0
+  - ::/0
+```
+
+  * Not all Pods become the client of Egress. To become a client, Pods need to have special annotations like this:
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: default
+  name: nat-client
+  annotations:
+    egress.coil.cybozu.com/internet-egress: nat
+spec:
+```
+
+### Reference  
+
+  * Refs: https://blog.kintone.io/entry/coilv2
+  * https://github.com/cybozu-go/coil
+
 
 ## Kubernetes antrea (CNI-Plugin)
 
@@ -1696,7 +5164,7 @@ kubectl -n kube-system get cm antrea-config -o yaml
 
 ```
 
-### Antrea Exercise
+### Antrea NetworkPolicy Exercise - 1 Cluster in Group
 
 
 ### Our Goal 
@@ -2731,973 +6199,6 @@ kubectl apply -f .
   * https://www.vrealize.it/2020/09/28/securing-you-k8s-network-with-antrea-clusternetworkpolicy/
 
 
-## Kubernetes calico (CNI-Plugin)
-
-### Welcher Routing-Mode wird im aktuellen Cluster verwendet
-
-
-```
-kubectl -n calico-system describe ds calico-node
-```
-
-```
-Environment:
-      DATASTORE_TYPE:                      kubernetes
-      WAIT_FOR_DATASTORE:                  true
-      CLUSTER_TYPE:                        k8s,operator,bgp
-      CALICO_DISABLE_FILE_LOGGING:         false
-      FELIX_DEFAULTENDPOINTTOHOSTACTION:   ACCEPT
-      FELIX_HEALTHENABLED:                 true
-      FELIX_HEALTHPORT:                    9099
-      NODENAME:                             (v1:spec.nodeName)
-      NAMESPACE:                            (v1:metadata.namespace)
-      FELIX_TYPHAK8SNAMESPACE:             calico-system
-      FELIX_TYPHAK8SSERVICENAME:           calico-typha
-      FELIX_TYPHACAFILE:                   /etc/pki/tls/certs/tigera-ca-bundle.crt
-      FELIX_TYPHACERTFILE:                 /node-certs/tls.crt
-      FELIX_TYPHAKEYFILE:                  /node-certs/tls.key
-      FIPS_MODE_ENABLED:                   false
-      FELIX_TYPHACN:                       typha-server
-      CALICO_MANAGE_CNI:                   true
-      CALICO_IPV4POOL_CIDR:                192.168.0.0/16
-      CALICO_IPV4POOL_VXLAN:               CrossSubnet
-      CALICO_IPV4POOL_BLOCK_SIZE:          26
-      CALICO_IPV4POOL_NODE_SELECTOR:       all()
-      CALICO_IPV4POOL_DISABLE_BGP_EXPORT:  false
-      CALICO_NETWORKING_BACKEND:           bird
-      IP:                                  autodetect
-      IP_AUTODETECTION_METHOD:             first-found
-      IP6:                                 none
-      FELIX_IPV6SUPPORT:                   false
-      KUBERNETES_SERVICE_HOST:             10.96.0.1
-      KUBERNETES_SERVICE_PORT:             443
-    Mounts:
-```
-
-### Install calicoctl in pod
-
-
-### General 
-
-#### It was like that ....
-
-  * calicoctl used to do validation locally in calicoctl for your manifests in the projectcalico/v3 api-version 
-  * This version was not available in kube-api-server 
-
-#### Now ....
-
-  * Validation takes place on server side. 
-  * For this to work the kube-api-server needs to be configured with calico 
-  * Now the preferred method is to use kubectl (without dependencies to calicoctl) but not for..... 
-    * calicoctl node
-    * calicoctl ipam
-    * calicoctl convert
-    * calicoctl version
-
-#### Reference: 
-
-  * https://docs.tigera.io/calico/latest/operations/calicoctl/configure/kdd
-
-
-
-
-
-### calicoctl Installation walkthrough (running in pod) 
-
-#### Find out version 
-
-```
-## welche version von calico setzen wir aktuell auf dem server ein 
-kubectl -n kube-system get ds calico-node -o=jsonpath='{.spec.template.spec.containers[0].image}'
-## docker.io/calico/node:v3.23.5
-
-```
-
-#### Pod erstellen für calicoctl auf Basis von 
-
-```
-cd
-mkdir -p manifests
-cd manifests 
-mkdir calicoctl 
-cd calicoctl 
-vi calicoctl.yaml
-```
-
-```
-### https://raw.githubusercontent.com/projectcalico/calico/v3.25.1/manifests/calicoctl.yaml
-### Calico Version master
-## https://projectcalico.docs.tigera.io/releases#master
-## This manifest includes the following component versions:
-##   calico/ctl:v3.25.1
-
-
-
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: calicoctl
-  namespace: kube-system
-
----
-
-apiVersion: v1
-kind: Pod
-metadata:
-  name: calicoctl
-  namespace: kube-system
-spec:
-  nodeSelector:
-    kubernetes.io/os: linux
-  hostNetwork: true
-  serviceAccountName: calicoctl
-  containers:
-  - name: calicoctl
-    image: calico/ctl:v3.23.5
-    command:
-      - /calicoctl
-    args:
-      - version
-      - --poll=1m
-    env:
-    - name: DATASTORE_TYPE
-      value: kubernetes
-
----
-
-kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: calicoctl
-rules:
-  - apiGroups: [""]
-    resources:
-      - namespaces
-      - nodes
-    verbs:
-      - get
-      - list
-      - update
-  - apiGroups: [""]
-    resources:
-      - nodes/status
-    verbs:
-      - update
-  - apiGroups: [""]
-    resources:
-      - pods
-      - serviceaccounts
-    verbs:
-      - get
-      - list
-  - apiGroups: [""]
-    resources:
-      - pods/status
-    verbs:
-      - update
-  - apiGroups: ["crd.projectcalico.org"]
-    resources:
-      - bgppeers
-      - bgpconfigurations
-      - clusterinformations
-      - felixconfigurations
-      - globalnetworkpolicies
-      - globalnetworksets
-      - ippools
-      - ipreservations
-      - kubecontrollersconfigurations
-      - networkpolicies
-      - networksets
-      - hostendpoints
-      - ipamblocks
-      - blockaffinities
-      - ipamhandles
-      - ipamconfigs
-    verbs:
-      - create
-      - get
-      - list
-      - update
-      - delete
-  - apiGroups: ["networking.k8s.io"]
-    resources:
-      - networkpolicies
-    verbs:
-      - get
-      - list
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: calicoctl
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: calicoctl
-subjects:
-- kind: ServiceAccount
-  name: calicoctl
-  namespace: kube-system
-  
-```
-
-### calicoctl verwenden 
-
-```
-## this will always work, no matter what version 
-kubectl -n kube-system exec calicoctl -- /calicoctl version
-
-## this will only work without flags, if we have the same version
-## on both sides 
-
-```
-
-### Wann calicoctl (Stand 2024/01 calico 3.27)
-
-
-### Für Informationen über die Nodes (z.B. BGP) - direkt auf Node ausführen 
-
- * calicoctl get nodes
-
-### Um Zusatzinformationen abzufragen, die nur in calicoctl zur Verfügung stehen 
-
-  * z.B
-  * calicoctl get web -n namespace-der-application
-
-
-### Install calico-api-server to use kubectl instead of calicoctl
-
-
-### prepare kube-api-server for to be use for calico calls. 
-
-  * Possible from calico 3.20+ (GA) 
-  * https://docs.tigera.io/calico/latest/operations/install-apiserver
-
-
-#### Step 1: Apply manifests for api server 
-
-```
-cd
-mkdir -p manifests 
-cd manifests 
-## calico api server 
-mkdir cas 
-cd cas 
-vi cas.yaml 
-```
-
-
-```
-## taken from https://raw.githubusercontent.com/projectcalico/calico/v3.25.1/manifests/apiserver.yaml
-## but adjusted images version to corresponding installation 
-## kubectl -n kube-system get ds calico-node -o=jsonpath='{.spec.template.spec.containers[0].image}'
-## This is a tech-preview manifest which installs the Calico API server. Note that this manifest is liable to change
-## or be removed in future releases without further warning.
-##
-## Namespace and namespace-scoped resources.
-apiVersion: v1
-kind: Namespace
-metadata:
-  labels:
-    name: calico-apiserver
-  name: calico-apiserver
-spec:
-
----
-
-## Policy to ensure the API server isn't cut off. Can be modified, but ensure 
-## that the main API server is always able to reach the Calico API server.
-kind: NetworkPolicy
-apiVersion: networking.k8s.io/v1
-metadata:
-  name: allow-apiserver
-  namespace: calico-apiserver
-spec:
-  podSelector:
-    matchLabels:
-      apiserver: "true"
-  ingress:
-  - ports:
-    - protocol: TCP
-      port: 5443
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: calico-api
-  namespace: calico-apiserver
-spec:
-  ports:
-  - name: apiserver
-    port: 443
-    protocol: TCP
-    targetPort: 5443
-  selector:
-    apiserver: "true"
-  type: ClusterIP
-
----
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    apiserver: "true"
-    k8s-app: calico-apiserver
-  name: calico-apiserver
-  namespace: calico-apiserver
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      apiserver: "true"
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      labels:
-        apiserver: "true"
-        k8s-app: calico-apiserver
-      name: calico-apiserver
-      namespace: calico-apiserver
-    spec:
-      containers:
-      - args:
-        - --secure-port=5443
-        # - -v=5 # not working in v3.23.5 not available as flag there 
-        env:
-        - name: DATASTORE_TYPE
-          value: kubernetes
-        image: calico/apiserver:v3.23.5
-        livenessProbe:
-          httpGet:
-            path: /version
-            port: 5443
-            scheme: HTTPS
-          initialDelaySeconds: 90
-          periodSeconds: 10
-        name: calico-apiserver
-        readinessProbe:
-          exec:
-            command:
-            - /code/filecheck
-          failureThreshold: 5
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        securityContext:
-          privileged: false
-          runAsUser: 0
-        volumeMounts:
-        - mountPath: /code/apiserver.local.config/certificates
-          name: calico-apiserver-certs
-      dnsPolicy: ClusterFirst
-      nodeSelector:
-        kubernetes.io/os: linux
-      restartPolicy: Always
-      serviceAccount: calico-apiserver
-      serviceAccountName: calico-apiserver
-      tolerations:
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/master
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/control-plane
-      volumes:
-      - name: calico-apiserver-certs
-        secret:
-          secretName: calico-apiserver-certs
-
----
-
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: calico-apiserver 
-  namespace: calico-apiserver 
-
----
-
-## Cluster-scoped resources below here.
-apiVersion: apiregistration.k8s.io/v1
-kind: APIService
-metadata:
-  name: v3.projectcalico.org
-spec:
-  group: projectcalico.org
-  groupPriorityMinimum: 1500
-  service:
-    name: calico-api
-    namespace: calico-apiserver
-    port: 443
-  version: v3
-  versionPriority: 200
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: calico-crds
-rules:
-- apiGroups:
-  - extensions
-  - networking.k8s.io
-  - ""
-  resources:
-  - networkpolicies
-  - nodes
-  - namespaces
-  - pods
-  - serviceaccounts
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - crd.projectcalico.org
-  resources:
-  - globalnetworkpolicies
-  - networkpolicies
-  - clusterinformations
-  - hostendpoints
-  - globalnetworksets
-  - networksets
-  - bgpconfigurations
-  - bgppeers
-  - felixconfigurations
-  - kubecontrollersconfigurations
-  - ippools
-  - ipreservations
-  - ipamblocks
-  - blockaffinities
-  - caliconodestatuses
-  - ipamconfigs
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - delete
-- apiGroups:
-  - policy
-  resourceNames:
-  - calico-apiserver
-  resources:
-  - podsecuritypolicies
-  verbs:
-  - use
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: calico-extension-apiserver-auth-access
-rules:
-- apiGroups:
-  - ""
-  resourceNames:
-  - extension-apiserver-authentication
-  resources:
-  - configmaps
-  verbs:
-  - list
-  - watch
-  - get
-- apiGroups:
-  - rbac.authorization.k8s.io
-  resources:
-  - clusterroles
-  - clusterrolebindings
-  - roles
-  - rolebindings
-  verbs:
-  - get
-  - list
-  - watch
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: calico-webhook-reader
-rules:
-- apiGroups:
-  - admissionregistration.k8s.io
-  resources:
-  - mutatingwebhookconfigurations
-  - validatingwebhookconfigurations
-  verbs:
-  - get
-  - list
-  - watch
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: calico-apiserver-access-crds
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: calico-crds
-subjects:
-- kind: ServiceAccount
-  name: calico-apiserver
-  namespace: calico-apiserver
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: calico-apiserver-delegate-auth
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: system:auth-delegator
-subjects:
-- kind: ServiceAccount
-  name: calico-apiserver
-  namespace: calico-apiserver
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: calico-apiserver-webhook-reader
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: calico-webhook-reader
-subjects:
-- kind: ServiceAccount
-  name: calico-apiserver
-  namespace: calico-apiserver
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: calico-extension-apiserver-auth-access
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: calico-extension-apiserver-auth-access
-subjects:
-- kind: ServiceAccount
-  name: calico-apiserver
-  namespace: calico-apiserver
-
-```
-
-#### Step 2: create certificates 
-
-```
-openssl req -x509 -nodes -newkey rsa:4096 -keyout apiserver.key -out apiserver.crt -days 365 -subj "/" -addext "subjectAltName = DNS:calico-api.calico-apiserver.svc"
-kubectl create secret -n calico-apiserver generic calico-apiserver-certs --from-file=apiserver.key --from-file=apiserver.crt
-## configure server with ca-bundle 
-kubectl patch apiservice v3.projectcalico.org -p \
-    "{\"spec\": {\"caBundle\": \"$(kubectl get secret -n calico-apiserver calico-apiserver-certs -o go-template='{{ index .data "apiserver.crt" }}')\"}}"
-
-```
-
-### Step 3: check if it is working 
-
-```
-## pod should run 
-kubectl -n calico-apiserver get pods 
-## if not delete it 
-## e.g. 
-kubectl -n calico-apiserver delete po calico-apiserver-6f64fdcc5c-kz45t
-## it will get recreated because of deployment 
-```
-
-```
-kubectl api-resources | grep '\sprojectcalico.org'
-## only available in v3 
-kubectl get clusterinfo 
-```
-
-### Find corresponding networks
-
-
-### Walkthrough  
-
-```
-## Step 1: create pod 
-kubectl run nginx-master --image=nginx
-## Find out on which node it runs 
-kubectl get pods -o wide 
-## create a debug container 
-kubectl debug -it nginx-master --image=busybox 
-```
-
-```
-## now within debug pod found out interface 
- ip a | grep @
-3: eth0@if22: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue
-```
-
-```
-## Log in to worker node  where pod runs and check interfaces
-kubectl debug -it node/worker1 --image=busybox
-```
-
-```
-## on worker node 
-## show matched line starting with 22 and then another 4 lines 
-ip a | grep -A 5 ^22 
-## e.g. 
-## 
-ip a | grep -A 5 ^22
-22: cali42c2aab93f3@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
-    link/ether ee:ee:ee:ee:ee:ee brd ff:ff:ff:ff:ff:ff link-netns cni-5adf994b-3a7e-c344-5d82-ef1f7a293d88
-    inet6 fe80::ecee:eeff:feee:eeee/64 scope link
-       valid_lft forever preferred_lft forever
-```
-
-```
-## Now you are able to determine the firewall rules 
-## you will find fw and tw rules (fw - from workload and tw - to workload)
-iptables -L -v | grep  cali42c2aab93f3
-```
-
-```
-## ... That is what you see as an example 
-Chain cali-tw-cali42c2aab93f3 (1 references)
- pkts bytes target     prot opt in     out     source               destination 
-   10  1384 ACCEPT     all  --  any    any     anywhere             anywhere             /* cali:WKA8EzdUNM0rVty1 */ ctstate RELATED,ESTABLISHED
-    0     0 DROP       all  --  any    any     anywhere             anywhere             /* cali:wr_OqGXKIN_LWnX0 */ ctstate INVALID
-    0     0 MARK       all  --  any    any     anywhere             anywhere             /* cali:kOUMqNj8np60A3Bi */ MARK and 0xfffeffff
-```
-
-
-
-### Calico Logging Firewall Rules
-
-
-### General
-
- * NetworkPolicy of Kubernetes does not provide possibility to track 
-
-### Solutions 
-
-  * Use NetworkPolicy from calico (to apply it with kubectl - the calico api server needs to be installed) / or use calicoctl 
-  * Enable Tracing 
-  * Use: https://kubernetes.io/blog/2019/04/19/introducing-kube-iptables-tailer/
-  
-### Solution 1: NetworkPolicy calico 
-
-  * https://github.com/projectcalico/calico/issues/4344
-
-
-### Logs 
-
-```
-## Normally you should see it with (on the right kubernetes node)
-cat /var/log/syslog | grep calico-packet 
-
-## This is how a syslog entry looks like 
-Here is a example (default) Log:
-Apr  3 10:12:30 aks-workerpool1-13987120-vmss000000 kernel: [10821.860593] calico-packet: IN=calic440f455693 OUT=eth0 MAC=ee:ee:ee:ee:ee:ee:f2:f8:09:3d:97:03:08:00 SRC=10.244.2.7 DST=8.8.8.8 LEN=84 TOS=0x00 PREC=0x00 TTL=63 ID=33536 DF PROTO=ICMP TYPE=8 CODE=0 ID=32113 SEQ=43 
-```
-
-### Walkthrough 
-
-```
-cd
-mkdir -p manifests
-cd manifests 
-mkdir pol2
-cd pol2
-vi 01-pod.yaml 
-```
-
-```
-apiVersion: v1
-kind: Pod
-metadata:
-  name: static-web
-  labels:
-    app: web
-spec:
-  containers:
-    - name: web
-      image: nginx
-      ports:
-        - name: web
-          containerPort: 80
-          protocol: TCP
-```
-
-```
-vi 02-pol.yaml 
-```
-
-```
-apiVersion: projectcalico.org/v3
-kind: NetworkPolicy
-metadata:
-  name: log
-spec:
-  selector: app == 'web'
-  types:
-  - Ingress
-  - Egress
-  ingress:
-  - action: Log
-  egress:
-  - action: Log
-  - action: Deny
-```
-
-```
-kubectl apply -f .
-## find the node, where it runs on 
-kubectl get pods -o wide 
-```
-
-```
-## login to that node with ssh (kubernetes node) 
-## e.g. ssh user@node 
-## switch to root: sudo su -
-tail -f /var/log/syslog | grep calico-packet 
-## or 
-journalctl -f | grep calico-packet 
-```
-
-```
-## now open a debug pod 
-kubectl debug -it static-web --image=busybox 
-## in pod ping - this will not work, because we cannot retrieve dns 
-ping www.google.de
-```
-
-```
-## watch output from other node in the meanwhile 
-```
-
-### Reference 
-
-  * Eventually set a prefix for logging:
-  * https://docs.tigera.io/calico-cloud/visibility/iptables
-
-### Calico Default Routing Mode BGP & vxlancrossnet
-
-
-### What does it do ? 
-
-  * BGP is used, when other node is on same subnet
-  * vxlan is used, when worker node to reach is in other subnet
-
-### Grafics
-
-![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/a2766737-e1e5-4ee0-8e03-9216a0379d97)
-
-### How to find out, if this node is used 
-
-```
-kubectl -n calico-system get ippool -o yaml | grep vxlan 
-```
-
-### Internals - Pod to Pod - Communication on Worker3 (node))
-
-
-![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/ba9d497d-36ed-467f-9965-faad76a201cd)
-
-### Internals - Inter-Pod - Communication (worker 3 -> worker 1
-
-
-![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/305e0dac-5d13-4f6c-88b0-3b06b88eba7c)
-
-## Kubernetes multus (Meta-CNI - Plugin)
-
-### Multus Überblick
-
-
-### Problem, Warum multus ? 
-
-  * Aktuell kann seitens kubernetes nur ein Interface verwaltet werden, weil der CNI-Call nur 1x ausgeführt wird. (eigentlich 2x wenn man localhost mit einbezieht)
-
-### Prerequisites 
-
-  * a CNI, that manages the network needs to be installed before hand, like Calico, Cilium
-
-### Graphics 
-
-![Multus](https://github.com/k8snetworkplumbingwg/multus-cni/raw/master/docs/images/multus-pod-image.svg)
-
-### General 
-
-  * Multus is a meta-plugin, which makes it possible to attach additional networks to your pod (multi - homing)
-
-### macvlan plugin 
-
-### Example macvlan 
-
-  * https://github.com/k8snetworkplumbingwg/multus-cni/blob/master/examples/macvlan-pod.yml
-
-```
----
-## This net-attach-def defines macvlan-conf with 
-##   + ips capabilities to specify ip in pod annotation and 
-##   + mac capabilities to specify mac address in pod annotation
-## default gateway is defined as well
-apiVersion: "k8s.cni.cncf.io/v1"
-kind: NetworkAttachmentDefinition
-metadata:
-  name: macvlan-conf
-spec: 
-  config: '{
-      "cniVersion": "0.3.1",
-      "plugins": [
-        {
-          "type": "macvlan",
-          "capabilities": { "ips": true },
-          "master": "eth0",
-          "mode": "bridge",
-          "ipam": {
-            "type": "static",
-            "routes": [
-              {
-                "dst": "0.0.0.0/0",
-                "gw": "10.1.1.1"
-              }
-            ] 
-          }
-        }, {
-          "capabilities": { "mac": true },
-          "type": "tuning"
-        }
-      ]
-    }'
----
-## Define a pod with macvlan-conf, defined above, with ip address and mac, and 
-## "gateway" overrides default gateway to use macvlan-conf's one. 
-## without "gateway" in k8s.v1.cni.cncf.io/networks, default route will be cluster
-## network interface, eth0, even tough macvlan-conf has default gateway config.
-apiVersion: v1
-kind: Pod
-metadata:
-  name: samplepod
-  annotations:
-    k8s.v1.cni.cncf.io/networks: '[
-            { "name": "macvlan-conf",
-              "ips": [ "10.1.1.101/24" ],
-              "mac": "c2:b0:57:49:47:f1",
-              "gateway": [ "10.1.1.1" ]
-            }]'
-spec:
-  containers:
-  - name: samplepod
-    command: ["/bin/bash", "-c", "trap : TERM INT; sleep infinity & wait"]
-    image: dougbtv/centos-network
-    ports:
-    - containerPort: 80
-
-```
-
-### sr-iov mit multus
-
-
-### Voraussetzung: Multus:
-
-### Konzept SR-IOV
-
-  * Direkte Hardwareanbindung der Netzwerkkarte
-  * Offload wird auf Netzwerkkarte gemacht (nicht im Kernel)
-  * bessere Performance
-
-### Generell 
-
-  * Erweiterung des PCI-Express Standarads 
-  * Eine Netzwerkkarte wird mehrmals angeboten und Kommunikation erfolgt direkt und nicht über den Umweg Kernel
-
-### Vorbereitung
-
- * https://github.com/k8snetworkplumbingwg/sriov-network-device-plugin
- * https://github.com/k8snetworkplumbingwg/sriov-network-device-plugin/tree/db98d96cc0d6ad3fff917ba238bd1cc5cc3f7e82#config-parameters
-
-### Einbindung 
-
-  * https://github.com/k8snetworkplumbingwg/sriov-network-device-plugin#example-deployments
-  * https://github.com/k8snetworkplumbingwg/multus-cni/blob/master/examples/sriov-pod.yml
-
-
-
- 
-
-
-## Kubernetes coil (egress - gateway)
-
-### coil
-
-
-### Opt-In egress-gateway (NAT-Service)
-
-```
-apiVersion: coil.cybozu.com/v2
-kind: Egress
-metadata:
-  namespace: internet-egress
-  name: nat
-spec:
-  replicas: 2
-  destinations:
-  - 0.0.0.0/0
-  - ::/0
-```
-
-  * Not all Pods become the client of Egress. To become a client, Pods need to have special annotations like this:
-
-```
-apiVersion: v1
-kind: Pod
-metadata:
-  namespace: default
-  name: nat-client
-  annotations:
-    egress.coil.cybozu.com/internet-egress: nat
-spec:
-```
-
-### Reference  
-
-  * Refs: https://blog.kintone.io/entry/coilv2
-  * https://github.com/cybozu-go/coil
-
-
-## Kubernetes - Ingress
-
-### Vom Browser über den Ingress bis zum Pod - Schaubild
-
-
-![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/c0e5ceba-c636-479b-b000-d866c8caf82c)
-
-### Ingress controller in microk8s aktivieren
-
-
-### Aktivieren
-
-```
-microk8s enable ingress
-```
-
-### Referenz 
-
-  * https://microk8s.io/docs/addon-ingress
-
-### ingress mit ssl absichern
-
 ## Kubernetes - Wartung / Debugging 
 
 ### kubectl drain/uncordon
@@ -3753,1132 +6254,10 @@ kubectl convert --help
 
   * https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-kubectl-convert-plugin 
 
-### Netzwerkverbindung zu pod testen
-
-
-### Situation 
-
-```
-Managed Cluster und ich kann nicht auf einzelne Nodes per ssh zugreifen
-```
-
-### Behelf: Eigenen Pod starten mit busybox 
-
-```
-## laengere Version 
-kubectl run podtest --rm -ti --image busybox -- /bin/sh
-```
-
-```
-## kuerzere Version 
-kubectl run podtest --rm -ti --image busybox 
-```
-
-### Example test connection 
-
-```
-## wget befehl zum Kopieren
-wget -O - http://10.244.0.99
-```
-
-```
-## -O -> Output (grosses O (buchstabe)) 
-kubectl run podtest --rm -ti --image busybox -- /bin/sh
-/ # wget -O - http://10.244.0.99
-/ # exit 
-```
-
 ### Curl from pod api-server
 
 
 https://nieldw.medium.com/curling-the-kubernetes-api-server-d7675cfc398c
-
-## Kubernetes Praxis API-Objekte 
-
-### Das Tool kubectl (Devs/Ops) - Spickzettel
-
-
-### Allgemein 
-
-```
-## Zeige Information über das Cluster 
-kubectl cluster-info 
-
-## Welche api-resources gibt es ?
-kubectl api-resources 
-
-## Hilfe zu object und eigenschaften bekommen
-kubectl explain pod 
-kubectl explain pod.metadata
-kubectl explain pod.metadata.name 
-
-```
-
-### Arbeiten mit manifesten 
-
-```
-kubectl apply -f nginx-replicaset.yml 
-## Wie ist aktuell die hinterlegte config im system
-kubectl get -o yaml -f nginx-replicaset.yml 
-
-## Änderung in nginx-replicaset.yml z.B. replicas: 4 
-## dry-run - was wird geändert 
-kubectl diff -f nginx-replicaset.yml 
-
-## anwenden 
-kubectl apply -f nginx-replicaset.yml 
-
-## Alle Objekte aus manifest löschen
-kubectl delete -f nginx-replicaset.yml 
-
-
-```
-
-### Ausgabeformate 
-
-```
-## Ausgabe kann in verschiedenen Formaten erfolgen 
-kubectl get pods -o wide # weitere informationen 
-## im json format
-kubectl get pods -o json 
-
-## gilt natürluch auch für andere kommandos
-kubectl get deploy -o json 
-kubectl get deploy -o yaml 
-
-## get a specific value from the complete json - tree 
-kubectl get node k8s-nue-jo-ff1p1 -o=jsonpath='{.metadata.labels}'
-
-```
-
-
-
-### Zu den Pods 
-
-```
-## Start einen pod // BESSER: direkt manifest verwenden
-## kubectl run podname image=imagename 
-kubectl run nginx image=nginx 
-
-## Pods anzeigen 
-kubectl get pods 
-kubectl get pod
-## Format weitere Information 
-kubectl get pod -o wide 
-## Zeige labels der Pods
-kubectl get pods --show-labels 
-
-## Zeige pods mit einem bestimmten label 
-kubectl get pods -l app=nginx 
-
-## Status eines Pods anzeigen 
-kubectl describe pod nginx 
-
-## Pod löschen 
-kubectl delete pod nginx 
-
-## Kommando in pod ausführen 
-kubectl exec -it nginx -- bash 
-## direkt in den 1. Pod des Deployments wechseln
-kubectl exec -it deployment/name-des-deployments -- bash 
-
-```
-
-### Arbeiten mit namespaces 
-
-```
-## Welche namespaces auf dem System 
-kubectl get ns 
-kubectl get namespaces 
-## Standardmäßig wird immer der default namespace verwendet 
-## wenn man kommandos aufruft 
-kubectl get deployments 
-
-## Möchte ich z.B. deployment vom kube-system (installation) aufrufen, 
-## kann ich den namespace angeben
-kubectl get deployments --namespace=kube-system 
-kubectl get deployments -n kube-system 
-
-## wir wollen unseren default namespace ändern 
-kubectl config set-context --current --namespace <dein-namespace>
-```
-
-
-
-### Referenz
-
-  * https://kubernetes.io/de/docs/reference/kubectl/cheatsheet/
-
-### kubectl example with run
-
-
-### Example (that does work)
-
-```
-## Show the pods that are running 
-kubectl get pods 
-
-## Synopsis (most simplistic example 
-## kubectl run NAME --image=IMAGE_EG_FROM_DOCKER
-## example
-kubectl run nginx --image=nginx:1.23
-
-kubectl get pods 
-## on which node does it run ? 
-kubectl get pods -o wide 
-```
-
-### Example (that does not work) 
-
-```
-kubectl run foo2 --image=foo2
-## ImageErrPull - Image konnte nicht geladen werden 
-kubectl get pods 
-## Weitere status - info 
-kubectl describe pods foo2 
-```
-
-### Ref:
-
-  * https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#run
-
-### Bauen einer Applikation mit Resource Objekten
-
-
-![Bauen einer Webanwendung](images/WebApp.drawio.png)
-
-### Pod manifest
-
-
-### Walkthrough 
-
-```
-cd 
-mkdir -p manifests
-cd manifests
-mkdir -p web
-cd web
-```
-
-```
-## vi nginx-static.yml 
-
-apiVersion: v1
-kind: Pod
-metadata:
-  name: nginx-static-web
-  labels:
-    webserver: nginx
-spec:
-  containers:
-  - name: web
-    image: nginx
-
-```
-
-```
-kubectl apply -f nginx-static.yml 
-kubectl describe pod nginx-static-web 
-## show config 
-kubectl get pod/nginx-static-web -o yaml
-kubectl get pod/nginx-static-web -o wide 
-```
-
-### Replicasets
-
-
-```
-cd
-mkdir -p manifests
-cd manifests
-mkdir 02-rs 
-cd 02-rs 
-## vi rs.yml
-```
-
-```
-apiVersion: apps/v1
-kind: ReplicaSet
-metadata:
-  name: nginx-replica-set
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      tier: frontend
-  template:
-    metadata:
-      name: template-nginx-replica-set
-      labels:
-        tier: frontend
-    spec:
-      containers:
-        - name: nginx
-          image: nginx:1.21
-          ports:
-            - containerPort: 80
-             
-
-             
-```
-
-```
-kubectl apply -f rs.yml 
-```
-
-### kubectl/manifest/deployments
-
-
-```
-cd
-mkdir -p manifests
-cd manifests
-mkdir 03-deploy
-cd 03-deploy 
-nano deploy.yml 
-```
-
-```
-
-## vi deploy.yml 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deployment
-spec:
-  selector:
-    matchLabels:
-      app: nginx
-  replicas: 8 # tells deployment to run 8 pods matching the template
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:1.21
-        ports:
-        - containerPort: 80
-        
-```
-
-```
-kubectl apply -f deploy.yml 
-```
-
-### Services - Aufbau
-
-
-![Services Aufbau](/images/kubernetes-services.drawio.svg)
-
-### Service Typen / Ebenen - Schaubild
-
-
-![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/9dd21328-d477-49ec-84b3-6fc4bfbd590b)
-
-### kubectl/manifest/service
-
-
-### Schritt 1: Deployment 
-
-```
-cd
-mkdir -p manifests
-cd manifests 
-mkdir 04-service 
-cd 04-service 
-##vi 01-deploy.yml 
-```
-
-```
-## 01-deploy.yml 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: my-nginx
-spec:
-  selector:
-    matchLabels:
-      run: my-nginx
-  replicas: 3
-  template:
-    metadata:
-      labels:
-        run: my-nginx
-    spec:
-      containers:
-      - name: my-nginx
-        image: nginx
-        ports:
-        - containerPort: 80
-```
-
-```
-kubectl apply -f .
-```
-
-### Schritt 2:
-
-
-```
-## 02-svc.yml 
-apiVersion: v1
-kind: Service
-metadata:
-  name: my-nginx
-  labels:
-    svc: nginx
-spec:
-  ports:
-  - port: 80
-    protocol: TCP
-  selector:
-    run: my-nginx
-```
-
-```
-kubectl apply -f . 
-```
-
-
-### Ref.
-
-  * https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/
-
-### Hintergrund Ingress
-
-
-
-
-### Ref. / Dokumentation 
-
-  * https://matthewpalmer.net/kubernetes-app-developer/articles/kubernetes-ingress-guide-nginx-example.html
-
-### Ingress Controller auf Digitalocean (doks) mit helm installieren
-
-
-### Basics 
-
-  * Das Verfahren funktioniert auch so auf anderen Plattformen, wenn helm verwendet wird und noch kein IngressController vorhanden
-  * Ist kein IngressController vorhanden, werden die Ingress-Objekte zwar angelegt, es funktioniert aber nicht. 
-
-### Prerequisites 
-
-  * kubectl muss eingerichtet sein 
-
-### Walkthrough (Setup Ingress Controller) 
-
-```
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-helm repo update
-helm show values ingress-nginx/ingress-nginx
-
-## It will be setup with type loadbalancer - so waiting to retrieve an ip from the external loadbalancer
-## This will take a little. 
-helm install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress --create-namespace --set controller.publishService.enabled=true 
-
-## See when the external ip comes available
-kubectl -n ingress get all
-kubectl --namespace ingress get services -o wide -w nginx-ingress-ingress-nginx-controller
-
-## Output  
-NAME                                     TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)                      AGE     SELECTOR
-nginx-ingress-ingress-nginx-controller   LoadBalancer   10.245.78.34   157.245.20.222   80:31588/TCP,443:30704/TCP   4m39s   app.kubernetes.io/component=controller,app.kubernetes.io/instance=nginx-ingress,app.kubernetes.io/name=ingress-nginx
-
-## Now setup wildcard - domain for training purpose 
-## inwx.com
-*.lab1.t3isp.de A 157.245.20.222 
-
-
-```
-
-
-### Documentation for default ingress nginx
-
-  * https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/
-
-### Beispiel Ingress
-
-
-### Prerequisits
-
-```
-## Ingress Controller muss aktiviert sein 
-microk8s enable ingress
-```
-
-### Walkthrough 
-
-#### Schritt 1:
-
-```
-cd 
-mkdir -p manifests
-cd manifests 
-mkdir abi
-cd abi 
-```
-
-
-```
-## apple.yml 
-## vi apple.yml 
-kind: Pod
-apiVersion: v1
-metadata:
-  name: apple-app
-  labels:
-    app: apple
-spec:
-  containers:
-    - name: apple-app
-      image: hashicorp/http-echo
-      args:
-        - "-text=apple"
----
-
-kind: Service
-apiVersion: v1
-metadata:
-  name: apple-service
-spec:
-  selector:
-    app: apple
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 5678 # Default port for image
-```
-
-```
-kubectl apply -f apple.yml 
-```
-
-```
-## banana
-## vi banana.yml
-kind: Pod
-apiVersion: v1
-metadata:
-  name: banana-app
-  labels:
-    app: banana
-spec:
-  containers:
-    - name: banana-app
-      image: hashicorp/http-echo
-      args:
-        - "-text=banana"
-
----
-
-kind: Service
-apiVersion: v1
-metadata:
-  name: banana-service
-spec:
-  selector:
-    app: banana
-  ports:
-    - port: 80
-      targetPort: 5678 # Default port for image
-```
-
-```
-kubectl apply -f banana.yml
-```
-
-#### Schritt 2:
-
-```
-## Ingress
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: example-ingress
-  annotations:
-    ingress.kubernetes.io/rewrite-target: /
-spec:
-  ingressClassName: nginx
-  rules:
-  - http:
-      paths:
-        - path: /apple
-          backend:
-            serviceName: apple-service
-            servicePort: 80
-        - path: /banana
-          backend:
-            serviceName: banana-service
-            servicePort: 80
-```
-
-```
-## ingress 
-kubectl apply -f ingress.yml
-kubectl get ing 
-```
-
-### Reference 
-
-  * https://matthewpalmer.net/kubernetes-app-developer/articles/kubernetes-ingress-guide-nginx-example.html
-
-### Find the problem 
-
-```
-## Hints 
-
-## 1. Which resources does our version of kubectl support 
-## Can we find Ingress as "Kind" here.
-kubectl api-ressources 
-
-## 2. Let's see, how the configuration works 
-kubectl explain --api-version=networking.k8s.io/v1 ingress.spec.rules.http.paths.backend.service
-
-## now we can adjust our config 
-```
-
-### Solution
-
-```
-## in kubernetes 1.22.2 - ingress.yml needs to be modified like so.
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: example-ingress
-  annotations:
-    ingress.kubernetes.io/rewrite-target: /
-spec:
-  ingressClassName: nginx
-  rules:
-  - http:
-      paths:
-        - path: /apple
-          pathType: Prefix
-          backend:
-            service:
-              name: apple-service
-              port:
-                number: 80
-        - path: /banana
-          pathType: Prefix
-          backend:
-            service:
-              name: banana-service
-              port:
-                number: 80                
-```
-
-### Install Ingress On Digitalocean DOKS
-
-### Beispiel mit Hostnamen
-
-
-### Prerequisits
-
-```
-## Ingress Controller muss aktiviert sein 
-### Nur der Fall wenn man microk8s zum Einrichten verwendet 
-### Ubuntu 
-microk8s enable ingress
-```
-
-### Walkthrough 
-
-#### Step 1: pods and services
-
-```
-cd
-mkdir -p manifests
-cd manifests 
-mkdir abi
-cd abi
-```
-
-```
-## apple.yml 
-## vi apple.yml 
-kind: Pod
-apiVersion: v1
-metadata:
-  name: apple-app
-  labels:
-    app: apple
-spec:
-  containers:
-    - name: apple-app
-      image: hashicorp/http-echo
-      args:
-        - "-text=apple-<dein-name>"
----
-
-kind: Service
-apiVersion: v1
-metadata:
-  name: apple-service
-spec:
-  selector:
-    app: apple
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 5678 # Default port for image
-```
-
-```
-kubectl apply -f apple.yml 
-```
-
-```
-## banana
-## vi banana.yml
-kind: Pod
-apiVersion: v1
-metadata:
-  name: banana-app
-  labels:
-    app: banana
-spec:
-  containers:
-    - name: banana-app
-      image: hashicorp/http-echo
-      args:
-        - "-text=banana-<dein-name>"
-
----
-
-kind: Service
-apiVersion: v1
-metadata:
-  name: banana-service
-spec:
-  selector:
-    app: banana
-  ports:
-    - port: 80
-      targetPort: 5678 # Default port for image
-```
-
-```
-kubectl apply -f banana.yml
-```
-
-### Step 2: Ingress 
-
-```
-## Ingress
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: example-ingress
-  annotations:
-    ingress.kubernetes.io/rewrite-target: /
-    # with the ingress controller from helm, you need to set an annotation 
-    # otherwice it does not know, which controller to use
-    # old version... use ingressClassName instead 
-    # kubernetes.io/ingress.class: nginx
-spec:
-  ingressClassName: nginx
-  rules:
-  - host: "<euername>.lab<nr>.t3isp.de"
-    http:
-      paths:
-        - path: /apple
-          backend:
-            serviceName: apple-service
-            servicePort: 80
-        - path: /banana
-          backend:
-            serviceName: banana-service
-            servicePort: 80
-```
-
-```
-## ingress 
-kubectl apply -f ingress.yml
-kubectl get ing 
-```
-
-### Reference 
-
-  * https://matthewpalmer.net/kubernetes-app-developer/articles/kubernetes-ingress-guide-nginx-example.html
-
-### Find the problem 
-
-```
-## Hints 
-
-## 1. Which resources does our version of kubectl support 
-## Can we find Ingress as "Kind" here.
-kubectl api-ressources 
-
-## 2. Let's see, how the configuration works 
-kubectl explain --api-version=networking.k8s.io/v1 ingress.spec.rules.http.paths.backend.service
-
-## now we can adjust our config 
-```
-
-### Solution
-
-```
-## in kubernetes 1.22.2 - ingress.yml needs to be modified like so.
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: example-ingress
-  annotations:
-    ingress.kubernetes.io/rewrite-target: /
-    # with the ingress controller from helm, you need to set an annotation 
-    # old version useClassName instead 
-    # otherwice it does not know, which controller to use
-    # kubernetes.io/ingress.class: nginx 
-spec:
-  ingressClassName: nginx
-  rules:
-  - host: "app12.lab.t3isp.de"
-    http:
-      paths:
-        - path: /apple
-          pathType: Prefix
-          backend:
-            service:
-              name: apple-service
-              port:
-                number: 80
-        - path: /banana
-          pathType: Prefix
-          backend:
-            service:
-              name: banana-service
-              port:
-                number: 80                
-```
-
-### Achtung: Ingress mit Helm - annotations
-
-### Permanente Weiterleitung mit Ingress
-
-
-### Example
-
-```
-## redirect.yml 
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: my-namespace
-
----
-
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    nginx.ingress.kubernetes.io/permanent-redirect: https://www.google.de
-    nginx.ingress.kubernetes.io/permanent-redirect-code: "308"
-  creationTimestamp: null
-  name: destination-home
-  namespace: my-namespace
-spec:
-  rules:
-  - host: web.training.local
-    http:
-      paths:
-      - backend:
-          service:
-            name: http-svc
-            port:
-              number: 80
-        path: /source
-        pathType: ImplementationSpecific
-```
-
-```
-Achtung: host-eintrag auf Rechner machen, von dem aus man zugreift 
-
-/etc/hosts 
-45.23.12.12 web.training.local
-```
-
-
-```
-curl -I  http://web.training.local/source
-HTTP/1.1 308 
-Permanent Redirect 
-
-```
-
-### Umbauen zu google ;o) 
-
-```
-This annotation allows to return a permanent redirect instead of sending data to the upstream. For example nginx.ingress.kubernetes.io/permanent-redirect: https://www.google.com would redirect everything to Google.
-
-```
-
-### Refs:
-
-  * https://github.com/kubernetes/ingress-nginx/blob/main/docs/user-guide/nginx-configuration/annotations.md#permanent-redirect
-  * 
-
-### ConfigMap Example
-
-
-### Schritt 1: configmap vorbereiten 
-```
-cd 
-mkdir -p manifests 
-cd manifests
-mkdir configmaptests 
-cd configmaptests
-nano 01-configmap.yml
-```
-
-```
-### 01-configmap.yml
-kind: ConfigMap 
-apiVersion: v1 
-metadata:
-  name: example-configmap 
-data:
-  # als Wertepaare
-  database: mongodb
-  database_uri: mongodb://localhost:27017
-```
-
-```
-kubectl apply -f 01-configmap.yml 
-kubectl get cm
-kubectl get cm -o yaml
-```
-
-### Schrit 2: Beispiel als Datei 
-
-
-```
-nano 02-pod.yml
-```
-
-```
-kind: Pod 
-apiVersion: v1 
-metadata:
-  name: pod-mit-configmap 
-
-spec:
-  # Add the ConfigMap as a volume to the Pod
-  volumes:
-    # `name` here must match the name
-    # specified in the volume mount
-    - name: example-configmap-volume
-      # Populate the volume with config map data
-      configMap:
-        # `name` here must match the name 
-        # specified in the ConfigMap's YAML 
-        name: example-configmap
-
-  containers:
-    - name: container-configmap
-      image: nginx:latest
-      # Mount the volume that contains the configuration data 
-      # into your container filesystem
-      volumeMounts:
-        # `name` here must match the name
-        # from the volumes section of this pod
-        - name: example-configmap-volume
-          mountPath: /etc/config
-
-
-```
-
-```
-kubectl apply -f 02-pod.yml 
-```
-
-```
-##Jetzt schauen wir uns den Container/Pod mal an
-kubectl exec pod-mit-configmap -- ls -la /etc/config
-kubectl exec -it pod-mit-configmap --  bash
-## ls -la /etc/config 
-```
-
-### Schritt 3: Beispiel. ConfigMap als env-variablen 
-
-```
-nano 03-pod-mit-env.yml
-```
-
-```
-## 03-pod-mit-env.yml 
-kind: Pod 
-apiVersion: v1 
-metadata:
-  name: pod-env-var 
-spec:
-  containers:
-    - name: env-var-configmap
-      image: nginx:latest 
-      envFrom:
-        - configMapRef:
-            name: example-configmap
-
-```
-
-```
-kubectl apply -f 03-pod-mit-env.yml
-```
-
-```
-## und wir schauen uns das an 
-##Jetzt schauen wir uns den Container/Pod mal an
-kubectl exec pod-env-var -- env
-kubectl exec -it pod-env-var --  bash
-## env
-
-```
-
-
-### Reference: 
-
- * https://matthewpalmer.net/kubernetes-app-developer/articles/ultimate-configmap-guide-kubernetes.html
-
-### Configmap MariaDB - Example
-
-
-### Schritt 1: configmap 
-
-```
-cd 
-mkdir -p manifests
-cd manifests
-mkdir cftest 
-cd cftest 
-nano 01-configmap.yml 
-```
-
-```
-### 01-configmap.yml
-kind: ConfigMap 
-apiVersion: v1 
-metadata:
-  name: mariadb-configmap 
-data:
-  # als Wertepaare
-  MARIADB_ROOT_PASSWORD: 11abc432
-```
-
-```
-kubectl apply -f .
-kubectl get cm
-kubectl get cm mariadb-configmap -o yaml
-```
-
-
-### Schritt 2: Deployment 
-```
-nano 02-deploy.yml
-```
-
-```
-##deploy.yml 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: mariadb-deployment
-spec:
-  selector:
-    matchLabels:
-      app: mariadb
-  replicas: 1 
-  template:
-    metadata:
-      labels:
-        app: mariadb
-    spec:
-      containers:
-      - name: mariadb-cont
-        image: mariadb:latest
-        envFrom:
-        - configMapRef:
-            name: mariadb-configmap
-
-```
-
-```
-kubectl apply -f .
-```
-
-### Important Sidenode 
-
-  * If configmap changes, deployment does not know
-  * So kubectl apply -f deploy.yml will not have any effect
-  * to fix, use stakater/reloader: https://github.com/stakater/Reloader
-
-
-### Configmap MariaDB my.cnf
-
-
-### configmap zu fuss 
-
-```
-vi mariadb-config2.yml 
-```
-
-```
-kind: ConfigMap 
-apiVersion: v1 
-metadata:
-  name: example-configmap 
-data:
-  # als Wertepaare
-  database: mongodb
-  my.cnf: |
- [mysqld]
- slow_query_log = 1
- innodb_buffer_pool_size = 1G 
-  
-```
-
-```
-kubectl apply -f .
-```
-
-```
-##deploy.yml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: mariadb-deployment
-spec:
-  selector:
-    matchLabels:
-      app: mariadb
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: mariadb
-    spec:
-      containers:
-      - name: mariadb-cont
-        image: mariadb:latest
-        envFrom:
-        - configMapRef:
-            name: mariadb-configmap
-
-        volumeMounts:
-          - name: example-configmap-volume
-            mountPath: /etc/my
-
-      volumes:
-      - name: example-configmap-volume
-        configMap:
-          name: example-configmap
-```
-
-```
-kubectl apply -f .
-```
 
 ## Kubernetes Deployment Scenarios 
 
@@ -6497,159 +7876,22 @@ Der Service Controller ist verantwortlich für das Abhören von Ereignissen zum 
   * [Good explanation](https://medium.com/@m.json/the-kubernetes-cloud-controller-manager-d440af0d2be5)
   * [Zugrundeliegende Konzepte](https://kubernetes.io/de/docs/concepts/architecture/cloud-controller/)
 
-## Kubernetes Load Balancer 
+## Kubernetes - Ingress
 
-### Kubernetes Load Balancer
+### Ingress controller in microk8s aktivieren
 
 
-### Attention 
-
-  * On digitalocean, we will probably run into problems, that it is not working properly 
-
-### General 
-
-  * Supports bgp and arp 
-  * Divided into controller, speaker 
-
-### Installation Ways  
-
-  * helm 
-  * manifests 
-
-### Walkthrough Digitalocean 
+### Aktivieren
 
 ```
-## Just to show some basics 
-## Page from metallb says that digitalocean is not really supported well 
-## So we will not install the speaker .
-
-helm repo add metallb https://metallb.github.io/metallb 
+microk8s enable ingress
 ```
 
-```
-## Eventually disabling speaker 
-## vi values.yml 
+### Referenz 
 
-```
+  * https://microk8s.io/docs/addon-ingress
 
-```
-helm install metallb metallb/metallb --namespace=metallb-system --create-namespace 
-```
-
-```
-cd
-mkdir -p manifests
-cd manifests 
-mkdir mb 
-cd mb 
-vi 01-cm.yml 
-```
-
-```
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  namespace: metallb-system
-  name: config
-data:
-  config: |
-    address-pools:
-    - name: default
-      protocol: layer2
-      addresses:
-      # Take the single address in case of digitalocean here.
-      # External ip 
-      # - 192.168.1.240-192.168.1.250
-      - 61.46.56.21
-```
-
-```
-vi 02-svc.yml 
-```
-
-```
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginx-svc 
-spec:
-  selector:
-
-## Adjust -> selector -> according to nginx below 
-    app: nginx 
-  ports:
-  - name: http
-    port: 80
-    targetPort: 80
-  type: LoadBalancer
-  # uncomment to try, if you get it automatically 
-  loadBalancerIP: 61.46.56.21
-
-```
-
-```
-kubectl apply -f .
-kubectl -n metallb-system get svc my-service 
-```
-
-```
-kubectl create deployment nginx --image nginx:alpine --port 80 --replicas=1
-kubectl get svc nginx-svc
-## You can open 80 port on Firewall using Console and open http://167.99.99.99 for a test.
-```
-
-### Trafic Policy 
-
- * https://metallb.universe.tf/usage/
-
-### Kubernetes Load Balancer new version for IpAdresses - object
-
-
-### Installatiion 
-
- * Refs: https://metallb.universe.tf/installation/
-
-### Step 1: Installation: 
-
-```
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.9/config/manifests/metallb-native.yaml
-```
-
-### Step 2: Konfiguration 
-
-```
-mkdir -p manifests
-cd manifests 
-mkdir metallb 
-vi 01-pool.yaml 
-```
-
-```
-apiVersion: metallb.io/v1beta1
-kind: IPAddressPool
-metadata:
-  name: first-pool
-  namespace: metallb-system
-spec:
-  addresses:
-  - 192.168.1.240-192.168.1.250
-```
-
-```
-vi 02-l2.yaml
-
-```
-
-```
-## now we need to propagate
-apiVersion: metallb.io/v1beta1
-kind: L2Advertisement
-metadata:
-  name: example
-  namespace: metallb-system
-```
-
-
+### ingress mit ssl absichern
 
 ## Kubernetes Documentation 
 
