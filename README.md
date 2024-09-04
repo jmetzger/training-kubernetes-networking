@@ -23,8 +23,11 @@
   1. Kubernetes NetworkPolicy
      * [Einfache Übung Network Policy](kubernetes-networkpolicy/00-simple-exercises-group.md)
      * [NetworkPolicy from IPBlock](kubernetes-networkpolicy/01-example-from-ipblock.md)
+    
+  1. Kubernetes (Antrea-)NetworkPolicy
+     * [Antrea NetworkPolicy Exercise - Each trainee has its own cluster](kubernetes-networks/antrea/99-exercise-own-cluster.md)
 
- 1. Kubernetes calico (CNI-Plugin)
+  1. Kubernetes calico (CNI-Plugin)
  
      * [Find corresponding networks](kubernetes-networks/calico/find-corresponding-interfaces.md)
      * [Calico Logging Firewall Rules](kubernetes-networks/calico/logging-policy.md)
