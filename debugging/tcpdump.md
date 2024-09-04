@@ -32,10 +32,6 @@ wget -O - <ip-des-apple-pods>:5678
 
 ## Debug traffic to ingress controller 
 
-### im browser eingeben
-
- * http://jochen.lab1.t3isp.de/apple
-
 ### mit netshoot connecten
 
 #### Variante 1: Direkt 
