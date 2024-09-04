@@ -73,7 +73,6 @@
      * [Internals - Pod to Pod - Communication on Worker3 (node))](kubernetes-networks/calico/pod-2-pod-on-node-internals.md)
      * [Internals - Inter-Pod - Communication (worker 3 -> worker 1](kubernetes-networks/calico/routing-modes/vxlan/internals-routing-inter-pod-communication.md)
 
-  
   1. Kubernetes Praxis API-Objekte 
      * [Bauen einer Applikation mit Resource Objekten](bauen-einer-webanwendung.md)
      * [Pod manifest](kubectl-examples/01-pod-nginx.md)
@@ -102,7 +101,7 @@
      * [Overview Kubernetes Antrea CNI-Plugin](kubernetes-networks/antrea/01_overview.md)
      * [Antctl](kubernetes-networks/antrea/10_antctl.md)
      * [Antrea view bridge and config](kubernetes-networks/antrea/20-view-bridge-and-config.md)
-     * [Antrea Exercise](kubernetes-networks/antrea/99_exercise.md)
+     * [Antrea NetworkPolicy Exercise - 1 Cluster in Group](kubernetes-networks/antrea/99_exercise.md)
 
   1. Kubernetes - Wartung / Debugging 
      * [kubectl drain/uncordon](/kubectl/uncordon-drain.md)
