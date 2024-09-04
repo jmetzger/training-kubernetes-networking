@@ -562,6 +562,12 @@ kubectl -n preprod-app2 get pods -o=custom-columns=NAMESPACE:.metadata.namespace
 ## Schritt 4: Zugriffe auf dev-app2/prepod-app2 klären 
 
 ```
+# nodeip rausbekommen
+kubectl get nodes -o wide
+```
+
+
+```
 kubectl get svc -n dev-app2 nginx 
 ```
 
