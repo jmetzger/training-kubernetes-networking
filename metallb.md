@@ -82,7 +82,7 @@ kubectl apply -f .
 ## Schritt 4: Test do i get an external ip 
 
 ```
-vi 03-deploy.yml
+nano 03-deploy.yml
 ```
 
 ```
@@ -110,7 +110,7 @@ spec:
 
 
 ```
-vi 04-service.yml
+nano 04-service.yml
 ```
 
 ```
