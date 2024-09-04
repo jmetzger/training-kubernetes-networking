@@ -770,19 +770,19 @@ kubectl apply -f .
 ```
 
 ```
-# nano 25-drop-any-ns-dev-app2.yaml 
+# nano 25-drop-any-ns-dev-app1.yaml 
 # allen anderen Traffic zum namespace app2 hin verbieten aus anderen namespaces 
 apiVersion: crd.antrea.io/v1beta1
 kind: ClusterNetworkPolicy
 metadata:
-  name: 25-drop-any-ns-dev-app2
+  name: 25-drop-any-ns-dev-app1
 spec:
     priority: 110
     tier: application
     appliedTo:
       - namespaceSelector:
           matchLabels:
-            ns: dev-app2
+            ns: dev-app1
     ingress:
       - action: Drop
         from:
@@ -822,18 +822,18 @@ kubectl apply -f .
 
 ```
 # disallow all traffic from other namespaces to prepr
-# nano 35-drop-any-ns-preprod-app2.yaml  
+# nano 35-drop-any-ns-preprod-app1.yaml  
 apiVersion: crd.antrea.io/v1beta1
 kind: ClusterNetworkPolicy
 metadata:
-  name: 21-drop-any-ns-preprod-app2
+  name: 21-drop-any-ns-preprod-app1
 spec:
     priority: 130
     tier: application
     appliedTo:
       - namespaceSelector:
           matchLabels:
-            ns: preprod-app2
+            ns: preprod-app1
     ingress:
       - action: Drop
         from:
