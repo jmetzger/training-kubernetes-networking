@@ -1,4 +1,4 @@
-# Complete Exercise working with Antrea (Designed for groups) 
+# Complete Exercise working with Antrea - own cluster
 
 ## Our Goal 
 
