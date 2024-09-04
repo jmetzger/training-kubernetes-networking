@@ -956,6 +956,16 @@ spec:
 kubectl apply -f .
 ```
 
+```
+# TESTEN -> das sollte gehen // VOM web->app 
+kubectl -n dev-app2 get pods -l app=a -o wide
+kubectl -n dev-app2 exec -it nginx-655cc89789-cjfmh -- curl -i http://192.168.1.9
+
+# TESTEN -> geht nicht // VOM app->web 
+kubectl -n dev-app2 get pods -l app=nginx -o wide
+kubectl -n dev-app2 exec -it appserver-8596ff696-jd9k4 -- wget -O - 192.168.2.8
+```
+
 ## Schritt 9: Usage of the Emergency Tier - e.g. Attack 
 
   * We have problems with Ubuntu 16.04. an we want to isolate it.
