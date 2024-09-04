@@ -721,7 +721,7 @@ deny-preprod-to-dev      SecurityOps   101        2               2             
 
 ```
 # und jetzt geht pingen in die andere Richtung auch nicht mehr
-kubectl -n preprod-app1-$KURZ exec deployments/ubuntu-20-04 -- ping 10.244.3.15
+kubectl -n preprod-app1 exec deployments/ubuntu-20-04 -- ping 10.244.3.15
 ```
 
 ## Schritt 11: Isolate Pods (only within the namespaces) 
@@ -833,7 +833,7 @@ spec:
     appliedTo:
       - namespaceSelector:
           matchLabels:
-            ns: preprod-app2-<name-kurz>
+            ns: preprod-app2
     ingress:
       - action: Drop
         from:
