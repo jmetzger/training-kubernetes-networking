@@ -191,7 +191,7 @@ metadata:
   name: appserver
   labels:
     app: app
-  namespace: dev-app2-<name-kurz>
+  namespace: dev-app2
 spec:
   replicas: 1
   selector:
