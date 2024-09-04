@@ -839,7 +839,7 @@ spec:
 kubectl apply -f .
 ```
 
-## Schritt 12: Isolate traffic within app2 - namespaces (3-Tier-app) (Das kann leider nur er Trainer machen ;o() - wg der Labels 
+## Schritt 12: Isolate traffic within app2 - namespaces (3-Tier-app)
 ```
 # For dev-app2 we want
 web->app (80)
@@ -940,7 +940,7 @@ spec:
 kubectl apply -f .
 ```
 
-## Schritt 13: Usage of the Emergency Tier - e.g. Attack (only Trainer)
+## Schritt 13: Usage of the Emergency Tier - e.g. Attack 
 
   * We have problems with Ubuntu 16.04. an we want to isolate it.
 
