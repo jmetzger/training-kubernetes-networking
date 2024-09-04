@@ -24,7 +24,7 @@ In app2 is a simple 3 Tier-App (WEB-APP-DB): dev-app2 / preprod-app2 (3tier-app)
 
 ![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/067f275e-152c-42b6-82fd-7bebc6921cbb)
 
-## Step 1: Rollout the pods (dev-app1)
+## Step 1: Rollout the pods (dev-app1/dev-app2)
 
 ```
 cd
