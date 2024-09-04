@@ -26,6 +26,7 @@
     
   1. Kubernetes (Antrea-)NetworkPolicy
      * [Antrea NetworkPolicy Exercise - Each trainee has its own cluster](kubernetes-networks/antrea/99-exercise-own-cluster.md)
+     * [Antrea - Enabling logging](kubernetes-networks/antrea/20-enable-logging.md)
 
   1. Kubernetes calico (CNI-Plugin)
  
