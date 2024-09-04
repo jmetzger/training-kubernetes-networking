@@ -26,6 +26,7 @@
     
   1. Kubernetes (Antrea-)NetworkPolicy
      * [Antrea NetworkPolicy Exercise - Each trainee has its own cluster](#antrea-networkpolicy-exercise---each-trainee-has-its-own-cluster)
+     * [Antrea - Enabling logging](#antrea---enabling-logging)
 
   1. Kubernetes calico (CNI-Plugin)
  
@@ -1981,7 +1982,7 @@ kubectl apply -f  .
 apiVersion: crd.antrea.io/v1beta1
 kind: ClusterNetworkPolicy
 metadata:
-  name: 02-allow-app-db
+  name: 45-allow-app-db
 spec:
     priority: 20
     tier: application
@@ -2055,7 +2056,7 @@ kubectl get tiers
 apiVersion: crd.antrea.io/v1beta1
 kind: ClusterNetworkPolicy
 metadata:
-  name: 50-deny-any-pod-ubuntu16
+  name: 80-emergency
 spec:
     priority: 50
     tier: emergency
@@ -2086,6 +2087,50 @@ kubectl -n dev-app1 exec -it ubuntu-20-04-66598645fd-dfx7f -- ping 192.168.1.8
 ### Reference: 
 
   * https://www.vrealize.it/2020/09/28/securing-you-k8s-network-with-antrea-clusternetworkpolicy/
+
+
+### Antrea - Enabling logging
+
+
+### Steps 
+
+```
+## Activate Logging in Policy Ingress or Egress
+
+## nano 80-emergency.yaml
+apiVersion: crd.antrea.io/v1beta1
+kind: ClusterNetworkPolicy
+metadata:
+  name: 80-emergency-ubuntu16
+spec:
+    priority: 50
+    tier: emergency
+    appliedTo:
+      - podSelector:
+          matchLabels:
+                  app: ubuntu-16-04
+    ingress:
+      - action: Drop
+        enableLogging: true
+        from:
+          - namespaceSelector: {}
+
+```
+
+```
+kubectl apply -f .
+```
+
+```
+## On which node is it running ?
+kubectl -n dev-app1 -l app=ubuntu-16 -o wide
+## Ausgabe: worker1 
+```
+
+```
+## Connect to worker1 per ssh
+tail /var/log/antrea/networkpolicy/np.log 
+```
 
 
 ## Kubernetes calico (CNI-Plugin)
@@ -2856,7 +2901,7 @@ spec:
   * helm 
   * manifests 
 
-### Walkthrough Digitalocean 
+### Step 1: install metallb
 
 ```
 ## Just to show some basics 
@@ -2876,71 +2921,111 @@ helm repo add metallb https://metallb.github.io/metallb
 helm install metallb metallb/metallb --namespace=metallb-system --create-namespace 
 ```
 
+### Step 2: addresspool und Propagation-type (config) 
+
 ```
 cd
 mkdir -p manifests
-cd manifests 
-mkdir mb 
-cd mb 
-vi 01-cm.yml 
+cd manifests
+mkdir lb
+cd lb
+nano 01-addresspool.yml 
 ```
 
 ```
-apiVersion: v1
-kind: ConfigMap
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
 metadata:
+  name: first-pool
   namespace: metallb-system
-  name: config
-data:
-  config: |
-    address-pools:
-    - name: default
-      protocol: layer2
-      addresses:
-      # Take the single address in case of digitalocean here.
-      # External ip 
-      # - 192.168.1.240-192.168.1.250
-      - 61.46.56.21
-```
-
-```
-vi 02-svc.yml 
-```
-
-```
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginx-svc 
 spec:
-  selector:
-
-## Adjust -> selector -> according to nginx below 
-    app: nginx 
-  ports:
-  - name: http
-    port: 80
-    targetPort: 80
-  type: LoadBalancer
-  # uncomment to try, if you get it automatically 
-  loadBalancerIP: 61.46.56.21
-
+  addresses:
+  # we will use our external ip here 
+  - 134.209.231.154-134.209.231.154
+  # both notations are possible 
+  - 157.230.113.124/32
 ```
 
 ```
 kubectl apply -f .
-kubectl -n metallb-system get svc my-service 
 ```
 
 ```
-kubectl create deployment nginx --image nginx:alpine --port 80 --replicas=1
-kubectl get svc nginx-svc
-## You can open 80 port on Firewall using Console and open http://167.99.99.99 for a test.
+nano 02-advertisement.yml
 ```
 
-### Trafic Policy 
+```
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: example
+  namespace: metallb-system
+```
 
- * https://metallb.universe.tf/usage/
+```
+kubectl apply -f .
+```
+
+### Schritt 4: Test do i get an external ip 
+
+```
+nano 03-deploy.yml
+```
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx
+spec:
+  selector:
+    matchLabels:
+      run: web-nginx
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        run: web-nginx
+    spec:
+      containers:
+      - name: cont-nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+
+```
+
+
+```
+nano 04-service.yml
+```
+
+```
+## 02-svc.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-nginx
+  labels:
+    svc: nginx
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    run: web-nginx
+```
+
+
+```
+kubectl apply -f .
+kubectl get pods
+kubectl get svc
+```
+
+```
+kubectl delete -f 03-deploy.yml 04-service.yml 
 
 ### Kubernetes Load Balancer new version for IpAdresses - object
 
