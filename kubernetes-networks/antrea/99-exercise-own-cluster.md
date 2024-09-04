@@ -724,7 +724,7 @@ deny-preprod-to-dev      SecurityOps   101        2               2             
 kubectl -n preprod-app1 exec deployments/ubuntu-20-04 -- ping 10.244.3.15
 ```
 
-## Schritt 11: Isolate Pods (only within the namespaces) 
+## Schritt 7: Isolate Pods (allow only traffic within the namespaces) 
 
   * Aktuell ist das ping vom preprod-app1 zum preprod-app2 namespace noch möglich
   * Das wollen wir einschränken
@@ -762,7 +762,7 @@ spec:
         from:
           - namespaceSelector:
               matchLabels:
-                ns: dev-app1-<name-kurz>
+                ns: dev-app1
 ```
 
 ```
@@ -844,7 +844,7 @@ spec:
 kubectl apply -f .
 ```
 
-## Schritt 12: Isolate traffic within app2 - namespaces (3-Tier-app)
+## Schritt 8: Isolate traffic within app2 - namespaces (3-Tier-app)
 ```
 # For dev-app2 we want
 web->app (80)
@@ -945,7 +945,7 @@ spec:
 kubectl apply -f .
 ```
 
-## Schritt 13: Usage of the Emergency Tier - e.g. Attack 
+## Schritt 9: Usage of the Emergency Tier - e.g. Attack 
 
   * We have problems with Ubuntu 16.04. an we want to isolate it.
 
