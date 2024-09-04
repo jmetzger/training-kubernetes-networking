@@ -691,20 +691,20 @@ kubectl -n dev-app1 exec deployments/ubuntu-20-04 -- ping 10.244.2.25
 apiVersion: crd.antrea.io/v1beta1
 kind: ClusterNetworkPolicy
 metadata:
-  name: deny-preprod-to-dev-<kurz-name>
+  name: deny-preprod-to-dev
 spec:
     priority: 101
     tier: SecurityOps
     appliedTo:
       - namespaceSelector:
           matchLabels:
-            env: dev-<name-kurz>
+            env: dev
     ingress:
       - action: Drop
         from:
           - namespaceSelector:
               matchLabels:
-                env: preprod-<name-kurz>
+                env: preprod
 ```
 
 ```
