@@ -999,6 +999,13 @@ kubectl apply -f .
 
   * Because Emergency has the highest priority, the policy in application (allow any in ns-app1) has no Impact anymore.
 
+```
+# TESTEN
+# GET IP 
+kubectl -n dev-app1 get pods -l app=ubuntu-16-04 -o wide
+# Use that IP for testing, e.g. 192.168.1.8
+kubectl -n dev-app1 exec -it ubuntu-20-04-66598645fd-dfx7f -- ping 192.168.1.8
+```
 
 ## Reference: 
 
