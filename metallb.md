@@ -14,7 +14,7 @@
   * helm 
   * manifests 
 
-## Walkthrough Digitalocean 
+## Step 1: install metallb
 
 ```
 # Just to show some basics 
