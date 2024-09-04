@@ -26,23 +26,20 @@ In app2 is a simple 3 Tier-App (WEB-APP-DB): dev-app2 / preprod-app2 (3tier-app)
 
 ## Step 1: Rollout the pods (dev-app1)
 
-  * Important - you need to adjust the namespaces as follows:
-    * dev-app1-<name-kurz> -> z.B. dev-app1-jjm (Deine Initialien)
-
 ```
 cd
 mkdir -p manifests
 cd manifests
 mkdir 10-antrea
 cd 10-antrea
+nano 01-pods-app1-app2.yaml 
 ```
 
 ```
-# nano 01-deployment-dev-app1.yaml
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: dev-app1-<name-kurz>
+  name: dev-app1
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -50,7 +47,7 @@ metadata:
   name: ubuntu-16-04
   labels:
     app: ubuntu-16-04
-  namespace: dev-app1-<name-kurz>
+  namespace: dev-app1
 spec:
   replicas: 1
   selector:
@@ -79,7 +76,7 @@ metadata:
   name: ubuntu-20-04
   labels:
     app: ubuntu-20-04
-  namespace: dev-app1-<name-kurz>
+  namespace: dev-app1
 spec:
   replicas: 2
   selector:
@@ -107,31 +104,17 @@ spec:
             apt-get install curl -y;
             apt-get install dsniff -y;
             sleep infinity;
-```
-
-```
-# check if we have replaced all the kurz entries
-cat 01-deployment-dev-app1.yaml | grep kurz 
-
-kubectl apply -f .
-# kubectl -n dev-app1-<name-kurz> get pods 
-# z.B. kubectl -n dev-app1-jjm get pods 
-```
-
-## Step 2: Rollout the pods (dev-app2)
-
-```
-# nano 02-deployment-dev-app2.yaml 
+---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: dev-app2-<name-kurz>
+  name: dev-app2
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: default-conf
-  namespace: dev-app2-<name-kurz>
+  namespace: dev-app2
 data:
   default.conf: |
     server {
@@ -153,7 +136,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx
-  namespace: dev-app2-<name-kurz>
+  namespace: dev-app2
 spec:
   replicas: 1
   selector:
@@ -193,7 +176,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nginx
-  namespace: dev-app2-<name-kurz>
+  namespace: dev-app2
 spec:
   type: NodePort
   ports:
@@ -234,7 +217,7 @@ metadata:
   name: app-service
   labels:
     app: app
-  namespace: dev-app2-<name-kurz>
+  namespace: dev-app2
 spec:
   ports:
   - port: 80
@@ -246,7 +229,7 @@ apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
 kind: Deployment
 metadata:
   name: mysql
-  namespace: dev-app2-<name-kurz>
+  namespace: dev-app2
 spec:
   selector:
     matchLabels:
@@ -285,7 +268,7 @@ metadata:
   name: mysql8-service
   labels:
     app: mysql8
-  namespace: dev-app2-<name-kurz>
+  namespace: dev-app2
 spec:
   type: ClusterIP
   ports:
@@ -297,17 +280,21 @@ spec:
 
 ```
 kubectl apply -f .
-kubectl -n dev-app2-<name-kurz> get all 
+kubectl get -n dev-app1 get all
+kubectl get -n dev-app2 get all 
 ```
 
-## Schritt 3: rollout preprod-app1 
+## Schritt 3: rollout preprod-app1/preprod-app2 
 
 ```
-# nano 03-deployment-preprod-app1.yaml
+nano 02-deployment-preprod-app1-app2.yaml
+```
+
+```
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: preprod-app1-<name-kurz>
+  name: preprod
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -315,7 +302,7 @@ metadata:
   name: ubuntu-16-04
   labels:
     app: ubuntu-16-04
-  namespace: preprod-app1-<name-kurz>
+  namespace: preprod-app1
 spec:
   replicas: 1
   selector:
@@ -344,7 +331,7 @@ metadata:
   name: ubuntu-20-04
   labels:
     app: ubuntu-20-04
-  namespace: preprod-app1-<name-kurz>
+  namespace: preprod-app1
 spec:
   replicas: 2
   selector:
@@ -372,26 +359,17 @@ spec:
             apt-get install curl -y;
             apt-get install dsniff -y;
             sleep infinity;
-```
-
-```
-kubectl apply -f .
-```
-
-## Schritt 4: Deploy preprod-app2
-
-```
-# nano 04-deployment-preprod-app2.yaml
+---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: preprod-app2-<name-kurz>
+  name: preprod-app2
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: default-conf
-  namespace: preprod-app2-<name-kurz>
+  namespace: preprod-app2
 data:
   default.conf: |
     server {
@@ -413,7 +391,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx
-  namespace: preprod-app2-<name-kurz>
+  namespace: preprod-app2
 spec:
   replicas: 1
   selector:
@@ -453,7 +431,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nginx
-  namespace: preprod-app2-<name-kurz>
+  namespace: preprod-app2
 spec:
   type: NodePort
   ports:
@@ -468,7 +446,7 @@ metadata:
   name: appserver
   labels:
     app: app
-  namespace: preprod-app2-<name-kurz>
+  namespace: preprod-app2
 spec:
   replicas: 1
   selector:
@@ -494,7 +472,7 @@ metadata:
   name: app-service
   labels:
     app: app
-  namespace: preprod-app2-<name-kurz>
+  namespace: preprod-app2
 spec:
   ports:
   - port: 80
@@ -506,7 +484,7 @@ apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
 kind: Deployment
 metadata:
   name: mysql
-  namespace: preprod-app2-<name-kurz>
+  namespace: preprod-app2
 spec:
   selector:
     matchLabels:
@@ -545,7 +523,7 @@ metadata:
   name: mysql8-service
   labels:
     app: mysql8
-  namespace: preprod-app2-<name-kurz>
+  namespace: preprod-app2
 spec:
   type: ClusterIP
   ports:
@@ -560,41 +538,31 @@ spec:
 kubectl apply -f .
 ```
 
-## Schritt 5: Daten auslesen 
-
-```
-# Das bitte anpassen
-KURZ=jm
-```
+## Schritt 3: Daten auslesen 
 
 ```
 
 # dev-app1
-kubectl -n dev-app1-$KURZ get pods -o=custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,STATUS:.status.phase,IP:.status.podIP,NODE:.spec.nodeName
+kubectl -n dev-app1 get pods -o=custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,STATUS:.status.phase,IP:.status.podIP,NODE:.spec.nodeName
 
 # dev-app2 
-kubectl -n dev-app2-$KURZ get pods -o=custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,STATUS:.status.phase,IP:.status.podIP,NODE:.spec.nodeName
+kubectl -n dev-app2 get pods -o=custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,STATUS:.status.phase,IP:.status.podIP,NODE:.spec.nodeName
 
 # preprod-app1
-kubectl -n preprod-app1-$KURZ get pods -o=custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,STATUS:.status.phase,IP:.status.podIP,NODE:.spec.nodeName
+kubectl -n preprod-app1 get pods -o=custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,STATUS:.status.phase,IP:.status.podIP,NODE:.spec.nodeName
 
 # preprod-app2 
-kubectl -n preprod-app2-$KURZ get pods -o=custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,STATUS:.status.phase,IP:.status.podIP,NODE:.spec.nodeName
+kubectl -n preprod-app2 get pods -o=custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name,STATUS:.status.phase,IP:.status.podIP,NODE:.spec.nodeName
 ```
 
 ```
 # BITTE die Infos zwischen speichern oder Screenshot machen
 ```
 
-## Schritt 6: Zugriff auf dev-app2 klären 
+## Schritt 4: Zugriffe auf dev-app2/prepod-app2 klären 
 
 ```
-# Das ändern 
-KURZ=jm
-```
-
-```
-kubectl get svc -n dev-app2-$KURZ nginx 
+kubectl get svc -n dev-app2 nginx 
 ```
 
 ![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/00a9d952-732a-4e12-98d5-766734e96ba7)
@@ -604,15 +572,8 @@ curl -i http://10.135.0.5:32767
 # oder im Browser mit Public - IP
 ```
 
-## Schritt 7: Zugriff auf preprod-app klären
-
 ```
-# Das ändern 
-KURZ=jm
-```
-
-```
-kubectl get svc -n preprod-app2-$KURZ nginx 
+kubectl get svc -n preprod-app2 nginx 
 ```
 
 ![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/0f53b7a4-0fe2-4294-b3eb-f5ac968da47c)
@@ -621,7 +582,7 @@ kubectl get svc -n preprod-app2-$KURZ nginx
 curl -i http://10.135.0.5:31836 
 ```
 
-## Schritt 8: Zugriff ohne antrea policy testen 
+## Schritt 5: Zugriff ohne antrea policy testen 
 
 ```
 KURZ=jm
@@ -630,6 +591,7 @@ kubectl exec -it -n dev-app1-$KURZ deployment/ubuntu-20-04 -- /bin/bash
 
 ```
 # scannen des netzes
+# !!! Achtung Netz kann anders sein !!!
 nmap 10.244.0.0/22
 ```
 
@@ -641,6 +603,7 @@ nmap 10.244.0.0/22
 
 ```
 # mysql preprod herausfinden
+# !!! Achtung Netz ändern 
 nmap 10.244.0.0/22 | grep mysql | grep preprod
 ```
 
@@ -652,27 +615,21 @@ nmap 10.244.0.0/22 | grep mysql | grep preprod
 ```
 
 ```
-mysql -h 10-244-3-20.mysql8-service.preprod-app2-jm.svc.cluster.local -p 
+mysql -h 10-244-3-20.mysql8-service.preprod-app2.svc.cluster.local -p 
 ```
 
-## Schritt 9: Isolate dev and preprod 
+## Schritt 6: Isolieren von dev und preprod 
 
 ![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/52d514ce-806b-48ed-bb90-8de5897537ef)
 
-
-```
-# entsprechend anpassen
-KURZ=jm
-```
-
 ```
 # Namspaces labeln
-kubectl label ns dev-app1-$KURZ env=dev-$KURZ ns=dev-app1-$KURZ
-kubectl label ns dev-app2-$KURZ env=dev-$KURZ ns=dev-app2-$KURZ
-kubectl label ns preprod-app1-$KURZ env=preprod-$KURZ ns=preprod-app1-$KURZ
-kubectl label ns preprod-app2-$KURZ env=preprod-$KURZ ns=preprod-app2-$KURZ
+kubectl label ns dev-app1 env=dev ns=dev-app1
+kubectl label ns dev-app2 env=dev ns=dev-app2
+kubectl label ns preprod-app1 env=preprod ns=preprod-app1
+kubectl label ns preprod-app2 env=preprod ns=preprod-app2
 
-kubectl describe ns dev-app1-$KURZ
+kubectl describe ns dev-app1
 ```
 
 ```
@@ -681,33 +638,32 @@ kubectl describe ns dev-app1-$KURZ
 apiVersion: crd.antrea.io/v1beta1
 kind: ClusterNetworkPolicy
 metadata:
-  name: deny-dev-to-preprod-<name-kurz>
+  name: deny-dev-to-preprod
 spec:
     priority: 100
     tier: SecurityOps
     appliedTo:
       - namespaceSelector:
           matchLabels:
-            env: preprod-<name-kurz>
+            env: preprod
     ingress:
       - action: Drop
         from:
           - namespaceSelector:
               matchLabels:
-                env: dev-<name-kurz>
+                env: dev
 ```
 
 ```
-KURZ=jm
 # Test ob ping von preprod nach dev funktioniert
 # Hier ein POD-IP raussuchen 
-kubectl -n dev-app1-$KURZ get pods -o wide
-kubectl -n preprod-app1-$KURZ exec deployments/ubuntu-20-04 -- ping 10.244.3.15
+kubectl -n dev-app1 get pods -o wide
+kubectl -n preprod-app1 exec deployments/ubuntu-20-04 -- ping 10.244.3.15
 
 # Test ob ping von dev nach preprod funktioniert - der sollte nicht funktionieren 
 # Hier eine POD-IP rausschen 
-kubectl -n preprod-app1-$KURZ get pods -o wide
-kubectl -n dev-app1-$KURZ exec deployments/ubuntu-20-04 -- ping 10.244.2.25
+kubectl -n preprod-app1 get pods -o wide
+kubectl -n dev-app1 exec deployments/ubuntu-20-04 -- ping 10.244.2.25
 ```
 
 ```
@@ -718,10 +674,10 @@ kubectl apply -f .
 ```
 # Jetzt nochmal die Pings testen von oben
 # ---> Ping ist immer noch möglich --> da keine Firewall - Regel 
-kubectl -n preprod-app1-$KURZ exec deployments/ubuntu-20-04 -- ping 10.244.3.15
+kubectl -n preprod-app1 exec deployments/ubuntu-20-04 -- ping 10.244.3.15
 
 # in die andere Richtung geht es aber nicht !!
-kubectl -n dev-app1-$KURZ exec deployments/ubuntu-20-04 -- ping 10.244.2.25
+kubectl -n dev-app1 exec deployments/ubuntu-20-04 -- ping 10.244.2.25
 ```
 
 ```
@@ -765,18 +721,13 @@ kubectl -n preprod-app1-$KURZ exec deployments/ubuntu-20-04 -- ping 10.244.3.15
 
 ## Schritt 11: Isolate Pods (only within the namespaces) 
 
-  * Aktuell ist das ping vom preprod-app1-<kurz-name> zum preprod-app2-<kurz-name> namespace noch möglich
+  * Aktuell ist das ping vom preprod-app1 zum preprod-app2 namespace noch möglich
   * Das wollen wir einschränken
-  * Ausserdem von dev-app1-<name-kurz> zu dev-app2-<name> 
-
-```
-# bei dir anpassen
-KURZ=jm
-```
+  * Ausserdem von dev-app1 zu dev-app2 
 
 ```
 # So sehen unsere Namespace - Labels aus
-kubectl describe namespace dev-app1-$KURZ 
+kubectl describe namespace dev-app1 
 ```
 
 ```
@@ -793,14 +744,14 @@ Labels:       env=dev-jm
 apiVersion: crd.antrea.io/v1beta1
 kind: ClusterNetworkPolicy
 metadata:
-  name: 20-allow-ns-dev-app1-dev-app1-<name-kurz>
+  name: 20-allow-ns-dev-app1-dev-app1
 spec:
     priority: 100
     tier: application
     appliedTo:
       - namespaceSelector:
           matchLabels:
-            ns: dev-app1-<name-kurz>
+            ns: dev-app1
     ingress:
       - action: Allow
         from:
@@ -819,14 +770,14 @@ kubectl apply -f .
 apiVersion: crd.antrea.io/v1beta1
 kind: ClusterNetworkPolicy
 metadata:
-  name: 25-drop-any-ns-dev-app2-<name-kurz>
+  name: 25-drop-any-ns-dev-app2
 spec:
     priority: 110
     tier: application
     appliedTo:
       - namespaceSelector:
           matchLabels:
-            ns: dev-app2-<name-kurz>
+            ns: dev-app2
     ingress:
       - action: Drop
         from:
@@ -844,20 +795,20 @@ kubectl apply -f .
 apiVersion: crd.antrea.io/v1beta1
 kind: ClusterNetworkPolicy
 metadata:
-  name: 30-allow-ns-preprod-app1-preprod-app1-<name-kurz>
+  name: 30-allow-ns-preprod-app1-preprod-app1
 spec:
     priority: 120
     tier: application
     appliedTo:
       - namespaceSelector:
           matchLabels:
-            ns: preprod-app1-<name-kurz>
+            ns: preprod-app1
     ingress:
       - action: Allow
         from:
           - namespaceSelector:
               matchLabels:
-                ns: preprod-app1-<name-kurz>
+                ns: preprod-app1
 ```
 
 ```
@@ -870,7 +821,7 @@ kubectl apply -f .
 apiVersion: crd.antrea.io/v1beta1
 kind: ClusterNetworkPolicy
 metadata:
-  name: 21-drop-any-ns-preprod-app2<name-kurz>
+  name: 21-drop-any-ns-preprod-app2
 spec:
     priority: 130
     tier: application
@@ -890,19 +841,15 @@ kubectl apply -f .
 
 ## Schritt 12: Isolate traffic within app2 - namespaces (3-Tier-app) (Das kann leider nur er Trainer machen ;o() - wg der Labels 
 ```
-# For dev-app2-<name-kurz> we want
+# For dev-app2 we want
 web->app (80)
 app->db (3306) 
 drop everything else 
 ```
 
 ```
-KURZ=jm;
-```
-
-```
-kubectl -n dev-app2-$KURZ describe pods | head -n 20
-kubectl -n preprod-app2-$KURZ describe pods | head -n 20
+kubectl -n dev-app2 describe pods | head -n 20
+kubectl -n preprod-app2 describe pods | head -n 20
 ```
 
 ![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/bfd0b89b-aa47-4493-8952-3c2aff5f7f1c)
@@ -914,7 +861,7 @@ kubectl -n preprod-app2-$KURZ describe pods | head -n 20
 apiVersion: crd.antrea.io/v1beta1
 kind: ClusterNetworkPolicy
 metadata:
-  name: 40-allow-web-app-<name-kurz>
+  name: 40-allow-web-app
 spec:
     priority: 10
     tier: application
@@ -942,7 +889,7 @@ kubectl apply -f  .
 apiVersion: crd.antrea.io/v1beta1
 kind: ClusterNetworkPolicy
 metadata:
-  name: 02-allow-app-db-<name-kurz>
+  name: 02-allow-app-db
 spec:
     priority: 20
     tier: application
@@ -971,17 +918,17 @@ kubectl apply -f .
 apiVersion: crd.antrea.io/v1beta1
 kind: ClusterNetworkPolicy
 metadata:
-  name: 03-deny-any-to-app2-<name-kurz>
+  name: 03-deny-any-to-app2
 spec:
     priority: 30
     tier: application
     appliedTo:
       - namespaceSelector:
           matchLabels:
-                  ns: dev-app2-<name-kurz>
+                  ns: dev-app2
       - namespaceSelector:
           matchLabels:
-                  ns: preprod-app2-<name-kurz>
+                  ns: preprod-app2
     ingress:
       - action: Drop
         from:
@@ -1006,7 +953,7 @@ kubectl get tiers
 apiVersion: crd.antrea.io/v1beta1
 kind: ClusterNetworkPolicy
 metadata:
-  name: 50-deny-any-pod-ubuntu16-<name-kurz>
+  name: 50-deny-any-pod-ubuntu16
 spec:
     priority: 50
     tier: emergency
