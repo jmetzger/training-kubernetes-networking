@@ -934,7 +934,7 @@ kubectl apply -f .
 apiVersion: crd.antrea.io/v1beta1
 kind: ClusterNetworkPolicy
 metadata:
-  name: 03-deny-any-to-app2
+  name: 50-deny-any-to-app2
 spec:
     priority: 30
     tier: application
