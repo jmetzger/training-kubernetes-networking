@@ -905,7 +905,7 @@ kubectl apply -f  .
 apiVersion: crd.antrea.io/v1beta1
 kind: ClusterNetworkPolicy
 metadata:
-  name: 02-allow-app-db
+  name: 45-allow-app-db
 spec:
     priority: 20
     tier: application
@@ -979,7 +979,7 @@ kubectl get tiers
 apiVersion: crd.antrea.io/v1beta1
 kind: ClusterNetworkPolicy
 metadata:
-  name: 50-deny-any-pod-ubuntu16
+  name: 80-emergency
 spec:
     priority: 50
     tier: emergency
