@@ -826,7 +826,7 @@ kubectl apply -f .
 apiVersion: crd.antrea.io/v1beta1
 kind: ClusterNetworkPolicy
 metadata:
-  name: 21-drop-any-ns-preprod-app1
+  name: 35-drop-any-ns-preprod-app1
 spec:
     priority: 130
     tier: application
