@@ -958,7 +958,7 @@ kubectl apply -f .
 
 ```
 # TESTEN -> das sollte gehen // VOM web->app 
-kubectl -n dev-app2 get pods -l app=a -o wide
+kubectl -n dev-app2 get pods -l app=app -o wide
 kubectl -n dev-app2 exec -it nginx-655cc89789-cjfmh -- curl -i http://192.168.1.9
 
 # TESTEN -> geht nicht // VOM app->web 
