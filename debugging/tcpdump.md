@@ -43,6 +43,9 @@ kubectl -n ingress debug nginx-ingress-ingress-nginx-controller-7bc7c7776d-jpj5h
 ```
 # in der shell
 tcpdump -n port 80
+# write to file in pcap format
+Older versions of tcpdump truncate packets to 68 or 96 bytes. If this is the case, use -s to capture full-sized packets:
+tcpdump -i <interface> -s 65535 -w <file>
 ```
 
 ### Variante 2: Im Hintergrund laufen lassen und connecten 
@@ -55,6 +58,9 @@ kubectl -n ingress exec -it nginx-ingress-ingress-nginx-controller-7bc7c7776d-jp
 ```
 # in der shell
 tcpdump -n port 80
+# write to file in pcap format
+Older versions of tcpdump truncate packets to 68 or 96 bytes. If this is the case, use -s to capture full-sized packets:
+tcpdump -i <interface> -s 65535 -w <file>
 ```
 
 
