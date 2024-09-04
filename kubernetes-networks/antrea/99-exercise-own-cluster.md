@@ -591,8 +591,7 @@ curl -i http://10.135.0.5:31836
 ## Schritt 5: Zugriff ohne antrea policy testen 
 
 ```
-KURZ=jm
-kubectl exec -it -n dev-app1-$KURZ deployment/ubuntu-20-04 -- /bin/bash
+kubectl exec -it -n dev-app1 deployment/ubuntu-20-04 -- /bin/bash
 ```
 
 ```
