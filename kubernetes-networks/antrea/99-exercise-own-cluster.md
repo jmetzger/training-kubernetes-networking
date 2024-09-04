@@ -284,7 +284,7 @@ kubectl get -n dev-app1 get all
 kubectl get -n dev-app2 get all 
 ```
 
-## Schritt 3: rollout preprod-app1/preprod-app2 
+## Schritt 2: rollout preprod-app1/preprod-app2 
 
 ```
 nano 02-deployment-preprod-app1-app2.yaml
