@@ -32,7 +32,7 @@ mkdir -p manifests
 cd manifests
 mkdir 10-antrea
 cd 10-antrea
-nano 01-pods-app1-app2.yaml 
+nano 01-pods-dev-app1-app2.yaml 
 ```
 
 ```
