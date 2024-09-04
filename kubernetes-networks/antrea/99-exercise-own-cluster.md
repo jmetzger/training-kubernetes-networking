@@ -280,8 +280,8 @@ spec:
 
 ```
 kubectl apply -f .
-kubectl get -n dev-app1 get all
-kubectl get -n dev-app2 get all 
+kubectl -n dev-app1 get all
+kubectl -n dev-app2 get all 
 ```
 
 ## Schritt 2: rollout preprod-app1/preprod-app2 
