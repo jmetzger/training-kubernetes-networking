@@ -844,6 +844,17 @@ spec:
 kubectl apply -f .
 ```
 
+```
+# TESTEN
+# Pod ausfinding machen, und ip vom 2. Pod finden in preprod-app1
+kubectl -n preprod-app1 get pods -o wide
+kubectl -n preprod-app1 exec -it ubuntu-16-04-b7d656f5b-f55rs -- ping 192.168.1.12
+# ping aus anderem Namespace sollte nicht gehen 
+kubectl -n preprod-app2 get pods -o wide
+kubectl -n preprod-app2 exec -it appserver-98bc7fd55-bjv94 -- ping 192.168.1.12
+```
+
+
 ## Schritt 8: Isolate traffic within app2 - namespaces (3-Tier-app)
 ```
 # For dev-app2 we want
