@@ -176,6 +176,8 @@
 
   1. Kubernetes API Reference
      * [API-Reference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/)
+     * [OpenAPI](https://raw.githubusercontent.com/kubernetes/kubernetes/master/api/openapi-spec/swagger.json)
+     * [Swagger Editor Online](https://editor.swagger.io/)
 
 
 ## Backlog
