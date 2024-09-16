@@ -12,24 +12,23 @@ cd 04-service
 ```
 
 ```
-# 01-deploy.yml 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-nginx
+  name: nginx-deployment
 spec:
   selector:
     matchLabels:
-      app: my-nginx
-  replicas: 3
+      app: nginx
+  replicas: 7 # tells deployment to run 8 pods matching the template
   template:
     metadata:
       labels:
-        app: my-nginx
+        app: nginx
     spec:
       containers:
-      - name: my-nginx
-        image: nginx
+      - name: nginx
+        image: nginx:1.23
         ports:
         - containerPort: 80
 ```
@@ -46,15 +45,13 @@ kubectl apply -f .
 apiVersion: v1
 kind: Service
 metadata:
-  name: my-nginx
-  labels:
-    svc: nginx
+  name: svc-nginx
 spec:
   ports:
   - port: 80
     protocol: TCP
   selector:
-    app: my-nginx
+    app: nginx
 ```
 
 ```
