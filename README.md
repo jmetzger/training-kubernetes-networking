@@ -43,6 +43,7 @@
 
   1. Kubernetes - Netzwerk (CNI's) / Mesh
      * [Netzwerk Interna](/kubernetes-networks/networking-internal-overview.md)
+     * [Kubernetes CIDR](kubernetes-networks/kubernetes-cidrs.md)
      * [Wirkweise cni](/kubernetes/internals/cni.md)
      * [Übersicht Netzwerke](/kubernetes-networks/overview.md)
      * [Calico/Cilium - nginx example NetworkPolicy](kubernetes-networkpolicy/00-simple-exercises-group.md)
