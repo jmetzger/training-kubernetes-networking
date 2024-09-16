@@ -174,6 +174,10 @@
   1. Kubernetes Documentation
      * [Well-Known Annotations](https://kubernetes.io/docs/reference/labels-annotations-taints/)
 
+  1. Kubernetes API Reference
+     * [API-Reference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/)
+
+
 ## Backlog
 
   1. Kubernetes - Überblick
