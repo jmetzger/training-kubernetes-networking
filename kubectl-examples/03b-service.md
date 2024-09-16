@@ -58,6 +58,14 @@ spec:
 kubectl apply -f . 
 ```
 
+## Schritt 3:
+
+```
+kubectl get svc svc-nginx
+kubectl describe svc svc-nginx
+kubectl get endpoints svc-nginx
+```
+
 
 ## Ref.
 
