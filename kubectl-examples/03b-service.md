@@ -64,6 +64,7 @@ kubectl apply -f .
 kubectl get svc svc-nginx
 kubectl describe svc svc-nginx
 kubectl get endpoints svc-nginx
+kubectl get endpoints svc-nginx -o yaml 
 ```
 
 
