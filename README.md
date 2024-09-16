@@ -22,8 +22,6 @@
      * [Das Tool kubectl (Devs/Ops) - Spickzettel](/kubectl/spickzettel.md)
      * [kubectl example with run](/kubectl/run-with-example.md)
      * [Bauen einer Applikation mit Resource Objekten](bauen-einer-webanwendung.md)
-     * [Pod manifest](kubectl-examples/01-pod-nginx.md)
-     * [Replicasets](kubectl-examples/01a-replicaset-nginx.md)
      * [kubectl/manifest/deployments](/kubectl-examples/03-nginx-deployment.md)
      * [Services - Aufbau](/kubernetes/services-aufbau.md)
      * [Service Typen / Ebenen - Schaubild](service-ebenen.md)
@@ -192,6 +190,10 @@
      * [Installation Kubernetes Dashboard](/microk8s/dashboard.md)
      * [Remote-Verbindung zu Kubernetes (microk8s) einrichten](microk8s/connect-from-remote.md)
 
+  1. Kubernetes API-Objekte
+     * [Pod manifest](kubectl-examples/01-pod-nginx.md)
+     * [Replicasets](kubectl-examples/01a-replicaset-nginx.md)
+       
   1. Kubernetes - RBAC
      * [Nutzer einrichten - kubernetes bis 1.24](/kubernetes/rbac-create-user.md)
 
