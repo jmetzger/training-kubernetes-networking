@@ -15,7 +15,6 @@
   1. Kubernetes - Misc
      * [Wann wird podIP vergeben ?](kubectl/run-with-example.md)
      * [Bash completion installieren](kubectl/bash-completion.md)
-     * [Remote-Verbindung zu Kubernetes (microk8s) einrichten](microk8s/connect-from-remote.md)
      * [kubectl verbindung mit namespace einrichten](kubectl/kubectl-einrichten.md)
      * [vim support for yaml](vim/vim-yaml.md)
 
@@ -161,6 +160,7 @@
      * [kubectl unter windows - Remote-Verbindung zu Kuberenets (microk8s) einrichten](kubectl-windows.md)
      * [Arbeiten mit der Registry](microk8s/registry.md)
      * [Installation Kubernetes Dashboard](/microk8s/dashboard.md)
+     * [Remote-Verbindung zu Kubernetes (microk8s) einrichten](microk8s/connect-from-remote.md)
 
   1. Kubernetes - RBAC
      * [Nutzer einrichten - kubernetes bis 1.24](/kubernetes/rbac-create-user.md)
