@@ -6,12 +6,14 @@ mkdir -p manifests
 cd manifests
 mkdir 03-deploy
 cd 03-deploy 
-nano deploy.yml 
 ```
 
 ```
+nano deploy.yml
+```
 
-# vi deploy.yml 
+
+```
 apiVersion: apps/v1
 kind: Deployment
 metadata:
