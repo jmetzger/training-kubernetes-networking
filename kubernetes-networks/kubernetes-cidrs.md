@@ -30,3 +30,9 @@ node 4 -> network.cilium.io/ipv4-pod-cidr: 10.244.1.0/25
 POD-CIDR: 10.244.1.128/25
 -> POD - IP: 10.244.1.180
 ```
+
+## Service-CIDR 
+
+```
+Netzbereich für IP-Adressen der Services
+```
