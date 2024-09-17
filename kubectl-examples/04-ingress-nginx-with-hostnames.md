@@ -92,6 +92,10 @@ kubectl apply -f banana.yml
 ## Step 2: Ingress 
 
 ```
+nano ingress.yaml
+```
+
+```
 # Ingress
 apiVersion: extensions/v1beta1
 kind: Ingress
