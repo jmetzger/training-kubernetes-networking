@@ -13,6 +13,10 @@ cd abi
 ```
 
 ```
+nano apple.yml
+```
+
+```
 # apple.yml 
 # vi apple.yml 
 kind: Pod
@@ -45,6 +49,11 @@ spec:
 ```
 kubectl apply -f apple.yml 
 ```
+
+```
+nano banana.yml
+```
+
 
 ```
 # banana
