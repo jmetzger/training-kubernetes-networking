@@ -18,7 +18,7 @@ helm show values ingress-nginx/ingress-nginx
 
 # It will be setup with type loadbalancer - so waiting to retrieve an ip from the external loadbalancer
 # This will take a little. 
-helm install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress --create-namespace --set controller.publishService.enabled=true 
+helm install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress --create-namespace
 
 # See when the external ip comes available
 kubectl -n ingress get all
