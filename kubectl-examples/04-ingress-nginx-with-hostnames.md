@@ -99,10 +99,6 @@ metadata:
   name: example-ingress
   annotations:
     ingress.kubernetes.io/rewrite-target: /
-    # with the ingress controller from helm, you need to set an annotation 
-    # otherwice it does not know, which controller to use
-    # old version... use ingressClassName instead 
-    # kubernetes.io/ingress.class: nginx
 spec:
   ingressClassName: nginx
   rules:
