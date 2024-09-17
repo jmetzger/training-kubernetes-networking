@@ -7,8 +7,8 @@
 
 ## Docker - Container oder andere 
 
-  * Container wird hochgefahren -> über CNI -> zieht Netzwerk - IP  hoch. 
-  * Container witd runtergahren -> uber CNI -> Netzwerk - IP wird released 
+  * Pod (Pause Container) wird hochgefahren -> über CNI -> zieht Netzwerk - IP  hoch. 
+  * Pod (Pause Container) witd runtergahren -> uber CNI -> Netzwerk - IP wird released 
 
 ## Welche gibt es ? 
 
