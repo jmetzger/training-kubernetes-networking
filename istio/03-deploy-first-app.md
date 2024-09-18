@@ -148,14 +148,16 @@ kubectl get pod
 # tlnx
 # kubectl -n tlnx run -it --rm curly --image=curlimages/curl -- sh
 # z.B. 
-kubectl -n tln5 run -it --rm curly --image=curlimages/curl -- sh
+kubectl run -it --rm curly --image=curlimages/curl -- sh
 ```
 
 ```
 # Within shell connect to webapp
-curl -s http://webapp.istioapp-tln1/api/catalog/items/1
+curl -s http://webapp.istioapp-tln5/api/catalog/items/1
 exit
 ```
+
+## Step 8.1: Verbindung zu webapp von aussen 
 
 ```
 # Wir können es aber auch visualisieren
