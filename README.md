@@ -132,7 +132,7 @@
 
   1. Kustomize
      * [Kustomize Overlay Beispiel](/kustomize/02-overlay-example.md)
-     * [Helm mit kustomize verheiraten](/kustomize/helm-kustomize-options.md)
+     * [Helm mit kustomize verheiraten](/helm/helm-kustomize-options.md)
 
   1. Kubernetes - Tipps & Tricks
      * [Kubernetes Debuggen ClusterIP/PodIP](/tipps-tricks/cluster-ip-debug.md)
