@@ -18,7 +18,7 @@ cd manifests/istio
 curl -L https://istio.io/downloadIstio | sh -
 ```
 
-## Step 2: Run istioctl - commands (version-check, precheck and install) 
+### Step 2: Run istioctl - commands (version-check, precheck and install) 
 
 ```
 # This istioctl will be under istio-1.20.2/bin
@@ -33,14 +33,14 @@ istioctl x precheck
 istioctl install --set profile=demo -y
 ```
 
-## Step 3: Install the addons 
+### Step 3: Install the addons 
 
 ```
 # Install Add-Ons
 kubectl apply -f istio-1.20.2/samples/addons/ 
 ```
 
-## Step 4: Check if all the corresponding container (from istio and addons) are running 
+### Step 4: Check if all the corresponding container (from istio and addons) are running 
 
 ```
 kubectl -n istio-system get pods 
