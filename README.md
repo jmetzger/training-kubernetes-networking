@@ -177,7 +177,13 @@
      * [API-Reference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/)
      * [OpenAPI](https://raw.githubusercontent.com/kubernetes/kubernetes/master/api/openapi-spec/swagger.json)
      * [Swagger Editor Online](https://editor.swagger.io/)
-
+    
+  1. Kubernetes Istio
+     * [Istio vs. Ingress Überblick](istio/00-istio-vs-ingress.md)
+     * [Istio installieren und Addons bereitsstellen](istio/01-install-and-addons.md)
+     * [Istion Überblick - egress und ingress - gateway](/istio/02-overview-ingress-egress-gateway.md)
+     * [Istio - Deployment of simple application](istio/03-deploy-first-app.md)
+     * [Istio - Grafana Dashboard](istio/04-grafana-dashboard.md)
 
 ## Backlog
 
