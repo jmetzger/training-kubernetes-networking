@@ -37,6 +37,8 @@ istioctl install --set profile=demo -y
 
 ```
 # Install Add-Ons
+# Ask trainer for directory
+# cd /usr/src/
 kubectl apply -f istio-1.23.1/samples/addons/ 
 ```
 
