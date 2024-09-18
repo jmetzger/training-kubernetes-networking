@@ -27,7 +27,7 @@ curl -L https://istio.io/downloadIstio | sh -
 ```
 
 ```
-# cd istio-1.20.2/bin
+# cd istio-1.23.1/bin
 istioctl version
 istioctl x precheck 
 istioctl install --set profile=demo -y
@@ -37,7 +37,7 @@ istioctl install --set profile=demo -y
 
 ```
 # Install Add-Ons
-kubectl apply -f istio-1.20.2/samples/addons/ 
+kubectl apply -f istio-1.23.1/samples/addons/ 
 ```
 
 ### Step 4: Check if all the corresponding container (from istio and addons) are running 
