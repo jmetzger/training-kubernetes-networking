@@ -97,7 +97,7 @@ istioctl kube-inject -f services/catalog/kubernetes/catalog.yaml | less
 ```
 # kubectl label namespace istioapp-tlnx istio-injection=enabled 
 # z.B
-kubectl label namespace istioapp-tln1 istio-injection=enabled 
+kubectl label namespace istioapp-tln5 istio-injection=enabled 
 ```
 
 ## Step 5: catalog ausrollen 
