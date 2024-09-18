@@ -118,13 +118,13 @@ kubectl get pods
 ```
 # do it from your namespace, e.g. tlnx 
 # z.B. 
-kubectl -n tln1 run -it --rm curly --image=curlimages/curl -- sh
+kubectl run -it --rm curly --image=curlimages/curl -- sh
 ```
 
 ```
 # within shell of that pod
 # catalog.yourappnamespace/items/1
-curl http://catalog.istioapp-tln1/items/1
+curl http://catalog.istioapp-tln5/items/1
 exit
 ```
 
