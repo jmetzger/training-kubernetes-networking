@@ -166,7 +166,7 @@
      * [ssl terminierung über proxy nginx](ssl-nginx-termination.md)
      * [LoadBalancer / Cluster Controller Manager](/internals/service/loadbalancer/cloud-controller-manager-do.md)
 
-  1. Kubernetes Load Balancer
+  1. Kubernetes Load Balancer / metallb (on premise)
      * [Kubernetes Load Balancer](metallb.md)
      * [Kubernetes Load Balancer new version for IpAdresses - object](loadbalancer/metallb.md)
 
