@@ -65,14 +65,8 @@
      * [Protecting Services](kubernetes-networkpolicy/calico/02-example-protecting-services.md)
      * [Exercise calico Network Policy](kubernetes-networkpolicy/calico/01-exercise-calico.md)
 
-  1. Kubernetes antrea (CNI-Plugin)
-     * [Unterschiede Dokus vmware (antrea mit nsx-t) und OpenSource Antrea](kubernetes-networks/antrea/00_documentation-open-source-vs-vmware.md)
-     * [Overview Kubernetes Antrea CNI-Plugin](kubernetes-networks/antrea/01_overview.md)
-     * [Antctl](kubernetes-networks/antrea/10_antctl.md)
-     * [Antrea view bridge and config](kubernetes-networks/antrea/20-view-bridge-and-config.md)
-     * [Antrea Exercise](kubernetes-networks/antrea/99_exercise.md)
-
   1. Kubernetes calico (CNI-Plugin)
+     * [calicoctl Cheatsheet](kubernetes-networks/calico/01-cheatsheet-calicoctl.md)
      * [Welcher Routing-Mode wird im aktuellen Cluster verwendet](/kubernetes-networks/calico/which-routing-mode-is-used.md)
      * [Install calicoctl in pod](/kubernetes-networks/calicoctl-installation.md)
      * [Wann calicoctl (Stand 2024/01 calico 3.27)](calico/wann-calicoctl.md)
@@ -210,10 +204,17 @@
      * [metrics-server aktivieren (microk8s und vanilla)](/microk8s/metrics-server.md)
 
   1. Kubernetes - Backups
-     + [Kubernetes Aware Cloud Backup - kasten.io](/backups/cluster-backup-kasten-io.md)
+     * [Kubernetes Aware Cloud Backup - kasten.io](/backups/cluster-backup-kasten-io.md)
 
   1. Kubernetes - Tipps & Tricks
      * [Assigning Pods to Nodes](/tipps-tricks/pods-2-nodes.md)
+    
+  1. Kubernetes antrea (CNI-Plugin)
+     * [Unterschiede Dokus vmware (antrea mit nsx-t) und OpenSource Antrea](kubernetes-networks/antrea/00_documentation-open-source-vs-vmware.md)
+     * [Overview Kubernetes Antrea CNI-Plugin](kubernetes-networks/antrea/01_overview.md)
+     * [Antctl](kubernetes-networks/antrea/10_antctl.md)
+     * [Antrea view bridge and config](kubernetes-networks/antrea/20-view-bridge-and-config.md)
+     * [Antrea Exercise](kubernetes-networks/antrea/99_exercise.md)
 
   1. Kubernetes - Documentation
      * [LDAP-Anbindung](https://github.com/apprenda-kismatic/kubernetes-ldap)
