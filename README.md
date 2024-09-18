@@ -22,6 +22,7 @@
      * [Das Tool kubectl (Devs/Ops) - Spickzettel](/kubectl/spickzettel.md)
      * [kubectl example with run](/kubectl/run-with-example.md)
      * [Bauen einer Applikation mit Resource Objekten](bauen-einer-webanwendung.md)
+     * [Anatomie einer Applikation](kubectl-examples/anatomie-einer-applikation.md)
      * [kubectl/manifest/deployments](/kubectl-examples/03-nginx-deployment.md)
      * [Services - Aufbau](/kubernetes/services-aufbau.md)
      * [Service Typen / Ebenen - Schaubild](service-ebenen.md)
