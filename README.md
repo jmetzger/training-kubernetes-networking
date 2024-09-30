@@ -11,6 +11,9 @@
      * [Bash completion installieren](kubectl/bash-completion.md)
      * [kubectl verbindung mit namespace einrichten](kubectl/kubectl-einrichten.md)
      * [vim support for yaml](vim/vim-yaml.md)
+
+  1. Kubernetes Services
+     * [Services -> NodePort](/internals/service/nodeport.md)
     
   1. Kubernetes Praxis API-Objekte
      * [Das Tool kubectl (Devs/Ops) - Spickzettel](/kubectl/spickzettel.md)
