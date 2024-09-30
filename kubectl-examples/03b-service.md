@@ -49,6 +49,7 @@ kind: Service
 metadata:
   name: svc-nginx
 spec:
+  type: ClusterIP
   ports:
   - port: 80
     protocol: TCP
