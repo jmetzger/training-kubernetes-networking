@@ -44,7 +44,7 @@
  
 ### Nodes  
 
-  * Nodes (Knoten) sind die Arbeiter (Maschinen), die Anwendungen ausführen
+  * Worker Nodes (Knoten) sind die Arbeiter (Maschinen), die Anwendungen ausführen
   * Ref: https://kubernetes.io/de/docs/concepts/architecture/nodes/
 
 ### Pod/Pods 
