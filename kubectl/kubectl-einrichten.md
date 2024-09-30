@@ -8,7 +8,6 @@ mkdir .kube
 cd .kube
 cp -a /tmp/config config
 ls -la
-# nano config befüllen 
 # das bekommt ihr aus Eurem Cluster Management Tool 
 ```
 
