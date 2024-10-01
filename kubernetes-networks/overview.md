@@ -3,7 +3,7 @@
 ## CNI 
 
   * Common Network Interface
-  * Feste Definition, wie Container mit Netzwerk-Bibliotheken kommunizieren
+  * Feste Definition, wie Pod  mit Netzwerk-Bibliotheken kommunizieren
 
 ## Docker - Container oder andere 
 
