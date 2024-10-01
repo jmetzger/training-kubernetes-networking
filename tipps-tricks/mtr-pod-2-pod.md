@@ -1,4 +1,6 @@
-# 2 Pods on 2 nodes 
+# my traceroute 
+
+## Setup 
 
 ```
 apiVersion: v1
@@ -25,4 +27,16 @@ spec:
   nodeSelector:
     kubernetes.io/hostname: worker2
 ---
+```
+
+## my traceroute 
+
+```
+kubectl debug -it node/worker1 --image nicolaka/netshoot
+```
+
+```
+mtr <ip-addresse-des-pod-auf-worker2>
+# ohne dns auflösung
+mtr -n <ip-addresse-des-pod-auf-worker2>
 ```
