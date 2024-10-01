@@ -13,7 +13,8 @@
      * [vim support for yaml](vim/vim-yaml.md)
 
   1. Kubernetes Services
-     * [Services -> NodePort](/internals/service/nodeport.md)
+     * [Services -> type: NodePort](/internals/service/nodeport.md)
+     * [Services -> type: LoadBalancer](/internals/service/loadbalancer.md)
     
   1. Kubernetes Praxis API-Objekte
      * [Das Tool kubectl (Devs/Ops) - Spickzettel](/kubectl/spickzettel.md)
