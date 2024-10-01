@@ -43,6 +43,7 @@
      * [Alte manifeste konvertieren mit convert plugin](/kubectl/convert-plugin.md)
      * [Netzwerkverbindung zu pod testen](/tipps-tricks/verbindung-zu-pod-testen.md)
      * [Curl from pod api-server](/kubernetes-advanced/curl-api-server.md)
+     * [mtr (mytraceroute) from pod to pod](/tipps-tricks/mtr-pod-2-pod.md)
 
   1. Kubernetes - Netzwerk (CNI's) / Mesh
      * [Netzwerk Interna](/kubernetes-networks/networking-internal-overview.md)
