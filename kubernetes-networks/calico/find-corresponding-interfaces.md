@@ -38,7 +38,7 @@ ip a | grep -A 5 ^22
 ```
 # Now you are able to determine the firewall rules 
 # you will find fw and tw rules (fw - from workload and tw - to workload)
-iptables -L -v | grep  cali42c2aab93f3
+iptables-legacy -L -v | grep  cali42c2aab93f3
 ```
 
 ```
