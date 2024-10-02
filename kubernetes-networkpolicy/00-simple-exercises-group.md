@@ -46,7 +46,10 @@ kubectl -n policy-demo-$KURZ apply -f .
 ```
 
 ```
-# nano 02-service.yaml
+nano 02-service.yml
+```
+
+```
 apiVersion: v1
 kind: Service
 metadata:
