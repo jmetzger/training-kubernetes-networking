@@ -109,7 +109,7 @@ kubectl auth can-i get deployment -n default --as system:serviceaccount:default:
 ### Mini-Schritt 1: kubeconfig setzen 
 
 ```
-kubectl config set-context training-ctx --cluster microk8s-cluster --user training
+kubectl config set-context training-ctx --cluster kubernetes --user training
 
 # extract name of the token from here 
 
