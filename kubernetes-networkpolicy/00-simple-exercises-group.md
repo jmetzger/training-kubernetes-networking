@@ -120,7 +120,10 @@ wget -q nginx -O -
 ## Schritt 4: Zugriff erlauben von pods mit dem Label run=access (alle mit run gestarteten pods mit namen access haben dieses label per default)
 
 ```
-# nano 04-access-nginx.yaml 
+nano 04-access-nginx.yaml 
+```
+
+```
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
