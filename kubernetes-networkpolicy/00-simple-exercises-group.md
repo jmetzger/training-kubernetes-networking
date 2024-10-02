@@ -16,7 +16,10 @@ cd np
 ```
 
 ```
-# nano 01-deployment.yml
+nano 01-deployment.yml
+```
+
+```
 apiVersion: apps/v1
 kind: Deployment
 metadata:
