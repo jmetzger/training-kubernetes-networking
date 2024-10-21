@@ -15,11 +15,13 @@
   1. Kubernetes - Projekt Applikation 
      * [Bauen einer Applikation mit Resource Objekten](bauen-einer-webanwendung.md)
      * [Anatomie einer Applikation](kubectl-examples/anatomie-einer-applikation.md)
-
+    
+  1. Kubernetes - Projekt Applikation - Step by Step (Netzwerk)
+     * [kubectl/manifest/deployments](/kubectl-examples/03-nginx-deployment.md)
+     
   1. Kubernetes Praxis API-Objekte
      * [Das Tool kubectl (Devs/Ops) - Spickzettel](/kubectl/spickzettel.md)
      * [kubectl example with run](/kubectl/run-with-example.md)
-     * [kubectl/manifest/deployments](/kubectl-examples/03-nginx-deployment.md)
      * [Services - Aufbau](/kubernetes/services-aufbau.md)
      * [Service Typen / Ebenen - Schaubild](service-ebenen.md)
      * [kubectl/manifest/service](/kubectl-examples/03b-service.md)
