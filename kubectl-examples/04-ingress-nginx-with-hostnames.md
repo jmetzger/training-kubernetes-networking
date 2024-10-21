@@ -164,7 +164,9 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: "app12.lab.t3isp.de"
+# <deinname> ersetzen durch dienen namen, z.B. jochen
+# jochen.lab1.t3isp.de
+  - host: "<deinname>.lab1.t3isp.de"
     http:
       paths:
         - path: /apple
