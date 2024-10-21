@@ -144,7 +144,7 @@ kubectl explain --api-version=networking.k8s.io/v1 ingress.spec.rules.http.paths
 # now we can adjust our config 
 ```
 
-## Solution
+## Direct Solution
 
 ```
 apiVersion: networking.k8s.io/v1
