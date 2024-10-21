@@ -15,21 +15,28 @@
   1. Kubernetes - Projekt Applikation 
      * [Bauen einer Applikation mit Resource Objekten](bauen-einer-webanwendung.md)
      * [Anatomie einer Applikation](kubectl-examples/anatomie-einer-applikation.md)
+
+  1. Kubernetes - IngressController
+     * [Ingress Controller installieren mit helm](/digitalocean/ingress-auf-digitalocean-mit-helm.md)
     
   1. Kubernetes - Projekt Applikation - Step by Step (Netzwerk)
      * [kubectl/manifest/deployments](/kubectl-examples/03-nginx-deployment.md)
-    
+     * [kubectl/manifest/service](/kubectl-examples/03b-service.md)    
      * [DNS - Resolution - Services](kubernetes-networks/dns-resolution-services.md)
+     * [Beispiel Ingress mit Hostnamen](/kubectl-examples/04-ingress-nginx-with-hostnames.md)
+       
+  1. Kubernetes Services (Schaubilder)
+     * [Services -> type: NodePort](/internals/service/nodeport.md)
+     * [Services -> type: LoadBalancer](/internals/service/loadbalancer.md)   
      
   1. Kubernetes Praxis API-Objekte
      * [Das Tool kubectl (Devs/Ops) - Spickzettel](/kubectl/spickzettel.md)
      * [kubectl example with run](/kubectl/run-with-example.md)
      * [Services - Aufbau](/kubernetes/services-aufbau.md)
      * [Service Typen / Ebenen - Schaubild](service-ebenen.md)
-     * [kubectl/manifest/service](/kubectl-examples/03b-service.md)
+
      * DaemonSets (Devs/Ops)
      * [Hintergrund Ingress](/kubernetes/ingress.md)
-     * [Ingress Controller auf Digitalocean (doks) mit helm installieren](/digitalocean/ingress-auf-digitalocean-mit-helm.md)
      * [Documentation for default ingress nginx](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/)
      * [Beispiel Ingress](/kubectl-examples/04-ingress-nginx.md)
      * [Install Ingress On Digitalocean DOKS](/digitalocean/install-ingress-helm.md)
@@ -39,10 +46,6 @@
      * [ConfigMap Example](/kubectl-examples/06-configmap.md)
      * [Configmap MariaDB - Example](kubectl-examples/06a-configmap-mariadb.md)
      * [Configmap MariaDB my.cnf](kubectl-examples/06b-mariadb-configmap-configfile.md)
-
-  1. Kubernetes Services
-     * [Services -> type: NodePort](/internals/service/nodeport.md)
-     * [Services -> type: LoadBalancer](/internals/service/loadbalancer.md)
 
   1. Kubernetes - Wartung / Debugging
      * [kubectl drain/uncordon](/kubectl/uncordon-drain.md)
@@ -116,7 +119,6 @@
      * [Documentation for default ingress nginx](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/)
      * [Beispiel Ingress](/kubectl-examples/04-ingress-nginx.md)
      * [Install Ingress On Digitalocean DOKS](/digitalocean/install-ingress-helm.md)
-     * [Beispiel mit Hostnamen](/kubectl-examples/04-ingress-nginx-with-hostnames.md)
      * [Achtung: Ingress mit Helm - annotations](/ingress-mit-helm-class-achtung.md)
      * [Permanente Weiterleitung mit Ingress](/kubectl-examples/05-ingress-permanent-redirect.md)
      * [ConfigMap Example](/kubectl-examples/06-configmap.md)
