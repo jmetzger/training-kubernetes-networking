@@ -185,6 +185,7 @@ spec:
 
 ```
 kubectl apply -f .
+kubectl describe ingress example-ingress 
 ```
 
 ```
