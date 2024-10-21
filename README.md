@@ -18,6 +18,8 @@
     
   1. Kubernetes - Projekt Applikation - Step by Step (Netzwerk)
      * [kubectl/manifest/deployments](/kubectl-examples/03-nginx-deployment.md)
+    
+     * [DNS - Resolution - Services](kubernetes-networks/dns-resolution-services.md)
      
   1. Kubernetes Praxis API-Objekte
      * [Das Tool kubectl (Devs/Ops) - Spickzettel](/kubectl/spickzettel.md)
