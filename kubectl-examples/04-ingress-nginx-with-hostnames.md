@@ -147,6 +147,10 @@ kubectl explain --api-version=networking.k8s.io/v1 ingress.spec.rules.http.paths
 ## Direct Solution
 
 ```
+nano ingress.yaml
+```
+
+```
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -177,4 +181,16 @@ spec:
               name: banana-service
               port:
                 number: 80                
+```
+
+```
+kubectl apply -f .
+```
+
+```
+# Testen im browser oder curl mit hostnamen
+# Variante 1:
+# z.B.
+curl http://jochen.lab1.t3isp.de/apple
+curl http://jochen.lab1.t3isp.de/banana
 ```
