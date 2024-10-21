@@ -70,6 +70,9 @@ kubectl get pod -o wide
 # Zeige labels der Pods
 kubectl get pods --show-labels 
 
+# Pods aus allen Namespaces anzeigen
+kubectl get pods -A
+
 # Zeige pods mit einem bestimmten label 
 kubectl get pods -l app=nginx 
 
