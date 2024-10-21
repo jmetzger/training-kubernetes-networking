@@ -53,6 +53,9 @@
      * [Debugging mit tcpdump - Beispiel Ingress](debugging/tcpdump.md)
      * [Debugging mit tcpdump - Beispiel NodePort](debugging/tcpdump-nodeport.md)
 
+  1. Kubernetes - Netzwork - Interna
+     [Kubernetes CIDR](kubernetes-networks/kubernetes-cidrs.md)
+
   1. Kubernetes - Netzwerk (CNI's) / Mesh
      * [Netzwerk Interna](/kubernetes-networks/networking-internal-overview.md)
      * [Kubernetes CIDR](kubernetes-networks/kubernetes-cidrs.md)
