@@ -33,7 +33,7 @@ spec:
   selector:
     matchLabels:
       app: nginx
-  replicas: 9 # tells deployment to run 2 pods matching the template
+  replicas: 1 
   template:
     metadata:
       labels:
