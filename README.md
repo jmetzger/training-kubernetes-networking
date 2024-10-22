@@ -52,7 +52,7 @@
   1. Kubernetes - Netzwerk (CNI's) / Mesh
      * [Netzwerk Interna](/kubernetes-networks/networking-internal-overview.md)
      * [Wirkweise cni](/kubernetes/internals/cni.md)
-     * [Übersicht Netzwerke](/kubernetes-networks/overview.md)
+     * [Übersicht Netzwerke (cni-provider)](/kubernetes-networks/overview.md)
      * [Calico/Cilium - nginx example NetworkPolicy](kubernetes-networkpolicy/00-simple-exercises-group.md)
      * [Beispiele Ingress Egress NetworkPolicy](kubernetes-networks/examples-ingress-egress.md)
      * [Kubernetes Ports/Protokolle](https://kubernetes.io/docs/reference/networking/ports-and-protocols/)
