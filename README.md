@@ -91,7 +91,6 @@
 
   1. Kubernetes - RBAC
      * [Nutzer einrichten microk8s ab kubernetes 1.25](/kubernetes/rbac-create-user-kubernetes-1-25.md)
-     * [Tipps&Tricks zu Deploymnent - Rollout](/kubectl/rollout.md)
 
   1. Kubernetes Advanced
      * [Curl api-server kubernetes aus pod heraus](kubernetes-advanced/curl-api-server.md)
@@ -165,7 +164,7 @@
 
   1. kubectl
      * [Tipps&Tricks zu Deploymnent - Rollout](/kubectl/rollout.md)
-
+  
   1. Kubernetes - Monitoring (microk8s und vanilla)
      * [metrics-server aktivieren (microk8s und vanilla)](/microk8s/metrics-server.md)
 
