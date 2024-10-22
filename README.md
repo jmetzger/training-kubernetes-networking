@@ -66,6 +66,7 @@
   1. Kubernetes calico (CNI-Plugin) - Part 2 Internal 
      * [Find corresponding networks - from pod to host](kubernetes-networks/calico/find-corresponding-interfaces.md)
      * [Internals - Pod to Pod - Communication on Worker3 (node))](kubernetes-networks/calico/pod-2-pod-on-node-internals.md)
+     * [Debug pod-2-pod on worker1](kubernetes-networks/calico/debug/pod-2-pod-on-worker1.md)
      * [Internals - Inter-Pod - Communication (worker 3 -> worker 1](kubernetes-networks/calico/routing-modes/vxlan/internals-routing-inter-pod-communication.md)
   
   1. Kubernetes calico (CNI-Plugin)
