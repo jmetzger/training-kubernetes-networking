@@ -12,11 +12,23 @@ kubectl get nodes --show-labels
 ## 1. Deployment auf worker1
 
 ```
+cd
+mkdir -p manifests
+cd manifests
+mkdir calicotest
+cd calicotest
+```
+
+```
+nano 01-deploy.yml
+```
+
+```
 # nginx-deployment 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deployment
+  name: nginx-deployment-calicotest
 spec:
   selector:
     matchLabels:
@@ -54,4 +66,11 @@ spec:
     machine=worker1
 ```
 
+```
+nano 02-pod.yaml
+```
+
+```
+kubectl apply -f .
+```
 
