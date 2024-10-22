@@ -42,9 +42,16 @@ ip a | grep -A 5 ^22
 ## Get information with calicoctl (installed on client) 
 
 ```
+# für den namespace defaut bzw. den konfigurierten 
 calicoctl get wep
+calicoctl get workloadendpoints
+
+# für alle namespaces
+calicoctl get wep -A 
 ```
 
+
+## Firewall - Regeln 
 
 ```
 # Now you are able to determine the firewall rules 
