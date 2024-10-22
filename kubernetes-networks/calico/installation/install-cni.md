@@ -1,4 +1,4 @@
-# Install CNI 
+# Install Calico - CNI 
 
 ## Walkthrough 
 
