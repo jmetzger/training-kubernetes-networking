@@ -1,6 +1,6 @@
 # Find corresponding interfaces 
 
-## Walkthrough  
+## Walkthrough  (without calicoctl)
 
 ```
 # Step 1: create pod 
@@ -39,6 +39,11 @@ ip a | grep -A 5 ^22
        valid_lft forever preferred_lft forever
 ```
 
+## Get information with calicoctl (installed on client) 
+
+```
+calicoctl get wep
+```
 
 
 ```
