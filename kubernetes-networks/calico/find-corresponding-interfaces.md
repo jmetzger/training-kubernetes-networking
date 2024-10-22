@@ -35,6 +35,8 @@ ip a | grep -A 5 ^22
        valid_lft forever preferred_lft forever
 ```
 
+
+
 ```
 # Now you are able to determine the firewall rules 
 # you will find fw and tw rules (fw - from workload and tw - to workload)
