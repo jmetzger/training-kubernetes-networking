@@ -50,6 +50,10 @@ spec:
 
 ## 2. noch ein Pod auf worker1 
 
+```
+nano 02-pod.yaml
+```
+
 ``` 
 apiVersion: v1
 kind: Pod
@@ -66,9 +70,7 @@ spec:
     machine=worker1
 ```
 
-```
-nano 02-pod.yaml
-```
+
 
 ```
 kubectl apply -f .
