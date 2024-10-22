@@ -45,7 +45,7 @@ spec:
         ports:
         - containerPort: 80
       nodeSelector:
-        machine: worker1
+        machine: worker2
 ```
 
 ## 2. noch ein Pod auf worker1 
@@ -79,8 +79,34 @@ kubectl apply -f .
 
 ```
 calicoctl get wep
-# Example 
-# nginx-calicotest (192.168.235.141) -> nginx.....z6rmp (192.168.235.138)
-# Now grep for the destination 
-route -n | grep 192.168.235.138 
 ```
+
+## 4. Clarity
+
+```
+# Research:
+# Example 
+# nginx-calicotest - worker1 (192.168.235.141) -> nginx.....z6rmp - worker2 (192.168.189.68)
+```
+
+## 5. Travel starts with worker1 
+
+```
+kubectl debug -it node/worker1 --image=busybox
+```
+
+```
+route -n | grep 192.168.189
+```
+
+## 6. Travel starts with worker2 
+
+```
+kubectl debug -it node/worker2 --image=busybox
+```
+
+```
+route -n | grep 192.168.189.68
+```
+
+![image](https://github.com/user-attachments/assets/7f66c7d0-a1c7-46c4-a863-e7434ad3bbaf)
