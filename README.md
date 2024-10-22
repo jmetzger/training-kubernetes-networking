@@ -59,10 +59,15 @@
      * [Kubernetes Ports/Protokolle](https://kubernetes.io/docs/reference/networking/ports-and-protocols/)
      * [IPV4/IPV6 Dualstack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/)
 
+  1. Kubernetes calico (CNI-Plugin) - Part 1 Installation
+     * [calico cni installieren](kubernetes-networks/calico/installation/install-cni.md)
+     * [Install calicoctl in pod](/kubernetes-networks/calicoctl-installation.md)
+    
+  1. Kubernetes calico (CNI-Plugin) - Part 2 Internal 
+
   1. Kubernetes calico (CNI-Plugin)
      * [calicoctl Cheatsheet](kubernetes-networks/calico/01-cheatsheet-calicoctl.md)
      * [Welcher Routing-Mode wird im aktuellen Cluster verwendet](/kubernetes-networks/calico/which-routing-mode-is-used.md)
-     * [Install calicoctl in pod](/kubernetes-networks/calicoctl-installation.md)
      * [Wann calicoctl (Stand 2024/01 calico 3.27)](calico/wann-calicoctl.md)
      * [Find corresponding networks](kubernetes-networks/calico/find-corresponding-interfaces.md)
      * [Calico Logging Firewall Rules](kubernetes-networks/calico/logging-policy.md)
