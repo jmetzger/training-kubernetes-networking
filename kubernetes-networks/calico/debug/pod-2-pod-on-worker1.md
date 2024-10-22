@@ -3,7 +3,7 @@
 ## Walkthrough 
 
 ```
-# leave n3 as is 
+# leave worker3 as is 
 kubectl label nodes worker1 machine=worker1
 kubectl label nodes worker2 machine=worker2
 kubectl get nodes --show-labels
