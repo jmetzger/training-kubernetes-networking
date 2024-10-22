@@ -51,7 +51,6 @@
 
   1. Kubernetes - Netzwerk (CNI's) / Mesh
      * [Netzwerk Interna](/kubernetes-networks/networking-internal-overview.md)
-     * [Kubernetes CIDR](kubernetes-networks/kubernetes-cidrs.md)
      * [Wirkweise cni](/kubernetes/internals/cni.md)
      * [Übersicht Netzwerke](/kubernetes-networks/overview.md)
      * [Calico/Cilium - nginx example NetworkPolicy](kubernetes-networkpolicy/00-simple-exercises-group.md)
@@ -64,17 +63,17 @@
      * [Install calicoctl in pod](/kubernetes-networks/calicoctl-installation.md)
     
   1. Kubernetes calico (CNI-Plugin) - Part 2 Internal 
-
+     * [Find corresponding networks - from pod to host](kubernetes-networks/calico/find-corresponding-interfaces.md)
+     * [Internals - Pod to Pod - Communication on Worker3 (node))](kubernetes-networks/calico/pod-2-pod-on-node-internals.md)
+     * [Internals - Inter-Pod - Communication (worker 3 -> worker 1](kubernetes-networks/calico/routing-modes/vxlan/internals-routing-inter-pod-communication.md)
+  
   1. Kubernetes calico (CNI-Plugin)
      * [calicoctl Cheatsheet](kubernetes-networks/calico/01-cheatsheet-calicoctl.md)
      * [Welcher Routing-Mode wird im aktuellen Cluster verwendet](/kubernetes-networks/calico/which-routing-mode-is-used.md)
      * [Wann calicoctl (Stand 2024/01 calico 3.27)](calico/wann-calicoctl.md)
-     * [Find corresponding networks](kubernetes-networks/calico/find-corresponding-interfaces.md)
      * [Calico Logging Firewall Rules](kubernetes-networks/calico/logging-policy.md)
      * [Calico Default Routing Mode BGP & vxlancrossnet](kubernetes-networks/calico/routing-modes/bgp-vxlancrossnet.md)
-     * [Internals - Pod to Pod - Communication on Worker3 (node))](kubernetes-networks/calico/pod-2-pod-on-node-internals.md)
-     * [Internals - Inter-Pod - Communication (worker 3 -> worker 1](kubernetes-networks/calico/routing-modes/vxlan/internals-routing-inter-pod-communication.md)
-  
+    
   1. Kubernetes multus (Meta-CNI - Plugin)
      * [Multus Überblick](kubernetes-networks/multus/overview.md)
      * [sr-iov mit multus](kubernetes-networks/multus/sr-iov.md)
