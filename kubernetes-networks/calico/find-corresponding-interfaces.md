@@ -13,7 +13,11 @@ kubectl debug -it nginx-master --image=busybox
 
 ```
 # now within debug pod found out interface 
- ip a | grep @
+ip a | grep @
+```
+
+```
+# Ausgabe 
 3: eth0@if22: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue
 ```
 
