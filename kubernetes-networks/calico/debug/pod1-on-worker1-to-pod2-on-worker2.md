@@ -81,7 +81,7 @@ kubectl apply -f .
 calicoctl get wep
 ```
 
-## 4. Clarity
+## 4. Was wollen wir erreichen ?
 
 ```
 # Research:
