@@ -1,9 +1,5 @@
 # Metallb 
 
-## Attention 
-
-  * On digitalocean, we will probably run into problems, that it is not working properly 
-
 ## General 
 
   * Supports bgp and arp 
