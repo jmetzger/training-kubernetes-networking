@@ -103,7 +103,6 @@
 
   1. Kubernetes Load Balancer / metallb (on premise)
      * [Kubernetes Load Balancer](metallb.md)
-     * [Kubernetes Load Balancer new version for IpAdresses - object](loadbalancer/metallb.md)
        
   1. Kubernetes API Reference
      * [API-Reference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.29/)
