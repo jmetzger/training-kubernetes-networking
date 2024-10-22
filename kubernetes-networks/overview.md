@@ -129,7 +129,7 @@ Typha maintains a single datastore connection on behalf of all of its clients li
 
 ### Vorteile 
 
-  * ISTIO integrierbar (Mesh - Netz) 
+  * ISTIO integrierbar (Service Mesh) 
   * Performance etwas besser als Flannel (weil keine Encapsulation)
 
 ### Referenz 
