@@ -67,7 +67,7 @@ spec:
     image: nginx
     imagePullPolicy: IfNotPresent
   nodeSelector:
-    machine=worker1
+    machine: worker1
 ```
 
 
