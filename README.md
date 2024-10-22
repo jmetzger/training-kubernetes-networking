@@ -60,6 +60,7 @@
 
   1. Kubernetes calico (CNI-Plugin) - Part 1 Installation
      * [calico cni installieren](kubernetes-networks/calico/installation/install-cni.md)
+     * [calicoctl auf client installieren](kubernetes-networks/calico/installation/install-calicoctl-on-client.md)
      * [Install calicoctl in pod](/kubernetes-networks/calicoctl-installation.md)
     
   1. Kubernetes calico (CNI-Plugin) - Part 2 Internal 
@@ -71,7 +72,6 @@
      * [calicoctl Cheatsheet](kubernetes-networks/calico/01-cheatsheet-calicoctl.md)
      * [Welcher Routing-Mode wird im aktuellen Cluster verwendet](/kubernetes-networks/calico/which-routing-mode-is-used.md)
      * [Wann calicoctl (Stand 2024/01 calico 3.27)](calico/wann-calicoctl.md)
-     * [Calico Logging Firewall Rules](kubernetes-networks/calico/logging-policy.md)
      * [Calico Default Routing Mode BGP & vxlancrossnet](kubernetes-networks/calico/routing-modes/bgp-vxlancrossnet.md)
     
   1. Kubernetes multus (Meta-CNI - Plugin)
@@ -86,6 +86,7 @@
 
   1. Calico NetworkPolicy
      * [Protecting Services](kubernetes-networkpolicy/calico/02-example-protecting-services.md)
+     * [Calico Logging Firewall Rules](kubernetes-networks/calico/logging-policy.md)
      * [Exercise calico Network Policy](kubernetes-networkpolicy/calico/01-exercise-calico.md)
 
   1. Helm (Kubernetes Paketmanager)
