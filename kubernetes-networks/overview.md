@@ -1,4 +1,4 @@
-# Kubernetes Netzwerk (CNI) 
+# Kubernetes Netzwerk (CNI-Provider) 
 
 ## CNI 
 
