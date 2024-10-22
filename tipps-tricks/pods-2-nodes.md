@@ -4,12 +4,12 @@
 
 ```
 # leave n3 as is 
-kubectl label nodes n7 rechenzentrum=rz1
-kubectl label nodes n17 rechenzentrum=rz2
-kubectl label nodes n27 rechenzentrum=rz2
-
+kubectl label nodes worker1 machine=worker1
+kubectl label nodes worker2 machine=worker2
 kubectl get nodes --show-labels
 ```
+
+## 1. Deployment auf worker1
 
 ```
 # nginx-deployment 
@@ -33,13 +33,16 @@ spec:
         ports:
         - containerPort: 80
       nodeSelector:
-        rechenzentrum: rz2
+        machine: worker1
+```
 
-# Let's rewrite that to deployment 
+## 2. noch ein Pod auf worker1 
+
+``` 
 apiVersion: v1
 kind: Pod
 metadata:
-  name: nginx
+  name: nginx-calicotest
   labels:
     env: test
 spec:
@@ -48,12 +51,7 @@ spec:
     image: nginx
     imagePullPolicy: IfNotPresent
   nodeSelector:
-    rechenzentrum=rz2
-
-
-
+    machine=worker1
 ```
 
-## Ref:
 
-  * https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
