@@ -136,13 +136,13 @@ kubectl config get-contexts
 ```
 
 ```
-CURRENT   NAME           CLUSTER            AUTHINFO    NAMESPACE
-          microk8s       microk8s-cluster   admin2
-*         training-ctx   microk8s-cluster   training2
+CURRENT   NAME                              CLUSTER            AUTHINFO          NAMESPACE
+          kubernetes-admin@kubernetes       kubernetes         kubernetes-admin
+*         training-ctx                      kubernetes         training
 ```
 
 ```
-kubectl config use-context microk8s  
+kubectl config use-context kubernetes-admin@kubernetes   
 ```
 
 
