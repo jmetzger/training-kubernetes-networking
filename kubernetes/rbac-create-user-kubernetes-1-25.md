@@ -52,9 +52,11 @@ kubectl apply -f .
 ### Mini-Schritt 2: ClusterRolle festlegen - Dies gilt für alle namespaces, muss aber noch zugewiesen werden
 
 ```
-## Bevor sie zugewiesen ist, funktioniert sie nicht - da sie keinem Nutzer zugewiesen ist 
+nano 03-pods-clusterrole.yml
+```
 
-# vi 03-pods-clusterrole.yml 
+```
+## Bevor sie zugewiesen ist, funktioniert sie nicht - da sie keinem Nutzer zugewiesen ist 
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -66,7 +68,7 @@ rules:
 ```
 
 ```
-kubectl apply -f 03-pods-clusterrole.yml 
+kubectl apply -f . 
 ```
 
 ### Mini-Schritt 3: Die ClusterRolle den entsprechenden Nutzern über RoleBinding zu ordnen 
