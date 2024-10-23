@@ -57,6 +57,7 @@
      * [Beispiele Ingress Egress NetworkPolicy](kubernetes-networks/examples-ingress-egress.md)
      * [Kubernetes Ports/Protokolle](https://kubernetes.io/docs/reference/networking/ports-and-protocols/)
      * [IPV4/IPV6 Dualstack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/)
+     * [Gute Präsentation zu cni](https://archive.fosdem.org/2023/schedule/event/network_cni_unleashed/attachments/slides/5713/export/events/attachments/network_cni_unleashed/slides/5713/cni_unleashed.pdf)
 
   1. Kubernetes calico (CNI-Plugin) - Part 1 Installation
      * [calico cni installieren](kubernetes-networks/calico/installation/install-cni.md)
