@@ -3,6 +3,19 @@
 ## Setup 
 
 ```
+cd
+mkdir -p manifests
+cd manifests
+mkdir -p traceroute
+cd traceroute
+```
+
+```
+nano pods.yaml
+```
+
+
+```
 apiVersion: v1
 kind: Pod
 metadata:
@@ -39,4 +52,5 @@ kubectl debug -it node/worker1 --image nicolaka/netshoot
 mtr <ip-addresse-des-pod-auf-worker2>
 # ohne dns auflösung
 mtr -n <ip-addresse-des-pod-auf-worker2>
+```
 ```
