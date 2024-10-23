@@ -42,6 +42,10 @@ spec:
 ---
 ```
 
+```
+kubectl apply -f .
+```
+
 ## my traceroute 
 
 ```
