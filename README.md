@@ -102,6 +102,7 @@
 
   1. Kubernetes - RBAC
      * [Nutzer einrichten microk8s ab kubernetes 1.25](/kubernetes/rbac-create-user-kubernetes-1-25.md)
+     * [Besser: Nutzer einrichten mit Zertifikat](kubernetes/rbac/create-kubeconfig-with-cert.md)
 
   1. Kubernetes Advanced
      * [Curl api-server kubernetes aus pod heraus](kubernetes-advanced/curl-api-server.md)
