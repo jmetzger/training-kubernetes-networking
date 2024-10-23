@@ -37,8 +37,6 @@ kubectl apply -f .
 ## Schritt 2: Daten sammeln 
 
 ```
-# Auf welchem Worker läuft das ?
-kubectl get pods -o wide 
 kubectl get svc svc-nginx 
 # Beispiel -> 32682 
 # Worker öffentliche IP rausfinden
