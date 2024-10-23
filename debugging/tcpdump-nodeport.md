@@ -1,45 +1,76 @@
 # tcpdump - nodeport example 
 
+## Schritt 1: Ausgangsbasis 
+
 ```
-## Übung 3.1  tcpdump 
+# Basis 03-deploy
+cd
+cd manifests
+cd 03-deploy
+ls -la 
+```
 
-0. export KUBECONFIG=~/.kube/config.calico
+## Schritt 2: Wir passen den Service an und Anzahl der Replicas in Deploy 
 
-1.  manifest/03-deploy 
+```
+nano 02-svc.yml
+```
 
-02-service.yaml 
--> type: NodePort
+```
+# Ändern Zeile mit type:
+# Ändern in type: NodePort 
+```
 
-deploy.yaml 
-replicas: 1 
+```
+nano deploy.yml
+```
 
-2. kubectl apply -f .
+```
+# Ändern Zeile mit replicas:
+# Ändern in replicas: 1
+```
 
-3.  NodePort rausfinden
+```
+kubectl apply -f .
+```
 
+## Schritt 2: Daten sammeln 
+
+```
+# Auf welchem Worker läuft das ?
+kubectl get pods -o wide 
 kubectl get svc svc-nginx 
--> 32682 
+# Beispiel -> 32682 
+# Worker öffentliche IP rausfinden
+kubectl get node -o wide | grep worker1
+# worker1 -> 164.92.131.128
+```
 
-worker1 -> 164.92.131.128
+## Schritt 3: 2. Session öffnen 
 
-4. bashrc richtig setzen 
-
- echo "export KUBECONFIG=~/.kube/config.calico" >> ~/.bashrc
-
-5. Zweite ssh-session 
-
-kubectl cluster-info # -> passt das ?
-
+```
 # ein debug-pod auf worker1 starten 
 kubectl debug -it node/worker1 --image nicolaka/netshoot 
-.# im pod 
+.# im pod tcpdump auf port von Schritt 2
 tcdump -i eth0 port 32682  
+```
 
-6. im browser addresse eingeben 
-http://164.92.131.128:32682
+## Schritt 4: 1. Session 
 
-7. in der 1. ssh session 
+```
+# while kontinuierlich 
+curl http://164.92.131.128:32682
+```
 
+## Schritt 5: 2. Session ausgabe tcpdump
+
+
+
+
+## Optional: Schritt 6
+
+```
+Welcher Pod von nginx -> daneben einen debug container starten
 kubectl get pods 
 kubectl debug -it nginx-deployment-5948f7484f-sbq9v --image nicolaka/netshoot 
 ```
