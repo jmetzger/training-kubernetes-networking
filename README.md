@@ -19,6 +19,7 @@
   1. Kubernetes - IngressController
      * [Vom Browser über den Ingress bis zum Pod - Schaubild](/kubernetes/ingress/schaubild.md)
      * [Ingress Controller installieren mit helm](/digitalocean/ingress-auf-digitalocean-mit-helm.md)
+     * [Wie funktioniert das Reload und Endpunkte](https://kubernetes.github.io/ingress-nginx/how-it-works/#nginx-configuration)
     
   1. Kubernetes - Projekt Applikation - Step by Step (Netzwerk)
      * [kubectl/manifest/deployments](/kubectl-examples/03-nginx-deployment.md)
