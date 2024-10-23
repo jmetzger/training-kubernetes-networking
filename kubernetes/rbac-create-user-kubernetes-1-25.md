@@ -39,6 +39,7 @@ kind: Secret
 type: kubernetes.io/service-account-token
 metadata:
   name: trainingtoken
+  namespace: default
   annotations:
     kubernetes.io/service-account.name: training
 ```
