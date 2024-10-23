@@ -118,6 +118,7 @@
   1. Kubernetes Istio
      * [Why istio and benefits](istio/overview/benefits-of-a-service-mesh.md)
      * [Overview sidecar pattern](/istio/overview/overview-classic-sidecar.md)
+     * [Ambient Mode istio](/istio/overview/ambient-mode.md)
      * [Istio vs. Ingress Überblick](istio/00-istio-vs-ingress.md)
      * [Istio installieren und Addons bereitsstellen](istio/01-install-and-addons.md)
      * [Istion Überblick - egress und ingress - gateway](/istio/02-overview-ingress-egress-gateway.md)
