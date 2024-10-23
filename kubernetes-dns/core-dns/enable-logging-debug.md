@@ -103,3 +103,11 @@ kubectl -n kube-system debug -it coredns-7c65d6cfc9-mqpn8 --custom=debug.json --
 # and it is there - no need to restart pod 
 cat /etc/coredns/Corefile
 ```
+
+
+## Oder rollout restart
+
+```
+kubectl rollout restart deploy coredns
+```
+
