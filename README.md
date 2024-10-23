@@ -124,6 +124,7 @@
      * [Istio - Deployment of simple application](istio/03-deploy-first-app.md)
      * [Istio - Grafana Dashboard](istio/04-grafana-dashboard.md)
      * [Mesh / istio](sammlung-istio.md)
+     * [Benchmarks istio ambient,sidecar und baseline](istio/overview/performance-comparison-baseline-sidecar-ambient.md)
 
   1. Kubernetes Deployment Scenarios
      * [Deployment green/blue,canary,rolling update](/kubernetes/deployment-strategies-en.md)
