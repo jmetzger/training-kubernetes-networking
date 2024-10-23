@@ -78,8 +78,7 @@ kubectl run -it --rm podtest --image=busybox
 ```
 
 ```
-# wget -O - http://my-nginx.default.svc.cluster.local  
-while [ true ]; do wget -O - http://my-nginx.default.svc.cluster.local; done  
+while [ true ]; do wget -O - http://my-nginx.default.svc.cluster.local; sleep 1; done  
 ```
 
 
