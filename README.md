@@ -70,11 +70,14 @@
      * [Debug pod-2-pod on worker1](kubernetes-networks/calico/debug/pod-2-pod-on-worker1.md)
      * [Internals - Inter-Pod - Communication (worker 3 -> worker 1](kubernetes-networks/calico/routing-modes/vxlan/internals-routing-inter-pod-communication.md)
   
-  1. Kubernetes calico (CNI-Plugin)
+  1. Kubernetes calico (CNI-Plugin) - Part 3 
      * [calicoctl Cheatsheet](kubernetes-networks/calico/01-cheatsheet-calicoctl.md)
      * [Welcher Routing-Mode wird im aktuellen Cluster verwendet](/kubernetes-networks/calico/which-routing-mode-is-used.md)
      * [Wann calicoctl (Stand 2024/01 calico 3.27)](calico/wann-calicoctl.md)
      * [Calico Default Routing Mode BGP & vxlancrossnet](kubernetes-networks/calico/routing-modes/bgp-vxlancrossnet.md)
+
+  1. Kubernetes calico (CNI-Plugin) - Part 4 -encryption
+     * [calico and wirguard](kubernetes-networks/calico/wireguard/overview.md)
     
   1. Kubernetes multus (Meta-CNI - Plugin)
      * [Multus Überblick](kubernetes-networks/multus/overview.md)
