@@ -1,13 +1,5 @@
 # RBAC - Create user for kubeconfig with restricted permissions 
 
-## Enable RBAC (nur in microk8s) 
-
-```
-# This is important, if not enable every user on the system is allowed to do everything 
-# do this on one of the nodes 
-microk8s enable rbac 
-```
-
 ## Schritt 1: Nutzer-Account auf Server anlegen und secret anlegen / in Client 
 
 ```
