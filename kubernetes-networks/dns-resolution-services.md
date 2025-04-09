@@ -1,5 +1,14 @@
 # DNS Resolution of services 
 
+## What is resolved 
+
+```
+svc-nginx
+svc-nginx.jochen # svc-nginx.<namespace>
+svc-nginx.jochen.svc
+svc-nginx.jochen.svc.cluster.local 
+```
+
 ```
 kubectl run podtest --rm -ti --image busybox
 If you don't see a command prompt, try pressing enter.
