@@ -41,6 +41,6 @@ kubectl apply -f deploy.yml
 ```
 
 ```
-kubectl get -f deploy.yml -o yaml
+# kubectl get -f deploy.yml -o yaml
 kubectl get all 
 ```
