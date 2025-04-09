@@ -61,15 +61,31 @@ spec:
 kubectl apply -f . 
 ```
 
-## Schritt 3:
+## Schritt 3 Endpunkte gefunden ?
 
 ```
 kubectl get svc svc-nginx
 kubectl describe svc svc-nginx
+```
+
+```
 kubectl get endpoints svc-nginx
 kubectl get endpoints svc-nginx -o yaml 
 ```
 
+## Schritt 4 Löschen deployment und prüfen die Endpunkte 
+
+```
+kubectl delete -f deploy.yml
+# Uups Endpunkte sind weg 
+kubectl describe svc svc-nginx 
+```
+
+```
+kubectl apply -f .
+# Endpunkte sind wieder da, aber neue POD-IPs
+kubectl describe svc svc-nginx 
+```
 
 ## Ref.
 
