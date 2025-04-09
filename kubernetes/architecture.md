@@ -2,7 +2,7 @@
 
 ## Schaubild 
 
-![image](https://github.com/user-attachments/assets/04e9ee45-510d-4da4-a788-08e0d158b4b4)
+![image](https://github.com/user-attachments/assets/90847e32-db41-474c-a8dc-6d56ab220023)
 
 ## Komponenten / Grundbegriffe
 
