@@ -19,7 +19,7 @@
 
 ## CNI-Provider 
 
-   * Ein Kubernetes-Cluster braucht immer ein CNI-Provider, sonst funktioniert die Kmmunikation nicht und die Nodes im Cluster stehen auf NotReady 
+   * Ein Kubernetes-Cluster braucht immer ein CNI-Provider, sonst funktioniert die Kommunikation nicht und die Nodes im Cluster stehen auf NotReady 
    * Beispiele: Calico, WeaveNet, Antrea, Cilium, Flannel 
 
 ## IPAM - IP Address Management 
