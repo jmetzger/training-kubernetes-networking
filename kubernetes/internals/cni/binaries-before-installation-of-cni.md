@@ -5,3 +5,5 @@
 ```
 19 Plugins
 ```
+
+![image](https://github.com/user-attachments/assets/d933e3e8-948f-4dca-be30-3ad2ffdefb1e)
