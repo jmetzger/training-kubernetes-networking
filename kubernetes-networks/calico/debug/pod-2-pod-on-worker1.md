@@ -78,9 +78,17 @@ kubectl apply -f .
 ## 3. Find out about cali-interfaces 
 
 ```
+# Ip von ziel rausfinden 
 calicoctl get wep
+```
+
+```
+kubectl debug -it node/worker1 --image=busybox  
+```
+
+```
 # Example 
-# nginx-calicotest (192.168.235.141) -> nginx.....z6rmp (192.168.235.138)
+# nginx-calicotest (192.168.235.141) -> ngin-deployment-calicotest.....z6rmp (192.168.235.138)
 # Now grep for the destination 
 route -n | grep 192.168.235.138 
 ```
