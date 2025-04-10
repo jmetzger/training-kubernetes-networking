@@ -41,4 +41,3 @@ So to summarize:
 
 ---
 
-Let me know if you want to trace the path of a packet from a pod to another pod or the internet — happy to diagram it!
