@@ -1,5 +1,9 @@
 # Kubernetes CIDRs 
 
+## Grafik 
+
+![image](https://github.com/user-attachments/assets/87bb7926-d962-4f71-b8b4-f04b7ab44ec6)
+
 ## Cluster CIDR - IP-Bereich für das gesamte Kubernetes Cluster 
 
 ```
@@ -35,4 +39,5 @@ POD-CIDR: 10.244.1.128/25
 
 ```
 Netzbereich für IP-Adressen der Services
+z.B. 10.109.0.0/16 
 ```
