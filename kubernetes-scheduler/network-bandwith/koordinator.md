@@ -22,13 +22,12 @@ helm install koordinator koordinator/koordinator --namespace koordinator-system 
 
 ### 2. **Enable Load-Aware Scheduling**
 
-Koordinator's **Load-Aware Scheduling** feature allows the scheduler to consider real-time node metrics, including CPU and memory usage, to make informed scheduling decisions. This feature is enabled by default. However, you can customize its behavior by modifying the `koord-scheduler-config` ConfigMap.
+Koordinator's **Load-Aware Scheduling** feature allows the scheduler to consider real-time node metrics, including CPU and memory usage, to make informed scheduling decisions. This feature is enabled by default. However, you can customize its behavior by modifying the `koord-scheduler-config` ConfigMap.
 
-To customize the configuration:
+To customize the configuration:
 
 - Edit the `koord-scheduler-config` ConfigMap:
-
-  
+ 
 ```bash
   kubectl edit configmap koord-scheduler-config -n koordinator-system
   ```
