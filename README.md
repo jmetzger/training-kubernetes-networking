@@ -136,8 +136,9 @@
      * [Service Blue/Green](/kubectl-examples/03c-service-blue-green-nginx.md)
      * [Praxis-Übung A/B Deployment](/kubectl-examples/08-ab-deployment.md)
 
-  1. Kubernetes - Hilfreiche Tools / Networking
+  1. Kubernetes - Hilfreiche Tools / Networking /Debugging
      * [NetworkPolicyEditor](https://editor.networkpolicy.io)
+     * [Debug on node with root-priviliges with kubectl debug](/debug/debug-as-root.md)
 
 ## Backlog
 
