@@ -32,9 +32,8 @@ To customize the configuration:
 ```bash
   kubectl edit configmap koord-scheduler-config -n koordinator-system
   ```
-
 
-- In the `data.koord-scheduler-config` section, you can configure thresholds and weights for resources, influencing how the scheduler balances loads across nodes. For example:
+- In the `data.koord-scheduler-config` section, you can configure thresholds and weights for resources, influencing how the scheduler balances loads across nodes. For example:
 
   
 ```yaml
@@ -58,7 +57,7 @@ To customize the configuration:
           args:
             # Configure thresholds and weights here
   ```
-
+
 
   This configuration enables the `LoadAwareScheduling` plugin and allows you to set specific thresholds and weights. For more detailed information on configuring these parameters, refer to the [Koordinator Load-Aware Scheduling Documentation](https://koordinator.sh/docs/user-manuals/load-aware-scheduling/).
 
@@ -68,23 +67,23 @@ To customize the configuration:
 
 For more granular control, you can set specific load thresholds on individual nodes using annotations. By adding the `scheduling.koordinator.sh/usage-thresholds` annotation to a node, you can define custom utilization thresholds that Koordinator will consider during scheduling.
 
-For example, to set a CPU usage threshold of 80% and a memory usage threshold of 70% on a node:
+For example, to set a CPU usage threshold of 80% and a memory usage threshold of 70% on a node:
 
 
 ```bash
 kubectl annotate node <node-name> scheduling.koordinator.sh/usage-thresholds='{"usageThresholds":{"cpu":80,"memory":70}}'
 ```
-
 
-Replace `<node-name>` with the name of your node. This annotation helps Koordinator make more informed scheduling decisions based on the real-time load of each node. Detailed instructions can be found in the [Koordinator Load-Aware Scheduling Documentation](https://koordinator.sh/docs/user-manuals/load-aware-scheduling/).
+
+Replace `<node-name>` with the name of your node. This annotation helps Koordinator make more informed scheduling decisions based on the real-time load of each node. Detailed instructions can be found in the [Koordinator Load-Aware Scheduling Documentation](https://koordinator.sh/docs/user-manuals/load-aware-scheduling/).
 
 ---
 
 ### 4. **Deploy Pods Using Koordinator's Scheduler**
 
-When deploying your applications, specify `koord-scheduler` as the scheduler in your Pod or Deployment manifests to utilize Koordinator's scheduling capabilities.
+When deploying your applications, specify `koord-scheduler` as the scheduler in your Pod or Deployment manifests to utilize Koordinator's scheduling capabilities.
 
-Here's an example of a Deployment manifest:
+Here's an example of a Deployment manifest:
 
 
 ```yaml
@@ -110,9 +109,9 @@ spec:
             - containerPort: 80
 ```
 
-In this manifest:
+In this manifest:
 
-- The `schedulerName: koord-scheduler` line directs Kubernetes to use Koordinator's scheduler for this Deployment.
-- The rest of the manifest defines a typical Deployment with three replicas of a container named `example-container`.
+- The `schedulerName: koord-scheduler` line directs Kubernetes to use Koordinator's scheduler for this Deployment.
+- The rest of the manifest defines a typical Deployment with three replicas of a container named `example-container`.
 
-By setting the `schedulerName` to `koord-scheduler`, Koordinator will handle the scheduling of these Pods, taking into account network traffic and other factors to optimize performance. For more information on configuring multiple schedulers, refer to the [Kubernetes Documentation](https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/).
+By setting the `schedulerName` to `koord-scheduler`, Koordinator will handle the scheduling of these Pods, taking into account network traffic and other factors to optimize performance. For more information on configuring multiple schedulers, refer to the [Kubernetes Documentation](https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/).
