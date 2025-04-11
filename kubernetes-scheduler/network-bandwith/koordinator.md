@@ -10,7 +10,7 @@ To configure **Koordinator** for **network-aware scheduling** in your Kubernetes
 
 ### 1. **Install Koordinator**
 
-Ensure that Koordinator is installed in your cluster. If it's not already installed, you can add the Koordinator Helm repository and install it using Helm:
+Ensure that Koordinator is installed in your cluster. If it's not already installed, you can add the Koordinator Helm repository and install it using Helm:
 
 
 ```bash
