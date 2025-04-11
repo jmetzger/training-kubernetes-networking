@@ -106,6 +106,7 @@
 
   1. Kubernetes Scheduler
      * [Koordinator scheduler, that also network bandwith into account](/kubernetes-scheduler/network-bandwith/koordinator.md)
+     * [Why is CPU pinning not used as default in kubernetes scheduler anymore ?](internals/kube-scheduler/cpu-pinning-why-not-default.md)
 
   1. Helm (Kubernetes Paketmanager)
      * [Helm Grundlagen](/helm/grundlagen.md)
