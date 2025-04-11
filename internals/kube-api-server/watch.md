@@ -143,3 +143,65 @@ clientset.CoreV1().Pods("").Watch(context.TODO(), metav1.ListOptions{
 ---
 
 Wenn du willst, kann ich dir ein Beispiel-Setup machen, wie du z. B. mit `mitmproxy` oder Envoy den Watch-Traffic in einer Testumgebung sichtbar machst. Oder ein kleines Python-Tool, das einen Watch aufruft und ausgibt. Sag einfach Bescheid!
+
+
+Sehr gute und tiefgehende Frage – du willst’s wirklich wissen! 😄  
+Schauen wir uns an, **welcher private Schlüssel bei der Verschlüsselung des Kubernetes API-Traffics verwendet wird**:
+
+---
+
+## 🔐 **Welcher private Key wird verwendet?**
+
+### 👉 **Der des API Servers selbst**, also:
+> **Der private Schlüssel des TLS-Zertifikats**, mit dem der Kubernetes API Server seine HTTPS-Verbindung absichert.
+
+---
+
+### 🧰 Wo liegt dieser Key?
+
+In einem typischen Kubernetes-Setup (z. B. kubeadm oder Vanilla):
+
+- Zertifikat: `/etc/kubernetes/pki/apiserver.crt`
+- Privater Schlüssel: `/etc/kubernetes/pki/apiserver.key`
+
+Das sieht z. B. so aus:
+
+```bash
+$ ls -l /etc/kubernetes/pki/apiserver.*
+-rw------- 1 root root 1675 apiserver.key
+-rw-r--r-- 1 root root 1363 apiserver.crt
+```
+
+💡 Nur **der API Server** (bzw. Root-User auf dem Host) hat Zugriff auf diesen Key. Er wird verwendet, um TLS-Handshake-Anfragen von Clients zu beantworten und die Verbindung zu verschlüsseln.
+
+---
+
+## 🧪 Kann ich den Traffic entschlüsseln, wenn ich den Key habe?
+
+Ja – mit Tools wie `Wireshark`, `mitmproxy`, `ssldump`, oder `openssl` kannst du den TLS-Traffic **entschlüsseln**, **wenn** du Zugriff auf den Private Key des API Servers hast **und** Perfect Forward Secrecy (PFS) **deaktiviert** ist (was allerdings meist **nicht der Fall** ist – siehe unten).
+
+---
+
+## ⚠️ ABER: Was ist mit **Perfect Forward Secrecy (PFS)**?
+
+### Die meisten Kubernetes API Server verwenden moderne TLS-Cipher wie:
+```
+TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+```
+
+Diese verwenden **Ephemeral Diffie-Hellman (ECDHE)** → bedeutet:
+> Selbst wenn du den privaten Schlüssel **nachträglich** bekommst, kannst du vergangene Verbindungen **nicht entschlüsseln**, weil die Sitzungsschlüssel **flüchtig erzeugt und nicht speicherbar** sind.
+
+🔐 **PFS schützt also effektiv gegen spätere Entschlüsselung**, auch mit Key.
+
+---
+
+## 💡 Fazit
+
+| Frage | Antwort |
+|-------|---------|
+| Wer hat den Key? | Der API Server (Datei: `apiserver.key`) |
+| Womit wird verschlüsselt? | Mit dem TLS-Zertifikat des API Servers |
+| Kann ich damit Traffic entschlüsseln? | Nur in Spezialfällen, wenn kein PFS aktiv ist |
+| Ist PFS aktiv? | In >99 % aller modernen Kubernetes-Setups: **Ja** |
+
