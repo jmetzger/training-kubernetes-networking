@@ -66,4 +66,107 @@ This is not *truly random per pod*, but it’s **automatically distributed** if 
 
 ---
 
-Would you prefer **random selection per pod** at runtime, or would **even distribution** via device plugin be enough? Depending on your goal, I can help you script either.
+
+Awesome! Here's a **ready-made Bash script** that randomly selects a `NetworkAttachmentDefinition` (NAD) from a specific namespace and outputs it in a way your Pod or init container can use.
+
+---
+
+### ✅ What this script does:
+- Lists all NADs in a namespace (with optional prefix filter).
+- Randomly picks one.
+- Writes it to a file or echoes it (depending on how you want to use it).
+
+---
+
+### 📄 `pick-random-nad.sh`
+
+```bash
+#!/bin/bash
+
+# CONFIGURABLE VARIABLES
+NAMESPACE="${NAD_NAMESPACE:-default}"        # Namespace where NADs are defined
+PREFIX="${NAD_PREFIX:-sriov-net-}"           # Filter NADs with a certain prefix
+OUTPUT_FILE="${OUTPUT_FILE:-/tmp/selected_nad}"  # File to store result
+
+# REQUIRE: kubectl installed and available in container
+if ! command -v kubectl &> /dev/null; then
+    echo "kubectl not found in PATH"
+    exit 1
+fi
+
+# Fetch list of matching NADs
+NADS=$(kubectl get network-attachment-definitions -n "$NAMESPACE" -o jsonpath="{.items[*].metadata.name}" | tr ' ' '\n' | grep "^${PREFIX}")
+
+# Check if we found anything
+if [ -z "$NADS" ]; then
+    echo "No NADs found in namespace '$NAMESPACE' with prefix '$PREFIX'"
+    exit 1
+fi
+
+# Pick one at random
+SELECTED_NAD=$(echo "$NADS" | shuf -n1)
+
+echo "Selected NAD: $SELECTED_NAD"
+
+# Save to file or stdout
+echo "$SELECTED_NAD" > "$OUTPUT_FILE"
+```
+
+---
+
+### 🧪 Example Usage in an Init Container (conceptual)
+
+```yaml
+initContainers:
+  - name: pick-nad
+    image: bitnami/kubectl:latest
+    command: ["/bin/bash", "-c"]
+    args:
+      - |
+        chmod +x /scripts/pick-random-nad.sh
+        /scripts/pick-random-nad.sh
+    env:
+      - name: NAD_NAMESPACE
+        value: "default"
+      - name: NAD_PREFIX
+        value: "sriov-net-"
+    volumeMounts:
+      - name: scripts
+        mountPath: /scripts
+      - name: shared
+        mountPath: /nad
+
+containers:
+  - name: main-app
+    image: your-app
+    env:
+      - name: NAD_NAME
+        valueFrom:
+          configMapKeyRef:
+            name: nad-config
+            key: selected_nad  # Or mount shared volume if using file
+    volumeMounts:
+      - name: shared
+        mountPath: /nad
+volumes:
+  - name: scripts
+    configMap:
+      name: pick-nad-script
+  - name: shared
+    emptyDir: {}
+```
+
+---
+
+### 🛡️ Permissions Needed
+Your service account (or init container) needs permission to:
+
+```yaml
+apiGroups: ["k8s.cni.cncf.io"]
+resources: ["network-attachment-definitions"]
+verbs: ["list"]
+```
+
+---
+
+Want a variant that **patches the Pod spec on-the-fly** to inject the selected NAD annotation?
