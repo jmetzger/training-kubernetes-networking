@@ -21,6 +21,7 @@
      * [Vom Browser über den Ingress bis zum Pod - Schaubild](#vom-browser-über-den-ingress-bis-zum-pod---schaubild)
      * [Ingress Controller installieren mit helm](#ingress-controller-installieren-mit-helm)
      * [Wie funktioniert das Reload und Endpunkte](https://kubernetes.github.io/ingress-nginx/how-it-works/#nginx-configuration)
+     * [How many requests per second](https://blog.nginx.org/blog/testing-performance-nginx-ingress-controller-kubernetes)
     
   1. Kubernetes - Projekt Applikation - Step by Step (Netzwerk)
      * [kubectl/manifest/deployments](#kubectlmanifestdeployments)
@@ -48,8 +49,11 @@
      * [Debugging mit tcpdump - Beispiel Ingress](#debugging-mit-tcpdump---beispiel-ingress)
      * [Debugging mit tcpdump - Beispiel NodePort](#debugging-mit-tcpdump---beispiel-nodeport)
 
-  1. Kubernetes - Netzwork - Interna
+  1. Kubernetes - Network - Interna
      * [Kubernetes CIDR](#kubernetes-cidr)
+
+  1. Kubernetes - Network - CNI Interna
+     * [Wann wird CNI aufgerufen ?](https://github.com/jmetzger/training-kubernetes-networking/blob/main/kubernetes/internals/cni/wann-wird-cni-aufgerufen.md)
 
   1. Kubernetes - Netzwerk (CNI's) / Mesh
      * [Netzwerk Interna](#netzwerk-interna)
@@ -66,24 +70,29 @@
      * [calicoctl auf client installieren](#calicoctl-auf-client-installieren)
      * [Install calicoctl in pod](#install-calicoctl-in-pod)
     
-  1. Kubernetes calico (CNI-Plugin) - Part 2 Internal 
+  1. Kubernetes calico (CNI-Plugin) - Part 2 Internals 
      * [Find corresponding networks - from pod to host](#find-corresponding-networks---from-pod-to-host)
      * [Internals - Pod to Pod - Communication on Worker3 (node))](#internals---pod-to-pod---communication-on-worker3-node)
      * [Debug pod-2-pod on worker1](#debug-pod-2-pod-on-worker1)
-     * [Internals - Inter-Pod - Communication (worker 3 -> worker 1](#internals---inter-pod---communication-worker-3-->-worker-1)
-  
+     * [Internals - Inter-Pod - Communication (worker 3 -> worker 1) vxlan cross subnet ](#internals---inter-pod---communication-worker-3-->-worker-1-vxlan-cross-subnet-)
+     * [iptables involved in veth - calico ?](#iptables-involved-in-veth---calico-)
+    
   1. Kubernetes calico (CNI-Plugin) - Part 3 
      * [calicoctl Cheatsheet](#calicoctl-cheatsheet)
      * [Welcher Routing-Mode wird im aktuellen Cluster verwendet](#welcher-routing-mode-wird-im-aktuellen-cluster-verwendet)
      * [Wann calicoctl (Stand 2024/01 calico 3.27)](#wann-calicoctl-stand-202401-calico-327)
      * [Calico Default Routing Mode BGP & vxlancrossnet](#calico-default-routing-mode-bgp--vxlancrossnet)
+     * [Calico cni setting mtu 0](#calico-cni-setting-mtu-0)
+     * [Calico cni setting policy_setup_timeout_seconds](#calico-cni-setting-policy_setup_timeout_seconds)
 
   1. Kubernetes calico (CNI-Plugin) - Part 4 -encryption
      * [calico and wirguard](#calico-and-wirguard)
     
   1. Kubernetes multus (Meta-CNI - Plugin)
      * [Multus Überblick](#multus-überblick)
+     * [Multus Installation](#multus-installation)
      * [sr-iov mit multus](#sr-iov-mit-multus)
+     * [Zufällige Auswahl von Network-Attachements-Definition für srv-iov](#zufällige-auswahl-von-network-attachements-definition-für-srv-iov)
 
   1. Kubernetes coil (egress - gateway)
      * [coil](#coil)
@@ -95,6 +104,10 @@
      * [Protecting Services](#protecting-services)
      * [Calico Logging Firewall Rules](#calico-logging-firewall-rules)
      * [Exercise calico Network Policy](#exercise-calico-network-policy)
+
+  1. Kubernetes Scheduler
+     * [Koordinator scheduler, that also network bandwith into account](#koordinator-scheduler-that-also-network-bandwith-into-account)
+     * [Why is CPU pinning not used as default in kubernetes scheduler anymore ?](#why-is-cpu-pinning-not-used-as-default-in-kubernetes-scheduler-anymore-)
 
   1. Helm (Kubernetes Paketmanager)
      * [Helm Grundlagen](#helm-grundlagen)
@@ -133,8 +146,13 @@
      * [Service Blue/Green](#service-bluegreen)
      * [Praxis-Übung A/B Deployment](#praxis-übung-ab-deployment)
 
-  1. Kubernetes - Hilfreiche Tools / Networking
+  1. Kubernetes - Hilfreiche Tools / Networking /Debugging
      * [NetworkPolicyEditor](https://editor.networkpolicy.io)
+     * [Debug on node with root-priviliges with kubectl debug](#debug-on-node-with-root-priviliges-with-kubectl-debug)
+
+  1. Kubernetes Security
+     * [NodeShell vs. kubectl debug (for node)](#nodeshell-vs-kubectl-debug-for-node)
+     * [Kube Api Server - Watch Internals](#kube-api-server---watch-internals)
 
 ## Backlog
 
@@ -253,7 +271,7 @@
 
 ### Schaubild 
 
-![image](https://github.com/user-attachments/assets/751339d5-f279-483b-a9c5-1ba196c4c3b6)
+![image](https://github.com/user-attachments/assets/ddef33e4-967c-4108-be9e-2d8cc5ede506)
 
 ### Komponenten / Grundbegriffe
 
@@ -530,7 +548,7 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 ## Falls repo bereits mit add hinzugefügt war 
 ## helm repo update
 
-helm install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress --create-namespace --version 4.11.3
+helm install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress --create-namespace --version 4.12.1
 
 ## See when the external ip comes available
 kubectl -n ingress get all
@@ -554,6 +572,10 @@ nginx-ingress-ingress-nginx-controller   LoadBalancer   10.245.78.34   157.245.2
 ### Wie funktioniert das Reload und Endpunkte
 
   * https://kubernetes.github.io/ingress-nginx/how-it-works/#nginx-configuration
+
+### How many requests per second
+
+  * https://blog.nginx.org/blog/testing-performance-nginx-ingress-controller-kubernetes
 
 ## Kubernetes - Projekt Applikation - Step by Step (Netzwerk)
 
@@ -601,7 +623,7 @@ kubectl apply -f deploy.yml
 ```
 
 ```
-kubectl get -f deploy.yml -o yaml
+## kubectl get -f deploy.yml -o yaml
 kubectl get all 
 ```
 
@@ -669,15 +691,31 @@ spec:
 kubectl apply -f . 
 ```
 
-### Schritt 3:
+### Schritt 3 Endpunkte gefunden ?
 
 ```
 kubectl get svc svc-nginx
 kubectl describe svc svc-nginx
+```
+
+```
 kubectl get endpoints svc-nginx
 kubectl get endpoints svc-nginx -o yaml 
 ```
 
+### Schritt 4 Löschen deployment und prüfen die Endpunkte 
+
+```
+kubectl delete -f deploy.yml
+## Uups Endpunkte sind weg 
+kubectl describe svc svc-nginx 
+```
+
+```
+kubectl apply -f .
+## Endpunkte sind wieder da, aber neue POD-IPs
+kubectl describe svc svc-nginx 
+```
 
 ### Ref.
 
@@ -685,6 +723,17 @@ kubectl get endpoints svc-nginx -o yaml
 
 ### DNS - Resolution - Services
 
+
+### What is resolved 
+
+```
+svc-nginx
+svc-nginx.jochen # svc-nginx.<namespace>
+svc-nginx.jochen.svc
+svc-nginx.jochen.svc.cluster.local 
+```
+
+### Exercise 
 
 ```
 kubectl run podtest --rm -ti --image busybox
@@ -707,6 +756,15 @@ writing to stdout
 apple-tln1
 -                    100% |**************************************************************************************************************|    11  0:00:00 ETA
 written to stdout
+```
+
+
+### How to find the FQDN (Full qualified domain name) 
+
+```
+## in busybox (clusterIP)
+nslookup 10.109.6.53
+name = svc-nginx.jochen.svc.cluster.local
 ```
 
 ### Beispiel Ingress mit Hostnamen
@@ -818,7 +876,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: "<euername>.lab<nr>.t3isp.de"
+  - host: "<euername>.lab1.t3isp.de"
     http:
       paths:
         - path: /apple
@@ -1312,55 +1370,88 @@ http://jochen.lab1.t3isp.de
 ### Debugging mit tcpdump - Beispiel NodePort
 
 
+### Schritt 1: Ausgangsbasis 
+
 ```
-### Übung 3.1  tcpdump 
+## Basis 03-deploy
+cd
+cd manifests
+cd 03-deploy
+ls -la 
+```
 
-0. export KUBECONFIG=~/.kube/config.calico
+### Schritt 2: Wir passen den Service an und Anzahl der Replicas in Deploy 
 
-1.  manifest/03-deploy 
+```
+nano 02-svc.yml
+```
 
-02-service.yaml 
--> type: NodePort
+```
+## Ändern Zeile mit type:
+## Ändern in type: NodePort 
+```
 
-deploy.yaml 
-replicas: 1 
+```
+nano deploy.yml
+```
 
-2. kubectl apply -f .
+```
+## Ändern Zeile mit replicas:
+## Ändern in replicas: 1
+```
 
-3.  NodePort rausfinden
+```
+kubectl apply -f .
+```
 
+### Schritt 2: Daten sammeln 
+
+```
 kubectl get svc svc-nginx 
--> 32682 
+## Beispiel -> 32682 
+## Worker öffentliche IP rausfinden
+kubectl get node -o wide | grep worker1
+## worker1 -> 164.92.131.128
+```
 
-worker1 -> 164.92.131.128
+### Schritt 3: 2. Session öffnen 
 
-4. bashrc richtig setzen 
-
- echo "export KUBECONFIG=~/.kube/config.calico" >> ~/.bashrc
-
-5. Zweite ssh-session 
-
-kubectl cluster-info # -> passt das ?
-
+```
 ## ein debug-pod auf worker1 starten 
 kubectl debug -it node/worker1 --image nicolaka/netshoot 
-.# im pod 
+.# im pod tcpdump auf port von Schritt 2
 tcdump -i eth0 port 32682  
+```
 
-6. im browser addresse eingeben 
-http://164.92.131.128:32682
+### Schritt 4: 1. Session 
 
-7. in der 1. ssh session 
+```
+## while kontinuierlich 
+curl http://164.92.131.128:32682
+```
 
+### Schritt 5: 2. Session ausgabe tcpdump
+
+
+
+
+### Optional: Schritt 6
+
+```
+Welcher Pod von nginx -> daneben einen debug container starten
 kubectl get pods 
 kubectl debug -it nginx-deployment-5948f7484f-sbq9v --image nicolaka/netshoot 
 ```
 
 
-## Kubernetes - Netzwork - Interna
+## Kubernetes - Network - Interna
 
 ### Kubernetes CIDR
 
+
+### Grafik 
+
+![image](https://github.com/user-attachments/assets/87bb7926-d962-4f71-b8b4-f04b7ab44ec6)
 
 ### Cluster CIDR - IP-Bereich für das gesamte Kubernetes Cluster 
 
@@ -1397,7 +1488,14 @@ POD-CIDR: 10.244.1.128/25
 
 ```
 Netzbereich für IP-Adressen der Services
+z.B. 10.109.0.0/16 
 ```
+
+## Kubernetes - Network - CNI Interna
+
+### Wann wird CNI aufgerufen ?
+
+  * https://github.com/jmetzger/training-kubernetes-networking/blob/main/kubernetes/internals/cni/wann-wird-cni-aufgerufen.md
 
 ## Kubernetes - Netzwerk (CNI's) / Mesh
 
@@ -1531,7 +1629,7 @@ ctr -n k8s.io c list | grep pause
 
 ### CNI-Provider 
 
-   * Ein Kubernetes-Cluster braucht immer ein CNI-Provider, sonst funktioniert die Kmmunikation nicht und die Nodes im Cluster stehen auf NotReady 
+   * Ein Kubernetes-Cluster braucht immer ein CNI-Provider, sonst funktioniert die Kommunikation nicht und die Nodes im Cluster stehen auf NotReady 
    * Beispiele: Calico, WeaveNet, Antrea, Cilium, Flannel 
 
 ### IPAM - IP Address Management 
@@ -2299,7 +2397,7 @@ kubectl -n kube-system exec calicoctl -- /calicoctl version
 
 ```
 
-## Kubernetes calico (CNI-Plugin) - Part 2 Internal 
+## Kubernetes calico (CNI-Plugin) - Part 2 Internals 
 
 ### Find corresponding networks - from pod to host
 
@@ -2376,6 +2474,8 @@ Chain cali-tw-cali42c2aab93f3 (1 references)
 
 ### Internals - Pod to Pod - Communication on Worker3 (node))
 
+
+![images](/images/Calico_Same_Node_Flow.png)
 
 ![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/ba9d497d-36ed-467f-9965-faad76a201cd)
 
@@ -2460,17 +2560,76 @@ kubectl apply -f .
 ### 3. Find out about cali-interfaces 
 
 ```
+## Ip von ziel rausfinden 
 calicoctl get wep
+```
+
+```
+kubectl debug -it node/worker1 --image=busybox  
+```
+
+```
 ## Example 
-## nginx-calicotest (192.168.235.141) -> nginx.....z6rmp (192.168.235.138)
+## nginx-calicotest (192.168.235.141) -> ngin-deployment-calicotest.....z6rmp (192.168.235.138)
 ## Now grep for the destination 
 route -n | grep 192.168.235.138 
 ```
 
-### Internals - Inter-Pod - Communication (worker 3 -> worker 1
+### Internals - Inter-Pod - Communication (worker 3 -> worker 1) vxlan cross subnet 
 
 
+### Wann ? 
+
+  * bei vxlan (dann immer vxlan)
+  * oder: vxlan cross subnet (Wenn zwei Subnetze nicht direkt erreichbar sind, wg. z.B. Firewall) 
+
+### Bild 
 ![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/305e0dac-5d13-4f6c-88b0-3b06b88eba7c)
+
+### iptables involved in veth - calico ?
+
+
+### Explanation 
+
+> **When a packet goes from one end of a veth pair to the other — does *that* action trigger iptables rules?**
+
+👉 **Answer:** **No**, the *act* of a packet traveling **through the veth pair itself** (from one end to the other) does **not** hit iptables directly.
+
+---
+
+#### 🔍 Think of it like this:
+
+The `veth` pair is just a **pipe** between two network interfaces.
+
+- When the pod sends a packet, it hits the **pod's `eth0`** (which is a veth interface).
+- That packet is instantly transferred to the **peer interface** on the host (also a veth).
+- That **transfer itself** — the jump between the veth ends — is **not processed by iptables**.
+
+---
+
+#### 🧱 iptables only comes in when:
+- The **host kernel processes the packet**, e.g., routing, forwarding, delivering to an application.
+- The packet is being **routed** or **bridged**, or undergoes **NAT**, etc.
+
+---
+
+#### 📷 Visualization:
+
+```text
+Pod eth0 (vethX)  <=====>  vethY on host  → bridge (cni0) → rest of the network
+
+             [no iptables]       →        [iptables here]
+```
+
+---
+
+So to summarize:
+
+✅ **iptables is involved** when the **packet leaves the veth** and is handled by the host stack (e.g., routed, forwarded, NATed).  
+❌ **iptables is not involved** in the **link between the two ends** of the veth — that part is a simple packet transfer.
+
+---
+
 
 ## Kubernetes calico (CNI-Plugin) - Part 3 
 
@@ -2584,20 +2743,242 @@ calicoctl ipam status
 ### Calico Default Routing Mode BGP & vxlancrossnet
 
 
+### Mode: 
+
+  * vxlan: crossnet
+
 ### What does it do ? 
 
-  * BGP is used, when other node is on same subnet
-  * vxlan is used, when worker node to reach is in other subnet
+  * BGP is used, when other node is directly reachable (no restriction through firewalling / networking)
+  * vxlan is used, when worker node is not directly reachable (using BGP)
 
 ### Grafics
 
 ![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/a2766737-e1e5-4ee0-8e03-9216a0379d97)
+
+
+### Detailed Explanation 
+
+---
+
+#### 🔍 Was ist `vxlancrossnet` in Calico?
+
+`vxlancrossnet` ist ein **Overlay-Modus von Calico**, der es ermöglicht, Pods auf verschiedenen Layer-3-Netzwerken (z. B. in getrennten Subnetzen oder Clouds) miteinander zu verbinden – **selbst wenn es keine direkte IP-Routen zwischen den Nodes gibt**.
+
+Es funktioniert, indem **VXLAN-Tunnel** aufgebaut werden, um Pod-Verkehr zu kapseln und übers Netzwerk zu transportieren.
+
+---
+
+#### 🧠 Warum braucht man `vxlancrossnet`?
+
+Standardmäßig funktioniert Calico im **BGP-Modus oder mit IP-IP/VXLAN Overlays**, wenn die Nodes sich gegenseitig routen können.
+
+Aber:
+
+- In **Cloud-Umgebungen**, wo Nodes in **verschiedenen VPCs/Subnetzen** liegen,
+- oder in hybriden Szenarien (on-prem + cloud),
+- ist manchmal **kein direktes Routing** zwischen den Nodes möglich.
+
+👉 `vxlancrossnet` löst das, indem es Pods trotzdem über ein **VXLAN-Overlay** miteinander kommunizieren lässt.
+
+---
+
+#### 🔧 Beispiel: Cluster mit zwei Nodes in getrennten Subnetzen
+
+**Scenario**:
+
+- Node A: `10.0.0.10` (Subnetz 10.0.0.0/24)
+- Node B: `10.1.0.20` (Subnetz 10.1.0.0/24)
+- Kein Routing zwischen den Subnetzen möglich (Security Groups, Firewalls, etc.)
+- Ziel: Pod auf Node A soll mit Pod auf Node B kommunizieren
+
+👉 Mit `vxlancrossnet` kapselt Calico den Pod-Traffic in ein VXLAN-Paket und überträgt es zwischen den Nodes – auch ohne Routing zwischen den Subnetzen.
+
+---
+
+#### 📦 Beispielhafte Konfiguration
+
+Du kannst `vxlancrossnet` in Calico so aktivieren:
+
+```yaml
+apiVersion: crd.projectcalico.org/v1
+kind: IPPool
+metadata:
+  name: default-pool
+spec:
+  cidr: 192.168.0.0/16
+  vxlanMode: CrossSubnet  # oder Always
+  encapsulation: VXLAN
+  blockSize: 26
+  natOutgoing: true
+  nodeSelector: all()
+```
+
+---
 
 ### How to find out, if this node is used 
 
 ```
 kubectl -n calico-system get ippool -o yaml | grep vxlan 
 ```
+
+### Calico cni setting mtu 0
+
+
+### Explanation 
+
+In the **CNI (Container Network Interface) config for Calico**, the `"mtu": 0` setting might look confusing at first. Here's what it means:
+
+---
+
+#### 🚀 What does `"mtu": 0` mean?
+
+Setting `"mtu": 0` **tells Calico to automatically detect the MTU** (Maximum Transmission Unit) based on the underlying network interface.
+
+---
+
+#### 🧠 Why would you do that?
+
+Instead of hardcoding a specific MTU (like 1500 or 1450), using `0` delegates the responsibility to Calico's CNI plugin, which will:
+
+- Discover the MTU of the primary network interface on the node.
+- Subtract necessary overhead (like VXLAN, WireGuard, IP-in-IP headers, etc., depending on your encapsulation mode).
+- Use the appropriate MTU for the workload interfaces to avoid fragmentation issues.
+
+---
+
+#### 📌 Example Use Case
+
+In a hybrid cluster with nodes running on different types of networks (cloud, on-prem), hardcoding MTU might lead to:
+
+- **Packet fragmentation**
+- **Network errors**
+- **Unpredictable performance**
+
+By using `"mtu": 0`, Calico adapts automatically.
+
+---
+
+#### ✅ Summary
+
+| Key | Value |
+|-----|-------|
+| `"mtu": 0` | Auto-detect MTU based on host interface |
+| Good for | Avoiding manual config, supporting diverse environments |
+| When to use | Most of the time unless you have a specific MTU requirement |
+
+---
+
+Alright! Here's how you can **check what MTU Calico is actually using** on your nodes:
+
+---
+
+#### 🛠️ Option 1: Inspect a Calico CNI-created interface inside a pod
+
+Run a pod and check the interface MTU inside it:
+
+```bash
+kubectl run -it --rm test-pod --image=alpine -- sh
+```
+
+Then inside the pod:
+
+```sh
+ip link
+```
+
+Look for the `eth0` interface — it’s usually the one used for communication — and you’ll see something like:
+
+```
+3: eth0@if5: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1440 ...
+```
+
+✅ This MTU (`1440` here) is what Calico assigned to the pod's virtual interface, based on the host MTU and overhead.
+
+---
+
+#### 🛠️ Option 2: Check on the host what MTU Calico chose
+
+SSH into one of your nodes and look for Calico interfaces:
+
+```bash
+ip link | grep cali
+```
+
+You might see:
+
+```
+15: cali12345678@if16: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1440 ...
+```
+
+That shows the MTU used for the host-side veth of the pod.
+
+---
+
+#### 🛠️ Option 3: Look at the actual auto-detected MTU logic in the logs
+
+You can grep the logs of the Calico CNI plugin or Felix:
+
+```bash
+kubectl -n kube-system logs -l k8s-app=calico-node | grep -i mtu
+```
+
+Or on some setups:
+
+```bash
+kubectl -n kube-system logs daemonset/calico-node | grep -i mtu
+```
+
+You may see lines like:
+
+```
+Auto-detected interface eth0 with MTU 1500
+Calico CNI MTU set to 1440 (1500 - 60)
+```
+
+That confirms both the detected MTU and how it subtracts encapsulation overhead.
+
+---
+
+If you'd like, I can help you write a little automated script to grab MTU values across all nodes or pods. Want that?
+
+### Calico cni setting policy_setup_timeout_seconds
+
+
+### Explanation 
+
+In the Calico CNI (Container Network Interface) configuration, the setting:
+
+```json
+"policy_setup_timeout_seconds": 0
+```
+
+refers to the **timeout period (in seconds)** that Calico waits for network policy setup to complete during pod creation.
+
+#### Here's what it specifically means:
+
+- **`policy_setup_timeout_seconds`** is a configuration parameter used in Calico's CNI plugin to **control how long the plugin will wait for policy enforcement components to be ready** before allowing the pod networking to proceed.
+  
+- When it's set to `0`, it **disables the wait** entirely. In other words, **Calico will not wait** for policy enforcement to be fully ready before returning control to Kubernetes.
+
+#### Why would you use `0`?
+
+- **Faster Pod Startup:** This can help speed up pod startup time, especially in scenarios where you don't want pod creation to be blocked by policy setup.
+- **Risk Tradeoff:** You might sacrifice some initial enforcement of network policies — the pod might be up and running **before the policies are applied**.
+  
+#### Typical Use Case:
+
+You might set this to `0`:
+- In test environments where speed is prioritized over strict policy enforcement.
+- If you have other mechanisms ensuring policies are consistently applied.
+- To avoid delays during cluster bootstrap or upgrades.
+
+#### TL;DR:
+
+Setting `"policy_setup_timeout_seconds": 0` in the Calico CNI config tells Calico:  
+🚫 "Don't wait for policies to be set up before finishing pod networking — just go ahead immediately."
+
+Let me know if you want to explore when it might be risky to use this or best practices around it.
 
 ## Kubernetes calico (CNI-Plugin) - Part 4 -encryption
 
@@ -2625,7 +3006,7 @@ https://docs.tigera.io/calico/latest/network-policy/encrypt-cluster-pod-traffic
 
 ### Prerequisites 
 
-  * a CNI, that manages the network needs to be installed before hand, like Calico, Cilium
+  * a CNI must be installed beforehand, that manages the network (Calico, Cilium)
 
 ### Graphics 
 
@@ -2640,6 +3021,13 @@ https://docs.tigera.io/calico/latest/network-policy/encrypt-cluster-pod-traffic
 ### Example macvlan 
 
   * https://github.com/k8snetworkplumbingwg/multus-cni/blob/master/examples/macvlan-pod.yml
+
+```
+mkdir -p manifests/multus-example
+cd manifests/multus-example
+nano network-attachment.yaml
+```
+
 
 ```
 ---
@@ -2658,7 +3046,7 @@ spec:
         {
           "type": "macvlan",
           "capabilities": { "ips": true },
-          "master": "eth0",
+          "master": "eth1",
           "mode": "bridge",
           "ipam": {
             "type": "static",
@@ -2675,7 +3063,18 @@ spec:
         }
       ]
     }'
----
+```
+
+```
+kubectl apply -f .
+```
+
+
+```
+nano pod.yaml
+```
+
+```
 ## Define a pod with macvlan-conf, defined above, with ip address and mac, and 
 ## "gateway" overrides default gateway to use macvlan-conf's one. 
 ## without "gateway" in k8s.v1.cni.cncf.io/networks, default route will be cluster
@@ -2701,6 +3100,105 @@ spec:
 
 ```
 
+```
+kubectl apply -f .
+kubectl exec -it samplepod -- sh 
+```
+
+```
+## in der shell
+ip a
+```
+
+### Multus Installation
+
+
+### Schritt 1: Optional: View settings of cni before installing multus 
+
+```
+kubectl debug -it node/worker1 --image=alpine 
+```
+
+```
+## in der bash
+apk add jq
+cat /host/etc/cni/net.d/10-calico.conflist | jq
+```
+
+```
+## Ausgabe
+
+/ # cat /host/etc/cni/net.d/10-calico.conflist | jq
+{
+  "name": "k8s-pod-network",
+  "cniVersion": "0.3.1",
+  "plugins": [
+    {
+      "container_settings": {
+        "allow_ip_forwarding": false
+      },
+      "datastore_type": "kubernetes",
+      "endpoint_status_dir": "/var/run/calico/endpoint-status",
+      "ipam": {
+        "assign_ipv4": "true",
+        "assign_ipv6": "false",
+        "type": "calico-ipam"
+      },
+      "kubernetes": {
+        "k8s_api_root": "https://10.96.0.1:443",
+        "kubeconfig": "/etc/cni/net.d/calico-kubeconfig"
+      },
+      "log_file_max_age": 30,
+      "log_file_max_count": 10,
+      "log_file_max_size": 100,
+      "log_file_path": "/var/log/calico/cni/cni.log",
+      "log_level": "Info",
+      "mtu": 0,
+      "nodename_file_optional": false,
+      "policy": {
+        "type": "k8s"
+      },
+      "policy_setup_timeout_seconds": 0,
+      "type": "calico"
+    },
+    {
+      "capabilities": {
+        "bandwidth": true
+      },
+      "type": "bandwidth"
+    },
+    {
+      "capabilities": {
+        "portMappings": true
+      },
+      "snat": true,
+      "type": "portmap"
+    }
+  ]
+}
+```
+
+### Schritt 2: Installation mit Helm 
+
+```
+kubectl apply -f https://raw.githubusercontent.com/k8snetworkplumbingwg/multus-cni/master/deployments/multus-daemonset-thick.yml
+```
+
+```
+## Überprüfung
+kubectl debug -it node/worker1 --image=alpine 
+```
+
+```
+## in der bash
+apk add jq
+
+## das wird als erstes geladen 
+cat /host/etc/cni/net.d/00-multus.conf | jq
+```
+
+
+
 ### sr-iov mit multus
 
 
@@ -2714,7 +3212,7 @@ spec:
 
 ### Generell 
 
-  * Erweiterung des PCI-Express Standarads 
+  * Erweiterung des PCI-Express Standards 
   * Eine Netzwerkkarte wird mehrmals angeboten und Kommunikation erfolgt direkt und nicht über den Umweg Kernel
 
 ### Vorbereitung
@@ -2730,6 +3228,573 @@ spec:
 
 
  
+
+
+### Zufällige Auswahl von Network-Attachements-Definition für srv-iov
+
+
+Yes, it’s technically possible to **autodetect SR-IOV NICs** on a Kubernetes node and dynamically configure a **Multus `NetworkAttachmentDefinition`** to attach a pod to a randomly selected one — **but not entirely natively** or dynamically at runtime without help.
+
+#### Let's break it down:
+
+---
+
+#### 🔍 SR-IOV Interface Detection
+
+You can detect all SR-IOV capable NICs on a node using tools like:
+
+```bash
+lspci | grep -i ether
+```
+
+Or more specifically:
+
+```bash
+ls /sys/class/net | while read iface; do
+  if [ -d "/sys/class/net/$iface/device/sriov_totalvfs" ]; then
+    echo "$iface is SR-IOV capable"
+  fi
+done
+```
+
+The `sriov-device-plugin` used with Kubernetes typically discovers and advertises these VFs to the Kubelet.
+
+---
+
+#### 📦 Multus + SR-IOV
+
+Multus uses `NetworkAttachmentDefinition` (NAD) with SR-IOV by referencing a resource (like `intel.com/sriov_netdevice`). This ties into the `sriov-network-device-plugin`, which assigns Virtual Functions (VFs) to pods based on availability.
+
+But **you can't directly say "randomly pick an SR-IOV interface" in the NAD JSON**. It needs a defined resource name and configuration — unless you automate generating NADs.
+
+---
+
+#### 🛠️ So how do you make this dynamic?
+
+##### Option 1: Dynamic NAD Generator (Custom Controller or Admission Webhook)
+- Create a custom mutating webhook or initContainer that:
+  - Detects all available SR-IOV devices on the node.
+  - Randomly picks one.
+  - Generates a NAD dynamically (with unique name) or patches the pod spec to refer to the chosen one.
+
+##### Option 2: Predefine Multiple NADs
+- Define multiple NADs manually, each bound to a specific SR-IOV interface.
+- In your app logic or scheduling controller, randomly select one when creating the pod.
+
+##### Option 3: Use SR-IOV device plugin with resource pool
+- Let the `sriov-network-operator` manage pools (e.g., via `SriovNetworkNodePolicy`) and abstract the devices.
+- Pods just request a resource (e.g., `intel.com/sriov_netdevice`) and the device plugin picks from the available pool.
+
+This is not *truly random per pod*, but it’s **automatically distributed** if you're okay with that.
+
+---
+
+#### ✅ TL;DR
+
+- **Auto-detecting SR-IOV NICs** = easy via sysfs or `sriov-network-device-plugin`.
+- **Random assignment in Multus NAD** = not directly supported.
+- **Solutions**:
+  - Use device plugin + pool (simpler).
+  - Generate NADs dynamically via custom logic (more flexible).
+
+---
+
+Perfect — you're aiming for **random selection of a specific SR-IOV VF per pod**, which is a bit outside of what Multus and the SR-IOV device plugin do by default. But with a bit of Kubernetes magic, we can make it work.
+
+Here’s a practical **design pattern** to achieve this:
+
+---
+
+### 🧩 Strategy for Random SR-IOV NIC Selection Per Pod
+
+#### 1. **Predefine NADs for Each SR-IOV Interface**
+- You create one `NetworkAttachmentDefinition` per physical interface (e.g., `sriov-net-ens1f0`, `sriov-net-ens2f0`, etc.)
+- Each NAD refers to a specific `resourceName` exposed by the SR-IOV device plugin.
+
+##### Example NAD for `ens1f0`:
+```yaml
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: sriov-net-ens1f0
+spec:
+  config: '{
+    "type": "sriov",
+    "name": "sriov-net-ens1f0",
+    "ipam": {
+      "type": "static"
+    },
+    "deviceID": "0000:01:00.1"  # optional if resource pool used
+  }'
+```
+
+---
+
+#### 2. **Custom Init Container or Admission Webhook to Inject a Random NAD**
+
+Since Kubernetes doesn't support "pick a random NAD" natively, your workaround is:
+
+##### Option A: Init Container + Downward API + Host Mount
+1. Mount a host path (e.g., `/etc/cni/net.d`) into the pod as read-only.
+2. Have an **init container** (or even an entrypoint script) that:
+   - Lists available NADs (e.g., via Kubernetes API).
+   - Picks one at random.
+   - Patches the pod's annotations to include it (if running in privileged mode + with necessary permissions).
+   - Or writes the choice to an environment file used by the main container.
+
+##### Option B: Mutating Admission Webhook
+This is more elegant but more complex:
+- Write a small webhook service (e.g., in Go or Python) that intercepts Pod creation.
+- At admission time, it:
+  - Queries available NADs matching a pattern (e.g., label or name prefix).
+  - Picks one at random.
+  - Adds the `k8s.v1.cni.cncf.io/networks` annotation with the chosen NAD.
+
+👉 This works seamlessly and is transparent to your apps.
+
+---
+
+#### 3. **Deploy Your Pods With a Generic NAD Label**
+You only need to request something like this:
+
+```yaml
+metadata:
+  annotations:
+    k8s.v1.cni.cncf.io/networks: sriov-net-<RANDOM>
+```
+
+The actual `<RANDOM>` part gets injected by your webhook or entrypoint logic.
+
+---
+
+#### 🛠️ Tools You’ll Need
+- Kubernetes client (kubectl or client library)
+- Permissions to list NADs (CRD)
+- Optional: controller/webhook framework like Kubebuilder or Kopf (Python)
+- Custom script or binary to pick the NAD at runtime
+
+---
+
+#### ✅ Benefits
+- Full control and randomness
+- Works even with static SR-IOV assignments
+- Extensible for other policies (e.g., "least used")
+
+---
+
+#### ⚠️ Caveats
+- You'll need a controller/webhook or privileged init logic.
+- NADs must be kept in sync with actual node hardware and VF pools.
+- If you’re using the `sriov-network-operator`, you may have to manually break up your `SriovNetworkNodePolicy` into per-interface pools.
+
+---
+
+Want a ready-made Python or Bash script to randomly pick a NAD and patch the pod? Or a small webhook template in Go/Python?
+
+
+
+Awesome! Here's a **ready-made Bash script** that randomly selects a `NetworkAttachmentDefinition` (NAD) from a specific namespace and outputs it in a way your Pod or init container can use.
+
+---
+
+#### ✅ What this script does:
+- Lists all NADs in a namespace (with optional prefix filter).
+- Randomly picks one.
+- Writes it to a file or echoes it (depending on how you want to use it).
+
+---
+
+#### 📄 `pick-random-nad.sh`
+
+```bash
+##!/bin/bash
+
+## CONFIGURABLE VARIABLES
+NAMESPACE="${NAD_NAMESPACE:-default}"        # Namespace where NADs are defined
+PREFIX="${NAD_PREFIX:-sriov-net-}"           # Filter NADs with a certain prefix
+OUTPUT_FILE="${OUTPUT_FILE:-/tmp/selected_nad}"  # File to store result
+
+## REQUIRE: kubectl installed and available in container
+if ! command -v kubectl &> /dev/null; then
+    echo "kubectl not found in PATH"
+    exit 1
+fi
+
+## Fetch list of matching NADs
+NADS=$(kubectl get network-attachment-definitions -n "$NAMESPACE" -o jsonpath="{.items[*].metadata.name}" | tr ' ' '\n' | grep "^${PREFIX}")
+
+## Check if we found anything
+if [ -z "$NADS" ]; then
+    echo "No NADs found in namespace '$NAMESPACE' with prefix '$PREFIX'"
+    exit 1
+fi
+
+## Pick one at random
+SELECTED_NAD=$(echo "$NADS" | shuf -n1)
+
+echo "Selected NAD: $SELECTED_NAD"
+
+## Save to file or stdout
+echo "$SELECTED_NAD" > "$OUTPUT_FILE"
+```
+
+---
+
+#### 🧪 Example Usage in an Init Container (conceptual)
+
+```yaml
+initContainers:
+  - name: pick-nad
+    image: bitnami/kubectl:latest
+    command: ["/bin/bash", "-c"]
+    args:
+      - |
+        chmod +x /scripts/pick-random-nad.sh
+        /scripts/pick-random-nad.sh
+    env:
+      - name: NAD_NAMESPACE
+        value: "default"
+      - name: NAD_PREFIX
+        value: "sriov-net-"
+    volumeMounts:
+      - name: scripts
+        mountPath: /scripts
+      - name: shared
+        mountPath: /nad
+
+containers:
+  - name: main-app
+    image: your-app
+    env:
+      - name: NAD_NAME
+        valueFrom:
+          configMapKeyRef:
+            name: nad-config
+            key: selected_nad  # Or mount shared volume if using file
+    volumeMounts:
+      - name: shared
+        mountPath: /nad
+volumes:
+  - name: scripts
+    configMap:
+      name: pick-nad-script
+  - name: shared
+    emptyDir: {}
+```
+
+---
+
+#### 🛡️ Permissions Needed
+Your service account (or init container) needs permission to:
+
+```yaml
+apiGroups: ["k8s.cni.cncf.io"]
+resources: ["network-attachment-definitions"]
+verbs: ["list"]
+```
+
+---
+
+Awesome — let’s build a **Go-based mutating admission webhook** that adds a random SR-IOV NAD to pod annotations at creation time.
+
+---
+
+### 🧩 Overview
+
+- **Language**: Go
+- **Framework**: [`controller-runtime`](https://github.com/kubernetes-sigs/controller-runtime) (standard for webhooks/controllers)
+- **Function**: Inject `k8s.v1.cni.cncf.io/networks: sriov-net-<random>` into pods missing that annotation
+- **Behavior**: Only mutate pods that match a label (e.g., `inject-sriov: "true"`)
+- **Deployment**: Webhook service + `MutatingWebhookConfiguration` + TLS certs
+
+---
+
+### 📦 Project Structure
+
+```
+sriov-webhook/
+├── main.go
+├── webhook.go
+├── Dockerfile
+├── config/
+│   ├── webhook.yaml
+│   └── certs/
+```
+
+---
+
+### 🧠 Core Go Code
+
+#### 📄 `main.go`
+
+```go
+package main
+
+import (
+	"flag"
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+
+	"sriov-webhook/webhook"
+)
+
+func main() {
+	var certFile, keyFile string
+	flag.StringVar(&certFile, "tls-cert-file", "/certs/tls.crt", "Path to TLS certificate file")
+	flag.StringVar(&keyFile, "tls-key-file", "/certs/tls.key", "Path to TLS key file")
+	flag.Parse()
+
+	mux := http.NewServeMux()
+	mux.HandleFunc("/mutate", webhook.HandlePodMutate)
+
+	log.Println("🚀 Starting webhook server on port 8443...")
+	server := &http.Server{
+		Addr:    ":8443",
+		Handler: mux,
+	}
+	err := server.ListenAndServeTLS(certFile, keyFile)
+	if err != nil {
+		log.Fatalf("❌ Failed to start server: %v", err)
+	}
+}
+```
+
+---
+
+#### 📄 `webhook.go`
+
+```go
+package webhook
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"math/rand"
+	"net/http"
+	"time"
+
+	admissionv1 "k8s.io/api/admission/v1"
+	corev1 "k8s.io/api/core/v1"
+)
+
+var nadList = []string{
+	"sriov-net-ens1f0", "sriov-net-ens2f0", "sriov-net-ens3f0",
+}
+
+func HandlePodMutate(w http.ResponseWriter, r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "unable to read request", http.StatusBadRequest)
+		return
+	}
+
+	review := admissionv1.AdmissionReview{}
+	if err := json.Unmarshal(body, &review); err != nil {
+		http.Error(w, "unable to parse admission review", http.StatusBadRequest)
+		return
+	}
+
+	pod := corev1.Pod{}
+	if err := json.Unmarshal(review.Request.Object.Raw, &pod); err != nil {
+		http.Error(w, "unable to unmarshal pod", http.StatusBadRequest)
+		return
+	}
+
+	if pod.ObjectMeta.Annotations["k8s.v1.cni.cncf.io/networks"] != "" {
+		respond(w, &review, nil) // already has NAD
+		return
+	}
+
+	if pod.ObjectMeta.Labels["inject-sriov"] != "true" {
+		respond(w, &review, nil) // label not matched
+		return
+	}
+
+	// Pick random NAD
+	rand.Seed(time.Now().UnixNano())
+	randomNAD := nadList[rand.Intn(len(nadList))]
+
+	patch := []map[string]interface{}{
+		{
+			"op":    "add",
+			"path":  "/metadata/annotations/k8s.v1.cni.cncf.io~1networks",
+			"value": randomNAD,
+		},
+	}
+
+	patchBytes, _ := json.Marshal(patch)
+
+	review.Response = &admissionv1.AdmissionResponse{
+		UID:     review.Request.UID,
+		Allowed: true,
+		Patch:   patchBytes,
+		PatchType: func() *admissionv1.PatchType {
+			pt := admissionv1.PatchTypeJSONPatch
+			return &pt
+		}(),
+	}
+
+	respBytes, _ := json.Marshal(review)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(respBytes)
+}
+
+func respond(w http.ResponseWriter, review *admissionv1.AdmissionReview, patch []byte) {
+	review.Response = &admissionv1.AdmissionResponse{
+		UID:     review.Request.UID,
+		Allowed: true,
+	}
+	respBytes, _ := json.Marshal(review)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(respBytes)
+}
+```
+
+---
+
+### 📦 Dockerfile
+
+```dockerfile
+FROM golang:1.21 as builder
+WORKDIR /app
+COPY . .
+RUN go build -o sriov-webhook .
+
+FROM alpine
+WORKDIR /root/
+COPY --from=builder /app/sriov-webhook .
+COPY config/certs /certs
+CMD ["./sriov-webhook", "-tls-cert-file=/certs/tls.crt", "-tls-key-file=/certs/tls.key"]
+```
+
+---
+
+### 🧾 `MutatingWebhookConfiguration` (snippet)
+
+
+```
+mkdir -p manifests/webhook-sr-iov
+cd manifests /web-sr-iov
+nano 01-webhook.yaml
+```
+
+```yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: sriov-nad-injector
+webhooks:
+  - name: nad-injector.sriov.svc.cluster.local 
+    rules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["CREATE"]
+        resources: ["pods"]
+    clientConfig:
+      service:
+        name: sriov-webhook
+        namespace: your-namespace
+        path: /mutate
+      caBundle: <base64-cabundle>
+    admissionReviewVersions: ["v1"]
+    sideEffects: None
+```
+
+```
+kubectl apply -f .
+```
+
+---
+
+### 🧪 Deploying
+
+You’ll need:
+- TLS certs (can use `cert-manager` or Kubernetes CA)
+- A `Deployment` + `Service` for the webhook
+- RBAC (if needed to query real NADs from the API)
+
+---
+
+```
+
+Perfect! Here's a helper script that:
+
+1. Generates a **self-signed TLS certificate** for the webhook service.
+2. Base64-encodes the **CA bundle**.
+3. Prepares it for inclusion in the `MutatingWebhookConfiguration`.
+
+---
+
+### 📄 `generate-tls.sh`
+
+```bash
+##!/bin/bash
+
+## Configurable values
+NAMESPACE="sriov-webhook"
+SERVICE="sriov-webhook"
+SECRET_NAME="sriov-webhook-tls"
+
+## Create certs directory
+mkdir -p certs && cd certs
+
+## Generate CA
+openssl genrsa -out ca.key 2048
+openssl req -x509 -new -nodes -key ca.key -subj "/CN=SRIOV Webhook CA" -days 365 -out ca.crt
+
+## Generate server key and CSR
+openssl genrsa -out tls.key 2048
+openssl req -new -key tls.key -subj "/CN=${SERVICE}.${NAMESPACE}.svc" -out server.csr
+
+## Generate server certificate signed by our CA
+cat > csr.conf <<EOF
+[ v3_ext ]
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.1 = ${SERVICE}
+DNS.2 = ${SERVICE}.${NAMESPACE}
+DNS.3 = ${SERVICE}.${NAMESPACE}.svc
+EOF
+
+openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial \
+    -out tls.crt -days 365 -extensions v3_ext -extfile csr.conf
+
+## Create Kubernetes TLS secret
+kubectl create secret tls ${SECRET_NAME} \
+  --cert=tls.crt --key=tls.key \
+  -n ${NAMESPACE}
+
+## Output base64-encoded CA bundle for webhook
+echo
+echo "📎 Copy this base64-encoded CA bundle into your MutatingWebhookConfiguration:"
+echo
+base64 -w 0 ca.crt
+echo
+```
+
+---
+
+### 🧪 How to Use
+
+1. Save it as `generate-tls.sh`  
+2. Run: `chmod +x generate-tls.sh && ./generate-tls.sh`  
+3. Copy the printed base64 `caBundle` into your `MutatingWebhookConfiguration.yaml` here:
+
+```yaml
+clientConfig:
+  caBundle: <PASTE_CA_BUNDLE_HERE>
+```
+
+---
+```
 
 
 ## Kubernetes coil (egress - gateway)
@@ -3282,6 +4347,267 @@ kubectl run -it --rm access --image=busybox
 ## In der Bbusybox 
 wget -O - http://my-nginx 
 ```
+
+## Kubernetes Scheduler
+
+### Koordinator scheduler, that also network bandwith into account
+
+
+### Explanation 
+
+Yes, Koordinator supports that.
+
+To configure **Koordinator** for **network-aware scheduling** in your Kubernetes cluster, you can follow these steps:
+
+---
+
+#### 1. **Install Koordinator**
+
+Ensure that Koordinator is installed in your cluster. If it's not already installed, you can add the Koordinator Helm repository and install it using Helm:
+
+
+```bash
+helm repo add koordinator https://koordinator-sh.github.io/charts/
+helm repo update
+helm install koordinator koordinator/koordinator --namespace koordinator-system --create-namespace
+```
+
+
+---
+
+#### 2. **Enable Load-Aware Scheduling**
+
+Koordinator's **Load-Aware Scheduling** feature allows the scheduler to consider real-time node metrics, including CPU and memory usage, to make informed scheduling decisions. This feature is enabled by default. However, you can customize its behavior by modifying the `koord-scheduler-config` ConfigMap.
+
+To customize the configuration:
+
+- Edit the `koord-scheduler-config` ConfigMap:
+ 
+```bash
+  kubectl edit configmap koord-scheduler-config -n koordinator-system
+  ```
+
+- In the `data.koord-scheduler-config` section, you can configure thresholds and weights for resources, influencing how the scheduler balances loads across nodes. For example:
+
+  
+```yaml
+  apiVersion: kubescheduler.config.k8s.io/v1beta2
+  kind: KubeSchedulerConfiguration
+  profiles:
+    - schedulerName: koord-scheduler
+      plugins:
+        filter:
+          enabled:
+            - name: LoadAwareScheduling
+        score:
+          enabled:
+            - name: LoadAwareScheduling
+              weight: 1
+        reserve:
+          enabled:
+            - name: LoadAwareScheduling
+      pluginConfig:
+        - name: LoadAwareScheduling
+          args:
+            # Configure thresholds and weights here
+  ```
+
+
+  This configuration enables the `LoadAwareScheduling` plugin and allows you to set specific thresholds and weights. For more detailed information on configuring these parameters, refer to the [Koordinator Load-Aware Scheduling Documentation](https://koordinator.sh/docs/user-manuals/load-aware-scheduling/).
+
+---
+
+#### 3. **Annotate Nodes with Custom Usage Thresholds (Optional)**
+
+For more granular control, you can set specific load thresholds on individual nodes using annotations. By adding the `scheduling.koordinator.sh/usage-thresholds` annotation to a node, you can define custom utilization thresholds that Koordinator will consider during scheduling.
+
+For example, to set a CPU usage threshold of 80% and a memory usage threshold of 70% on a node:
+
+
+```bash
+kubectl annotate node <node-name> scheduling.koordinator.sh/usage-thresholds='{"usageThresholds":{"cpu":80,"memory":70}}'
+```
+
+
+Replace `<node-name>` with the name of your node. This annotation helps Koordinator make more informed scheduling decisions based on the real-time load of each node. Detailed instructions can be found in the [Koordinator Load-Aware Scheduling Documentation](https://koordinator.sh/docs/user-manuals/load-aware-scheduling/).
+
+---
+
+#### 4. **Deploy Pods Using Koordinator's Scheduler**
+
+When deploying your applications, specify `koord-scheduler` as the scheduler in your Pod or Deployment manifests to utilize Koordinator's scheduling capabilities.
+
+Here's an example of a Deployment manifest:
+
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: example
+  template:
+    metadata:
+      labels:
+        app: example
+    spec:
+      schedulerName: koord-scheduler
+      containers:
+        - name: example-container
+          image: example-image
+          ports:
+            - containerPort: 80
+```
+
+In this manifest:
+
+- The `schedulerName: koord-scheduler` line directs Kubernetes to use Koordinator's scheduler for this Deployment.
+- The rest of the manifest defines a typical Deployment with three replicas of a container named `example-container`.
+
+By setting the `schedulerName` to `koord-scheduler`, Koordinator will handle the scheduling of these Pods, taking into account network traffic and other factors to optimize performance. For more information on configuring multiple schedulers, refer to the [Kubernetes Documentation](https://kubernetes.io/docs/tasks/extend-kubernetes/configure-multiple-schedulers/).
+
+### Why is CPU pinning not used as default in kubernetes scheduler anymore ?
+
+
+### The basics 
+
+CPU pinning (or **CPU affinity**) is a technique where specific processes or threads are bound to run on specific CPUs (cores), rather than being scheduled on any available CPU by the OS scheduler. This can improve **performance and cache locality** by keeping workloads on the same CPU and reducing context switching or cache misses.
+
+---
+
+#### 🔧 How CPU Pinning Works
+
+When CPU pinning is enabled:
+
+- The OS scheduler is told to **restrict** a process/thread to a specific CPU (or a set of CPUs).
+- For example: process A → only runs on CPU 0, process B → only on CPU 1.
+- In Linux, tools like `taskset`, `cset`, or `cpuset cgroups` can enforce CPU pinning.
+- In containers, it's handled via cgroups and `cpuset` settings, often via the container runtime or orchestration platform like Kubernetes.
+
+---
+
+#### 🤔 Why Was CPU Pinning Used?
+
+- **Real-time systems**: where latency and predictability are critical.
+- **Performance tuning**: for applications that are CPU-bound and benefit from avoiding cache thrashing or migration.
+- **NUMA-aware scheduling**: pinning threads to specific NUMA nodes can help optimize memory access patterns.
+
+---
+
+#### 🧊 Why Kubernetes Doesn't Use CPU Pinning by Default Anymore
+
+Kubernetes used to support pinning via the `cpuManagerPolicy=static`, which could align containers to specific cores when `Guaranteed` QoS was used.
+
+However, **it's not the default**, and here's why:
+
+1. **Complexity vs. Benefit**:
+   - Managing CPU topology at scale is **complex and brittle**.
+   - In dynamic workloads (which Kubernetes excels at), strict pinning can lead to **resource fragmentation** and underutilization.
+
+2. **Reduced Flexibility**:
+   - Pinning reduces the OS scheduler’s ability to optimize CPU time across workloads.
+   - It limits Kubernetes' ability to reschedule or balance pods dynamically.
+
+3. **Overhead in Mixed Workloads**:
+   - For non-latency-critical workloads, the gains are often negligible.
+   - Kubernetes prefers **isolation** via cgroups (`cpu shares`, `quota`, etc.), which is more flexible.
+
+4. **Not Portable**:
+   - CPU pinning is **highly node-specific**.
+   - Kubernetes prioritizes portability, so default behavior avoids assuming specific CPU layouts.
+
+---
+
+#### 🛠️ When You *Should* Use CPU Pinning in Kubernetes
+
+CPU pinning *is* still possible in Kubernetes with the right settings:
+
+- Use `Guaranteed` QoS class (i.e., requests = limits for CPU).
+- Enable `--cpu-manager-policy=static` on the kubelet.
+- Optionally configure `TopologyManager` and `NUMA` alignment.
+
+✅ Recommended for:
+- Real-time or latency-sensitive apps (e.g., telco 5G workloads)
+- HPC (high-performance computing)
+- Some AI/ML inference workloads
+
+Let’s break that down — it's a key point in understanding *why* Kubernetes doesn’t use strict CPU pinning by default.
+
+---
+
+#### 🔄 What are Dynamic Workloads?
+
+In Kubernetes, **dynamic workloads** means:
+
+- Pods **come and go frequently** (auto-scaling, job runners, CI/CD pipelines, etc.).
+- Cluster **resources are shared** among many teams or services.
+- Kubernetes constantly tries to **optimize usage**: bin-packing, rescheduling, scaling up/down.
+
+---
+
+#### 📌 What Does “Strict CPU Pinning” Do?
+
+Strict CPU pinning means:
+
+- A container gets locked to **specific CPU cores**.
+- Those cores are reserved **exclusively** for that pod — no sharing.
+- Even if the pod is doing **nothing**, no one else can use those cores.
+
+---
+
+#### 🧩 Now: What is Resource Fragmentation?
+
+Imagine you have a 4-core node:
+
+| Core | Available? | Pinned to |
+|------|------------|-----------|
+| 0    | No         | Pod A     |
+| 1    | No         | Pod B     |
+| 2    | Yes        | Free      |
+| 3    | Yes        | Free      |
+
+Now another pod (Pod C) comes in and wants 2 CPUs — but **only 2 unpinned cores are available**.
+
+✅ Kubernetes sees 2 free CPUs overall  
+🚫 But because cores 0 & 1 are pinned (and not shared), Pod C **can’t be scheduled here**, even though the node is only 50% utilized!
+
+That’s **resource fragmentation**: the **available CPU is split into unusable chunks**.
+
+---
+
+#### 📉 What is Underutilization?
+
+Same scenario:  
+Let’s say Pod A and Pod B are mostly idle — using only ~5% CPU each.
+
+But because they’ve *pinned* their CPUs, no other pod is allowed to use cores 0 or 1.
+
+Result?
+
+- Cores 0 and 1 are **mostly idle**.
+- The node looks **"full"** to the scheduler.
+- Meanwhile, other nodes may be **overloaded**.
+
+That's **underutilization** — you’re **not getting the most out of your hardware**.
+
+---
+
+#### ⚖️ Why Kubernetes Avoids This
+
+Kubernetes prefers **soft isolation** via cgroups:
+
+- Containers get CPU *shares* or *quotas*, not full core reservations.
+- The OS can dynamically move workloads around.
+- Kubernetes can fit more workloads per node and reschedule things efficiently.
+
+So unless you're in a **real-time** or **deterministic** use case (like telco or industrial systems), strict pinning hurts the **efficiency and elasticity** that Kubernetes is designed for.
+
+---
+
 
 ## Helm (Kubernetes Paketmanager)
 
@@ -4668,11 +5994,323 @@ kubectl get svc my-nginx -o wide
 curl <external-ip>:<node-port>
 ```
 
-## Kubernetes - Hilfreiche Tools / Networking
+## Kubernetes - Hilfreiche Tools / Networking /Debugging
 
 ### NetworkPolicyEditor
 
   * https://editor.networkpolicy.io
+
+### Debug on node with root-priviliges with kubectl debug
+
+
+
+```
+kubectl debug node/worker2 -it --image=nicolaka/netshoot --profile=netadmin  
+## in der shell 
+apk add iptables-legacy
+```
+
+## Kubernetes Security
+
+### NodeShell vs. kubectl debug (for node)
+
+
+### Explanation
+
+#### 🐚 `node-shell` (e.g., from `kops` or other tools)
+- **What it is**: A command that typically starts a privileged pod on the node you want to debug.
+- **How it works**: 
+  - It schedules a **privileged pod** on the node using `hostPID`, `hostNetwork`, and often mounts the node’s filesystem.
+  - Once the pod is up, it execs into a shell inside that pod.
+- **Main Use Case**: Used primarily to get "inside" a node when you need full access to the node’s environment from within Kubernetes (e.g., inspecting logs, filesystems, or processes).
+- **Tools**: Often provided by tools like `kops`, e.g., `kops toolbox node-shell <node-name>`.
+
+#### ✅ `kubectl debug` (with node targeting)
+- **What it is**: A native `kubectl` command introduced in Kubernetes 1.18+ (stable around 1.23) for debugging pods and nodes.
+- **How it works (node debug)**:
+  - You run something like:
+    ```bash
+    kubectl debug node/<node-name> -it --image=busybox
+    ```
+  - It creates a **debug pod** on that node, using similar capabilities to `node-shell` (privileged, `hostPID`, etc.).
+  - Offers more control (custom images, attach to namespaces, etc.) and is more **standardized** across clusters.
+
+---
+
+#### 🔍 Key Differences
+
+| Feature                      | `node-shell`                         | `kubectl debug node`                |
+|-----------------------------|--------------------------------------|-------------------------------------|
+| Native to Kubernetes         | ❌ (usually via `kops`, scripts)     | ✅ Yes                               |
+| Requires external tooling    | ✅ Often (`kops`, scripts)           | ❌ Just `kubectl`                   |
+| Uses `kubectl`               | ✅ Yes (indirectly)                  | ✅ Yes                               |
+| Customizable image           | ❌ Usually fixed                     | ✅ You can specify the image         |
+| Part of standard workflow    | ❌ More "legacy" or tool-specific     | ✅ Recommended upstream method       |
+| Works on any cluster         | ❌ Usually limited (e.g., to `kops`) | ✅ Works on any compliant cluster    |
+
+---
+
+#### ✅ Recommendation
+- Prefer **`kubectl debug`** for node access if your Kubernetes version supports it and you're not tied to a specific tooling ecosystem.
+- Use **`node-shell`** if you're in a `kops` environment or using automation/scripts that depend on it.
+
+Want a sample command for either?
+
+#### 🚨 Security Concerns with `node-shell`
+
+##### 1. **Privileged Access**
+- It runs a **privileged pod** with:
+  - `hostPID: true` → can see/manipulate processes on the node.
+  - `hostNetwork: true` → full network stack access.
+  - Mounting the node's **entire root filesystem**.
+- This essentially gives **root-level access** to the node, which can be risky if misused.
+
+##### 2. **Cluster-Wide Risk**
+- If someone gains access to this mechanism and can launch `node-shell`, they could potentially:
+  - Inspect secrets.
+  - Tamper with system files.
+  - Escalate privileges or break out of isolation.
+
+##### 3. **Audit and Logging**
+- It's not always obvious who launched a `node-shell` session.
+- If your environment **doesn't log pod creations properly**, this might fly under the radar.
+- `kubectl debug`, by contrast, has more clear semantics and integrates better with Kubernetes auditing.
+
+##### 4. **Non-Standard Behavior**
+- `node-shell` is often **tool-specific** (e.g., `kops`) and not portable or standardized across clusters.
+- This can lead to confusion or inconsistent behavior in different environments (especially if you're collaborating across teams or orgs).
+
+---
+
+#### ✅ When Is `node-shell` Still Useful?
+
+- **Dev or staging clusters**, where quick debugging is more important than strict security controls.
+- When using **`kops`**, and you want a simple, reliable way to jump into nodes.
+- If your team already **audits or restricts RBAC access** to who can run it.
+
+---
+
+#### 🔒 Recommendations
+
+| Practice | Suggestion |
+|---------|------------|
+| Use RBAC | Only let **trusted admins** run `node-shell` or create privileged pods. |
+| Audit logs | Enable **audit logging** to track who creates pods like this. |
+| Prefer `kubectl debug` | Especially in **regulated** or **production** environments. |
+| Avoid running it long-term | Don’t leave debug pods running — they could be misused. |
+
+---
+
+Want a quick `kubectl debug` alternative to `node-shell` for a node? I can give you a drop-in command.
+
+### Kube Api Server - Watch Internals
+
+
+
+Der `watch`-Mechanismus im Kubernetes API Server ist ein zentrales Feature für effiziente Reaktionen auf Änderungen im Clusterzustand – z. B. wenn Controller, Operatoren oder Tools wie `kubectl` Ressourcenänderungen beobachten. Hier ist eine technische Erklärung, wie das funktioniert:
+
+---
+
+### 🧠 Grundidee von `watch`
+
+Statt regelmäßig (`polling`) den API-Server nach dem Zustand einer Ressource zu fragen, öffnet der Client eine **langlaufende HTTP-Verbindung**, bei der der API-Server **kontinuierlich Änderungen streamt**, sobald sie auftreten.
+
+---
+
+### 🔧 Technische Funktionsweise
+
+```
+GET /api/v1/pods?watch=true
+```
+
+…dann antwortet der API Server **nicht mit einer einmaligen Liste**, sondern beginnt, **ein Event-Stream (HTTP-Streaming)** zurückzugeben.
+
+#### 3. **Events als Antwort**
+Der Client erhält ein Stream von JSON-Objekten wie:
+
+```json
+{
+  "type": "ADDED",
+  "object": {
+    "metadata": { ... }
+  }
+}
+{
+  "type": "MODIFIED",
+  "object": { ... }
+}
+{
+  "type": "DELETED",
+  "object": { ... }
+}
+```
+
+Jedes dieser Events beschreibt eine Änderung, die in etcd passiert ist.
+
+---
+
+
+### ⚡ Performance: Wie skaliert das?
+
+- Der API Server cached Änderungen (Change history, genannt **watch cache**) für kurze Zeit im RAM.
+- So muss er nicht ständig etcd abfragen.
+- Das erhöht die Performance bei vielen parallelen Watches (z. B. in großen Clustern mit vielen Controllern).
+
+---
+
+### 🛠️ Beispiel mit curl
+
+```bash
+curl -k -H "Authorization: Bearer $TOKEN" \
+  "https://<apiserver>/api/v1/namespaces/default/pods?watch=true"
+```
+
+Du bekommst eine `chunked` HTTP-Antwort mit Live-Updates.
+
+Super spannende Frage – hier tauchen wir richtig tief in die Kubernetes-Interna ein! 🔬
+
+---
+
+### 🔍 **Kann man den Watch-Stream im API Server "sehen"?**
+
+#### 🧭 Kurz gesagt:
+Du kannst den Traffic **sehen**, aber **nicht direkt einsehen oder entschlüsseln**, wenn du nicht Teil des Traffics bist oder nicht Zugriff auf den TLS-Schlüssel hast.
+
+---
+
+### 🛜 Welches Protokoll wird verwendet?
+
+#### ✅ **HTTP/1.1 über TLS**
+- Kubernetes API Calls, inklusive `watch`, laufen über **HTTPS** (also HTTP/1.1 über TLS).
+- Der `watch`-Mechanismus verwendet **HTTP-Streaming** mit `Transfer-Encoding: chunked`.
+
+---
+
+### 🔐 Ist der Stream verschlüsselt?
+
+#### Ja – **immer!**
+- Selbst innerhalb des Clusters läuft die Kommunikation mit dem API-Server meist über HTTPS.
+- Die Verbindung ist durch **TLS verschlüsselt**, also ohne den privaten Schlüssel **nicht entschlüsselbar**.
+
+---
+
+### 🔭 Was könntest du trotzdem beobachten?
+
+#### Möglichkeit 1: **Audit Logs aktivieren**
+- Du kannst in der API-Server-Konfiguration **Audit Logging** aktivieren.
+- Dann siehst du, **welcher Client** wann einen `watch` auf welche Ressourcen geöffnet hat – aber nicht den Stream selbst.
+
+Beispiel aus einem Audit Log:
+
+```json
+{
+  "verb": "watch",
+  "user": { "username": "system:kube-controller-manager" },
+  "objectRef": { "resource": "pods", "namespace": "default" },
+  "stage": "ResponseStarted"
+}
+```
+
+➡️ Zeigt dir: Watch wurde geöffnet, aber nicht was "gestreamt" wurde.
+
+---
+
+#### Möglichkeit 2: **Mitprotokollieren mit einem Proxy (z. B. mit MITM)**
+- Wenn du in einer Testumgebung bist, kannst du den Traffic über einen **TLS-terminierenden Proxy** wie [mitmproxy](https://mitmproxy.org/) oder Envoy umleiten.
+- Dort kannst du dann den **klartext HTTP-Stream** beobachten.
+- Das geht natürlich **nur**, wenn du den TLS-Traffic aufbrechen kannst, z. B. durch eigene Zertifikate oder Debug-Zugriff.
+
+---
+
+#### Möglichkeit 3: **Einen eigenen Watch-Client schreiben**
+- Du kannst ein Tool oder Script schreiben (z. B. in Python oder Go), das einen `watch=true`-Request stellt.
+- Dann **siehst du direkt**, was der API Server als Stream sendet.
+
+Beispiel in Go (vereinfacht):
+
+```go
+clientset.CoreV1().Pods("").Watch(context.TODO(), metav1.ListOptions{
+    Watch: true,
+})
+```
+
+---
+
+### 🧪 Fazit
+
+| Aspekt | Antwort |
+|-------|--------|
+| Protokoll | HTTP/1.1 über TLS |
+| Stream sichtbar? | Nein, verschlüsselt |
+| Entschlüsselung möglich? | Nur mit MITM oder privatem TLS-Zertifikat |
+| Auditierbar? | Ja, mit Audit Logs |
+| Debugging möglich? | Ja, mit eigenen Clients oder Proxies |
+
+---
+
+Wenn du willst, kann ich dir ein Beispiel-Setup machen, wie du z. B. mit `mitmproxy` oder Envoy den Watch-Traffic in einer Testumgebung sichtbar machst. Oder ein kleines Python-Tool, das einen Watch aufruft und ausgibt. Sag einfach Bescheid!
+
+
+Sehr gute und tiefgehende Frage – du willst’s wirklich wissen! 😄  
+Schauen wir uns an, **welcher private Schlüssel bei der Verschlüsselung des Kubernetes API-Traffics verwendet wird**:
+
+---
+
+### 🔐 **Welcher private Key wird verwendet?**
+
+#### 👉 **Der des API Servers selbst**, also:
+> **Der private Schlüssel des TLS-Zertifikats**, mit dem der Kubernetes API Server seine HTTPS-Verbindung absichert.
+
+---
+
+#### 🧰 Wo liegt dieser Key?
+
+In einem typischen Kubernetes-Setup (z. B. kubeadm oder Vanilla):
+
+- Zertifikat: `/etc/kubernetes/pki/apiserver.crt`
+- Privater Schlüssel: `/etc/kubernetes/pki/apiserver.key`
+
+Das sieht z. B. so aus:
+
+```bash
+$ ls -l /etc/kubernetes/pki/apiserver.*
+-rw------- 1 root root 1675 apiserver.key
+-rw-r--r-- 1 root root 1363 apiserver.crt
+```
+
+💡 Nur **der API Server** (bzw. Root-User auf dem Host) hat Zugriff auf diesen Key. Er wird verwendet, um TLS-Handshake-Anfragen von Clients zu beantworten und die Verbindung zu verschlüsseln.
+
+---
+
+### 🧪 Kann ich den Traffic entschlüsseln, wenn ich den Key habe?
+
+Ja – mit Tools wie `Wireshark`, `mitmproxy`, `ssldump`, oder `openssl` kannst du den TLS-Traffic **entschlüsseln**, **wenn** du Zugriff auf den Private Key des API Servers hast **und** Perfect Forward Secrecy (PFS) **deaktiviert** ist (was allerdings meist **nicht der Fall** ist – siehe unten).
+
+---
+
+### ⚠️ ABER: Was ist mit **Perfect Forward Secrecy (PFS)**?
+
+#### Die meisten Kubernetes API Server verwenden moderne TLS-Cipher wie:
+```
+TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+```
+
+Diese verwenden **Ephemeral Diffie-Hellman (ECDHE)** → bedeutet:
+> Selbst wenn du den privaten Schlüssel **nachträglich** bekommst, kannst du vergangene Verbindungen **nicht entschlüsseln**, weil die Sitzungsschlüssel **flüchtig erzeugt und nicht speicherbar** sind.
+
+🔐 **PFS schützt also effektiv gegen spätere Entschlüsselung**, auch mit Key.
+
+---
+
+### 💡 Fazit
+
+| Frage | Antwort |
+|-------|---------|
+| Wer hat den Key? | Der API Server (Datei: `apiserver.key`) |
+| Womit wird verschlüsselt? | Mit dem TLS-Zertifikat des API Servers |
+| Kann ich damit Traffic entschlüsseln? | Nur in Spezialfällen, wenn kein PFS aktiv ist |
+| Ist PFS aktiv? | In >99 % aller modernen Kubernetes-Setups: **Ja** |
+
 
 ## Docker Überblick
 
