@@ -135,4 +135,3 @@ So unless you're in a **real-time** or **deterministic** use case (like telco or
 
 ---
 
-Would you like a visual diagram or analogy to make this even clearer?
