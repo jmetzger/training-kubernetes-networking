@@ -2,7 +2,7 @@
 
 ## Mode: 
 
-  * vxlancrossnet
+  * vxlan: crossnet
 
 ## What does it do ? 
 
