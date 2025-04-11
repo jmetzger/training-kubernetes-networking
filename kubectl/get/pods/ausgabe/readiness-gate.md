@@ -59,4 +59,76 @@ Dort siehst du die Readiness Gates und ob sie erfüllt sind.
 
 ---
 
+## Beispiel 2 
+
+
+---
+
+### 🧪 Ziel:  
+Der Pod soll erst dann als „Ready“ gelten, wenn eine benutzerdefinierte Condition (`example.com/ready`) auf `True` gesetzt wurde.
+
+---
+
+### 🔧 Deployment-Beispiel mit Readiness Gate
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: readiness-gate-demo
+spec:
+  readinessGates:
+    - conditionType: "example.com/ready"
+  containers:
+    - name: app
+      image: busybox
+      args: ["sh", "-c", "echo App running; sleep 3600"]
+      readinessProbe:
+        exec:
+          command: ["cat", "/tmp/ready"]
+        initialDelaySeconds: 3
+        periodSeconds: 5
+  initContainers:
+    - name: set-readiness
+      image: busybox
+      command:
+        - sh
+        - -c
+        - |
+          echo "Waiting 10s before setting readiness condition..."
+          sleep 10
+          kubectl patch pod readiness-gate-demo \
+            --type='json' \
+            -p='[{"op":"add","path":"/status/conditions/-","value":{"type":"example.com/ready","status":"True","lastTransitionTime":"'$(date -Iseconds)'"}}]' \
+            --subresource=status
+```
+
+---
+
+### 📝 Erklärung:
+
+- `readinessGates`: definiert, dass der Pod nur „Ready“ wird, wenn die Condition `example.com/ready` erfüllt ist.
+- `initContainer`: wartet 10 Sekunden und setzt dann die Readiness-Condition per `kubectl patch`.
+- Die Hauptcontainer-Readiness-Probe (`readinessProbe`) erwartet eine Datei `/tmp/ready`, die wir hier nur symbolisch drin haben.
+
+---
+
+### ❗ Voraussetzung:
+Damit der `initContainer` `kubectl` verwenden kann und auf den API-Server zugreifen darf, müsstest du:
+- Ein ServiceAccount mit passenden RBAC-Rechten zuweisen
+- Oder du simulierst das manuell von außen (z. B. durch ein Sidecar oder externen Controller)
+
+---
+
+### 🔍 Beobachtung:
+
+```bash
+kubectl get pod readiness-gate-demo -w
+```
+
+Du wirst sehen, dass der Pod **nicht "READY"** ist, bis die Bedingung erfüllt ist.
+
+---
+
+Möchtest du auch ein RBAC-Beispiel dazu, damit das `kubectl patch` im Container funktioniert?
 Wenn du magst, kann ich dir ein Minibeispiel zeigen, wie man so einen Readiness Gate in einem Deployment nutzt.
