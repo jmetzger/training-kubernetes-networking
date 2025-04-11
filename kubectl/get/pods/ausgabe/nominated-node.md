@@ -28,6 +28,13 @@ Perfekt, hier ist ein kleines Beispiel, das zeigt, wie die **`NOMINATED NODE`**-
 
 #### 1. Erstelle zwei PriorityClasses
 
+```
+cd 
+mkdir -p manifests/prio
+cd manifests/prio
+nano low-priority.yaml
+```
+
 ```yaml
 # low-priority.yaml
 apiVersion: scheduling.k8s.io/v1
@@ -72,7 +79,7 @@ spec:
     args: ["sleep", "3600"]
     resources:
       requests:
-        cpu: "900m"
+        cpu: "400m"
 ```
 
 ```bash
@@ -99,14 +106,14 @@ spec:
     args: ["sleep", "3600"]
     resources:
       requests:
-        cpu: "800m"
+        cpu: "300m"
 ```
 
 ```bash
 kubectl apply -f high-pod.yaml
 ```
 
-> Kubernetes merkt: Es reicht kein Platz, aber der neue Pod hat eine höhere Priorität. Also wird der `low-priority-pod` **preempted** (also entfernt), um Platz zu machen.
+> Kubernetes merkt: Der Platz reicht nicht, aber der neue Pod hat eine höhere Priorität. Also wird der `low-priority-pod` **preempted** (also entfernt), um Platz zu machen.
 
 ---
 
