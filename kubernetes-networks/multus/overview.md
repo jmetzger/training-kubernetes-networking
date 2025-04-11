@@ -102,4 +102,10 @@ spec:
 
 ```
 kubectl apply -f .
+kubectl exec -it samplepod -- sh 
+```
+
+```
+# in der shell
+ip a
 ```
