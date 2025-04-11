@@ -148,6 +148,7 @@
 
   1. Kubernetes Security
      * [NodeShell vs. kubectl debug (for node)](/tools/node-shell-vs-kubectl-debug.md)
+     * [Kube Api Server - Watch Internals](/internals/kube-api-server/watch.md)
 
 ## Backlog
 
