@@ -28,7 +28,7 @@ Koordinator's **Load-Aware Scheduling** feature allows the scheduler to consider
 
 To customize the configuration:
 
-- Edit the `koord-scheduler-config` ConfigMap:
+- Edit the `koord-scheduler-config` ConfigMap:
  
 ```bash
   kubectl edit configmap koord-scheduler-config -n koordinator-system
