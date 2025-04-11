@@ -124,3 +124,24 @@ spec:
 ```
 kubectl apply -f .
 ```
+
+```
+kubectl debug -it node/worker1 --image nicolaka/netshoot --profile netadmin 
+# in sh 
+apk add iptables-legacy
+# 
+iptables-legacy -L -t nat 
+```
+
+
+```
+iptables-legacy -L -t nat | grep -A 10 KUBE-SERVICES
+iptables-legacy -L -t nat | grep -A 10 KUBE-SVC-V2O
+# SEP = Service Endpoint 
+iptables-legacy -L -t nat | less
+```
+
+```
+# in less ausgabe (your corresponding SEP - Entry)
+/KUBE-SEP-6Z 
+```
