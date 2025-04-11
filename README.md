@@ -91,6 +91,7 @@
      * [Multus Überblick](kubernetes-networks/multus/overview.md)
      * [Multus Installation](kubernetes-networks/multus/installation.md)
      * [sr-iov mit multus](kubernetes-networks/multus/sr-iov.md)
+     * [Zufällige Auswahl von Network-Attachements-Definition für srv-iov](/kubernetes-networks/multus/sr-iov/autodetection.md)
 
   1. Kubernetes coil (egress - gateway)
      * [coil](kubernetes-networks/coil/overview.md)
