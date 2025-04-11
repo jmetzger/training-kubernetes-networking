@@ -129,7 +129,13 @@ kubectl apply -f high-pod.yaml
 #### 4. Schau dir die Pods an
 
 ```bash
-kubectl get pods -o wide
+kubectl get pods -o wide -w
+```
+
+```
+# Wenn übung beendet
+kubectl delete -f .
+kubectl uncordon worker1 worker3
 ```
 
 Du solltest sehen:
