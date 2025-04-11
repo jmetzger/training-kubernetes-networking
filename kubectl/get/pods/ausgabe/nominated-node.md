@@ -65,6 +65,10 @@ kubectl apply -f high-priority.yaml
 
 #### 2. Erzeuge einen Pod mit niedriger Priorität, der viel CPU braucht
 
+```
+nano low-pod.yaml
+```
+
 ```yaml
 # low-pod.yaml
 apiVersion: v1
@@ -91,6 +95,10 @@ kubectl apply -f low-pod.yaml
 ---
 
 #### 3. Jetzt starte einen **high-priority Pod**, der ebenfalls CPU braucht
+
+```
+nano high-pod.yaml
+```
 
 ```yaml
 # high-pod.yaml
