@@ -10,7 +10,7 @@
 
 ## Generell 
 
-  * Erweiterung des PCI-Express Standarads 
+  * Erweiterung des PCI-Express Standards 
   * Eine Netzwerkkarte wird mehrmals angeboten und Kommunikation erfolgt direkt und nicht über den Umweg Kernel
 
 ## Vorbereitung
