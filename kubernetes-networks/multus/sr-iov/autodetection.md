@@ -66,6 +66,99 @@ This is not *truly random per pod*, but it’s **automatically distributed** if 
 
 ---
 
+Perfect — you're aiming for **random selection of a specific SR-IOV VF per pod**, which is a bit outside of what Multus and the SR-IOV device plugin do by default. But with a bit of Kubernetes magic, we can make it work.
+
+Here’s a practical **design pattern** to achieve this:
+
+---
+
+## 🧩 Strategy for Random SR-IOV NIC Selection Per Pod
+
+### 1. **Predefine NADs for Each SR-IOV Interface**
+- You create one `NetworkAttachmentDefinition` per physical interface (e.g., `sriov-net-ens1f0`, `sriov-net-ens2f0`, etc.)
+- Each NAD refers to a specific `resourceName` exposed by the SR-IOV device plugin.
+
+#### Example NAD for `ens1f0`:
+```yaml
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: sriov-net-ens1f0
+spec:
+  config: '{
+    "type": "sriov",
+    "name": "sriov-net-ens1f0",
+    "ipam": {
+      "type": "static"
+    },
+    "deviceID": "0000:01:00.1"  # optional if resource pool used
+  }'
+```
+
+---
+
+### 2. **Custom Init Container or Admission Webhook to Inject a Random NAD**
+
+Since Kubernetes doesn't support "pick a random NAD" natively, your workaround is:
+
+#### Option A: Init Container + Downward API + Host Mount
+1. Mount a host path (e.g., `/etc/cni/net.d`) into the pod as read-only.
+2. Have an **init container** (or even an entrypoint script) that:
+   - Lists available NADs (e.g., via Kubernetes API).
+   - Picks one at random.
+   - Patches the pod's annotations to include it (if running in privileged mode + with necessary permissions).
+   - Or writes the choice to an environment file used by the main container.
+
+#### Option B: Mutating Admission Webhook
+This is more elegant but more complex:
+- Write a small webhook service (e.g., in Go or Python) that intercepts Pod creation.
+- At admission time, it:
+  - Queries available NADs matching a pattern (e.g., label or name prefix).
+  - Picks one at random.
+  - Adds the `k8s.v1.cni.cncf.io/networks` annotation with the chosen NAD.
+
+👉 This works seamlessly and is transparent to your apps.
+
+---
+
+### 3. **Deploy Your Pods With a Generic NAD Label**
+You only need to request something like this:
+
+```yaml
+metadata:
+  annotations:
+    k8s.v1.cni.cncf.io/networks: sriov-net-<RANDOM>
+```
+
+The actual `<RANDOM>` part gets injected by your webhook or entrypoint logic.
+
+---
+
+### 🛠️ Tools You’ll Need
+- Kubernetes client (kubectl or client library)
+- Permissions to list NADs (CRD)
+- Optional: controller/webhook framework like Kubebuilder or Kopf (Python)
+- Custom script or binary to pick the NAD at runtime
+
+---
+
+### ✅ Benefits
+- Full control and randomness
+- Works even with static SR-IOV assignments
+- Extensible for other policies (e.g., "least used")
+
+---
+
+### ⚠️ Caveats
+- You'll need a controller/webhook or privileged init logic.
+- NADs must be kept in sync with actual node hardware and VF pools.
+- If you’re using the `sriov-network-operator`, you may have to manually break up your `SriovNetworkNodePolicy` into per-interface pools.
+
+---
+
+Want a ready-made Python or Bash script to randomly pick a NAD and patch the pod? Or a small webhook template in Go/Python?
+
+
 
 Awesome! Here's a **ready-made Bash script** that randomly selects a `NetworkAttachmentDefinition` (NAD) from a specific namespace and outputs it in a way your Pod or init container can use.
 
