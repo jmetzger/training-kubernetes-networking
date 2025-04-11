@@ -102,6 +102,9 @@
      * [Calico Logging Firewall Rules](kubernetes-networks/calico/logging-policy.md)
      * [Exercise calico Network Policy](kubernetes-networkpolicy/calico/01-exercise-calico.md)
 
+  1. Kubernetes Scheduler
+     * [Koordinator scheduler, that also network bandwith into account](/kubernetes-scheduler/network-bandwith/koordinator.md)
+
   1. Helm (Kubernetes Paketmanager)
      * [Helm Grundlagen](/helm/grundlagen.md)
      * [Helm Warum ?](/helm/warum.md)
