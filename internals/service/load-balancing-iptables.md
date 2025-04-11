@@ -11,7 +11,7 @@ Assuming kube-proxy is running in **iptables mode**, here’s what happens and w
 ### 🔧 Scenario Overview:
 
 - You have a Service (e.g., `my-service`) with a ClusterIP (e.g., `10.96.0.100`) and port (e.g., `80`)
-- The Service selects 3 Pods (let’s say on ports 80) via label selectors
+- The Service selects 3 Pods (let’s say on ports 8080) via label selectors
 - Kube-proxy on each node programs `iptables` rules
 
 ---
