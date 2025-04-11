@@ -83,7 +83,7 @@ spec:
     args: ["sleep", "3600"]
     resources:
       requests:
-        cpu: "1600m"
+        cpu: "2000m"
 ```
 
 ```bash
