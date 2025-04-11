@@ -44,4 +44,75 @@ By using `"mtu": 0`, Calico adapts automatically.
 
 ---
 
-Let me know if you want help checking what MTU Calico is actually using on your nodes.
+Alright! Here's how you can **check what MTU Calico is actually using** on your nodes:
+
+---
+
+### 🛠️ Option 1: Inspect a Calico CNI-created interface inside a pod
+
+Run a pod and check the interface MTU inside it:
+
+```bash
+kubectl run -it --rm test-pod --image=alpine -- sh
+```
+
+Then inside the pod:
+
+```sh
+ip link
+```
+
+Look for the `eth0` interface — it’s usually the one used for communication — and you’ll see something like:
+
+```
+3: eth0@if5: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1440 ...
+```
+
+✅ This MTU (`1440` here) is what Calico assigned to the pod's virtual interface, based on the host MTU and overhead.
+
+---
+
+### 🛠️ Option 2: Check on the host what MTU Calico chose
+
+SSH into one of your nodes and look for Calico interfaces:
+
+```bash
+ip link | grep cali
+```
+
+You might see:
+
+```
+15: cali12345678@if16: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1440 ...
+```
+
+That shows the MTU used for the host-side veth of the pod.
+
+---
+
+### 🛠️ Option 3: Look at the actual auto-detected MTU logic in the logs
+
+You can grep the logs of the Calico CNI plugin or Felix:
+
+```bash
+kubectl -n kube-system logs -l k8s-app=calico-node | grep -i mtu
+```
+
+Or on some setups:
+
+```bash
+kubectl -n kube-system logs daemonset/calico-node | grep -i mtu
+```
+
+You may see lines like:
+
+```
+Auto-detected interface eth0 with MTU 1500
+Calico CNI MTU set to 1440 (1500 - 60)
+```
+
+That confirms both the detected MTU and how it subtracts encapsulation overhead.
+
+---
+
+If you'd like, I can help you write a little automated script to grab MTU values across all nodes or pods. Want that?
