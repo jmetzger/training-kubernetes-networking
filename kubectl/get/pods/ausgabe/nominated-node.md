@@ -57,8 +57,9 @@ description: "Hohe Priorität"
 ```
 
 ```bash
-kubectl apply -f low-priority.yaml
-kubectl apply -f high-priority.yaml
+kubectl cordon worker1
+kubectl cordon worker3
+kubectl apply -f .
 ```
 
 ---
