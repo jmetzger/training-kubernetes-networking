@@ -90,7 +90,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-deployment
-  namespace: nginx-demo
 spec:
   replicas: 3
   selector:
@@ -112,7 +111,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nginx-service
-  namespace: nginx-demo
 spec:
   selector:
     app: nginx
