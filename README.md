@@ -146,6 +146,9 @@
      * [NetworkPolicyEditor](https://editor.networkpolicy.io)
      * [Debug on node with root-priviliges with kubectl debug](/debug/debug-as-root.md)
 
+  1. Kubernetes Security
+     * [NodeShell vs. kubectl debug (for node)](/tools/node-shell-vs-kubectl-debug.md)
+
 ## Backlog
 
   1. Docker Überblick
