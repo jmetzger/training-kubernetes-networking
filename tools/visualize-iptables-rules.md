@@ -18,12 +18,6 @@ Yes, there are several tools and approaches to visualize `iptables` rules and tr
   dot -Tpng output.dot -o iptables.png
   ```
 
----
-
-#### 2. **Visual iptables**
-- **Description**: Web-based tool to drag-and-drop or define iptables rules visually.
-- **URL**: [https://visualiptables.com/](https://visualiptables.com/)
-- **Good for**: Learning or prototyping.
 
 ---
 
