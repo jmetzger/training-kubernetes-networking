@@ -6,7 +6,7 @@
 
 ## Prerequisites 
 
-  * a CNI, that manages the network needs to be installed before hand, like Calico, Cilium
+  * a CNI must be installed beforehand, that manages the network (Calico, Cilium)
 
 ## Graphics 
 
