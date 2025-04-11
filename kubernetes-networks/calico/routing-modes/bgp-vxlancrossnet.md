@@ -16,9 +16,6 @@
 
 ## Detailed Explanation 
 
-Klar! Lass uns gemeinsam **`vxlancrossnet` bei Calico** anschauen:  
-Ich erkläre erst kurz, was es ist, warum es wichtig ist, und zeige dir dann ein Beispiel mit einer passenden Infografik.
-
 ---
 
 ### 🔍 Was ist `vxlancrossnet` in Calico?
