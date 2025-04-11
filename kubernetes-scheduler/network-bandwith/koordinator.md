@@ -2,6 +2,8 @@
 
 ## Explanation 
 
+Yes, Koordinator supports that.
+
 To configure **Koordinator** for **network-aware scheduling** in your Kubernetes cluster, you can follow these steps:
 
 ---
