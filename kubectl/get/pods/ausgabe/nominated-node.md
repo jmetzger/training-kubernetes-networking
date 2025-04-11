@@ -18,11 +18,9 @@ In diesem Fall wird im Feld **NOMINATED NODE** der Name dieses Nodes angezeigt.
 - **Leer** = Keine Nominierung → Pod wird normal geplant oder ist bereits auf einem Node.
 - **Node-Name steht drin** = Pod wartet darauf, auf genau diesem Node geplant zu werden, sobald Ressourcen verfügbar sind.
 
-Wenn du willst, kann ich dir das mit einem Beispiel oder YAML-Konfiguration zeigen.
+## Beispiel 
 
-
-
-Perfekt, hier ist ein kleines Beispiel, das zeigt, wie die **`NOMINATED NODE`**-Spalte zustande kommt – und wie man sie beobachten kann. Wir simulieren einen Fall mit **Priority Classes** und **Preemption**.
+Perfekt, hier ist ein kleines Beispiel, das zeigt, wie die **`NOMINATED NODE`**-Spalte zustande kommt – und wie man sie beobachten kann. Wir simulieren einen Fall mit **Priority Classes**.
 
 ---
 
