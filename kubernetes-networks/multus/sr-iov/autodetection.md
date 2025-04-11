@@ -474,12 +474,81 @@ You’ll need:
 
 ---
 
-## ⚡️ Want This as a Repo or Helm Chart?
+```
 
-I can create a GitHub-style structure or Helm template next. Let me know what works best for you:
+Perfect! Here's a helper script that:
 
-- ✅ GitHub repo style with `Makefile`, `kustomize`, `cert-generator`
-- ✅ Helm chart for fast install
-- ✅ Bundle as YAML manifest for quick test
+1. Generates a **self-signed TLS certificate** for the webhook service.
+2. Base64-encodes the **CA bundle**.
+3. Prepares it for inclusion in the `MutatingWebhookConfiguration`.
 
-Which one do you want?
+---
+
+## 📄 `generate-tls.sh`
+
+```bash
+#!/bin/bash
+
+# Configurable values
+NAMESPACE="sriov-webhook"
+SERVICE="sriov-webhook"
+SECRET_NAME="sriov-webhook-tls"
+
+# Create certs directory
+mkdir -p certs && cd certs
+
+# Generate CA
+openssl genrsa -out ca.key 2048
+openssl req -x509 -new -nodes -key ca.key -subj "/CN=SRIOV Webhook CA" -days 365 -out ca.crt
+
+# Generate server key and CSR
+openssl genrsa -out tls.key 2048
+openssl req -new -key tls.key -subj "/CN=${SERVICE}.${NAMESPACE}.svc" -out server.csr
+
+# Generate server certificate signed by our CA
+cat > csr.conf <<EOF
+[ v3_ext ]
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+
+[ alt_names ]
+DNS.1 = ${SERVICE}
+DNS.2 = ${SERVICE}.${NAMESPACE}
+DNS.3 = ${SERVICE}.${NAMESPACE}.svc
+EOF
+
+openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial \
+    -out tls.crt -days 365 -extensions v3_ext -extfile csr.conf
+
+# Create Kubernetes TLS secret
+kubectl create secret tls ${SECRET_NAME} \
+  --cert=tls.crt --key=tls.key \
+  -n ${NAMESPACE}
+
+# Output base64-encoded CA bundle for webhook
+echo
+echo "📎 Copy this base64-encoded CA bundle into your MutatingWebhookConfiguration:"
+echo
+base64 -w 0 ca.crt
+echo
+```
+
+---
+
+## 🧪 How to Use
+
+1. Save it as `generate-tls.sh`  
+2. Run: `chmod +x generate-tls.sh && ./generate-tls.sh`  
+3. Copy the printed base64 `caBundle` into your `MutatingWebhookConfiguration.yaml` here:
+
+```yaml
+clientConfig:
+  caBundle: <PASTE_CA_BUNDLE_HERE>
+```
+
+---
+```
+
