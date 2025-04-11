@@ -441,13 +441,20 @@ CMD ["./sriov-webhook", "-tls-cert-file=/certs/tls.crt", "-tls-key-file=/certs/t
 
 ## 🧾 `MutatingWebhookConfiguration` (snippet)
 
+
+```
+mkdir -p manifests/webhook-sr-iov
+cd manifests /web-sr-iov
+nano 01-webhook.yaml
+```
+
 ```yaml
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
   name: sriov-nad-injector
 webhooks:
-  - name: nad-injector.sriov.example.com
+  - name: nad-injector.sriov.svc.cluster.local 
     rules:
       - apiGroups: [""]
         apiVersions: ["v1"]
@@ -461,6 +468,10 @@ webhooks:
       caBundle: <base64-cabundle>
     admissionReviewVersions: ["v1"]
     sideEffects: None
+```
+
+```
+kubectl apply -f .
 ```
 
 ---
