@@ -23,6 +23,13 @@
   * https://github.com/k8snetworkplumbingwg/multus-cni/blob/master/examples/macvlan-pod.yml
 
 ```
+mkdir -p manifests/multus-example
+cd manifests/multus-example
+nano network-attachment.yaml
+```
+
+
+```
 ---
 # This net-attach-def defines macvlan-conf with 
 #   + ips capabilities to specify ip in pod annotation and 
@@ -39,7 +46,7 @@ spec:
         {
           "type": "macvlan",
           "capabilities": { "ips": true },
-          "master": "eth0",
+          "master": "eth1",
           "mode": "bridge",
           "ipam": {
             "type": "static",
@@ -56,7 +63,18 @@ spec:
         }
       ]
     }'
----
+```
+
+```
+kubectl apply -f .
+```
+
+
+```
+nano pod.yaml
+```
+
+```
 # Define a pod with macvlan-conf, defined above, with ip address and mac, and 
 # "gateway" overrides default gateway to use macvlan-conf's one. 
 # without "gateway" in k8s.v1.cni.cncf.io/networks, default route will be cluster
@@ -80,4 +98,8 @@ spec:
     ports:
     - containerPort: 80
 
+```
+
+```
+kubectl apply -f .
 ```
