@@ -8,13 +8,4 @@ Yes, there are several tools and approaches to visualize `iptables` rules and tr
 
 ### 🔧 **Tools to Visualize iptables Rules**
 
-#### 1. **iptables-legacy-save + iptablesviz**
-- **Description**: A script that parses the output of `iptables-save` and generates a Graphviz `.dot` file (which you can render to an image).
-- **URL**: [https://github.com/milo2012/iptablesviz](https://github.com/milo2012/iptablesviz)
-- **Usage**:
-  ```bash
-  iptables-legacy-save > rules.v4
-  ./iptablesviz.py rules.v4 > output.dot
-  dot -Tpng output.dot -o iptables.png
-  ```
-
+  * https://github.com/Nudin/iptable_vis
