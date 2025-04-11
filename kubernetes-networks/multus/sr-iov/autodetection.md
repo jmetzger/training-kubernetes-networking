@@ -262,4 +262,224 @@ verbs: ["list"]
 
 ---
 
-Want a variant that **patches the Pod spec on-the-fly** to inject the selected NAD annotation?
+Awesome — let’s build a **Go-based mutating admission webhook** that adds a random SR-IOV NAD to pod annotations at creation time.
+
+---
+
+## 🧩 Overview
+
+- **Language**: Go
+- **Framework**: [`controller-runtime`](https://github.com/kubernetes-sigs/controller-runtime) (standard for webhooks/controllers)
+- **Function**: Inject `k8s.v1.cni.cncf.io/networks: sriov-net-<random>` into pods missing that annotation
+- **Behavior**: Only mutate pods that match a label (e.g., `inject-sriov: "true"`)
+- **Deployment**: Webhook service + `MutatingWebhookConfiguration` + TLS certs
+
+---
+
+## 📦 Project Structure
+
+```
+sriov-webhook/
+├── main.go
+├── webhook.go
+├── Dockerfile
+├── config/
+│   ├── webhook.yaml
+│   └── certs/
+```
+
+---
+
+## 🧠 Core Go Code
+
+### 📄 `main.go`
+
+```go
+package main
+
+import (
+	"flag"
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+
+	"sriov-webhook/webhook"
+)
+
+func main() {
+	var certFile, keyFile string
+	flag.StringVar(&certFile, "tls-cert-file", "/certs/tls.crt", "Path to TLS certificate file")
+	flag.StringVar(&keyFile, "tls-key-file", "/certs/tls.key", "Path to TLS key file")
+	flag.Parse()
+
+	mux := http.NewServeMux()
+	mux.HandleFunc("/mutate", webhook.HandlePodMutate)
+
+	log.Println("🚀 Starting webhook server on port 8443...")
+	server := &http.Server{
+		Addr:    ":8443",
+		Handler: mux,
+	}
+	err := server.ListenAndServeTLS(certFile, keyFile)
+	if err != nil {
+		log.Fatalf("❌ Failed to start server: %v", err)
+	}
+}
+```
+
+---
+
+### 📄 `webhook.go`
+
+```go
+package webhook
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"math/rand"
+	"net/http"
+	"time"
+
+	admissionv1 "k8s.io/api/admission/v1"
+	corev1 "k8s.io/api/core/v1"
+)
+
+var nadList = []string{
+	"sriov-net-ens1f0", "sriov-net-ens2f0", "sriov-net-ens3f0",
+}
+
+func HandlePodMutate(w http.ResponseWriter, r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "unable to read request", http.StatusBadRequest)
+		return
+	}
+
+	review := admissionv1.AdmissionReview{}
+	if err := json.Unmarshal(body, &review); err != nil {
+		http.Error(w, "unable to parse admission review", http.StatusBadRequest)
+		return
+	}
+
+	pod := corev1.Pod{}
+	if err := json.Unmarshal(review.Request.Object.Raw, &pod); err != nil {
+		http.Error(w, "unable to unmarshal pod", http.StatusBadRequest)
+		return
+	}
+
+	if pod.ObjectMeta.Annotations["k8s.v1.cni.cncf.io/networks"] != "" {
+		respond(w, &review, nil) // already has NAD
+		return
+	}
+
+	if pod.ObjectMeta.Labels["inject-sriov"] != "true" {
+		respond(w, &review, nil) // label not matched
+		return
+	}
+
+	// Pick random NAD
+	rand.Seed(time.Now().UnixNano())
+	randomNAD := nadList[rand.Intn(len(nadList))]
+
+	patch := []map[string]interface{}{
+		{
+			"op":    "add",
+			"path":  "/metadata/annotations/k8s.v1.cni.cncf.io~1networks",
+			"value": randomNAD,
+		},
+	}
+
+	patchBytes, _ := json.Marshal(patch)
+
+	review.Response = &admissionv1.AdmissionResponse{
+		UID:     review.Request.UID,
+		Allowed: true,
+		Patch:   patchBytes,
+		PatchType: func() *admissionv1.PatchType {
+			pt := admissionv1.PatchTypeJSONPatch
+			return &pt
+		}(),
+	}
+
+	respBytes, _ := json.Marshal(review)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(respBytes)
+}
+
+func respond(w http.ResponseWriter, review *admissionv1.AdmissionReview, patch []byte) {
+	review.Response = &admissionv1.AdmissionResponse{
+		UID:     review.Request.UID,
+		Allowed: true,
+	}
+	respBytes, _ := json.Marshal(review)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(respBytes)
+}
+```
+
+---
+
+## 📦 Dockerfile
+
+```dockerfile
+FROM golang:1.21 as builder
+WORKDIR /app
+COPY . .
+RUN go build -o sriov-webhook .
+
+FROM alpine
+WORKDIR /root/
+COPY --from=builder /app/sriov-webhook .
+COPY config/certs /certs
+CMD ["./sriov-webhook", "-tls-cert-file=/certs/tls.crt", "-tls-key-file=/certs/tls.key"]
+```
+
+---
+
+## 🧾 `MutatingWebhookConfiguration` (snippet)
+
+```yaml
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: sriov-nad-injector
+webhooks:
+  - name: nad-injector.sriov.example.com
+    rules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["CREATE"]
+        resources: ["pods"]
+    clientConfig:
+      service:
+        name: sriov-webhook
+        namespace: your-namespace
+        path: /mutate
+      caBundle: <base64-cabundle>
+    admissionReviewVersions: ["v1"]
+    sideEffects: None
+```
+
+---
+
+## 🧪 Deploying
+
+You’ll need:
+- TLS certs (can use `cert-manager` or Kubernetes CA)
+- A `Deployment` + `Service` for the webhook
+- RBAC (if needed to query real NADs from the API)
+
+---
+
+## ⚡️ Want This as a Repo or Helm Chart?
+
+I can create a GitHub-style structure or Helm template next. Let me know what works best for you:
+
+- ✅ GitHub repo style with `Makefile`, `kustomize`, `cert-generator`
+- ✅ Helm chart for fast install
+- ✅ Bundle as YAML manifest for quick test
+
+Which one do you want?
