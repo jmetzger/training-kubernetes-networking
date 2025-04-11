@@ -18,10 +18,3 @@ Yes, there are several tools and approaches to visualize `iptables` rules and tr
   dot -Tpng output.dot -o iptables.png
   ```
 
-
----
-
-#### 3. **iptables-graph**
-- **Description**: Similar to iptablesviz; converts iptables rules into Graphviz format.
-- **URL**: [https://github.com/ldx/iptables-graph](https://github.com/ldx/iptables-graph)
-
