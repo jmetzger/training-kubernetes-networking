@@ -1,15 +1,23 @@
 ## Agenda
 
-  1. Kubernetes - Überblick
+  1. Kubernetes Grundlagen
      * [Aufbau Allgemein](/kubernetes/architecture.md)
      * [Structure Kubernetes Deep Dive](https://github.com/jmetzger/training-kubernetes-advanced/assets/1933318/1ca0d174-f354-43b2-81cc-67af8498b56c)
      * [CRI - Container Runtime interface](/kubernetes/internals/cri.md)
      * [Ports und Protokolle](https://kubernetes.io/docs/reference/networking/ports-and-protocols/)
 
-  1. Kubernetes - Misc
-     * [Wann wird podIP vergeben ?](kubectl/run-with-example.md)
-     * [Bash completion installieren](kubectl/bash-completion.md)
+  1. Kubernetes Einrichtung
      * [kubectl verbindung mit namespace einrichten](kubectl/kubectl-einrichten.md)
+  
+  1. Kubernetes Networking (Grundlagen)
+     * [Cluster-CIDR, POD-CIDR und Service-CIDR]()
+     * [Wann wird podIP vergeben ?](kubectl/run-with-example.md)     
+
+## Backlog 
+
+  1. Kubernetes - Misc
+
+     * [Bash completion installieren](kubectl/bash-completion.md)
      * [vim support for yaml](vim/vim-yaml.md)
 
   1. Kubernetes - Projekt Applikation 
