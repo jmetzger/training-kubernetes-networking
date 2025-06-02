@@ -6,6 +6,9 @@
      * [CRI - Container Runtime interface](/kubernetes/internals/cri.md)
      * [Ports und Protokolle](https://kubernetes.io/docs/reference/networking/ports-and-protocols/)
 
+  1. Kubernetes Networking Internals
+    * [Networking Internal Overview](/kubernetes-networks/networking-internal-overview.md)
+
   1. Kubernetes Einrichtung
      * [kubectl verbindung mit namespace einrichten](kubectl/kubectl-einrichten.md)
   
