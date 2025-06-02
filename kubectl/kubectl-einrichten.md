@@ -4,7 +4,7 @@
 
 ```
 cd
-mkdir .kube
+mkdir -p .kube
 cd .kube
 cp -a /tmp/config config
 ls -la
