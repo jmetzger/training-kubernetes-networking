@@ -22,6 +22,7 @@
 
   1. Kubernetes Networking Übung
      * [Wann wird die PodIP vergeben](kubectl/run-with-example.md)
+     * [Host erforschen z.B. CNI mit kubectl debug](debug/kubectl-debug-cni.md)
 
 ## Backlog 
 
