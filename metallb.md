@@ -134,3 +134,8 @@ kubectl get svc
 
 ```
 kubectl delete -f 03-deploy.yml 04-service.yml 
+```
+
+## Schritt 5: Referenz:
+
+  * https://metallb.io/installation/#installation-with-helm
