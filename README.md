@@ -20,6 +20,9 @@
      * [CNI-Provider calico einrichten](kubernetes-networks/calico/installation/install-cni.md)
      * [Andere Cluster-CIDR verwenden - calico/kubeadm](/kubernetes-networks/calico/installation/using-different-cluster-cidr-kubeadm.md)    
 
+  1. Kubernetes Networking Übung
+     * [Wann wird die PodIP vergeben](kubectl/run-with-example.md)
+
 ## Backlog 
 
   1. Kubernetes - Misc
