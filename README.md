@@ -17,7 +17,8 @@
      * [Wann wird podIP vergeben ?](kubectl/run-with-example.md)
     
   1. Kubernetes Netzwerk einrichten
-     * [CNI-Provider calico einrichten](kubernetes-networks/calico/installation/install-cni.md)     
+     * [CNI-Provider calico einrichten](kubernetes-networks/calico/installation/install-cni.md)
+     * [Andere Cluster-CIDR verwenden - calico/kubeadm](/kubernetes-networks/calico/installation/using-different-cluster-cidr-kubeadm.md)    
 
 ## Backlog 
 
