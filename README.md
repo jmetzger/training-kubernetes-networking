@@ -14,7 +14,10 @@
   
   1. Kubernetes Networking (Grundlagen)
      * [Cluster-CIDR, POD-CIDR und Service-CIDR]()
-     * [Wann wird podIP vergeben ?](kubectl/run-with-example.md)     
+     * [Wann wird podIP vergeben ?](kubectl/run-with-example.md)
+    
+  1. Kubernetes Netzwerk einrichten
+     * [CNI-Provider calico einrichten](kubernetes-networks/calico/installation/install-cni.md)     
 
 ## Backlog 
 
