@@ -57,5 +57,5 @@ kubectl debug -it node/worker3 --image=busybox
 
 ```
 # in der bash 
-route -an | grep <ip-pod-nach>
+route -n | grep <ip-pod-nach>
 ```
