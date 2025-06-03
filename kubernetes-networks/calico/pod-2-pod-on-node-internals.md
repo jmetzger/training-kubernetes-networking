@@ -52,7 +52,7 @@ kubectl apply -f .
 kubectl get pods -o wide 
 
 # mit dem host-system verbinden über eine debug node pod
-kubectl debug -it node/worker3 image=busybox 
+kubectl debug -it node/worker3 --image=busybox 
 ```
 
 ```
