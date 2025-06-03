@@ -135,6 +135,7 @@ kubectl get svc
 ```
 # auf dem client 
 curl http://<ip aus get svc>
+```
 
 ```
 kubectl delete -f 03-deploy.yml 04-service.yml 
