@@ -30,7 +30,7 @@
     
   1. Kubernetes Load Balancer / metallb (on premise)
      * [Kubernetes Load Balancer - metallb](metallb.md)
-     * [Feste IP beziehen](/service/fest-ip-beziehen.md)
+     * [Feste IP beziehen](/service/feste-ip-beziehen.md)
       
 ## Backlog 
 
