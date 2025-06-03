@@ -27,10 +27,14 @@
   1. Kubernetes CNI
      * [Wie funktioniert das unter der Haube](/kubernetes/internals/cni.md)
      * [Überblick cni provider](kubernetes-networks/overview.md)
-    
+
   1. Kubernetes Load Balancer / metallb (on premise)
      * [Kubernetes Load Balancer - metallb](metallb.md)
      * [Feste IP beziehen](/service/feste-ip-beziehen.md)
+    
+  1. Kubernetes Networking Internals
+     * [Weg von Pod zu Host -> veth / calicoctl get wep](calico/find-corresponding-interfaces.md)
+     * [Info: keine iptables - Regeln innerhalb veth -paar](calico/veth/iptables-not-involved.md)
       
 ## Backlog 
 
