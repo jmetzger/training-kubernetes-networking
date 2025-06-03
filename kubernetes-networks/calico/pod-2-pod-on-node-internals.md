@@ -10,6 +10,7 @@
 ```
 cd
 mkdir -p manifests/2pods
+cd manifests/2pods
 ```
 
 ```
