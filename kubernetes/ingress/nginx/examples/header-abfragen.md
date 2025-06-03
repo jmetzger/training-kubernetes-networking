@@ -86,6 +86,24 @@ curl http://<eure-subdomain>.t3isp.de
 ## Walkthrough (Teil 2)
 
 ```
+# ändern des der helm installation
+mkdir helm-values
+cd helm-values
+nano values.yaml
+```
+
+```
+controller:
+   allowSnippetAnnotations: true
+```
+
+```
+cd ..
+helm upgrade --install metallb metallb/metallb --namespace=metallb-system --create-namespace --version 0.14.8 -f helm-values/values.yaml
+```
+
+
+```
 nano bar.yaml
 ```
 
