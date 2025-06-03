@@ -64,6 +64,29 @@ route -n | grep <ip-pod-nach>
 ## Übung (Teil2) Auf den anderen worker nodes ? 
 
 ```
+nano pod3.yaml 
+```
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-auf-worker1
+spec:
+  nodeName: worker1
+  containers:
+    - name: busybox
+      image: busybox:1.35
+      command: ["sleep", "3600"]
+```
+
+```
+kubectl apply -f .
+kubectl get pods -o wide
+calicoctl get wep 
+```
+
+```
 # z.B. wenn vorher worker3 -> dann worker1
 kubectl debug node/worker1 -it --image=busybox
 ```
