@@ -8,10 +8,19 @@
 ## Übung:
 
 ```
+cd
+mkdir -p manifests/2pods
+```
+
+```
+nano pod1.yaml
+```
+
+```
 apiVersion: v1
 kind: Pod
 metadata:
-  name: nginx-test
+  name: pod-von
 spec:
   nodeName: worker3
   containers:
@@ -20,10 +29,14 @@ spec:
 ```
 
 ```
+nano pod2.yaml 
+```
+
+```
 apiVersion: v1
 kind: Pod
 metadata:
-  name: busybox
+  name: pod-nach
 spec:
   nodeName: worker3
   containers:
@@ -32,3 +45,15 @@ spec:
       command: ["sleep", "3600"]
 ```
 
+```
+kubectl apply -f .
+# Ip rausfinden 
+kubectl get pods -o wide 
+
+# mit dem host-system verbinden über eine debug node pod
+kubectl debug -it node/worker image=busybox 
+```
+
+```
+route -an | grep <ip-pod-nach>
+```
