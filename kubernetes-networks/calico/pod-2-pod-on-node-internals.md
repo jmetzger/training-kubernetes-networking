@@ -5,7 +5,7 @@
 ![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/ba9d497d-36ed-467f-9965-faad76a201cd)
 
 
-## Übung:
+## Übung (Teil 1)
 
 ```
 cd
@@ -59,3 +59,19 @@ kubectl debug -it node/worker3 --image=busybox
 # in der bash 
 route -n | grep <ip-pod-nach>
 ```
+
+
+## Übung (Teil2) Auf den anderen worker nodes ? 
+
+```
+# z.B. wenn vorher worker3 -> dann worker1
+kubectl debug node/worker1 --image=busybox
+```
+
+```
+# in der bash 
+route -n | grep <ip-pod-nach>
+```
+
+
+
