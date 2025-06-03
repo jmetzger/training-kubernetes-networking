@@ -147,7 +147,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: header-demo.local
+    - host: <hier-domain>.t3isp.de
       http:
         paths:
           - path: /
@@ -168,8 +168,8 @@ kubectl apply -f .
 ```
 # Aufruf ohne header
 # Achtung IP - anpassen (ip von ingress - controller svc) 
-curl -H "Host: header-demo.local" http://192.168.49.2
+curl http://<hier-domain>.t3isp.de
 ```
 # Aufruf mit header
-curl -H "Host: header-demo.local" -H "X-Service-Type: bar" http://192.168.49.2
+curl -H "X-Service-Type: bar" <hier-domain>.t3isp.de
 ```
