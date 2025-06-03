@@ -13,7 +13,7 @@
      * [kubectl verbindung mit namespace einrichten](kubectl/kubectl-einrichten.md)
   
   1. Kubernetes Networking (Grundlagen)
-     * Cluster-CIDR, POD-CIDR und Service-CIDR
+     * [Cluster-CIDR, POD-CIDR und Service-CIDR](kubernetes-networks/kubernetes-cidrs.md)
      * [Wann wird podIP vergeben ?](kubectl/run-with-example.md)
     
   1. Kubernetes Netzwerk einrichten
