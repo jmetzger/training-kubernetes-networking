@@ -1,3 +1,3 @@
 # Calico (Ablauf bgp) 
 
-![images/calico-bgp-ablauf.svg](hallo)
+![Calico Ablauf](/images/calico-bgp-ablauf.svg)
