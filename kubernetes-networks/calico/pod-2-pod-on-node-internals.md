@@ -65,7 +65,7 @@ route -n | grep <ip-pod-nach>
 
 ```
 # z.B. wenn vorher worker3 -> dann worker1
-kubectl debug node/worker1 --image=busybox
+kubectl debug node/worker1 -it --image=busybox
 ```
 
 ```
