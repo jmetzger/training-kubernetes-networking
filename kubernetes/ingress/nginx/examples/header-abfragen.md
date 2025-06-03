@@ -83,47 +83,7 @@ curl http://<eure-subdomain>.t3isp.de
 
 
 
-## Walkthrough (Teil 2>
-
-
-
-```
-nano foo.yaml
-```
-
-```
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: foo
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: foo
-  template:
-    metadata:
-      labels:
-        app: foo
-    spec:
-      containers:
-        - name: foo
-          image: hashicorp/http-echo
-          args:
-            - "-text=Hello from foo"
-            - "-listen=:5678"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: foo
-spec:
-  selector:
-    app: foo
-  ports:
-    - port: 80
-      targetPort: 5678
-```
+## Walkthrough (Teil 2)
 
 ```
 nano bar.yaml
