@@ -35,6 +35,12 @@
   1. Kubernetes Networking Internals
      * [Weg von Pod zu Host -> veth / calicoctl get wep](calico/find-corresponding-interfaces.md)
      * [Info: keine iptables - Regeln innerhalb veth -paar](calico/veth/iptables-not-involved.md)
+
+ 1. Kubernetes - IngressController
+     * [Vom Browser über den Ingress bis zum Pod - Schaubild](/kubernetes/ingress/schaubild.md)
+     * [Ingress Controller installieren mit helm](/digitalocean/ingress-auf-digitalocean-mit-helm.md)
+     * [Wie funktioniert das Reload und Endpunkte](https://kubernetes.github.io/ingress-nginx/how-it-works/#nginx-configuration)
+     * [How many requests per second](https://blog.nginx.org/blog/testing-performance-nginx-ingress-controller-kubernetes)
       
 ## Backlog 
 
