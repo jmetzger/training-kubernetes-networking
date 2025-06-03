@@ -29,7 +29,7 @@
      * [Überblick cni provider](kubernetes-networks/overview.md)
     
   1. Kubernetes Load Balancer / metallb (on premise)
-     * [Kubernetes Load Balancer](metallb.md) 
+     * [Kubernetes Load Balancer - metallb](metallb.md) 
       
 ## Backlog 
 
