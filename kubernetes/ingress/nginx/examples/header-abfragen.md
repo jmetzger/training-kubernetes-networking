@@ -73,7 +73,8 @@ spec:
 ```
 
 ```
-kubectl apply -f . 
+kubectl apply -f .
+kubectl describe ingress header-routing
 ```
 
 ``` 
