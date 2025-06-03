@@ -20,7 +20,7 @@ helm install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress --cre
 
 # See when the external ip comes available
 kubectl -n ingress get all
-kubectl --namespace ingress get services -o wide -w nginx-ingress-ingress-nginx-controller
+kubectl -n ingress get svc
 ```
 
 
