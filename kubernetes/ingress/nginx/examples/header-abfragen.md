@@ -1,12 +1,90 @@
 # Eigenen Header Abfragen 
 
-## Walkthrough 
+## Vorbereitung 
 
 ```
 cd
 mkdir -p manifests/headertest
 cd manifests/headertest
 ```
+
+## Ohne Routing 
+
+```
+nano foo.yaml
+```
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: foo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: foo
+  template:
+    metadata:
+      labels:
+        app: foo
+    spec:
+      containers:
+        - name: foo
+          image: hashicorp/http-echo
+          args:
+            - "-text=Hello from foo"
+            - "-listen=:5678"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: foo
+spec:
+  selector:
+    app: foo
+  ports:
+    - port: 80
+      targetPort: 5678
+```
+
+```
+nano ingress.yaml
+```
+
+```
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: header-routing
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: <hier-domain>.t3isp.de
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: foo
+                port:
+                  number: 80
+```
+
+```
+kubectl apply -f . 
+```
+
+``` 
+curl http://<eure-subdomain>.t3isp.de
+```
+
+
+
+## Walkthrough (Teil 2>
+
+
 
 ```
 nano foo.yaml
@@ -130,7 +208,7 @@ kubectl apply -f .
 # Aufruf ohne header
 # Achtung IP - anpassen (ip von ingress - controller svc) 
 curl -H "Host: header-demo.local" http://192.168.49.2
-
+```
 # Aufruf mit header
 curl -H "Host: header-demo.local" -H "X-Service-Type: bar" http://192.168.49.2
 ```
