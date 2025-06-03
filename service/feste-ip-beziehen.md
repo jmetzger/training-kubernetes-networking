@@ -29,3 +29,9 @@ spec:
   selector:
     run: web-nginx
 ```
+
+```
+kubectl apply -f .
+# ist es die von oben ? 
+kubectl get svc
+```
