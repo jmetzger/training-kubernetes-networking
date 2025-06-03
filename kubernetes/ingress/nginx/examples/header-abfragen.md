@@ -99,9 +99,8 @@ controller:
 
 ```
 cd ..
-helm upgrade --install metallb metallb/metallb --namespace=metallb-system --create-namespace --version 0.14.8 -f helm-values/values.yaml
+helm upgrade --install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress --create-namespace --version 4.12.2 -f helm-values/values.yaml
 ```
-
 
 ```
 nano bar.yaml
