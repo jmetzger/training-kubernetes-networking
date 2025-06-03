@@ -7,7 +7,7 @@
 
 ## Prerequisites 
 
-  * kubectl muss eingerichtet sein 
+  * kubectl und helm muss eingerichtet sein 
 
 ## Walkthrough (Setup Ingress Controller) 
 
