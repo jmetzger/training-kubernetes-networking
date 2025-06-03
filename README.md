@@ -13,7 +13,7 @@
      * [kubectl verbindung mit namespace einrichten](kubectl/kubectl-einrichten.md)
   
   1. Kubernetes Networking (Grundlagen)
-     * [Cluster-CIDR, POD-CIDR und Service-CIDR]()
+     * Cluster-CIDR, POD-CIDR und Service-CIDR
      * [Wann wird podIP vergeben ?](kubectl/run-with-example.md)
     
   1. Kubernetes Netzwerk einrichten
@@ -27,7 +27,10 @@
   1. Kubernetes CNI
      * [Wie funktioniert das unter der Haube](/kubernetes/internals/cni.md)
      * [Überblick cni provider](kubernetes-networks/overview.md)
-
+    
+  1. Kubernetes Load Balancer / metallb (on premise)
+     * [Kubernetes Load Balancer](metallb.md) 
+      
 ## Backlog 
 
   1. Kubernetes - Misc
