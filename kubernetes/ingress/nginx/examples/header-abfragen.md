@@ -95,6 +95,9 @@ nano values.yaml
 ```
 controller:
    allowSnippetAnnotations: true
+   snippetSecurityPolicy:
+      enabled: true
+      allowed-snippet-annotations: 'server-snippet,configuration-snippet,rewrite-snippet'
 ```
 
 ```
