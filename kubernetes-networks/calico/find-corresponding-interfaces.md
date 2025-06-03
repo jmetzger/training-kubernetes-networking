@@ -2,7 +2,7 @@
 
 ## Walkthrough  (without calicoctl)
 
-```
+```bash
 # Step 1: create pod 
 kubectl run nginx-master --image=nginx
 # Find out on which node it runs 
