@@ -83,27 +83,7 @@ curl http://<eure-subdomain>.t3isp.de
 
 
 
-## Walkthrough (Teil 2)
-
-```
-# ändern des der helm installation
-mkdir helm-values
-cd helm-values
-nano values.yaml
-```
-
-```
-controller:
-   allowSnippetAnnotations: true
-   snippetSecurityPolicy:
-      enabled: true
-      allowed-snippet-annotations: 'server-snippet,configuration-snippet,rewrite-snippet'
-```
-
-```
-cd ..
-helm upgrade --install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress --create-namespace --version 4.12.2 -f helm-values/values.yaml
-```
+## Walkthrough (Teil 2 mit routing)
 
 ```
 nano bar.yaml
@@ -152,31 +132,43 @@ nano ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: header-routing
+  name: api-v2-headers
   annotations:
-    nginx.ingress.kubernetes.io/server-snippet: |
-      set $target_service "foo";
-      if ($http_x_service_type = "bar") {
-        set $target_service "bar";
-      }
-      rewrite_by_lua_block {
-        local target = ngx.var.target_service
-        ngx.var.upstream = target
-      }
-      proxy_pass http://$upstream;
+    nginx.ingress.kubernetes.io/canary: "true"
+    nginx.ingress.kubernetes.io/canary-by-header: "X-Service-Type"
+    nginx.ingress.kubernetes.io/canary-by-header-value: "bar"
 spec:
-  ingressClassName: nginx
+  ingressClassName: nginx 
   rules:
-    - host: <hier-domain>.t3isp.de
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: foo
-                port:
-                  number: 80
+  - host: api.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: bar
+            port:
+              number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: header-routing
+spec:
+  ingressClassName: nginx  # ← Das auch!
+  rules:
+  - host: <hier-domain>.t3isp.de
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: foo
+            port:
+              number: 80
+
 ```
 
 ```
