@@ -1,16 +1,63 @@
 
 
 ## Agenda
-  1. Kubernetes - Überblick
+  1. Kubernetes Grundlagen
      * [Aufbau Allgemein](#aufbau-allgemein)
      * [Structure Kubernetes Deep Dive](https://github.com/jmetzger/training-kubernetes-advanced/assets/1933318/1ca0d174-f354-43b2-81cc-67af8498b56c)
      * [CRI - Container Runtime interface](#cri---container-runtime-interface)
      * [Ports und Protokolle](https://kubernetes.io/docs/reference/networking/ports-and-protocols/)
 
-  1. Kubernetes - Misc
-     * [Wann wird podIP vergeben ?](#wann-wird-podip-vergeben-)
-     * [Bash completion installieren](#bash-completion-installieren)
+  1. Kubernetes Networking Internals
+     * [Networking Internal Overview](#networking-internal-overview)
+
+  1. Kubernetes Einrichtung
      * [kubectl verbindung mit namespace einrichten](#kubectl-verbindung-mit-namespace-einrichten)
+  
+  1. Kubernetes Networking (Grundlagen)
+     * [Cluster-CIDR, POD-CIDR und Service-CIDR](#cluster-cidr-pod-cidr-und-service-cidr)
+     * [Wann wird podIP vergeben ?](#wann-wird-podip-vergeben-)
+    
+  1. Kubernetes Netzwerk einrichten
+     * [CNI-Provider calico einrichten](#cni-provider-calico-einrichten)
+     * [Andere Cluster-CIDR verwenden - calico/kubeadm](#andere-cluster-cidr-verwenden---calicokubeadm)
+
+  1. Kubernetes Networking Übung
+     * [Wann wird die PodIP vergeben](#wann-wird-die-podip-vergeben)
+     * [Host erforschen z.B. CNI mit kubectl debug](#host-erforschen-zb-cni-mit-kubectl-debug)
+    
+  1. Kubernetes CNI
+     * [Wie funktioniert das unter der Haube](#wie-funktioniert-das-unter-der-haube)
+     * [Überblick cni provider](#überblick-cni-provider)
+      
+  1. Kubernetes Load Balancer / metallb (on premise)
+     * [Kubernetes Load Balancer - metallb](#kubernetes-load-balancer---metallb)
+     * [Feste IP beziehen](#feste-ip-beziehen)
+    
+  1. Kubernetes Networking Internals
+     * [Weg von Pod zu Host -> veth / calicoctl get wep](#weg-von-pod-zu-host-->-veth--calicoctl-get-wep)
+     * [Info: keine iptables - Regeln innerhalb veth -paar](#info-keine-iptables---regeln-innerhalb-veth--paar)
+
+  1. Kubernetes - IngressController
+     * [Vom Browser über den Ingress bis zum Pod - Schaubild](#vom-browser-über-den-ingress-bis-zum-pod---schaubild)
+     * [Ingress Controller installieren mit helm](#ingress-controller-installieren-mit-helm)
+     * [Wie funktioniert das Reload und Endpunkte](https://kubernetes.github.io/ingress-nginx/how-it-works/#nginx-configuration)
+     * [How many requests per second](https://blog.nginx.org/blog/testing-performance-nginx-ingress-controller-kubernetes)
+     * [Multiple IngresController nginx](#multiple-ingrescontroller-nginx)
+
+  1. Kubernetes - Ingress - Examples
+     * [Routing with Header](https://github.com/jmetzger/training-kubernetes-networking/blob/main/kubernetes/ingress/nginx/examples/header-abfragen.md)
+    
+  1. Kubernetes - Calico - BGP
+     * [Calico BGP - Wirkweise Schaubild](#calico-bgp---wirkweise-schaubild)
+
+  1. Kubernetes NetworkPolicy
+     * [Einfache Übung Network Policy](#einfache-übung-network-policy)
+      
+## Backlog 
+
+  1. Kubernetes - Misc
+
+     * [Bash completion installieren](#bash-completion-installieren)
      * [vim support for yaml](#vim-support-for-yaml)
 
   1. Kubernetes - Projekt Applikation 
@@ -264,7 +311,7 @@
 
 <div class="page-break"></div>
 
-## Kubernetes - Überblick
+## Kubernetes Grundlagen
 
 ### Aufbau Allgemein
 
@@ -391,7 +438,191 @@ Container.
 
   * https://kubernetes.io/docs/reference/networking/ports-and-protocols/
 
-## Kubernetes - Misc
+## Kubernetes Networking Internals
+
+### Networking Internal Overview
+
+
+### Network Namespace for each pod 
+
+#### Overview 
+
+![Overview](https://www.inovex.de/wp-content/uploads/2020/05/Container-to-Container-Networking_2_neu-400x401.png)
+![Overview Kubernetes Networking](https://www.inovex.de/wp-content/uploads/2020/05/Container-to-Container-Networking_3_neu-400x412.png)
+
+#### General 
+
+  * Each pod will have its own network namespace
+    * with routing, networkdevices 
+  * Connection to default namespace to host is done through veth - Link to bridge on host network 
+    * similar like on docker to docker0 
+  
+```
+  Each container is connected to the bridge via a veth-pair. This interface pair functions like a virtual point-to-point ethernet connection and connects the network namespaces of the containers with the network namespace of the host
+```
+  
+  * Every container is in the same Network Namespace, so they can communicate through localhost
+    * Example with hashicorp/http-echo container 1 and busybox container 2 
+ 
+ 
+### Pod-To-Pod Communication (across nodes)  
+ 
+#### Prerequisites 
+ 
+  * pods on a single node as well as pods on a topological remote can establish communication at all times
+   * Each pod receives a unique IP address, valid anywhere in the cluster. Kubernetes requires this address to not be subject to network address   translation (NAT)
+   * Pods on the same node through virtual bridge (see image above)
+ 
+#### General (what needs to be done) - and could be done manually
+ 
+   * local bridge networks of all nodes need to be connected
+   * there needs to be an IPAM (IP-Address Managemenet) so addresses are only used once
+   * The need to be routes so, that each bridge can communicate with the bridge on the other network
+   * Plus: There needs to be a rule for incoming network
+   * Also: A tunnel needs to be set up to the outside world.
+
+#### General - Pod-to-Pod Communication (across nodes) - what would need to be done
+
+![pod to pod across nodes](https://www.inovex.de/wp-content/uploads/2020/05/Pod-to-Pod-Networking.png)
+
+
+#### General - Pod-to-Pod Communication (side-note) 
+
+  * This could of cause be done manually, but it is too complex 
+  * So Kubernetes has created an Interface, which is well defined 
+    * The interface is called CNI (common network interface) 
+    * Funtionally is achieved through Network Plugin (which use this interface) 
+      * e.g. calico / cilium / weave net / flannel 
+
+
+#### CNI 
+
+  * CNI only handles network connectivity of container and the cleanup of allocated resources (i.e. IP addresses) after containers have been deleted (garbage collection) and therefore is lightweight and quite easy to implement. 
+  * There are some basic libraries within CNI which do some basic stuff.
+ 
+   
+    
+
+
+### Hidden Pause Container 
+
+#### What is for ? 
+
+  * Holds the network - namespace for the pod 
+  * Gets started first and falls asleep later 
+  * Will still be there, when the other containers die 
+
+```
+cd 
+mkdir -p manifests 
+cd manifests 
+mkdir pausetest
+cd pausetest
+nano 01-nginx.yml
+```
+
+```
+## vi nginx-static.yml 
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pausetest
+  labels:
+    webserver: nginx:1.21
+spec:
+  containers:
+  - name: web
+    image: nginx
+```
+
+```
+kubectl apply -f .
+## als root auf dem worker node 
+ctr -n k8s.io c list | grep pause
+```
+
+
+### References 
+
+  * https://www.inovex.de/de/blog/kubernetes-networking-part-1-en/
+  * https://www.inovex.de/de/blog/kubernetes-networking-2-calico-cilium-weavenet/
+
+## Kubernetes Einrichtung
+
+### kubectl verbindung mit namespace einrichten
+
+
+### config einrichten 
+
+```
+cd
+mkdir -p .kube
+cd .kube
+cp -a /tmp/config config
+ls -la
+## das bekommt ihr aus Eurem Cluster Management Tool 
+```
+
+```
+kubectl cluster-info
+```
+
+### Arbeitsbereich konfigurieren 
+
+```
+kubectl create ns jochen
+kubectl get ns
+kubectl config set-context --current --namespace jochen
+kubectl get pods 
+```
+
+## Kubernetes Networking (Grundlagen)
+
+### Cluster-CIDR, POD-CIDR und Service-CIDR
+
+
+### Grafik 
+
+![image](https://github.com/user-attachments/assets/87bb7926-d962-4f71-b8b4-f04b7ab44ec6)
+
+### Cluster CIDR - IP-Bereich für das gesamte Kubernetes Cluster 
+
+```
+## Netzbereich für mein gesamtes Cluster 
+10.244.0.0/16
+```
+
+### POD-CIDR - Teilbereich aus der Cluster - CIDR pro Node 
+
+```
+## Jede Node bekommt ein Teilnetz
+Beispiel cilium
+
+node 1 -> network.cilium.io/ipv4-pod-cidr: 10.244.0.0/25
+node 2 -> network.cilium.io/ipv4-pod-cidr: 10.244.0.128/25
+node 3 -> network.cilium.io/ipv4-pod-cidr: 10.244.1.128/25
+node 4 -> network.cilium.io/ipv4-pod-cidr: 10.244.1.0/25
+
+```
+
+### POD-IP 
+
+  * Wird aus POD-CIDR des jeweiligen Nodes vergeben
+
+```
+## pod bekommt aus netzbereich POD-CIDR auf Node eine IP-Adresse zugewiesen
+## CILIUM CNI macht das z.B.
+POD-CIDR: 10.244.1.128/25
+-> POD - IP: 10.244.1.180
+```
+
+### Service-CIDR 
+
+```
+Netzbereich für IP-Adressen der Services
+z.B. 10.109.0.0/16 
+```
 
 ### Wann wird podIP vergeben ?
 
@@ -425,6 +656,908 @@ kubectl describe pods foo2
 ### Ref:
 
   * https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#run
+
+## Kubernetes Netzwerk einrichten
+
+### CNI-Provider calico einrichten
+
+
+### Walkthrough 
+
+```
+## Step 1 - Install the operator
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.1/manifests/tigera-operator.yaml
+## Step 2 - Install the custom resources 
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.1/manifests/custom-resources.yaml
+```
+
+### Testing 
+
+```
+kubectl -n tigera-operator get pods 
+kubectl -n calico-system get pods
+kubectl -n calico-apiserver get pods
+## Sind die nodes schon ready 
+kubectl get nodes
+
+kubectl -n kube-system get pods
+kubectl -n kube-system get pods coredns-7c65d6cfc9-f6f56
+kubectl -n kube-system describe pods coredns-7c65d6cfc9-f6f56
+```
+
+### Reference 
+
+  * https://docs.tigera.io/calico/latest/getting-started/kubernetes/quickstart
+
+### Andere Cluster-CIDR verwenden - calico/kubeadm
+
+
+### Voraussetzungen: 
+
+  * Alle Nodes sind bereits mit os (z.B. Ubuntu 24.04.) und installierten Kernkomponenten versehen
+
+```
+kubelet
+kubeadm
+containerd
+```
+
+### Schritt 1: Nur auf control plane notwendig (d.h. init) 
+
+```
+## Initalisiert das control plane mit anderer cluster cidr 
+kubeadm init --pod-network-cidr=10.178.0.0/16
+
+```
+
+### Schritt 2: weitere Cluster Nodes ausrollen und joinen 
+
+```
+....
+```
+
+### Schritt 3: Installation Object für calico anders bauen 
+
+```
+## This section includes base Calico installation configuration.
+## For more information, see: https://docs.tigera.io/calico/latest/reference/installation/api#operator.tigera.io/v1.Installation
+apiVersion: operator.tigera.io/v1
+kind: Installation
+metadata:
+  name: default
+spec:
+  # Configures Calico networking.
+  calicoNetwork:
+    ipPools:
+    - name: default-ipv4-ippool
+      blockSize: 26
+      cidr: 10.178.0.0/16
+      encapsulation: VXLANCrossSubnet
+      natOutgoing: Enabled
+      nodeSelector: all()
+
+---
+
+## This section configures the Calico API server.
+## For more information, see: https://docs.tigera.io/calico/latest/reference/installation/api#operator.tigera.io/v1.APIServer
+apiVersion: operator.tigera.io/v1
+kind: APIServer
+metadata:
+  name: default
+spec: {}
+
+---
+
+```
+
+## Kubernetes Networking Übung
+
+### Wann wird die PodIP vergeben
+
+
+### Example (that does work)
+
+```
+## Show the pods that are running 
+kubectl get pods 
+
+## Synopsis (most simplistic example 
+## kubectl run NAME --image=IMAGE_EG_FROM_DOCKER
+## example
+kubectl run nginx --image=nginx:1.23
+
+kubectl get pods 
+## on which node does it run ? 
+kubectl get pods -o wide 
+```
+
+### Example (that does not work) 
+
+```
+kubectl run foo2 --image=foo2
+## ImageErrPull - Image konnte nicht geladen werden 
+kubectl get pods 
+## Weitere status - info 
+kubectl describe pods foo2 
+```
+
+### Ref:
+
+  * https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#run
+
+### Host erforschen z.B. CNI mit kubectl debug
+
+
+```
+kubectl debug node/worker1 -it --image=ubuntu 
+## in der bash 
+cd /host/etc/cni/net.d
+ls -la
+apt update 
+apt install jq # im container 
+cat 10-calico.conflist | jq
+```
+
+## Kubernetes CNI
+
+### Wie funktioniert das unter der Haube
+
+
+
+
+
+### Referenz:
+
+  * https://isovalent.com/blog/post/demystifying-cni/
+
+
+### Ablauf 
+   * Containerd ruft CNI plugin über subcommandos: ADD, DEL, CHECK, VERSION auf (mehr subcommandos gibt es nicht)
+   * Was gemacht werden soll wird über JSON-Objekt übergeben
+   * Die Antwort kommt auch wieder als JSON zurück 
+
+### Plugins die Standardmäßig schon da sind 
+ 
+   * https://www.cni.dev/plugins/current/
+
+### CNI-Provider 
+
+   * Ein Kubernetes-Cluster braucht immer ein CNI-Provider, sonst funktioniert die Kommunikation nicht und die Nodes im Cluster stehen auf NotReady 
+   * Beispiele: Calico, WeaveNet, Antrea, Cilium, Flannel 
+
+### IPAM - IP Address Management 
+
+   * Ziel ist, dass Adressen nicht mehrmals vergeben werden.
+   * Dazu wird ein Pool bereitgestellt.
+   * Es gibt 3 CNI IPAM - Module:
+     * host-local
+     * dhcp
+     * static  
+```
+* IPAM: IP address allocation 
+dhcp : Runs a daemon on the host to make DHCP requests on behalf of a container
+host-local : Maintains a local database of allocated IPs
+static : Allocates static IPv4/IPv6 addresses to containers
+```
+
+### Beispiel json für antrea (wird verwendet beim Aufruf von CNI) 
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/85dcbcf4-0c01-4fe0-a737-dd0f7d04231f)
+
+### Überblick cni provider
+
+
+### CNI 
+
+  * Common Network Interface
+  * Feste Definition, wie Pod  mit Netzwerk-Bibliotheken kommunizieren
+
+### Docker - Container oder andere 
+
+  * Pod (Pause Container) wird hochgefahren -> über CNI -> zieht Netzwerk - IP  hoch. 
+  * Pod (Pause Container) witd runtergahren -> uber CNI -> Netzwerk - IP wird released 
+
+### Welche gibt es ? 
+
+  * Flannel
+  * Canal 
+  * Calico 
+  * Cilium
+  * Antrea (vmware)
+  * Weave Net 
+  
+### Flannel
+
+#### Generell
+
+  * Flannel is a CNI which gives a subnet to each host for use with container runtimes.
+
+#### Overlay - Netzwerk 
+
+  * virtuelles Netzwerk was sich oben drüber und eigentlich auf Netzwerkebene nicht existiert
+  * VXLAN
+
+#### Vorteile 
+
+  * Guter einfacher Einstieg 
+  * reduziert auf eine Binary flanneld 
+
+#### Nachteile 
+
+  * keine Firewall - Policies möglich 
+  * keine klassichen Netzwerk-Tools zum Debuggen möglich. 
+
+#### Guter Einstieg in flannel 
+
+  * https://mvallim.github.io/kubernetes-under-the-hood/documentation/kube-flannel.html
+
+### Canal 
+
+#### General 
+
+  * Auch ein Overlay - Netzwerk 
+  * Unterstützt auch policies
+  * Kombination aus Flannel (Overlay) und den NetworkPolicies aus Calico 
+
+### Calico
+
+![calico](https://tanzu.vmware.com/developer/guides/container-networking-calico-refarch/images/calico-components.png)
+
+#### Komponenten 
+
+##### Calico API server
+
+  * Lets you manage Calico resources directly with kubectl.
+
+##### Felix
+
+```
+Main task: Programs routes and ACLs, and anything else required on the host to provide desired connectivity for the endpoints on that host. Runs on each machine that hosts endpoints. Runs as an agent daemon. 
+```
+
+##### BIRD
+
+  * Gets routes from Felix and distributes to BGP peers on the network for inter-host routing. Runs on each node that hosts a Felix agent. Open source, internet routing daemon.
+
+#### confd
+
+```
+Monitors Calico datastore for changes to BGP configuration and global defaults such as AS number, logging levels, and IPAM information. Open source, lightweight configuration management tool.
+
+Confd dynamically generates BIRD configuration files based on the updates to data in the datastore. When the configuration file changes, confd triggers BIRD to load the new files
+```
+
+#### Dikastes
+
+```
+Enforces NetworkPolicy for istio service mesh
+```
+
+#### CNI plugin
+
+#### Datastore plugin
+
+#### IPAM plugin
+
+#### kube-controllers
+
+```
+Main task: Monitors the Kubernetes API and performs actions based on cluster state. kube-controllers.
+
+The tigera/kube-controllers container includes the following controllers:
+
+Policy controller
+Namespace controller
+Serviceaccount controller
+Workloadendpoint controller
+Node controller
+```
+
+#### Typha
+
+```
+Typha maintains a single datastore connection on behalf of all of its clients like Felix and confd. It caches the datastore state and deduplicates events so that they can be fanned out to many listeners.
+```
+
+#### calicoctl
+
+  * Wird heute selten gebraucht, da das meiste heute mit kubectl über den Calico API Server realisiert werden kann
+  * Früher haben die neuesten NetworkPolicies/v3 nur über calioctl funktioniert 
+
+#### Generell 
+
+  * klassische Netzwerk (BGP) - kein Overlay
+  * klassische Netzwerk-Tools können verwendet werden.
+  * eBPF ist implementiert, aber muss aktiviert
+
+#### Vorteile gegenüber Flannel 
+
+  * Policy über Kubernetes Object (NetworkPolicies)
+
+#### Vorteile 
+
+  * ISTIO integrierbar (Service Mesh) 
+  * Performance etwas besser als Flannel (weil keine Encapsulation)
+
+#### Referenz 
+  * https://projectcalico.docs.tigera.io/security/calico-network-policy
+
+### Cilium 
+
+![Cilium Architecture](https://docs.cilium.io/en/stable/_images/cilium-arch.png)
+
+#### Komponenten:
+
+##### Cilium Agent 
+
+  * Läuft auf jeder Node im Cluster
+  * Lauscht auf events from Orchestrierer (z.B. container gestoppt und gestartet)
+  * Managed die eBPF - Programme, die Linux kernel verwendet um den Netzwerkzugriff aus und in die Container zu kontrollieren
+
+##### Client (CLI)
+
+  * Wird im Agent mit installiert (interagiert mit dem agent auf dem gleichen Node)
+  * Kann aber auch auf dem Client installiert werden auf dem kubectl läuft.
+
+##### Cilium Operator
+
+  * Zuständig dafür, dass die Agents auf den einzelnen Nodes ausgerollt werden
+  * Es gibt ihn nur 1x im Cluster
+  * Ist unkritisch, sobald alles ausgerollt ist.
+    * wenn dieser nicht läuft funktioniert das Networking trotzdem
+
+##### cilium CNI - Plugin 
+
+  * Ist ein binary auf dem server (worker)
+  * wird durch die Container Runtime ausgeführt.
+  * cilium cni plugin interagiert mit der Cilium API auf dem Node 
+
+#### Datastore 
+
+  * Daten werden per Default in CRD (Custom Resource Defintions) gespeichert
+  * Diese Resource Objekte werden von Cilium definiert und angelegt.
+    * Wenn Sie angelegt sind, sind die Daten dadurch automatisch im etc - Speicher
+    * Mit der weiteren Möglichkeit den Status zu speichern.   
+  * Alternative: Speichern der Daten direkt in etcd
+
+#### Generell 
+
+![Cilium](https://www.inovex.de/wp-content/uploads/2020/05/Cilium.png)
+
+  * Quelle: https://www.inovex.de/de/blog/kubernetes-networking-2-calico-cilium-weavenet/
+
+  * Verwendet keine Bridge sondern Hooks im Kernel, die mit eBPF aufgesetzt werden
+    * Bessere Performance
+  * eBPF wird auch für NetworkPolicies unter der Haube eingesetzt
+  * Mit Ciliums Cluster Mesh lassen sich mehrere Cluster miteinander verbinden:
+
+#### Vorteile 
+
+  * Höhere Leistung mit eBPF-Ansatz. (extended Berkely Packet Filter)
+    * JIT - Just in time compiled -
+    * Bytecode wird zu MaschineCode kompiliert (Miniprogramme im Kernel)
+  * Ersatz für iptables (wesentlich schneller und keine Degredation wie iptables ab 5000 Services)
+  * Gut geeignet für größere Cluster 
+
+### Weave Net 
+
+  * Ähnlich calico 
+  * Verwendet overlay netzwerk
+  * Sehr stabil bzgl IPV4/IPV6 (Dual Stack) 
+  * Sehr grosses Feature-Set 
+  * mit das älteste Plugin 
+
+## Kubernetes Load Balancer / metallb (on premise)
+
+### Kubernetes Load Balancer - metallb
+
+
+### General 
+
+  * Supports bgp and arp 
+  * Divided into controller, speaker 
+
+### Installation Ways  
+
+  * helm 
+  * manifests 
+
+### Step 1: install metallb
+
+```
+## Just to show some basics 
+## Page from metallb says that digitalocean is not really supported well 
+## So we will not install the speaker .
+
+helm repo add metallb https://metallb.github.io/metallb 
+```
+
+```
+## Eventually disabling speaker 
+## vi values.yml 
+
+```
+
+```
+helm install metallb metallb/metallb --namespace=metallb-system --create-namespace --version 0.14.8
+```
+
+### Step 2: addresspool und Propagation-type (config) 
+
+```
+cd
+mkdir -p manifests
+cd manifests
+mkdir lb
+cd lb
+nano 01-addresspool.yml 
+```
+
+```
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: first-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  # we will use our external ip here 
+  - 134.209.231.154-134.209.231.154
+  # both notations are possible 
+  - 157.230.113.124/32
+```
+
+```
+kubectl apply -f .
+```
+
+```
+nano 02-advertisement.yml
+```
+
+```
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: example
+  namespace: metallb-system
+```
+
+```
+kubectl apply -f .
+```
+
+### Schritt 4: Test do i get an external ip 
+
+```
+nano 03-deploy.yml
+```
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx
+spec:
+  selector:
+    matchLabels:
+      run: web-nginx
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        run: web-nginx
+    spec:
+      containers:
+      - name: cont-nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+
+```
+
+
+```
+nano 04-service.yml
+```
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-nginx
+  labels:
+    svc: nginx
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    run: web-nginx
+```
+
+
+```
+kubectl apply -f .
+kubectl get pods
+kubectl get svc
+```
+
+```
+## auf dem client 
+curl http://<ip aus get svc>
+```
+
+```
+kubectl delete -f 03-deploy.yml 04-service.yml 
+```
+
+### Schritt 5: Referenz:
+
+  * https://metallb.io/installation/#installation-with-helm
+
+### Feste IP beziehen
+
+
+### Beispiel 
+
+```
+cd
+mkdir -p manifests/lb/
+```
+
+```
+## Service yaml anpassen
+nano 03-service.yaml
+```
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-nginx
+  labels:
+    svc: nginx
+spec:
+  type: LoadBalancer
+## eure ip aus dem pool nehmen 
+  loadBalancerIP: 167.99.130.85
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    run: web-nginx
+```
+
+```
+kubectl apply -f .
+## ist es die von oben ? 
+kubectl get svc
+```
+
+## Kubernetes Networking Internals
+
+### Weg von Pod zu Host -> veth / calicoctl get wep
+
+### Info: keine iptables - Regeln innerhalb veth -paar
+
+
+### Explanation 
+
+> **When a packet goes from one end of a veth pair to the other — does *that* action trigger iptables rules?**
+
+👉 **Answer:** **No**, the *act* of a packet traveling **through the veth pair itself** (from one end to the other) does **not** hit iptables directly.
+
+---
+
+#### 🔍 Think of it like this:
+
+The `veth` pair is just a **pipe** between two network interfaces.
+
+- When the pod sends a packet, it hits the **pod's `eth0`** (which is a veth interface).
+- That packet is instantly transferred to the **peer interface** on the host (also a veth).
+- That **transfer itself** — the jump between the veth ends — is **not processed by iptables**.
+
+---
+
+#### 🧱 iptables only comes in when:
+- The **host kernel processes the packet**, e.g., routing, forwarding, delivering to an application.
+- The packet is being **routed** or **bridged**, or undergoes **NAT**, etc.
+
+---
+
+#### 📷 Visualization:
+
+```text
+Pod eth0 (vethX)  <=====>  vethY on host  → bridge (cni0) → rest of the network
+
+             [no iptables]       →        [iptables here]
+```
+
+---
+
+So to summarize:
+
+✅ **iptables is involved** when the **packet leaves the veth** and is handled by the host stack (e.g., routed, forwarded, NATed).  
+❌ **iptables is not involved** in the **link between the two ends** of the veth — that part is a simple packet transfer.
+
+---
+
+
+## Kubernetes - IngressController
+
+### Vom Browser über den Ingress bis zum Pod - Schaubild
+
+
+![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/c0e5ceba-c636-479b-b000-d866c8caf82c)
+
+### Ingress Controller installieren mit helm
+
+
+### Basics 
+
+  * Das Verfahren funktioniert auch so auf anderen Plattformen, wenn helm verwendet wird und noch kein IngressController vorhanden
+  * Ist kein IngressController vorhanden, werden die Ingress-Objekte zwar angelegt, es funktioniert aber nicht. 
+
+### Prerequisites 
+
+  * kubectl und helm muss eingerichtet sein 
+
+### Walkthrough (Setup Ingress Controller) 
+
+```
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+## Falls repo bereits mit add hinzugefügt war 
+## helm repo update
+
+helm install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress --create-namespace --version 4.12.2
+
+## See when the external ip comes available
+kubectl -n ingress get all
+kubectl -n ingress get svc
+```
+
+
+```
+## Output  
+NAME                                     TYPE           CLUSTER-IP     EXTERNAL-IP      PORT(S)                      AGE     SELECTOR
+nginx-ingress-ingress-nginx-controller   LoadBalancer   10.245.78.34   157.245.20.222   80:31588/TCP,443:30704/TCP   4m39s   app.kubernetes.io/component=controller,app.kubernetes.io/instance=nginx-ingress,app.kubernetes.io/name=ingress-nginx
+
+## Now setup wildcard - domain for training purpose 
+## inwx.com
+*.lab1.t3isp.de A 157.245.20.222 
+
+
+```
+
+
+### Wie funktioniert das Reload und Endpunkte
+
+  * https://kubernetes.github.io/ingress-nginx/how-it-works/#nginx-configuration
+
+### How many requests per second
+
+  * https://blog.nginx.org/blog/testing-performance-nginx-ingress-controller-kubernetes
+
+### Multiple IngresController nginx
+
+
+### Set different helm-values and install second release 
+
+```
+controller:
+  electionID: ingress-controller-leader
+  ingressClass: internal-nginx  # default: nginx
+  ingressClassResource:
+    name: internal-nginx  # default: nginx
+    enabled: true
+    default: false
+    controllerValue: "k8s.io/internal-ingress-nginx"  # default: k8s.io/ingress-nginx
+```
+
+### Reference:
+
+   * https://kubernetes.github.io/ingress-nginx/user-guide/multiple-ingress/
+
+## Kubernetes - Ingress - Examples
+
+### Routing with Header
+
+  * https://github.com/jmetzger/training-kubernetes-networking/blob/main/kubernetes/ingress/nginx/examples/header-abfragen.md
+
+## Kubernetes - Calico - BGP
+
+### Calico BGP - Wirkweise Schaubild
+
+
+![Calico Ablauf](/images/calico-bgp-ablauf.svg)
+
+## Kubernetes NetworkPolicy
+
+### Einfache Übung Network Policy
+
+
+### Schritt 1: Deployment und Service erstellen 
+
+```
+KURZ=jm
+kubectl create ns policy-demo-$KURZ 
+```
+
+```
+cd 
+mkdir -p manifests
+cd manifests
+mkdir -p np
+cd np
+```
+
+```
+nano 01-deployment.yml
+```
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.23
+        ports:
+        - containerPort: 80
+```
+
+```
+kubectl -n policy-demo-$KURZ apply -f . 
+```
+
+```
+nano 02-service.yml
+```
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  type: ClusterIP # Default Wert 
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: nginx
+```
+
+```
+kubectl -n policy-demo-$KURZ apply -f . 
+```
+
+### Schritt 2: Zugriff testen ohne Regeln 
+
+```
+## lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
+kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
+```
+
+```
+## innerhalb der shell 
+wget -q nginx -O -
+```
+
+```
+## Optional: Pod anzeigen in 2. ssh-session zu jump-host
+kubectl -n policy-demo-$KURZ get pods --show-labels
+```
+
+### Schritt 3: Policy festlegen, dass kein Zugriff erlaubt ist. 
+
+```
+nano 03-default-deny.yaml 
+```
+
+```
+## Schritt 2: Policy festlegen, dass kein Ingress-Traffic erlaubt
+## in diesem namespace: policy-demo-$KURZ 
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: default-deny
+spec:
+  podSelector:
+    matchLabels: {}
+```
+
+```
+kubectl -n policy-demo-$KURZ apply -f .
+```
+
+### Schritt 3.5: Verbindung mit deny all Regeln testen 
+
+```
+kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
+```
+
+```
+## innerhalb der shell 
+wget -q nginx -O -
+```
+
+### Schritt 4: Zugriff erlauben von pods mit dem Label run=access (alle mit run gestarteten pods mit namen access haben dieses label per default)
+
+```
+nano 04-access-nginx.yaml 
+```
+
+```
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: access-nginx
+spec:
+  podSelector:
+    matchLabels:
+      app: nginx
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            run: access
+```
+
+```
+kubectl -n policy-demo-$KURZ apply -f . 
+```
+
+### Schritt 5: Testen (zugriff sollte funktionieren)
+
+```
+## lassen einen 2. pod laufen mit dem auf den nginx zugreifen 
+## pod hat durch run -> access automatisch das label run:access zugewiesen 
+kubectl run --namespace=policy-demo-$KURZ access --rm -ti --image busybox
+```
+
+```
+## innerhalb der shell 
+wget -q nginx -O -
+```
+
+
+### Schritt 6: Pod mit label run=no-access - da sollte es nicht gehen 
+
+``` 
+kubectl run --namespace=policy-demo-$KURZ no-access --rm -ti --image busybox
+```
+
+```
+## in der shell  
+wget -q nginx -O -
+```
+
+### Schritt 7: Aufräumen 
+
+```
+kubectl delete ns policy-demo-$KURZ 
+```
+
+
+### Ref:
+
+  * https://projectcalico.docs.tigera.io/security/tutorials/kubernetes-policy-basic
+
+## Kubernetes - Misc
 
 ### Bash completion installieren
 
@@ -461,33 +1594,6 @@ complete -F __start_kubectl k
 ### Reference 
 
   * https://kubernetes.io/docs/tasks/tools/included/optional-kubectl-configs-bash-linux/
-
-### kubectl verbindung mit namespace einrichten
-
-
-### config einrichten 
-
-```
-cd
-mkdir .kube
-cd .kube
-cp -a /tmp/config config
-ls -la
-## das bekommt ihr aus Eurem Cluster Management Tool 
-```
-
-```
-kubectl cluster-info
-```
-
-### Arbeitsbereich konfigurieren 
-
-```
-kubectl create ns jochen
-kubectl get ns
-kubectl config set-context --current --namespace jochen
-kubectl get pods 
-```
 
 ### vim support for yaml
 
@@ -539,7 +1645,7 @@ Eigenschaft: <return> # springt eingerückt in die nächste Zeile um 2 spaces ei
 
 ### Prerequisites 
 
-  * kubectl muss eingerichtet sein 
+  * kubectl und helm muss eingerichtet sein 
 
 ### Walkthrough (Setup Ingress Controller) 
 
@@ -548,11 +1654,11 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 ## Falls repo bereits mit add hinzugefügt war 
 ## helm repo update
 
-helm install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress --create-namespace --version 4.12.1
+helm install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress --create-namespace --version 4.12.2
 
 ## See when the external ip comes available
 kubectl -n ingress get all
-kubectl --namespace ingress get services -o wide -w nginx-ingress-ingress-nginx-controller
+kubectl -n ingress get svc
 ```
 
 
@@ -2198,10 +3304,24 @@ spec:
 ### Walkthrough 
 
 ```
-## Step 1 - Install the operator 
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.2/manifests/tigera-operator.yaml
+## Step 1 - Install the operator
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.1/manifests/tigera-operator.yaml
 ## Step 2 - Install the custom resources 
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.2/manifests/custom-resources.yaml
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.1/manifests/custom-resources.yaml
+```
+
+### Testing 
+
+```
+kubectl -n tigera-operator get pods 
+kubectl -n calico-system get pods
+kubectl -n calico-apiserver get pods
+## Sind die nodes schon ready 
+kubectl get nodes
+
+kubectl -n kube-system get pods
+kubectl -n kube-system get pods coredns-7c65d6cfc9-f6f56
+kubectl -n kube-system describe pods coredns-7c65d6cfc9-f6f56
 ```
 
 ### Reference 
@@ -2404,7 +3524,7 @@ kubectl -n kube-system exec calicoctl -- /calicoctl version
 
 ### Walkthrough  (without calicoctl)
 
-```
+```bash
 ## Step 1: create pod 
 kubectl run nginx-master --image=nginx
 ## Find out on which node it runs 
@@ -2478,6 +3598,101 @@ Chain cali-tw-cali42c2aab93f3 (1 references)
 ![images](/images/Calico_Same_Node_Flow.png)
 
 ![image](https://github.com/jmetzger/training-kubernetes-networking/assets/1933318/ba9d497d-36ed-467f-9965-faad76a201cd)
+
+
+### Übung (Teil 1)
+
+```
+cd
+mkdir -p manifests/2pods
+cd manifests/2pods
+```
+
+```
+nano pod1.yaml
+```
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-von
+spec:
+  nodeName: worker3
+  containers:
+    - name: nginx
+      image: nginx:1.24
+```
+
+```
+nano pod2.yaml 
+```
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-nach
+spec:
+  nodeName: worker3
+  containers:
+    - name: busybox
+      image: busybox:1.35
+      command: ["sleep", "3600"]
+```
+
+```
+kubectl apply -f .
+## Ip rausfinden 
+kubectl get pods -o wide 
+
+## mit dem host-system verbinden über eine debug node pod
+kubectl debug -it node/worker3 --image=busybox 
+```
+
+```
+## in der bash 
+route -n | grep <ip-pod-nach>
+```
+
+
+### Übung (Teil2) Auf den anderen worker nodes ? 
+
+```
+nano pod3.yaml 
+```
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-auf-worker1
+spec:
+  nodeName: worker1
+  containers:
+    - name: busybox
+      image: busybox:1.35
+      command: ["sleep", "3600"]
+```
+
+```
+kubectl apply -f .
+kubectl get pods -o wide
+calicoctl get wep 
+```
+
+```
+## z.B. wenn vorher worker3 -> dann worker1
+kubectl debug node/worker1 -it --image=busybox
+```
+
+```
+## in der bash 
+route -n | grep <ip-pod-nach>
+```
+
+
+
 
 ### Debug pod-2-pod on worker1
 
@@ -5240,7 +6455,17 @@ kubectl get svc
 ```
 
 ```
+## auf dem client 
+curl http://<ip aus get svc>
+```
+
+```
 kubectl delete -f 03-deploy.yml 04-service.yml 
+```
+
+### Schritt 5: Referenz:
+
+  * https://metallb.io/installation/#installation-with-helm
 
 ## Kubernetes API Reference
 
