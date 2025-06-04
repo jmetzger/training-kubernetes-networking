@@ -132,6 +132,30 @@ nano ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  name: header-routing
+spec:
+  ingressClassName: nginx  # ← Das auch!
+  rules:
+  - host: <hier-domain>.t3isp.de
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: foo
+            port:
+              number: 80
+```
+
+```
+nano ingress-v2.yaml
+```
+
+```
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
   name: header-routing-bar
   annotations:
     nginx.ingress.kubernetes.io/canary: "true"
@@ -150,26 +174,8 @@ spec:
             name: bar
             port:
               number: 80
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: header-routing
-spec:
-  ingressClassName: nginx  # ← Das auch!
-  rules:
-  - host: <hier-domain>.t3isp.de
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: foo
-            port:
-              number: 80
-
 ```
+
 
 ```
 kubectl apply -f . 
