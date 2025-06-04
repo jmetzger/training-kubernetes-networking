@@ -41,6 +41,10 @@
      * [Ingress Controller installieren mit helm](/digitalocean/ingress-auf-digitalocean-mit-helm.md)
      * [Wie funktioniert das Reload und Endpunkte](https://kubernetes.github.io/ingress-nginx/how-it-works/#nginx-configuration)
      * [How many requests per second](https://blog.nginx.org/blog/testing-performance-nginx-ingress-controller-kubernetes)
+     * [Multiple IngresController nginx](/kubernetes/ingress/nginx/examples/multiple-nginx-controller.md)
+
+  1. Kubernetes - Ingress - Examples
+     * [Routing with Header](https://github.com/jmetzger/training-kubernetes-networking/blob/main/kubernetes/ingress/nginx/examples/header-abfragen.md)
     
   1. Kubernetes - Calico - BGP
      * [Calico BGP - Wirkweise Schaubild](kubernetes-networks/calico/bgp/calico-bgp-ablauf.md)
