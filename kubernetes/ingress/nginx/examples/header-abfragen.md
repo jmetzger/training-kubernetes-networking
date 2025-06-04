@@ -187,3 +187,7 @@ curl http://<hier-domain>.t3isp.de
 # Aufruf mit header
 curl -H "X-Service-Type: bar" <hier-domain>.t3isp.de
 ```
+
+## Referenz:
+
+  * https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/
