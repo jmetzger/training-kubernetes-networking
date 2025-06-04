@@ -48,6 +48,9 @@
     
   1. Kubernetes - Calico - BGP
      * [Calico BGP - Wirkweise Schaubild](kubernetes-networks/calico/bgp/calico-bgp-ablauf.md)
+
+  1. Kubernetes NetworkPolicy
+     * [Einfache Übung Network Policy](kubernetes-networkpolicy/00-simple-exercises-group.md)
       
 ## Backlog 
 
