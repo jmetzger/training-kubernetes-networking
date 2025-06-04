@@ -56,9 +56,10 @@ kind: Ingress
 metadata:
   name: whisker
   namespace: calico-system
-  nginx.ingress.kubernetes.io/auth-type: basic
-  nginx.ingress.kubernetes.io/auth-secret: whisker-basic-auth
-  nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
+  annotations:
+     nginx.ingress.kubernetes.io/auth-type: basic
+     nginx.ingress.kubernetes.io/auth-secret: whisker-basic-auth
+     nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
 spec:
   ingressClassName: nginx
   rules:
