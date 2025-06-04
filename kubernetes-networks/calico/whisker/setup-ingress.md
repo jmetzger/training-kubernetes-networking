@@ -41,6 +41,12 @@ cd manifests/whisker
 ```
 
 ```
+# credentials erstellen
+htpasswd -c auth admin  # Enter your desired password
+kubectl create secret generic whisker-basic-auth --from-file=auth -n calico-system
+```
+
+```
 nano 01-ingress.yaml
 ```
 
@@ -49,7 +55,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: whisker
-  namespace: calico-system 
+  namespace: calico-system
+  nginx.ingress.kubernetes.io/auth-type: basic
+  nginx.ingress.kubernetes.io/auth-secret: whisker-basic-auth
+  nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
 spec:
   ingressClassName: nginx
   rules:
