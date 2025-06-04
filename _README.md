@@ -56,6 +56,11 @@
     
   1. Calico - GUI (since calico 3.30)
      * [Calico GUI](#calico-gui)
+
+  1. Gateway API
+     * [Overview](#overview)
+     * [Implementations](#implementations)
+     * [Conformance Report - What is implemented in which software](https://github.com/kubernetes-sigs/gateway-api/tree/main/conformance/reports)
            
 ## Backlog 
 
@@ -1690,6 +1695,71 @@ kubectl apply -f .
   * https://github.com/orgs/projectcalico/discussions/10395
 
 
+
+## Gateway API
+
+### Overview
+
+
+### Features 
+
+  * Responsibility separation
+  * TrafficRouting based on RequestHeader / Environment Variable 
+  * LoadBalancing (Gewichtung: 10% an Service 1, 90% an Service 2) 
+  * TCP und gRPC-Routing 
+
+### Komponenten 
+
+  1. GatewayController (Kong, Nginx, Traefik, HAProxy, Istio) - Software
+  1. GatewayClass (Stable)
+  1. Gateway (Stable) 
+  1. HttpRoute (GA) / TCPRoute (experimentell) / gRPCRoute (experimentell) 
+
+### Shared responsibility 
+
+#### Gateway API can be split into different responsibility roles
+
+![Hallo](images/resource-model.png)
+
+#### Reference 
+
+  * https://gateway-api.sigs.k8s.io/
+
+### Implementations
+
+
+### Kong 
+
+  * Ref: https://github.com/kong/kubernetes-ingress-controller
+
+### Nginx 
+
+  * Ref: https://github.com/nginxinc/nginx-gateway-fabric
+
+### Traefik 
+
+  * Important: Traefik currently only partly supports spec v1.0.0
+  * Currently: v1.1.0 from Kubernetes is already out
+
+```
+## Please do not use Traefik right now for the gateway api
+```
+
+### Reference:
+
+  * https://gateway-api.sigs.k8s.io/implementations/
+
+### Conformance 
+
+  * https://github.com/kubernetes-sigs/gateway-api/tree/main/conformance/reports
+
+### Guides 
+
+  * https://gateway-api.sigs.k8s.io/guides/
+
+### Conformance Report - What is implemented in which software
+
+  * https://github.com/kubernetes-sigs/gateway-api/tree/main/conformance/reports
 
 ## Kubernetes - Misc
 
