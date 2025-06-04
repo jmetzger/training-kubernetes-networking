@@ -8,6 +8,7 @@
 
 ```
 kubectl get networkpolicies  -A
+kubectl -n calico-system get networkpolicy whisker -o yaml
 ```
 
 ![image](https://github.com/user-attachments/assets/9ae9e0bb-9039-4ade-9a6d-640e22b55333)
