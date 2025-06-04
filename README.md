@@ -51,6 +51,7 @@
 
   1. Kubernetes NetworkPolicy
      * [Einfache Übung Network Policy](kubernetes-networkpolicy/00-simple-exercises-group.md)
+     * [Kubernetes policy api - neu noch alpha](https://network-policy-api.sigs.k8s.io/reference/examples/)
       
 ## Backlog 
 
