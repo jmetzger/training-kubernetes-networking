@@ -182,6 +182,8 @@ kubectl apply -f .
 # Achtung IP - anpassen (ip von ingress - controller svc) 
 curl http://<hier-domain>.t3isp.de
 ```
+
+```
 # Aufruf mit header
 curl -H "X-Service-Type: bar" <hier-domain>.t3isp.de
 ```
