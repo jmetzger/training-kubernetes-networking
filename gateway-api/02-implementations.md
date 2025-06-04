@@ -20,3 +20,7 @@
 ## Reference:
 
   * https://gateway-api.sigs.k8s.io/implementations/
+
+## Conformance 
+
+  * https://github.com/kubernetes-sigs/gateway-api/tree/main/conformance/reports
