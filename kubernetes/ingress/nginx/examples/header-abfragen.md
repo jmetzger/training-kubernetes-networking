@@ -132,7 +132,7 @@ nano ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: header-routing
+  name: header-routing-bar
   annotations:
     nginx.ingress.kubernetes.io/canary: "true"
     nginx.ingress.kubernetes.io/canary-by-header: "X-Service-Type"
@@ -140,7 +140,7 @@ metadata:
 spec:
   ingressClassName: nginx 
   rules:
-  - host: api.example.com
+  - host: <hier-domain>.t3isp.de
     http:
       paths:
       - path: /
