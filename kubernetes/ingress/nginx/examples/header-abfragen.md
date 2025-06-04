@@ -132,7 +132,7 @@ nano ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: api-v2-headers
+  name: header-routing
   annotations:
     nginx.ingress.kubernetes.io/canary: "true"
     nginx.ingress.kubernetes.io/canary-by-header: "X-Service-Type"
