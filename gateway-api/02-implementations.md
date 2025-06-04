@@ -11,7 +11,7 @@
 ## Traefik 
 
   * Important: Traefik currently only partly supports spec v1.0.0
-  * Currently: v1.1.0 from Kubernetes is alreay out
+  * Currently: v1.1.0 from Kubernetes is already out
 
 ```
 # Please do not use Traefik right now for the gateway api
