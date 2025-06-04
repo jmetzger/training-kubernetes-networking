@@ -5,8 +5,9 @@
 ```
 helm repo add kong https://charts.konghq.com
 helm -n kong upgrade --install kong kong/ingress --version 0.19.0 --create-namespace
-helm get ingressclasses 
-
+kubectl get ingressclasses
+# IP - Addresse 
+kubectl -n kong get svc 
 ```
 
 
