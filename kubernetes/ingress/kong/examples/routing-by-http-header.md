@@ -4,7 +4,7 @@
 
 ```
 helm repo add kong https://charts.konghq.com
-helm -n kong install kong kong/ingress --version 0.19.0 --create-namespace
+helm -n kong upgrade --install kong kong/ingress --version 0.19.0 --create-namespace
 helm get ingressclasses 
 
 ```
