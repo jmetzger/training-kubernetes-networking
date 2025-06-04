@@ -6,6 +6,10 @@
   * Whisker and Goldmane are the first components in calico that create NetworkPolicy Objects
   * Example:
 
+```
+kubectl get networkpolicies  -A
+```
+
 ![image](https://github.com/user-attachments/assets/9ae9e0bb-9039-4ade-9a6d-640e22b55333)
 
 ## Labelling of namespaces 
