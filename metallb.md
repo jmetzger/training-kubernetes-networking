@@ -27,7 +27,8 @@ helm repo add metallb https://metallb.github.io/metallb
 ```
 
 ```
-helm install metallb metallb/metallb --namespace=metallb-system --create-namespace --version 0.14.8
+# reset-values, always reset values on upgrade 
+helm upgrade --install metallb metallb/metallb --namespace=metallb-system --create-namespace --version 0.15.2 --reset-values
 ```
 
 ## Step 2: addresspool und Propagation-type (config) 
