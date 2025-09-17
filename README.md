@@ -28,6 +28,7 @@
      * [Wann wird die PodIP vergeben](kubectl/run-with-example.md)
     
   1. Kubernetes - Projekt Applikation - Step by Step (Netzwerk)
+     * [Bauen einer Webanwendung](bauen-einer-webanwendung.md)
      * [kubectl/manifest/deployments](/kubectl-examples/03-nginx-deployment.md)
      * [kubectl/manifest/service](/kubectl-examples/03b-service.md)    
      * [DNS - Resolution - Services](kubernetes-networks/dns-resolution-services.md)
