@@ -22,9 +22,18 @@
     
   1. Kubernetes Netzwerk einrichten
      * [CNI-Provider calico einrichten](kubernetes-networks/calico/installation/install-cni.md)
-     * [Andere Cluster-CIDR verwenden - calico/kubeadm](/kubernetes-networks/calico/installation/using-different-cluster-cidr-kubeadm.md)    
+     * [Andere Cluster-CIDR verwenden - calico/kubeadm](/kubernetes-networks/calico/installation/using-different-cluster-cidr-kubeadm.md)
 
-  1. Kubernetes Networking Übung
+  1. Kubernetes Networking Übung (Praxis 2)
+     * [Wann wird die PodIP vergeben](kubectl/run-with-example.md)
+    
+  1. Kubernetes - Projekt Applikation - Step by Step (Netzwerk)
+     * [kubectl/manifest/deployments](/kubectl-examples/03-nginx-deployment.md)
+     * [kubectl/manifest/service](/kubectl-examples/03b-service.md)    
+     * [DNS - Resolution - Services](kubernetes-networks/dns-resolution-services.md)
+     * [Beispiel Ingress mit Hostnamen](/kubectl-examples/04-ingress-nginx-with-hostnames.md)   
+
+  1. Kubernetes Networking Übung (Praxis 2)
      * [Wann wird die PodIP vergeben](kubectl/run-with-example.md)
      * [Host erforschen z.B. CNI mit kubectl debug](debug/kubectl-debug-cni.md)
     
@@ -81,12 +90,6 @@
      * [Ingress Controller installieren mit helm](/digitalocean/ingress-auf-digitalocean-mit-helm.md)
      * [Wie funktioniert das Reload und Endpunkte](https://kubernetes.github.io/ingress-nginx/how-it-works/#nginx-configuration)
      * [How many requests per second](https://blog.nginx.org/blog/testing-performance-nginx-ingress-controller-kubernetes)
-    
-  1. Kubernetes - Projekt Applikation - Step by Step (Netzwerk)
-     * [kubectl/manifest/deployments](/kubectl-examples/03-nginx-deployment.md)
-     * [kubectl/manifest/service](/kubectl-examples/03b-service.md)    
-     * [DNS - Resolution - Services](kubernetes-networks/dns-resolution-services.md)
-     * [Beispiel Ingress mit Hostnamen](/kubectl-examples/04-ingress-nginx-with-hostnames.md)
        
   1. Kubernetes Services (Schaubilder)
      * [Services -> type: NodePort](/internals/service/nodeport.md)
