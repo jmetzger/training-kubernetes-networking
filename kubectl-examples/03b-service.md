@@ -91,7 +91,7 @@ kubectl describe svc svc-nginx
 ## Schritt 5 : NodePort : Short version 
 
 ```
-nano service.yml
+nano ß2-svc.yml
 # in Zeile type: 
 # ClusterIP ersetzt durch NodePort 
 
@@ -106,7 +106,7 @@ curl http://164.92.193.245:30280
 ## Schritt 6 : Service mit LoadBalancer (ExternalIP)
 
 ```
-nano service.yml
+nano 02-svc.yml
 # in Zeile type: 
 # NodePort ersetzt durch LoadBalancer  
 
