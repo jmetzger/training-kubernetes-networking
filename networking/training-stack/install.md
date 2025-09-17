@@ -19,6 +19,14 @@ terraform init
 terraform apply -auto-approve
 ```
 
+## Testen 
+
+```
+kubectl cluster-info
+kubectl get nodes -o wide
+```
+
+
 ## Hinweis
 
 ```
