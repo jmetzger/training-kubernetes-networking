@@ -87,6 +87,58 @@ kubectl apply -f .
 kubectl describe svc svc-nginx 
 ```
 
+
+## Schritt 5 : NodePort : Short version 
+
+```
+nano service.yml
+# in Zeile type: 
+# ClusterIP ersetzt durch NodePort 
+
+kubectl apply -f .
+kubectl get svc
+kubectl get nodes -o wide
+# im client 
+curl http://164.92.193.245:30280
+```
+
+
+## Schritt 6 : Service mit LoadBalancer (ExternalIP)
+
+```
+nano service.yml
+# in Zeile type: 
+# NodePort ersetzt durch LoadBalancer  
+
+kubectl apply -f .
+kubectl get svc svc-nginx
+kubectl describe svc svc-nginx 
+kubectl get svc svc-nginx -w 
+# spätestens nach 5 Minuten bekommen wir eine externe ip
+# z.B. 41.32.44.45
+
+curl http://41.32.44.45 
+```
+
+
+## Optional: Example getting a specific ip from loadbalancer (if supported) 
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-nginx2
+spec:
+  type: LoadBalancer
+  # this line to get a specific ip if supported
+  loadBalancerIP: 10.34.12.34
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    web: my-nginx
+```       
+
 ## Ref.
 
   * https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/
