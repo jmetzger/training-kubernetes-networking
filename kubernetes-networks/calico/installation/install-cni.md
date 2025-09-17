@@ -19,7 +19,7 @@ kubectl -n calico-apiserver get pods
 kubectl get nodes
 
 kubectl -n kube-system get pods
-kubectl -n kube-system get pods coredns-7c65d6cfc9-f6f56
+kubectl -n kube-system get pods coredns-7c65d6cfc9-f6f56 -o wide
 kubectl -n kube-system describe pods coredns-7c65d6cfc9-f6f56
 ```
 
