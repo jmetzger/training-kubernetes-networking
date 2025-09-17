@@ -16,7 +16,7 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 # Falls repo bereits mit add hinzugefügt war 
 # helm repo update
 
-helm install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress --create-namespace --version 4.12.2
+helm upgrade --install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress --create-namespace --version 4.13.2
 
 # See when the external ip comes available
 kubectl -n ingress get all
