@@ -10,7 +10,7 @@
 
 ```
 cd
-git clone https://github.com/jmetzger/training-kubernets-networking-stack-do-terraform.git install
+git clone https://github.com/jmetzger/training-kubernetes-networking-stack-do-terraform.git install
 cd install
 cat /tmp/.env
 source /tmp/.env
