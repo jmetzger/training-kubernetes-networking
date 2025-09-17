@@ -3,7 +3,7 @@
 ## Exercise 
 
 ```
-kubectl run podtest --rm -ti --image busybox
+kubectl run podtest --rm -ti --image=busybox
 ```
 
 ## Example with svc-nginx 
