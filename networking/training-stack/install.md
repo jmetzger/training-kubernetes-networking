@@ -14,6 +14,7 @@ git clone https://github.com/jmetzger/training-kubernets-networking-stack-do-ter
 cd install
 cat /tmp/.env
 source /tmp/.env
+export TF_VAR_do_token
 terraform init
 terraform apply -auto-approve
 ```
