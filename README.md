@@ -7,6 +7,10 @@
      * [CRI - Container Runtime interface](/kubernetes/internals/cri.md)
      * [Ports und Protokolle](https://kubernetes.io/docs/reference/networking/ports-and-protocols/)
 
+  1. Installation (Self-Service)
+     [Installation - Self Service](/networking/training-stack/install.md)
+
+
   1. Kubernetes Networking Internals
      * [Networking Internal Overview](/kubernetes-networks/networking-internal-overview.md)
 
