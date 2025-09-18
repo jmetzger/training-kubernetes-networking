@@ -151,6 +151,10 @@ kubectl explain ingress
 apiVersion: networking.k8s.io/v1
 ```
 
+```
+kubectl apply -f .
+```
+
 ### Schritt 2: Fehler Eigenschaften beheben 
 
 <img width="947" height="115" alt="image" src="https://github.com/user-attachments/assets/c2f7760e-2853-4f24-b6a1-20bafa779024" />
