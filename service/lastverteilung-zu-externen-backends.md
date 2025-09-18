@@ -144,3 +144,7 @@ spec:
 ```
 
 
+## Automatischer Neuladen bei Änderung der configMap 
+
+  * https://github.com/stakater/Reloader
+
