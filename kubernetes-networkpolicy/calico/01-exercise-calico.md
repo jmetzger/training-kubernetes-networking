@@ -47,7 +47,7 @@ spec:
 kubectl apply -f .
 ```
 
-## Step 2: nginx ausrollen aus manifests/04-service und testen
+## Step 3: nginx ausrollen aus manifests/04-service und testen
 
 ```
 cd
@@ -118,7 +118,7 @@ kubectl run -it --rm access --image=busybox
 wget -O - http://svc-nginx 
 ```
 
-## Step 3: Traffic erlauben egress von busybox 
+## Step 4: Traffic erlauben egress von busybox 
 
 ```
 cd
@@ -158,7 +158,7 @@ wget -O - http://www.google.de
 wget -O - http://my-nginx
 ```
 
-## Step 4: Traffic erlauben für nginx 
+## Step 5: Traffic erlauben für nginx 
 
 ```
 # 03-allow-ingress-my-nginx.yml 
