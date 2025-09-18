@@ -66,6 +66,9 @@
   1. Kubernetes NetworkPolicy
      * [Einfache Übung Network Policy](kubernetes-networkpolicy/00-simple-exercises-group.md)
      * [Kubernetes policy api - neu noch alpha](https://network-policy-api.sigs.k8s.io/reference/examples/)
+
+  1. Extras: Lastverteilung zu externen Backends(Ausserhalb von Kubernetes)
+     * [Lastverteilung zu externen Backends(Ausserhalb von Kubernetes)](service/lastverteilung-zu-externen-backends.md)
     
   1. Calico - GUI (since calico 3.30)
      * [Calico GUI](/kubernetes-networks/calico/whisker/setup-ingress.md)
