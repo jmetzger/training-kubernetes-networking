@@ -48,7 +48,7 @@ Older versions of tcpdump truncate packets to 68 or 96 bytes. If this is the cas
 tcpdump -i <interface> -s 65535 -w <file>
 ```
 
-### Variante 2: Im Hintergrund laufen lassen und connecten 
+#### Variante 2: Im Hintergrund laufen lassen und connecten 
 
 ```
 kubectl -n ingress debug nginx-ingress-ingress-nginx-controller-7bc7c7776d-jpj5h --image nicolaka/netshoot -- sleep infinite
