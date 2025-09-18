@@ -150,12 +150,12 @@ wget -O - http://svc-nginx
 
 ```
 # 03-allow-ingress-my-nginx.yml 
-apiVersion: crd.projectcalico.org/v1
+apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
   name: allow-nginx-ingress
 spec:
-  selector: run == 'my-nginx'
+  selector: web == 'my-nginx'
   types:
   - Ingress
   ingress:
@@ -174,5 +174,5 @@ kubectl run -it --rm access --image=busybox
 
 ```
 # In der Bbusybox 
-wget -O - http://my-nginx 
+wget -O - http://svc-nginx 
 ```
