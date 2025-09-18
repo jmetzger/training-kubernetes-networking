@@ -50,14 +50,6 @@ kubectl apply -f .
 ## Step 3: nginx ausrollen aus manifests/04-service und testen
 
 ```
-cd
-mkdir -p manifests
-cd manifests
-mkdir 04-service 
-cd 04-service 
-```
-
-```
 nano deploy.yml 
 ```
 
