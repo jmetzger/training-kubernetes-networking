@@ -143,7 +143,7 @@ kubectl run -it --rm access --image=busybox
 wget -O - http://www.google.de
 
 # sollte nicht funktionieren
-wget -O - http://my-nginx
+wget -O - http://svc-nginx
 ```
 
 ## Step 5: Traffic erlauben für nginx 
