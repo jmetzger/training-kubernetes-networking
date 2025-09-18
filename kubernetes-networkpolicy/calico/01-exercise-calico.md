@@ -1,6 +1,52 @@
 # Exercise networkpolicy calico
 
-## Step 1: Set global policy
+## Step 1:
+
+```
+cd
+mkdir -p manifests
+cd manifests
+mkdir calico
+cd calico
+```
+
+```
+nano 01-gnp.yml
+```
+
+## Step 2: Set global policy
+
+```
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: default-deny
+spec:
+  # Auf alle Namespaces außer kube-system und calico-system anwenden
+  namespaceSelector: kubernetes.io/metadata.name not in {"kube-system","calico-system"}
+
+  types:
+  - Ingress
+  - Egress
+
+  # Egress-Ausnahmen (z. B. DNS)
+  egress:
+  - action: Allow
+    protocol: UDP
+    destination:
+      selector: 'k8s-app == "kube-dns"'
+      ports: [53]
+  - action: Allow
+    protocol: TCP
+    destination:
+      selector: 'k8s-app == "kube-dns"'
+      ports: [53]
+```
+
+```
+kubectl apply -f .
+```
+
 
 ```
 apiVersion: crd.projectcalico.org/v1
