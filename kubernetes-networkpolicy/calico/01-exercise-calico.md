@@ -113,16 +113,12 @@ wget -O - http://svc-nginx
 ## Step 4: Traffic erlauben egress von busybox 
 
 ```
-cd
-cd manifests
-mkdir cnp
-cd cnp
+nano 02-egress-allow-busybox.yml  
 ```
-
 
 ```
 # vi 02-egress-allow-busybox.yml
-apiVersion: crd.projectcalico.org/v1
+apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
   name: allow-busybox-egress
