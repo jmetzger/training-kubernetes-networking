@@ -8,6 +8,36 @@ kind: GlobalNetworkPolicy
 metadata:
   name: default-deny
 spec:
+  # Alles außer kube-system und calico-system sperren
+  namespaceSelector: >
+    kubernetes.io/metadata.name != "kube-system" &&
+    kubernetes.io/metadata.name != "calico-system"
+  types:
+  - Ingress
+  - Egress
+  egress:
+    # allow all namespaces to communicate to DNS pods
+  - action: Allow
+    protocol: UDP
+    destination:
+      selector: 'k8s-app == "kube-dns"'
+      ports:
+      - 53
+  - action: Allow
+    protocol: TCP
+    destination:
+      selector: 'k8s-app == "kube-dns"'
+      ports:
+      - 53
+```
+
+
+```
+apiVersion: crd.projectcalico.org/v1
+kind: GlobalNetworkPolicy
+metadata:
+  name: default-deny
+spec:
   namespaceSelector: kubernetes.io/metadata.name != "kube-system"
   types:
   - Ingress
