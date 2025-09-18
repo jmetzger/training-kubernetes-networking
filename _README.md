@@ -3,9 +3,13 @@
 ## Agenda
   1. Kubernetes Grundlagen
      * [Aufbau Allgemein](#aufbau-allgemein)
+     * [Ausbaustufen](#ausbaustufen)
      * [Structure Kubernetes Deep Dive](https://github.com/jmetzger/training-kubernetes-advanced/assets/1933318/1ca0d174-f354-43b2-81cc-67af8498b56c)
      * [CRI - Container Runtime interface](#cri---container-runtime-interface)
      * [Ports und Protokolle](https://kubernetes.io/docs/reference/networking/ports-and-protocols/)
+
+  1. Installation (Self-Service)
+     * [Installation - Self Service](#installation---self-service)
 
   1. Kubernetes Networking Internals
      * [Networking Internal Overview](#networking-internal-overview)
@@ -21,7 +25,17 @@
      * [CNI-Provider calico einrichten](#cni-provider-calico-einrichten)
      * [Andere Cluster-CIDR verwenden - calico/kubeadm](#andere-cluster-cidr-verwenden---calicokubeadm)
 
-  1. Kubernetes Networking Übung
+  1. Kubernetes Networking Übung (Praxis 2)
+     * [Wann wird die PodIP vergeben](#wann-wird-die-podip-vergeben)
+    
+  1. Kubernetes - Projekt Applikation - Step by Step (Netzwerk)
+     * [Bauen einer Webanwendung](#bauen-einer-webanwendung)
+     * [kubectl/manifest/deployments](#kubectlmanifestdeployments)
+     * [kubectl/manifest/service](#kubectlmanifestservice)
+     * [DNS - Resolution - Services](#dns---resolution---services)
+     * [Beispiel Ingress mit Hostnamen](#beispiel-ingress-mit-hostnamen)
+
+  1. Kubernetes Networking Übung (Praxis 2)
      * [Wann wird die PodIP vergeben](#wann-wird-die-podip-vergeben)
      * [Host erforschen z.B. CNI mit kubectl debug](#host-erforschen-zb-cni-mit-kubectl-debug)
     
@@ -53,16 +67,31 @@
   1. Kubernetes NetworkPolicy
      * [Einfache Übung Network Policy](#einfache-übung-network-policy)
      * [Kubernetes policy api - neu noch alpha](https://network-policy-api.sigs.k8s.io/reference/examples/)
+
+  1. Extras: Lastverteilung zu externen Backends(Ausserhalb von Kubernetes)
+     * [Lastverteilung zu externen Backends(Ausserhalb von Kubernetes)](#lastverteilung-zu-externen-backendsausserhalb-von-kubernetes)
     
   1. Calico - GUI (since calico 3.30)
      * [Calico GUI](#calico-gui)
+
+  1. Kubernetes Istio
+     * [Why istio and benefits](#why-istio-and-benefits)
+     * [Overview sidecar pattern](#overview-sidecar-pattern)
+     * [Ambient Mode istio](#ambient-mode-istio)
+     * [Istio vs. Ingress Überblick](#istio-vs-ingress-überblick)
+     * [Istio installieren und Addons bereitsstellen](#istio-installieren-und-addons-bereitsstellen)
+     * [Istion Überblick - egress und ingress - gateway](#istion-überblick---egress-und-ingress---gateway)
+     * [Istio - Deployment of simple application](#istio---deployment-of-simple-application)
+     * [Istio - Grafana Dashboard](#istio---grafana-dashboard)
+     * [Mesh / istio](#mesh--istio)
+     * [Benchmarks istio ambient,sidecar und baseline](#benchmarks-istio-ambientsidecar-und-baseline)
+         
+## Backlog 
 
   1. Gateway API
      * [Overview](#overview)
      * [Implementations](#implementations)
      * [Conformance Report - What is implemented in which software](https://github.com/kubernetes-sigs/gateway-api/tree/main/conformance/reports)
-           
-## Backlog 
 
   1. Kubernetes - Misc
 
@@ -78,12 +107,6 @@
      * [Ingress Controller installieren mit helm](#ingress-controller-installieren-mit-helm)
      * [Wie funktioniert das Reload und Endpunkte](https://kubernetes.github.io/ingress-nginx/how-it-works/#nginx-configuration)
      * [How many requests per second](https://blog.nginx.org/blog/testing-performance-nginx-ingress-controller-kubernetes)
-    
-  1. Kubernetes - Projekt Applikation - Step by Step (Netzwerk)
-     * [kubectl/manifest/deployments](#kubectlmanifestdeployments)
-     * [kubectl/manifest/service](#kubectlmanifestservice)
-     * [DNS - Resolution - Services](#dns---resolution---services)
-     * [Beispiel Ingress mit Hostnamen](#beispiel-ingress-mit-hostnamen)
        
   1. Kubernetes Services (Schaubilder)
      * [Services -> type: NodePort](#services-->-type-nodeport)
@@ -405,6 +428,11 @@ Er stellt sicher, dass Container in einem Pod ausgeführt werden.
   * https://www.redhat.com/de/topics/containers/kubernetes-architecture
 
 
+### Ausbaustufen
+
+
+![image](https://github.com/user-attachments/assets/355652f2-1a2e-441b-93c2-5b68508158b1)
+
 ### Structure Kubernetes Deep Dive
 
   * https://github.com/jmetzger/training-kubernetes-advanced/assets/1933318/1ca0d174-f354-43b2-81cc-67af8498b56c
@@ -446,6 +474,50 @@ Container.
 ### Ports und Protokolle
 
   * https://kubernetes.io/docs/reference/networking/ports-and-protocols/
+
+## Installation (Self-Service)
+
+### Installation - Self Service
+
+
+  * ausgerollt mit terraform (binary ist installiert) - snap install --classic terraform 
+  * beinhaltet
+      1. 1 controlplane
+      1. 2 worker nodes
+  * Netzwerk steht noch nicht zur Verfügung 
+   
+### Walktrough 
+
+```
+cd
+git clone https://github.com/jmetzger/training-kubernetes-networking-stack-do-terraform.git install
+cd install
+cat /tmp/.env
+source /tmp/.env
+export TF_VAR_do_token
+terraform init
+terraform apply -auto-approve
+```
+
+### Testen 
+
+```
+kubectl cluster-info
+kubectl get nodes -o wide
+```
+
+
+### Hinweis
+
+```
+## Sollte es nicht sauber durchlaufen
+## einfach nochmal
+terraform apply -auto-approve
+
+## Wenn das nicht geht, einfach nochmal neu
+terraform destroy -auto-approve
+terraform apply -auto-approve
+```
 
 ## Kubernetes Networking Internals
 
@@ -659,7 +731,10 @@ kubectl run foo2 --image=foo2
 ## ImageErrPull - Image konnte nicht geladen werden 
 kubectl get pods 
 ## Weitere status - info 
-kubectl describe pods foo2 
+kubectl describe pods foo2
+
+## Auch der nicht laufende Pod 
+kubectl get pods -o wide 
 ```
 
 ### Ref:
@@ -675,9 +750,9 @@ kubectl describe pods foo2
 
 ```
 ## Step 1 - Install the operator
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.1/manifests/tigera-operator.yaml
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.3/manifests/tigera-operator.yaml
 ## Step 2 - Install the custom resources 
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.1/manifests/custom-resources.yaml
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.3/manifests/custom-resources.yaml
 ```
 
 ### Testing 
@@ -690,7 +765,7 @@ kubectl -n calico-apiserver get pods
 kubectl get nodes
 
 kubectl -n kube-system get pods
-kubectl -n kube-system get pods coredns-7c65d6cfc9-f6f56
+kubectl -n kube-system get pods coredns-7c65d6cfc9-f6f56 -o wide
 kubectl -n kube-system describe pods coredns-7c65d6cfc9-f6f56
 ```
 
@@ -759,7 +834,7 @@ spec: {}
 
 ```
 
-## Kubernetes Networking Übung
+## Kubernetes Networking Übung (Praxis 2)
 
 ### Wann wird die PodIP vergeben
 
@@ -787,7 +862,563 @@ kubectl run foo2 --image=foo2
 ## ImageErrPull - Image konnte nicht geladen werden 
 kubectl get pods 
 ## Weitere status - info 
-kubectl describe pods foo2 
+kubectl describe pods foo2
+
+## Auch der nicht laufende Pod 
+kubectl get pods -o wide 
+```
+
+### Ref:
+
+  * https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#run
+
+## Kubernetes - Projekt Applikation - Step by Step (Netzwerk)
+
+### Bauen einer Webanwendung
+
+
+![Bauen einer Webanwendung](images/WebApp.drawio.png)
+
+### kubectl/manifest/deployments
+
+
+```
+cd
+mkdir -p manifests
+cd manifests
+mkdir 03-deploy
+cd 03-deploy 
+```
+
+```
+nano deploy.yml
+```
+
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 8 # tells deployment to run 8 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.21
+        ports:
+        - containerPort: 80
+        
+```
+
+```
+kubectl apply -f deploy.yml 
+```
+
+```
+## kubectl get -f deploy.yml -o yaml
+kubectl get all 
+```
+
+### kubectl/manifest/service
+
+
+### Schritt 1: Deployment 
+
+```
+cd
+mkdir -p manifests
+cd manifests 
+mkdir 04-service 
+cd 04-service 
+##vi 01-deploy.yml 
+```
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 7 # tells deployment to run 8 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.23
+        ports:
+        - containerPort: 80
+```
+
+```
+kubectl apply -f .
+```
+
+### Schritt 2:
+
+```
+nano 02-svc.yml
+```
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-nginx
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: nginx
+```
+
+```
+kubectl apply -f . 
+```
+
+### Schritt 3 Endpunkte gefunden ?
+
+```
+kubectl get svc svc-nginx
+kubectl describe svc svc-nginx
+```
+
+```
+kubectl get endpoints svc-nginx
+kubectl get endpoints svc-nginx -o yaml 
+```
+
+### Schritt 4 Löschen deployment und prüfen die Endpunkte 
+
+```
+kubectl delete -f deploy.yml
+## Uups Endpunkte sind weg 
+kubectl describe svc svc-nginx 
+```
+
+```
+kubectl apply -f .
+## Endpunkte sind wieder da, aber neue POD-IPs
+kubectl describe svc svc-nginx 
+```
+
+
+### Schritt 5 : NodePort : Short version 
+
+```
+nano 02-svc.yml
+## in Zeile type: 
+## ClusterIP ersetzt durch NodePort 
+
+kubectl apply -f .
+kubectl get svc
+kubectl get nodes -o wide
+## im client 
+curl http://164.92.193.245:30280
+```
+
+
+### Schritt 6 : Service mit LoadBalancer (ExternalIP)
+
+```
+nano 02-svc.yml
+## in Zeile type: 
+## NodePort ersetzt durch LoadBalancer  
+
+kubectl apply -f .
+kubectl get svc svc-nginx
+kubectl describe svc svc-nginx 
+kubectl get svc svc-nginx -w 
+## spätestens nach 5 Minuten bekommen wir eine externe ip
+## z.B. 41.32.44.45
+
+curl http://41.32.44.45 
+```
+
+
+### Optional: Example getting a specific ip from loadbalancer (if supported) 
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-nginx2
+spec:
+  type: LoadBalancer
+  # this line to get a specific ip if supported
+  loadBalancerIP: 10.34.12.34
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    web: my-nginx
+```       
+
+### Ref.
+
+  * https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/
+
+### DNS - Resolution - Services
+
+
+### Exercise 
+
+```
+kubectl run podtest --rm -ti --image=busybox
+```
+
+### Example with svc-nginx 
+
+```
+## in sh
+wget -O - http://svc-nginx
+wget -O - http://svc-nginx.jochen
+wget -O - http://svc-nginx.jochen.svc
+wget -O - http://svc-nginx.jochen.svc.cluster.local
+```
+
+### Example with apple-service 
+
+```
+If you don't see a command prompt, try pressing enter.
+/ # wget -O - http://apple-service.jochen
+Connecting to apple-service.jochen (10.245.39.214:80)
+writing to stdout
+apple-tln1
+-                    100% |**************************************************************************************************************|    11  0:00:00 ETA
+written to stdout
+/ # wget -O - http://apple-service.jochen.svc.cluster.local
+Connecting to apple-service.jochen.svc.cluster.local (10.245.39.214:80)
+writing to stdout
+apple-tln1
+-                    100% |**************************************************************************************************************|    11  0:00:00 ETA
+written to stdout
+/ # wget -O - http://apple-service
+Connecting to apple-service (10.245.39.214:80)
+writing to stdout
+apple-tln1
+-                    100% |**************************************************************************************************************|    11  0:00:00 ETA
+written to stdout
+```
+
+### How to find the FQDN (Full qualified domain name) 
+
+```
+## in busybox (clusterIP)
+nslookup 10.109.6.53
+name = svc-nginx.jochen.svc.cluster.local
+```
+
+### Beispiel Ingress mit Hostnamen
+
+
+### Walkthrough 
+
+#### Step 1: pods and services
+
+```
+cd
+mkdir -p manifests
+cd manifests 
+mkdir abi
+cd abi
+```
+
+```
+nano apple.yml
+```
+
+```
+## apple.yml 
+## vi apple.yml 
+kind: Pod
+apiVersion: v1
+metadata:
+  name: apple-app
+  labels:
+    app: apple
+spec:
+  containers:
+    - name: apple-app
+      image: hashicorp/http-echo
+      args:
+        - "-text=apple-<dein-name>"
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: apple-service
+spec:
+  selector:
+    app: apple
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5678 # Default port for image
+```
+
+```
+kubectl apply -f apple.yml 
+```
+
+```
+nano banana.yml
+```
+
+
+```
+## banana
+## vi banana.yml
+kind: Pod
+apiVersion: v1
+metadata:
+  name: banana-app
+  labels:
+    app: banana
+spec:
+  containers:
+    - name: banana-app
+      image: hashicorp/http-echo
+      args:
+        - "-text=banana-<dein-name>"
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: banana-service
+spec:
+  selector:
+    app: banana
+  ports:
+    - port: 80
+      targetPort: 5678 # Default port for image
+```
+
+```
+kubectl apply -f banana.yml
+```
+
+### Step 2: Ingress 
+
+```
+nano ingress.yaml
+```
+
+```
+## Ingress
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: example-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "<euername>.lab1.t3isp.de"
+    http:
+      paths:
+        - path: /apple
+          backend:
+            serviceName: apple-service
+            servicePort: 80
+        - path: /banana
+          backend:
+            serviceName: banana-service
+            servicePort: 80
+```
+
+```
+## ingress 
+kubectl apply -f ingress.yml
+kubectl get ing 
+```
+
+### Reference 
+
+  * https://matthewpalmer.net/kubernetes-app-developer/articles/kubernetes-ingress-guide-nginx-example.html
+
+### Find the problem 
+
+
+#### Schritt 1: api-version ändern
+
+```
+## Welche Landkarten gibt es ?
+kubectl api-versions
+## Auf welcher Landkarte ist Ingress jetzt
+kubectl explain ingress
+```
+
+<img width="376" height="69" alt="image" src="https://github.com/user-attachments/assets/15111f3d-f82e-4b79-99c4-2670e4332524" />
+
+```
+## ingress ändern ingress.yml 
+## von
+## apiVersion: extensions/v1beta1
+## in
+apiVersion: networking.k8s.io/v1
+```
+
+```
+kubectl apply -f .
+```
+
+#### Schritt 2: Fehler Eigenschaften beheben 
+
+<img width="947" height="115" alt="image" src="https://github.com/user-attachments/assets/c2f7760e-2853-4f24-b6a1-20bafa779024" />
+
+```
+## Problem serviceName beheben
+## Was gibt es stattdessen
+## -> es gibt service aber keine serviceName 
+kubectl explain ingress.spec.rules.http.paths.backend
+## -> es gibt service.name 
+kubectl explain ingress.spec.rules.http.paths.backend.
+```
+
+```
+## Korrektur 2x in ingress.yaml: Inkl. servicePort (neu: service.port.number
+## vorher
+##  backend:
+##            serviceName: apple-service
+##            servicePort: 80
+## jetzt:
+  service:
+    name: apple-service
+    port:
+      number: 80
+```
+
+```
+kubectl apply -f . 
+```
+
+#### Schritt 3: pathType ergänzen 
+
+<img width="907" height="46" alt="image" src="https://github.com/user-attachments/assets/8da36c28-7737-49ba-a9a0-994a21fd02fb" />
+
+
+  * Es wird festgelegt wie der Pfad ausgewertet
+
+```
+## Wir müssen pathType auf der 1. Unterebene von paths einfügen
+## Entweder exact oder prefix 
+```
+
+<img width="372" height="124" alt="image" src="https://github.com/user-attachments/assets/615884d5-2335-4dc1-99fd-cc79a224a8b6" />
+
+```
+kubectl apply -f .
+```
+
+#### Schritt 4: Testen aufrufen 
+
+```
+curl http://<euername>.lab1.t3isp.de/apple
+curl http://<euername>.lab1.t3isp.de/apple/ # Sollte nicht funktioniert
+curl http://<euername>.lab1.t3isp.de/banana
+curl http://<euername>.lab1.t3isp.de/banana/
+curl http://<euername>.lab1.t3isp.de/banana/something
+```
+
+```
+Das kann man auch so im Browser eingeben
+```
+
+### Solution
+
+```
+nano ingress.yml
+```
+
+```
+## in kubernetes 1.22.2 - ingress.yml needs to be modified like so.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "<euername>.lab1.t3isp.de"
+    http:
+      paths:
+        - path: /apple
+          pathType: Prefix
+          backend:
+            service:
+              name: apple-service
+              port:
+                number: 80
+        - path: /banana
+          pathType: Prefix
+          backend:
+            service:
+              name: banana-service
+              port:
+                number: 80                
+```
+
+```
+kubectl apply -f .
+kubectl get ingress example-ingress
+## mit describe herausfinden, ob er die services gefundet 
+kubectl describe ingress example-ingress
+```
+
+## Kubernetes Networking Übung (Praxis 2)
+
+### Wann wird die PodIP vergeben
+
+
+### Example (that does work)
+
+```
+## Show the pods that are running 
+kubectl get pods 
+
+## Synopsis (most simplistic example 
+## kubectl run NAME --image=IMAGE_EG_FROM_DOCKER
+## example
+kubectl run nginx --image=nginx:1.23
+
+kubectl get pods 
+## on which node does it run ? 
+kubectl get pods -o wide 
+```
+
+### Example (that does not work) 
+
+```
+kubectl run foo2 --image=foo2
+## ImageErrPull - Image konnte nicht geladen werden 
+kubectl get pods 
+## Weitere status - info 
+kubectl describe pods foo2
+
+## Auch der nicht laufende Pod 
+kubectl get pods -o wide 
 ```
 
 ### Ref:
@@ -1088,7 +1719,8 @@ helm repo add metallb https://metallb.github.io/metallb
 ```
 
 ```
-helm install metallb metallb/metallb --namespace=metallb-system --create-namespace --version 0.14.8
+## reset-values, always reset values on upgrade 
+helm upgrade --install metallb metallb/metallb --namespace=metallb-system --create-namespace --version 0.15.2 --reset-values
 ```
 
 ### Step 2: addresspool und Propagation-type (config) 
@@ -1320,7 +1952,7 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 ## Falls repo bereits mit add hinzugefügt war 
 ## helm repo update
 
-helm install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress --create-namespace --version 4.12.2
+helm upgrade --install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress --create-namespace --version 4.13.2
 
 ## See when the external ip comes available
 kubectl -n ingress get all
@@ -1570,6 +2202,160 @@ kubectl delete ns policy-demo-$KURZ
 
   * https://network-policy-api.sigs.k8s.io/reference/examples/
 
+## Extras: Lastverteilung zu externen Backends(Ausserhalb von Kubernetes)
+
+### Lastverteilung zu externen Backends(Ausserhalb von Kubernetes)
+
+
+### Schaubild 
+
+<img width="863" height="511" alt="image" src="https://github.com/user-attachments/assets/2aae6747-94ad-431e-b5e4-6a6e2f135976" />
+
+
+
+### Manifeste 
+
+```
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ext-lb
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: envoy-config
+  namespace: ext-lb
+data:
+  envoy.yaml: |
+    static_resources:
+      listeners:
+      - name: listener_https_passthrough
+        address:
+          socket_address: { address: 0.0.0.0, port_value: 443 }
+        filter_chains:
+        - filters:
+          - name: envoy.filters.network.tcp_proxy
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.network.tcp_proxy.v3.TcpProxy
+              stat_prefix: tcp_passthrough
+              cluster: external_backends
+              access_log:
+              - name: envoy.access_loggers.stdout
+                typed_config:
+                  "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
+
+      clusters:
+      - name: external_backends
+        type: STATIC
+        connect_timeout: 2s
+        lb_policy: ROUND_ROBIN
+        # Optional: Outlier Detection nimmt instabile Hosts temporär raus
+        outlier_detection:
+          consecutive_5xx: 1
+          interval: 5s
+          base_ejection_time: 30s
+          max_ejection_percent: 100
+        load_assignment:
+          cluster_name: external_backends
+          endpoints:
+          - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address: { address: 203.0.113.10, port_value: 443 }
+            - endpoint:
+                address:
+                  socket_address: { address: 203.0.113.11, port_value: 443 }
+            - endpoint:
+                address:
+                  socket_address: { address: 203.0.113.12, port_value: 443 }
+        health_checks:
+        - timeout: 2s
+          interval: 5s
+          unhealthy_threshold: 2
+          healthy_threshold: 2
+          tcp_health_check: {}   # reine TCP-Erreichbarkeit prüfen
+          # Wenn deine Backends HTTP-Health bieten, nutze stattdessen:
+          # http_health_check:
+          #   path: /health
+          #   expected_statuses: [{start:200, end:299}]
+          #   codec_client_type: HTTP1
+
+    admin:
+      address:
+        socket_address: { address: 0.0.0.0, port_value: 9901 }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: envoy
+  namespace: ext-lb
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: envoy
+  template:
+    metadata:
+      labels:
+        app: envoy
+    spec:
+      containers:
+      - name: envoy
+        image: envoyproxy/envoy:v1.31.2
+        args:
+          - -c
+          - /etc/envoy/envoy.yaml
+          - --disable-hot-restart
+        ports:
+          - name: https
+            containerPort: 443
+          - name: admin
+            containerPort: 9901
+        volumeMounts:
+          - name: envoy-config
+            mountPath: /etc/envoy
+        readinessProbe:
+          httpGet: { path: /ready, port: 9901 }
+          initialDelaySeconds: 3
+          periodSeconds: 5
+        livenessProbe:
+          httpGet: { path: /server_info, port: 9901 }
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        resources:
+          requests: { cpu: "50m", memory: "64Mi" }
+          limits:   { cpu: "500m", memory: "256Mi" }
+      volumes:
+        - name: envoy-config
+          configMap:
+            name: envoy-config
+            items:
+              - key: envoy.yaml
+                path: envoy.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ext-backend
+  namespace: ext-lb
+spec:
+  type: ClusterIP
+  selector:
+    app: envoy
+  ports:
+    - name: https
+      port: 443        # Port, den deine App im Pod verwendet
+      targetPort: https
+```
+
+
+### Automatischer Neuladen bei Änderung der configMap 
+
+  * https://github.com/stakater/Reloader
+
+
 ## Calico - GUI (since calico 3.30)
 
 ### Calico GUI
@@ -1695,6 +2481,468 @@ kubectl apply -f .
   * https://github.com/orgs/projectcalico/discussions/10395
 
 
+
+## Kubernetes Istio
+
+### Why istio and benefits
+
+
+### What is a service mesh ?
+
+```
+A service mesh is an infrastructure layer
+that gives applications capabilities
+like zero-trust security, observability,
+and advanced traffic management, without code changes.
+```
+
+### Advantages / Features 
+
+ 1. Observability & monitoring
+ 1. Traffic management
+ 1. Resilience & Reliability 
+ 1. Security
+ 1. Service Discovery
+
+#### Observability & monitoring
+
+  * Service mesh offers:
+    * valuable insights into the communication between services
+    * effective monitoring to help in troubleshooting application errors.
+
+#### Traffic management
+
+  * Service mesh offers:
+    * intelligent request distribution
+    * load balancing, 
+    * support for canary deployments. 
+    * These capabilities enhance resource utilization and enable efficient traffic management
+
+#### Resilience & Reliability 
+
+  * By handling retries, timeouts, and failures,
+    * service mesh contributes to the overall stability and resilience of services
+    * reducing the impact of potential disruptions.
+
+#### Security
+
+  * Service mesh enforces security policies, and handles authentication, authorization, and encryption
+    * ensuring secure communication between services and eventually, strengthening the overall security posture of the application.
+
+#### Service Discovery
+
+  * With service discovery features, service mesh can simplify the process of locating and routing services dynamically
+  * adapting to system changes seamlessly. This enables easier management and interaction between services.
+
+### Overall benefits 
+
+```
+Microservices communication:
+Adopting a service mesh can simplify the implementation of a microservices architecture by abstracting away infrastructure complexities.
+It provides a standardized approach to manage and orchestrate communication within the microservices ecosystem.
+```
+
+
+### Overview sidecar pattern
+
+
+![image](https://github.com/user-attachments/assets/ad858ca2-2bdc-4604-beef-f543f833e56f)
+
+![image](https://github.com/user-attachments/assets/cad96bcb-8fb8-445c-b371-5a3b728a0a5f)
+* Source: kubebyexample.com 
+
+### Ambient Mode istio
+
+
+### Light: Only Layer 4 per node (ztunnel) 
+
+  * No sidecar (envoy-proxy) per Pod, but one ztunnel agent per Node (Layer 4)
+  * Enables security features (mtls, traffic encryption)
+
+#### Like so:
+
+  ![image](https://github.com/user-attachments/assets/755931d7-5bdd-43c9-8f93-28e8ee0b2bf3)
+
+### Full fledged: Layer 4 (ztunnel) per Node & Layer 7 per Namespace (
+
+  * One waypoint - proxy is rolled out per Namespace, which connects to the ztunnel agents 
+
+![image](https://github.com/user-attachments/assets/a2aadab7-2ec0-446f-a35a-e972b8ac46b8)
+
+#### Features in "fully-fledged" - ambient - mode 
+
+![image](https://github.com/user-attachments/assets/30b89a37-cb71-46e9-a395-aafb593ebb12)
+
+
+### Advantages:
+
+  * Less overhead
+  * One can start step-by-step moving towards a mesh (Layer 4 firstly and if wanted Layer 7 for specicfic namespaces)
+  * Old pattern: sidecar and new pattern: ambient can live side by side. 
+
+### Istio vs. Ingress Überblick
+
+
+![Schaubild](/images/Istio-vs-Ingress-Istio-vs.-IngressController.drawio.png)
+
+### Istio installieren und Addons bereitsstellen
+
+
+### On the client (where you also use kubectl) 
+
+#### Steps 1: Download install and run 
+
+```
+## as tlnx - user 
+## find a decent where to run the installation
+## not perfect, but better than to put it in home-folder
+cd 
+mkdir -p manifests/istio
+cd manifests/istio
+```
+
+```
+## now download the install an run the shell
+curl -L https://istio.io/downloadIstio | sh -
+```
+
+#### Step 2: Run istioctl - commands (version-check, precheck and install) 
+
+```
+## This istioctl will be under istio-1.20.2/bin
+## but TRAINER has already installed it under /usr/bin/istioctl
+## So we can use that one !! 
+```
+
+```
+## cd istio-1.23.1/bin
+istioctl version
+istioctl x precheck 
+istioctl install --set profile=demo -y
+```
+
+#### Step 3: Install the addons 
+
+```
+## Install Add-Ons
+## Ask trainer for directory
+cd /usr/src/
+kubectl apply -f istio-1.23.1/samples/addons/ 
+```
+
+#### Step 4: Check if all the corresponding container (from istio and addons) are running 
+
+```
+kubectl -n istio-system get pods 
+```
+
+### Istion Überblick - egress und ingress - gateway
+
+
+![image](https://github.com/jmetzger/training-kubernetes-advanced/assets/1933318/c02c7154-cb9a-4253-8232-6cd125f2862c)
+
+### Istio - Deployment of simple application
+
+
+### Overview (what we want to do) 
+
+![image](https://github.com/jmetzger/training-kubernetes-advanced/assets/1933318/285fc65a-57ec-425f-bcd7-729777f79a7d)
+
+  * Catalog Service is reachable through api
+
+### Step 1: Vorbereitung - repo mit beispielen klonen 
+
+```
+cd
+git clone https://github.com/jmetzger/istio-exercises/
+cd istio-exercises 
+```
+
+### Step 2: Eigenen Namespace erstellen 
+
+```
+## Jeder Teilnehmer erstellt seinen eigenen Namespace
+## z.B. istioapp-tlnx
+## d.h. für Teilnehmer 5 (tln5) -> istioapp-tln5
+kubectl create ns istioapp-tln5 
+## Context so einstellen, dass dieser namespace verwendet
+kubectl config set-context --current --namespace istioapp-tln5 
+```
+
+### Step 3: Anwendung untersuchen / istioctl kube-inject 
+
+  * Ihr könnt unten direkt den Pfad nehmen, das ist einfacher ;o) 
+
+```
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: catalog
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: catalog
+  name: catalog
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: catalog
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: catalog
+    version: v1
+  name: catalog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalog
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: catalog
+        version: v1
+    spec: 
+      serviceAccountName: catalog
+      containers:
+      - env:
+        - name: KUBERNETES_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        image: istioinaction/catalog:latest
+        imagePullPolicy: IfNotPresent
+        name: catalog
+        ports:
+        - containerPort: 3000
+          name: http
+          protocol: TCP
+        securityContext:
+          privileged: false
+```
+
+```
+## schauen wir uns das mal mit injection an 
+istioctl kube-inject -f services/catalog/kubernetes/catalog.yaml | less 
+```
+
+### Step 4: Automatische Injection einrichten. 
+
+```
+## kubectl label namespace istioapp-tlnx istio-injection=enabled 
+## z.B
+kubectl label namespace istioapp-tln5 istio-injection=enabled 
+```
+
+### Step 5: catalog ausrollen 
+
+```
+kubectl apply -f services/catalog/kubernetes/catalog.yaml
+```
+
+```
+## Prüfen, ob wirklich 2 container in einem pod laufen,
+## dann funktioniert die Injection
+## WORKS, Yeah !
+kubectl get pods 
+```
+
+### Step 6: Wir wollen den Catalog jetzt erreichen 
+
+```
+## do it from your namespace, e.g. tlnx 
+## z.B. 
+kubectl run -it --rm curly --image=curlimages/curl -- sh
+```
+
+```
+## within shell of that pod
+## catalog.yourappnamespace/items/1
+curl http://catalog.istioapp-tln5/items/1
+exit
+```
+
+### Step 7: Jetzt deployen wir die webapp 
+
+```
+## Wir schauen uns das manifest für die webapp an
+## und ändern die env-variablen CATALOG_SERVICE_HOST 
+## tlnx durch Eure Teilnehmernummer ersetzen 
+catalog.istioapp-tlnx  
+```
+
+```
+kubectl apply -f services/webapp/kubernetes/webapp.yaml 
+kubectl get pod
+```
+
+### Step 8: Verbindung zu webapp testen 
+
+```
+## tlnx
+## kubectl -n tlnx run -it --rm curly --image=curlimages/curl -- sh
+## z.B. 
+kubectl run -it --rm curly --image=curlimages/curl -- sh
+```
+
+```
+## Within shell connect to webapp
+curl -s http://webapp.istioapp-tln5/api/catalog/items/1
+exit
+```
+
+### Step 8.1: Verbindung zu webapp von aussen 
+
+```
+## Wir können es aber auch visualisieren
+kubectl port-forward deploy/webapp 8001:8080
+## z.B. Teilnehmer tln1 -> 8001:8080
+
+## WICHTIG Jeder Teilneher sollte hier einen abweichenden Port nehmen 
+## Jetzt lokal noch einen Tunnel aufbauen
+## s. Anleitung Putty
+## Source Port: 8080 # das ist der auf dem Rechner 
+## Destination: localhost:8001
+## Add
+## Achtung -> danach noch Session speichern
+```
+
+```
+## Jetzt im Browser http://localhost:8080
+## aufrufen
+```
+
+### Step 9: Ingress - Gateway konfigurieren (ähnlich wie Ingress-Objekt) 
+
+```
+## wir schauen uns das vorher mal an 
+```
+
+```
+## namespace - fähig, d.h. ein Gateway mit gleichem Namen pro Namespace möglich 
+cat ingress-virtualservice/ingress-gateway.yaml
+## hier bitte bei Hosts hostname eintragen, der für t3isp.de verwendet, und zwar
+## jeder Teilnehmer eine eigene Subdomain:  z.B. jochen.istio.t3isp.de 
+kubectl apply -f ingress-virtualservice/ingress-gateway.yaml
+```
+
+### Step 10: Reach it from outside 
+
+```
+## We need to find the loadbalancer IP
+kubectl -n istio-system get svc 
+## in unserem Fall
+146.190.177.12
+## Das trägt Jochen dns t3isp.de ein. 
+
+## Wir können jetzt also das System von extern erreichen
+## vomn client aus, oder direkt über den Browser 
+##curl -i 146.190.177.12/api/catalog/items/1
+## Hier hostname statt ip einträgen
+curl -i http://tlnx.istio.t3isp.de/api/catalog/items/1 
+
+```
+
+```
+## Wir können auch über istioctl direkt überprüfen, ob es einen Routen-Config gibt
+istioctl proxy-config routes deploy/istio-ingressgateway.istio-system
+
+## Falls das nicht funktioniert, können wir auch überprüfen ob ein gateway und ein virtualservice installiert wurde
+kubectl get gateway
+kubectl get virtualservice
+## Kurzform des Services reicht, weil im gleichen namespace
+## Wo soll es hingehen -> == -> Upstream 
+## route -> destination -> host -> webapp 
+kubectl get virtualservice -o yaml 
+```
+
+```
+### Wichtiger Hinweis, auf beiden Seiten ingressgateway und vor dem Pod des Dienstes Webapp
+### Sitzt ein envoy-proxy und kann Telemetrie-Daten und Insight sammeln was zwischen den
+### applicationen passiert -> das passiert über ein sidecar in jeder Applikation 
+
+### Wichtig: Das passiert alles ausserhalb der Applikation
+### Nicht wie früher z.B. bei Netflix innerhalb z.B. für die Sprache Java
+```
+
+### Istio - Grafana Dashboard
+
+
+### Status
+
+  * Wir haben bereits mit den Addons Grafana ausgerollt,
+  * Dieses wollen wir jetzt aktivieren
+
+### Schritt 1: Dashboard aktivieren -> achtung jeder nimmt seinen eigenen Port 
+
+```
+## um Grunde macht das auch nur ein port - forward 
+## Das macht der Trainer nur 1x, dann können alle dort zugreifen
+istioctl dashboard grafana --port=3000 --browser=false
+```
+
+```
+## Jetzt über den Browser öffnen
+http://localhost:3000
+## Dann Dashboard -> istio -> istio services
+```
+
+```
+## Lass uns mal Traffic hinschicken vom Client aus
+## ip vom ingressgateway from loadBalancer 
+while true; do curl http://jochen.istio.t3isp.de/api/catalog; sleep .5; done 
+
+## Und das das Dashboard nochmal refreshend
+##-> General ausklappen 
+```
+
+### Mesh / istio
+
+
+### Schaubild 
+
+![istio Schaubild](https://istio.io/latest/docs/examples/virtual-machines/vm-bookinfo.svg)
+
+### Istio 
+
+```
+## Visualization 
+## with kiali (included in istio) 
+https://istio.io/latest/docs/tasks/observability/kiali/kiali-graph.png
+
+## Example 
+## https://istio.io/latest/docs/examples/bookinfo/
+The sidecars are injected in all pods within the namespace by labeling the namespace like so:
+kubectl label namespace default istio-injection=enabled
+
+## Gateway (like Ingress in vanilla Kubernetes) 
+kubectl label namespace default istio-injection=enabled
+```
+
+### istio tls 
+
+ * https://istio.io/latest/docs/ops/configuration/traffic-management/tls-configuration/
+
+
+### istio - the next generation without sidecar 
+
+  * https://istio.io/latest/blog/2022/introducing-ambient-mesh/
+
+### Benchmarks istio ambient,sidecar und baseline
+
+
+  * https://livewyer.io/blog/2024/06/06/comparison-of-service-meshes-part-two/
+  * https://github.com/livewyer-ops/poc-servicemesh2024/blob/main/docs/test-report-istio.md
 
 ## Gateway API
 
@@ -1858,7 +3106,7 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 ## Falls repo bereits mit add hinzugefügt war 
 ## helm repo update
 
-helm install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress --create-namespace --version 4.12.2
+helm upgrade --install nginx-ingress ingress-nginx/ingress-nginx --namespace ingress --create-namespace --version 4.13.2
 
 ## See when the external ip comes available
 kubectl -n ingress get all
@@ -1886,397 +3134,6 @@ nginx-ingress-ingress-nginx-controller   LoadBalancer   10.245.78.34   157.245.2
 ### How many requests per second
 
   * https://blog.nginx.org/blog/testing-performance-nginx-ingress-controller-kubernetes
-
-## Kubernetes - Projekt Applikation - Step by Step (Netzwerk)
-
-### kubectl/manifest/deployments
-
-
-```
-cd
-mkdir -p manifests
-cd manifests
-mkdir 03-deploy
-cd 03-deploy 
-```
-
-```
-nano deploy.yml
-```
-
-
-```
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deployment
-spec:
-  selector:
-    matchLabels:
-      app: nginx
-  replicas: 8 # tells deployment to run 8 pods matching the template
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:1.21
-        ports:
-        - containerPort: 80
-        
-```
-
-```
-kubectl apply -f deploy.yml 
-```
-
-```
-## kubectl get -f deploy.yml -o yaml
-kubectl get all 
-```
-
-### kubectl/manifest/service
-
-
-### Schritt 1: Deployment 
-
-```
-cd
-mkdir -p manifests
-cd manifests 
-mkdir 04-service 
-cd 04-service 
-##vi 01-deploy.yml 
-```
-
-```
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deployment
-spec:
-  selector:
-    matchLabels:
-      app: nginx
-  replicas: 7 # tells deployment to run 8 pods matching the template
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:1.23
-        ports:
-        - containerPort: 80
-```
-
-```
-kubectl apply -f .
-```
-
-### Schritt 2:
-
-```
-nano 02-svc.yml
-```
-
-```
-apiVersion: v1
-kind: Service
-metadata:
-  name: svc-nginx
-spec:
-  type: ClusterIP
-  ports:
-  - port: 80
-    protocol: TCP
-  selector:
-    app: nginx
-```
-
-```
-kubectl apply -f . 
-```
-
-### Schritt 3 Endpunkte gefunden ?
-
-```
-kubectl get svc svc-nginx
-kubectl describe svc svc-nginx
-```
-
-```
-kubectl get endpoints svc-nginx
-kubectl get endpoints svc-nginx -o yaml 
-```
-
-### Schritt 4 Löschen deployment und prüfen die Endpunkte 
-
-```
-kubectl delete -f deploy.yml
-## Uups Endpunkte sind weg 
-kubectl describe svc svc-nginx 
-```
-
-```
-kubectl apply -f .
-## Endpunkte sind wieder da, aber neue POD-IPs
-kubectl describe svc svc-nginx 
-```
-
-### Ref.
-
-  * https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/
-
-### DNS - Resolution - Services
-
-
-### What is resolved 
-
-```
-svc-nginx
-svc-nginx.jochen # svc-nginx.<namespace>
-svc-nginx.jochen.svc
-svc-nginx.jochen.svc.cluster.local 
-```
-
-### Exercise 
-
-```
-kubectl run podtest --rm -ti --image busybox
-If you don't see a command prompt, try pressing enter.
-/ # wget -O - http://apple-service.jochen
-Connecting to apple-service.jochen (10.245.39.214:80)
-writing to stdout
-apple-tln1
--                    100% |**************************************************************************************************************|    11  0:00:00 ETA
-written to stdout
-/ # wget -O - http://apple-service.jochen.svc.cluster.local
-Connecting to apple-service.jochen.svc.cluster.local (10.245.39.214:80)
-writing to stdout
-apple-tln1
--                    100% |**************************************************************************************************************|    11  0:00:00 ETA
-written to stdout
-/ # wget -O - http://apple-service
-Connecting to apple-service (10.245.39.214:80)
-writing to stdout
-apple-tln1
--                    100% |**************************************************************************************************************|    11  0:00:00 ETA
-written to stdout
-```
-
-
-### How to find the FQDN (Full qualified domain name) 
-
-```
-## in busybox (clusterIP)
-nslookup 10.109.6.53
-name = svc-nginx.jochen.svc.cluster.local
-```
-
-### Beispiel Ingress mit Hostnamen
-
-
-### Walkthrough 
-
-#### Step 1: pods and services
-
-```
-cd
-mkdir -p manifests
-cd manifests 
-mkdir abi
-cd abi
-```
-
-```
-nano apple.yml
-```
-
-```
-## apple.yml 
-## vi apple.yml 
-kind: Pod
-apiVersion: v1
-metadata:
-  name: apple-app
-  labels:
-    app: apple
-spec:
-  containers:
-    - name: apple-app
-      image: hashicorp/http-echo
-      args:
-        - "-text=apple-<dein-name>"
----
-
-kind: Service
-apiVersion: v1
-metadata:
-  name: apple-service
-spec:
-  selector:
-    app: apple
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 5678 # Default port for image
-```
-
-```
-kubectl apply -f apple.yml 
-```
-
-```
-nano banana.yml
-```
-
-
-```
-## banana
-## vi banana.yml
-kind: Pod
-apiVersion: v1
-metadata:
-  name: banana-app
-  labels:
-    app: banana
-spec:
-  containers:
-    - name: banana-app
-      image: hashicorp/http-echo
-      args:
-        - "-text=banana-<dein-name>"
-
----
-
-kind: Service
-apiVersion: v1
-metadata:
-  name: banana-service
-spec:
-  selector:
-    app: banana
-  ports:
-    - port: 80
-      targetPort: 5678 # Default port for image
-```
-
-```
-kubectl apply -f banana.yml
-```
-
-### Step 2: Ingress 
-
-```
-nano ingress.yaml
-```
-
-```
-## Ingress
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: example-ingress
-  annotations:
-    ingress.kubernetes.io/rewrite-target: /
-spec:
-  ingressClassName: nginx
-  rules:
-  - host: "<euername>.lab1.t3isp.de"
-    http:
-      paths:
-        - path: /apple
-          backend:
-            serviceName: apple-service
-            servicePort: 80
-        - path: /banana
-          backend:
-            serviceName: banana-service
-            servicePort: 80
-```
-
-```
-## ingress 
-kubectl apply -f ingress.yml
-kubectl get ing 
-```
-
-### Reference 
-
-  * https://matthewpalmer.net/kubernetes-app-developer/articles/kubernetes-ingress-guide-nginx-example.html
-
-### Find the problem 
-
-```
-## Hints 
-
-## 1. Which resources does our version of kubectl support 
-## Can we find Ingress as "Kind" here.
-kubectl api-ressources 
-
-## 2. Let's see, how the configuration works 
-kubectl explain --api-version=networking.k8s.io/v1 ingress.spec.rules.http.paths.backend.service
-
-## now we can adjust our config 
-```
-
-### Direct Solution
-
-```
-nano ingress.yaml
-```
-
-```
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: example-ingress
-  annotations:
-    ingress.kubernetes.io/rewrite-target: /
-    # with the ingress controller from helm, you need to set an annotation 
-    # old version useClassName instead 
-    # otherwice it does not know, which controller to use
-    # kubernetes.io/ingress.class: nginx 
-spec:
-  ingressClassName: nginx
-  rules:
-## <deinname> ersetzen durch dienen namen, z.B. jochen
-## jochen.lab1.t3isp.de
-  - host: "<deinname>.lab1.t3isp.de"
-    http:
-      paths:
-        - path: /apple
-          pathType: Prefix
-          backend:
-            service:
-              name: apple-service
-              port:
-                number: 80
-        - path: /banana
-          pathType: Prefix
-          backend:
-            service:
-              name: banana-service
-              port:
-                number: 80                
-```
-
-```
-kubectl apply -f .
-kubectl describe ingress example-ingress 
-```
-
-```
-## Testen im browser oder curl mit hostnamen
-## Variante 1:
-## z.B.
-curl http://jochen.lab1.t3isp.de/apple
-curl http://jochen.lab1.t3isp.de/banana
-```
 
 ## Kubernetes Services (Schaubilder)
 
@@ -2456,7 +3313,10 @@ kubectl run foo2 --image=foo2
 ## ImageErrPull - Image konnte nicht geladen werden 
 kubectl get pods 
 ## Weitere status - info 
-kubectl describe pods foo2 
+kubectl describe pods foo2
+
+## Auch der nicht laufende Pod 
+kubectl get pods -o wide 
 ```
 
 ### Ref:
@@ -2653,7 +3513,7 @@ Older versions of tcpdump truncate packets to 68 or 96 bytes. If this is the cas
 tcpdump -i <interface> -s 65535 -w <file>
 ```
 
-#### Variante 2: Im Hintergrund laufen lassen und connecten 
+##### Variante 2: Im Hintergrund laufen lassen und connecten 
 
 ```
 kubectl -n ingress debug nginx-ingress-ingress-nginx-controller-7bc7c7776d-jpj5h --image nicolaka/netshoot -- sleep infinite
@@ -3509,9 +4369,9 @@ spec:
 
 ```
 ## Step 1 - Install the operator
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.1/manifests/tigera-operator.yaml
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.3/manifests/tigera-operator.yaml
 ## Step 2 - Install the custom resources 
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.1/manifests/custom-resources.yaml
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.3/manifests/custom-resources.yaml
 ```
 
 ### Testing 
@@ -3524,7 +4384,7 @@ kubectl -n calico-apiserver get pods
 kubectl get nodes
 
 kubectl -n kube-system get pods
-kubectl -n kube-system get pods coredns-7c65d6cfc9-f6f56
+kubectl -n kube-system get pods coredns-7c65d6cfc9-f6f56 -o wide
 kubectl -n kube-system describe pods coredns-7c65d6cfc9-f6f56
 ```
 
@@ -5592,48 +6452,54 @@ ping www.google.de
 ### Exercise calico Network Policy
 
 
-### Step 1: Set global policy
-
-```
-apiVersion: crd.projectcalico.org/v1
-kind: GlobalNetworkPolicy
-metadata:
-  name: default-deny
-spec:
-  namespaceSelector: kubernetes.io/metadata.name != "kube-system"
-  types:
-  - Ingress
-  - Egress
-  egress:
-   # allow all namespaces to communicate to DNS pods
-  - action: Allow
-    protocol: UDP
-    destination:
-      selector: 'k8s-app == "kube-dns"'
-      ports:
-      - 53
-  - action: Allow
-    protocol: TCP
-    destination:
-      selector: 'k8s-app == "kube-dns"'
-      ports:
-      - 53
-
-```
-
-```
-kubectl apply -f . 
-```
-
-### Step 2: nginx ausrollen aus manifests/04-service und testen
+### Step 1:
 
 ```
 cd
 mkdir -p manifests
 cd manifests
-mkdir 04-service 
-cd 04-service 
+mkdir calico
+cd calico
 ```
+
+```
+nano 01-gnp.yml
+```
+
+### Step 2: Set global policy
+
+```
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: default-deny
+spec:
+  # Auf alle Namespaces außer kube-system und calico-system anwenden
+  namespaceSelector: kubernetes.io/metadata.name not in {"kube-system","calico-system"}
+
+  types:
+  - Ingress
+  - Egress
+
+  # Egress-Ausnahmen (z. B. DNS)
+  egress:
+  - action: Allow
+    protocol: UDP
+    destination:
+      selector: 'k8s-app == "kube-dns"'
+      ports: [53]
+  - action: Allow
+    protocol: TCP
+    destination:
+      selector: 'k8s-app == "kube-dns"'
+      ports: [53]
+```
+
+```
+kubectl apply -f .
+```
+
+### Step 3: nginx ausrollen aus manifests/04-service und testen
 
 ```
 nano deploy.yml 
@@ -5690,25 +6556,21 @@ kubectl apply -f .
 ```
 kubectl run -it --rm access --image=busybox 
 ```
-```
 
+```
 ## In der Bbusybox 
 wget -O - http://svc-nginx 
 ```
 
-### Step 3: Traffic erlauben egress von busybox 
+### Step 4: Traffic erlauben egress von busybox 
 
 ```
-cd
-cd manifests
-mkdir cnp
-cd cnp
+nano 02-egress-allow-busybox.yml  
 ```
-
 
 ```
 ## vi 02-egress-allow-busybox.yml
-apiVersion: crd.projectcalico.org/v1
+apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
   name: allow-busybox-egress
@@ -5733,19 +6595,19 @@ kubectl run -it --rm access --image=busybox
 wget -O - http://www.google.de
 
 ## sollte nicht funktionieren
-wget -O - http://my-nginx
+wget -O - http://svc-nginx
 ```
 
-### Step 4: Traffic erlauben für nginx 
+### Step 5: Traffic erlauben für nginx 
 
 ```
 ## 03-allow-ingress-my-nginx.yml 
-apiVersion: crd.projectcalico.org/v1
+apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
   name: allow-nginx-ingress
 spec:
-  selector: run == 'my-nginx'
+  selector: web == 'my-nginx'
   types:
   - Ingress
   ingress:
@@ -5764,7 +6626,7 @@ kubectl run -it --rm access --image=busybox
 
 ```
 ## In der Bbusybox 
-wget -O - http://my-nginx 
+wget -O - http://svc-nginx 
 ```
 
 ## Kubernetes Scheduler
@@ -6553,7 +7415,8 @@ helm repo add metallb https://metallb.github.io/metallb
 ```
 
 ```
-helm install metallb metallb/metallb --namespace=metallb-system --create-namespace --version 0.14.8
+## reset-values, always reset values on upgrade 
+helm upgrade --install metallb metallb/metallb --namespace=metallb-system --create-namespace --version 0.15.2 --reset-values
 ```
 
 ### Step 2: addresspool und Propagation-type (config) 
