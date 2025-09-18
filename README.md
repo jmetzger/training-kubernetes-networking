@@ -73,12 +73,24 @@
   1. Calico - GUI (since calico 3.30)
      * [Calico GUI](/kubernetes-networks/calico/whisker/setup-ingress.md)
 
+  1. Kubernetes Istio
+     * [Why istio and benefits](istio/overview/benefits-of-a-service-mesh.md)
+     * [Overview sidecar pattern](/istio/overview/overview-classic-sidecar.md)
+     * [Ambient Mode istio](/istio/overview/ambient-mode.md)
+     * [Istio vs. Ingress Überblick](istio/00-istio-vs-ingress.md)
+     * [Istio installieren und Addons bereitsstellen](istio/01-install-and-addons.md)
+     * [Istion Überblick - egress und ingress - gateway](/istio/02-overview-ingress-egress-gateway.md)
+     * [Istio - Deployment of simple application](istio/03-deploy-first-app.md)
+     * [Istio - Grafana Dashboard](istio/04-grafana-dashboard.md)
+     * [Mesh / istio](sammlung-istio.md)
+     * [Benchmarks istio ambient,sidecar und baseline](istio/overview/performance-comparison-baseline-sidecar-ambient.md)
+         
+## Backlog 
+
   1. Gateway API
      * [Overview](gateway-api/01-introduction.md)
      * [Implementations](gateway-api/02-implementations.md)
      * [Conformance Report - What is implemented in which software](https://github.com/kubernetes-sigs/gateway-api/tree/main/conformance/reports)
-           
-## Backlog 
 
   1. Kubernetes - Misc
 
