@@ -1,5 +1,11 @@
 # Lastverteilung zu externen Backends ausserhalb von Kubernetes - Cluster
 
+## Schaubild 
+
+<img width="863" height="511" alt="image" src="https://github.com/user-attachments/assets/2aae6747-94ad-431e-b5e4-6a6e2f135976" />
+
+
+
 ## Manifeste 
 
 ```
